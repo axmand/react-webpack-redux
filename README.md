@@ -5,9 +5,9 @@
 
 ### run ###
 
->To run the project , please typing 'run start' in cmd
+>to run the project , please typing 'run start' in cmd
 ```
-run start
+npm run start
 ```
 >then open 
 ```

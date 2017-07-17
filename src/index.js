@@ -1,10 +1,10 @@
 import React from 'react'
 import { render } from 'react-dom'
-import Component from './components/test'
+import HelloLabel from './components/HelloLabel'
 
 
 let main = function () {
-    render(<Component />, document.body);
+    render(<HelloLabel/>, document.body);
 }
 
 main();

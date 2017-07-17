@@ -7,7 +7,7 @@ const path = require('path'),
     webpack = require('webpack'),
     webpackhtml = require('html-webpack-plugin');
 
-const APP_PATH = path.resolve(__dirname, './app/index.js'),
+const APP_PATH = path.resolve(__dirname, './src/index.js'),
     BUILD_PATH = path.resolve(__dirname, './build');
 
 module.exports = {
@@ -24,7 +24,7 @@ module.exports = {
             {
                 loader: "babel-loader",
                 include: [
-                    path.resolve(__dirname, 'app'),
+                    path.resolve(__dirname, 'src'),
                 ],
                 exclude: [
                     // node_module_dir
@@ -34,14 +34,13 @@ module.exports = {
                     plugins: ['transform-runtime'],
                     presets: ['es2015', 'stage-0', 'react']
                 }
-            },
+            }
         ]
     },
     plugins: [
         // new webpack.optimize.CommonsChunkPlugin('react', 'react.js'),
         new webpackhtml({
             title: "Hello World APP",
-            
         })
     ]
 };
