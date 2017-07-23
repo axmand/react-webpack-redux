@@ -41,6 +41,7 @@ module.exports = {
         // new webpack.optimize.CommonsChunkPlugin('react', 'react.js'),
         new webpackhtml({
             title: "Hello World APP",
+            filename: 'build/index.html'
         })
     ]
 };

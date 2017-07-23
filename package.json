@@ -35,15 +35,12 @@
     "redux": "^3.7.2",
     "style-loader": "^0.18.2",
     "webpack": "^3.1.0",
-    "webpack-dev-server": "^2.5.1"
-  },
-  "dependencies": {
+    "webpack-dev-server": "^2.5.1",
     "babel-runtime": "^6.23.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",
-    "redux": "^3.7.1",
     "redux-thunk": "^2.2.0"
   }
 }

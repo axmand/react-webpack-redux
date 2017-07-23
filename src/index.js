@@ -4,7 +4,10 @@ import HelloLabel from './components/HelloLabel'
 
 
 let main = function () {
-    render(<HelloLabel/>, document.body);
+
+    let sss=document.getElementById('tet');
+
+    render(<HelloLabel/>, sss);
 }
 
 main();
