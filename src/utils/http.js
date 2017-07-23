@@ -1,6 +1,10 @@
 ﻿/**
  * @description promise/A标准的http对象，支持json,jsonp方法
  * @module http
+ * -已使用promise包装http请求
+ * -建议使用新的API，fetch
+ * -fetch reference:
+ * https://github.com/camsong/blog/issues/2
  */
 import noop from './noop';
 
