@@ -7,7 +7,7 @@ const path = require('path'),
     webpack = require('webpack'),
     webpackhtml = require('html-webpack-plugin');
 
-const APP_PATH = path.resolve(__dirname, './src/index.js'),
+const APP_PATH = path.resolve(__dirname, './src/app.js'),
     BUILD_PATH = path.resolve(__dirname, './build');
 
 module.exports = {
