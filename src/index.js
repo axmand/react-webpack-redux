@@ -14,15 +14,24 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router'
-//1.引入store
-import store, { history } from 'STORE'
-//2.引入route
-import routes from 'ROUTE'
-//3.引入assets文件夹下的 icon，css等资源文件
+import {createStore} from 'redux';
 
+//1.引入view
+import LoginView from './views/LoginView';
+//2.引入route
+//import store, { history } from 'STORE'
+//3.引入assets文件夹下的 icon，css等资源文件
+import RootReducer from './redux/reducers/RootReducer';
+//4.引入reducer
+const store = createStore(RootReducer.combine(),0);
+//5.doucment parent
+const root = document.getElementById('root');
+/**
+ * 通过redux提供的provider,与Redux连接
+ */
 ReactDOM.render(
     <Provider store={store}>
-        <Router history={history} children={routes} />
+       <LoginView/>
     </Provider>,
-    MOUNT_NODE
+    root
 );
