@@ -23,7 +23,7 @@ import LoginView from './views/LoginView';
 //3.引入assets文件夹下的 icon，css等资源文件
 import RootReducer from './redux/reducers/RootReducer';
 //4.引入reducer
-const store = createStore(RootReducer.combine(),0);
+const store = createStore(RootReducer.combine(),{});
 //5.doucment parent
 const root = document.getElementById('root');
 /**

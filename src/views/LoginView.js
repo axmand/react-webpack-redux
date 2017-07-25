@@ -3,9 +3,10 @@
  * 登录界面view
  */
 import React, { Component } from 'react';
-import Login from '../components/Login';
 import { connect } from 'react-redux';
 import {LOGINTODO} from '../redux/actions/ActionTypes';
+import Map from '../components/Map';
+import Login from '../components/Login';
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -21,7 +22,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-const LoginView=connect(mapStateToProps,mapDispatchToProps)(Login);
+const LoginView=connect(mapStateToProps,mapDispatchToProps)(Map);
 
 //注入dispatch
 export default LoginView;

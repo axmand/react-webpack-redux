@@ -13,8 +13,8 @@ import PropTypes from 'prop-types';
 
 const Login = ({ onClick, complete, text }) => (
     <div>
-        <input type='text'/>
-        <input type='text'/>
+        <input type='text' />
+        <input type='text' />
         <button onClick={onClick} >登录</button>
     </div>
 )
