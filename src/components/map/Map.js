@@ -15,14 +15,17 @@ import * as maptalks from 'maptalks';
 //引入地图组件
 import MapToolBar from './MapToolBar';
 
-
+/**
+ * @type {maptalks.Map}
+ */
+let map;
 
 class Map extends Component {
 
     componentDidMount() {
 
         const mapDiv = this.refs.map;
-        const map = new maptalks.Map(mapDiv, {
+        map = new maptalks.Map(mapDiv, {
             center: [-0.113049, 51.498568],
             zoom: 14,
             baseLayer: new maptalks.TileLayer('base', {
@@ -41,7 +44,7 @@ class Map extends Component {
         return (
             <div>
                 <div ref='map' style={{ color: "#000", width: "500px", height: "400px" }} />
-                <MapToolBar style={{ left: "5px;" }} onClick={onMenuItemClick} text="dasdaf" />
+                <MapToolBar style={{ left: "5px;" }} onClick={onMenuItemClick} text="zoom" />
             </div>
         )
     }
@@ -57,8 +60,9 @@ Map.propTypes = {
 
 //加入reducer
 const mapReduce = (state = 0, action) => {
-    if (action.type === LOGIN_TODO) {
-        //登录认证操作
+    if (action.type === "menuClick" && action.payload.command==="zoom") {
+        //放大地图
+        map.setZoom(10);
     }
     return state;
 }
@@ -94,12 +98,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             })
         },
 
-        onMenuItemClick: (id) => {
-            const prop = ownProps;
+        onMenuItemClick: (text) => {
             dispatch({
                 type: 'menuClick',
                 payload: {
-                    hhh: id
+                    command: text
                 }
             });
         }
