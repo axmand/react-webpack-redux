@@ -6,11 +6,9 @@ import PropTypes from 'prop-types';
 //ui
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
+import Menu, { MenuItem } from 'material-ui/Menu'
 import Divider from 'material-ui/Divider';
 //图标
-import ContentLink from 'material-ui/svg-icons/content/link';
 
 const style = {
     paper: {
@@ -29,7 +27,7 @@ const MapToolBar = ({ onClick, complete, text }) => {
         <MuiThemeProvider>
             <Paper style={style.paper}>
                 <Menu desktop={true} width={60} onClick={()=>onClick(text)}>
-                    <MenuItem leftIcon={<ContentLink />}></MenuItem>
+                    <MenuItem>123</MenuItem>
                 </Menu>
             </Paper>
         </MuiThemeProvider>
