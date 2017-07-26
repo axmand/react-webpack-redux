@@ -25,9 +25,6 @@ const style = {
 }
 
 const MapToolBar = ({ onClick, complete, text }) => {
-
-    const ss=text;
-
     return (<div>
         <MuiThemeProvider>
             <Paper style={style.paper}>

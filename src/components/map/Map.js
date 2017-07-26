@@ -1,5 +1,5 @@
 /**
- * login 登录组件
+ * Map组件
  * @author yellow date 2017/7/24
  * -由于此组件包含input,button。可以根据需要拆分组件
  * 
