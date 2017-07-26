@@ -7,8 +7,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import RootReducer from './../../redux/reducers/RootReducer';
-import { LOGIN_TODO } from './../../redux/actions/ActionTypes';
+import RootReducer from './../../redux/RootReducer';
 import PropTypes from 'prop-types';
 import * as maptalks from 'maptalks';
 

@@ -4,9 +4,7 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { LOGINTODO } from '../redux/actions/ActionTypes';
 import Map from '../components/map/Map';
-import Login from '../components/Login';
 
 
 
