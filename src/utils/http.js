@@ -3,6 +3,9 @@
  * @module http
  * -已使用promise包装http请求
  * -建议使用新的API，fetch
+ * 
+ * fetch(url).then((data)=>{},);
+ * 
  * -fetch reference:
  * https://github.com/camsong/blog/issues/2
  */

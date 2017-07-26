@@ -21,7 +21,7 @@ import LoginView from './views/LoginView';
 //2.引入route
 //import store, { history } from 'STORE'
 //3.引入assets文件夹下的 icon，css等资源文件
-import RootReducer from './redux/reducers/RootReducer';
+import RootReducer from './redux/RootReducer';
 //4.引入reducer
 const store = createStore(RootReducer.combine(),{});
 //5.doucment parent
