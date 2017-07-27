@@ -34,7 +34,8 @@ function ObligeeOwnerMessage(props) {
 
 ObligeeOwnerMessage.propTypes = {
   classes: PropTypes.object.isRequired,
-  NAME: PropTypes.string.isRequired
+  NAME: PropTypes.string.isRequired,
+   ID: PropTypes.string.isRequired
 };
 
 export default withStyles(styleSheet)(ObligeeOwnerMessage);

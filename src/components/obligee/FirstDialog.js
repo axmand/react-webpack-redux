@@ -86,20 +86,21 @@ class FirstDialog extends Component {
           <AppBar className={classes.appBar}>
              
             <Toolbar>
-              <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
+               <Typography type="title" color="inherit" className={classes.flex}>
+                 <Tabs index={this.state.index} onChange={this.handleChange}>
+            <Tab label="权利信息" />
+            <Tab label="宗地信息" />
+            <Tab label="使用信息" />
+          </Tabs>
+              </Typography>
+              <Button color="contrast" onClick={this.handleRequestClose}>
+                 <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              <Typography type="title" color="inherit" className={classes.flex}>
-                权籍调查表
-              </Typography>
-               <Tabs index={this.state.index} onChange={this.handleChange}>
-            <Tab label="Item One" />
-            <Tab label="Item Two" />
-            <Tab label="Item Three" />
-          </Tabs>
-              <Button color="contrast" onClick={this.handleRequestClose}>
-                保存
               </Button>
+              
+              
+             
             </Toolbar>
           </AppBar>
         {this.state.index === 0 &&
