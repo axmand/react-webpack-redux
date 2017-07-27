@@ -12,6 +12,16 @@ import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import Menu, { MenuItem } from 'material-ui/Menu'
+
+import Tabs, { Tab } from 'material-ui/Tabs';
+import Paper from 'material-ui/Paper';
+import Grid from 'material-ui/Grid';
+import ObligeeOwnerMessage from './ObligeeOwnerMessage'
+const TabContainer = props =>
+  <div style={{ padding: 20 }}>
+    {props.children}
+  </div>;
+
 const styleSheet = createStyleSheet('FirstDialog', {
   appBar: {
     position: 'relative',
@@ -19,11 +29,38 @@ const styleSheet = createStyleSheet('FirstDialog', {
   flex: {
     flex: 1,
   },
+   root: {
+    flexGrow: 1,
+    marginTop: 30,
+  },
+  paper: {
+    padding: 16,
+    textAlign: 'center',
+   
+  },
 });
+
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
+  root: {
+    flexGrow: 1,
+    marginTop: theme.spacing.unit * 3,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
 
 class FirstDialog extends Component {
   state = {
     open: false,
+    index: 0,
+  };
+ 
+
+  handleChange = (event, index) => {
+    this.setState({ index });
   };
 
   handleRequestClose = () => {
@@ -47,27 +84,36 @@ class FirstDialog extends Component {
           transition={<Slide direction="up" />}
         >
           <AppBar className={classes.appBar}>
+             
             <Toolbar>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography type="title" color="inherit" className={classes.flex}>
-                Sound
+                权籍调查表
               </Typography>
+               <Tabs index={this.state.index} onChange={this.handleChange}>
+            <Tab label="Item One" />
+            <Tab label="Item Two" />
+            <Tab label="Item Three" />
+          </Tabs>
               <Button color="contrast" onClick={this.handleRequestClose}>
-                save
+                保存
               </Button>
             </Toolbar>
           </AppBar>
-          <List>
-            <ListItem button>
-              <ListItemText primary="Phone ringtone" secondary="Titania" />
-            </ListItem>
-            <Divider />
-            <ListItem button>
-              <ListItemText primary="Default notification ringtone" secondary="Tethys" />
-            </ListItem>
-          </List>
+        {this.state.index === 0 &&
+          <TabContainer>
+            <ObligeeOwnerMessage NAME="PETER"/>
+          </TabContainer>}
+        {this.state.index === 1 &&
+          <TabContainer>
+            {'Item Two'}
+          </TabContainer>}
+        {this.state.index === 2 &&
+          <TabContainer>
+            {'Item Three'}
+          </TabContainer>}
         </Dialog>
       </div>
     );
