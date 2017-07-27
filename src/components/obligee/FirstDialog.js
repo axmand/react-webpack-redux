@@ -16,7 +16,7 @@ import Menu, { MenuItem } from 'material-ui/Menu'
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
-import ObligeeOwnerMessage from './ObligeeOwnerMessage'
+import ObligeeOwnerMessage  from './ObligeeOwnerMessage'
 const TabContainer = props =>
   <div style={{ padding: 20 }}>
     {props.children}
@@ -105,7 +105,7 @@ class FirstDialog extends Component {
           </AppBar>
         {this.state.index === 0 &&
           <TabContainer>
-            <ObligeeOwnerMessage NAME="PETER"/>
+            <ObligeeOwnerMessage ID="身份证号码" id="00001" NAME="姓名" name="PETER"/>
           </TabContainer>}
         {this.state.index === 1 &&
           <TabContainer>
