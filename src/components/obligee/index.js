@@ -5,7 +5,7 @@ import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import PeopleIcon from 'material-ui-icons/People'
 
 import Menu, { MenuItem } from 'material-ui/Menu'
-
+import FirstDialog from './FirstDialog'
 const styleSheet = createStyleSheet('ObligeeModule', theme => ({
   listitem: {
     flexDirection: 'column',
@@ -53,7 +53,8 @@ class ObligeeModule extends Component {
               vertical:'center',
           }}
         >
-          <MenuItem onClick={this.handleRequestClose}>权籍调查表</MenuItem>
+          
+          <FirstDialog />
           <MenuItem onClick={this.handleRequestClose}>界址签章表</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>调查审核表</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>共有宗地面积分摊表</MenuItem>
