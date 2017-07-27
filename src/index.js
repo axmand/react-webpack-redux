@@ -15,7 +15,6 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import {createStore} from 'redux'
-import { MuiThemeProvider } from 'material-ui/styles'
 
 //1.引入view
 import LoginView from './views/LoginView'
@@ -33,14 +32,12 @@ const root = document.getElementById('root')
  */
 ReactDOM.render(
     <Provider store={store}>
-      <MuiThemeProvider>
-				<Router>
-					<div>
-						<Route exact path="/" component={MainView}/> 
-						<Route path="/mainview" component={MainView}/>
-					</div>
-				</Router>
-			</MuiThemeProvider>
+			<Router>
+				<div>
+					<Route exact path="/" component={MainView}/> 
+					<Route path="/mainview" component={MainView}/>
+				</div>
+			</Router>
     </Provider>,
     root
 );

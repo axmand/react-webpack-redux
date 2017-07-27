@@ -4,9 +4,9 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Map from '../components/map/Map';
+import Login from '../components/login/Login';
 
 
 
 //注入dispatch
-export default Map;
+export default Login;
