@@ -11,17 +11,17 @@ import LocationOnIcon from 'material-ui-icons/LocationOn';
 
 const styleSheet = createStyleSheet('SelfButton0', {
   root: {
-    width: 1000,
+    width: 10,
   },
 });
 
-const SelfButton0 =({ onTouch, complete, text ,index})=>{
+const SelfButton0 =({ onTouch, complete, text ,value})=>{
     return( 
       <div className={classes.root}>
         <BottomNavigation value={value} onChange={this.handleChange} >
           <BottomNavigationButton label="编辑" />
         </BottomNavigation>
-        <Button>完成</Button>
+        <Button onClick={()=>onTouch(text)}>完成</Button>
         <Button>删除</Button>
       </div>
     )
@@ -31,7 +31,7 @@ SelfButton0.propTypes = {
   classes: PropTypes.object.isRequired,
   onTouch: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
 };
 
 export default withStyles(styleSheet)(SelfButton0);

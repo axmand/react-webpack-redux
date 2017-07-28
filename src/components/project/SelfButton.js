@@ -2,47 +2,74 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
-import BottomNavigation, { BottomNavigationButton } from 'material-ui/BottomNavigation';
+import { FormLabel, FormControl, FormControlLabel } from 'material-ui/Form';
+import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
+import Grid from 'material-ui/Grid';
+import Switch from 'material-ui/Switch';
 import Button from 'material-ui/Button';
-//图标
-import RestoreIcon from 'material-ui-icons/Restore';
-import FavoriteIcon from 'material-ui-icons/Favorite';
-import LocationOnIcon from 'material-ui-icons/LocationOn';
-
-const styleSheet = createStyleSheet('SelfButton', {
-  root: {
-    width: 1000,
-  },
-});
+//自定义组件
+import SelfCard from './SelfCard'
 
 class SelfButton extends Component {
   state = {
-    value: 0,
+    checkedA: true,
+    checkedB: false,
+    anchorEl: undefined,
+    open: false,
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  handleClick = event => {
+    this.setState({ open: true, anchorEl: event.currentTarget })
+  }
+
+  handleRequestClose = () => {
+    this.setState({ open: false });
+  }
+  
+  handleOpen = () => {
+    this.setState({ open: true });
   };
 
   render() {
-    const classes = this.props.classes;
-    const { value } = this.state;
-
     return (
-      <div className={classes.root}>
-        <BottomNavigation value={value} onChange={this.handleChange} >
-          <BottomNavigationButton label="编辑" />
-        </BottomNavigation>
-        <Button>完成</Button>
-        <Button>删除</Button>
+      <div>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={this.state.checkedA}
+              onChange={(event, checked) => this.setState({ checkedA: checked })}
+            />
+          }
+          label="编辑"
+        />
+       <FormLabel>
+          <Button onClick={this.handleClick}>删除</Button>
+          <Button>完成</Button>
+       </FormLabel>
+      
+       <Dialog
+          open={this.state.open}
+          onRequestClose={this.handleRequestClose}
+       >
+          <DialogContent>
+            <DialogContentText>
+              确定删除所选项目？
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleRequestClose} color="default">
+              取消
+            </Button>
+            <Button onClick={this.handleRequestClose} color="primary">
+              确认
+            </Button>
+          </DialogActions>
+       </Dialog>
+       <SelfCard/>
+
       </div>
     );
   }
 }
 
-SelfButton.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styleSheet)(SelfButton);
-
+export default SelfButton;
