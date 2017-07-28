@@ -13,27 +13,26 @@ import * as maptalks from 'maptalks';
 
 //引入地图组件
 import MapToolBar from './MapToolBar';
-
 /**
  * @type {maptalks.Map}
  */
 let map;
-
 class Map extends Component {
 
     componentDidMount() {
-
         const mapDiv = this.refs.map;
         map = new maptalks.Map(mapDiv, {
-            center: [-0.113049, 51.498568],
+            center:[-0.113049,51.498568],
             zoom: 14,
             baseLayer: new maptalks.TileLayer('base', {
-                urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+                urlTemplate:'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
                 subdomains: ['a', 'b', 'c', 'd', 'e']
-            })
+            }),
+             layers : [
+                new maptalks.VectorLayer('point'),
+                new maptalks.VectorLayer('polygon')
+            ]
         });
-
-
     }
 
     render() {
@@ -42,8 +41,8 @@ class Map extends Component {
 
         return (
             <div>
-                <div ref='map' style={{ color: "#000", width: "500px", height: "400px" }} />
-                <MapToolBar style={{ left: "5px;" }} onClick={onMenuItemClick} text="zoom" />
+                <div ref='map' style={{ color: "#000", width: "100%", height: "500px" }} />
+                <MapToolBar style={{ right: "5px;" }} onClick={onMenuItemClick} text="zoom_in"/>
             </div>
         )
     }
@@ -59,10 +58,58 @@ Map.propTypes = {
 
 //加入reducer
 const mapReduce = (state = 0, action) => {
-    if (action.type === "menuClick" && action.payload.command==="zoom") {
-        //放大地图
-        map.setZoom(10);
+    //图层管理
+    if (action.type=== "menuClick" && action.payload.command==="layer_control"){
+       if(action.type==="layerControlClick"&&action.payload.command==="point"){
+
+       }
+       if(action.type==="layerControlClick"&&action.payload.command==="line"){
+           
+       }
+       if(action.type==="layerControlClick"&&action.payload.command==="polygon"){
+           
+       }       
     }
+    //获取当前定位
+     if (action.type === "menuClick" && action.payload.command==="get_location") {
+        //获取定位,由于无GPS返回固定坐标
+        const center= new maptalks.Coordinate(114.360734,30.541093);
+        map.setCenter (center); 
+        const circle = new maptalks.Circle(center, 20, {
+            symbol: {
+                    lineColor: '#34495e',
+                    lineWidth: 2,
+                    polygonFill: '#1bbc9b',
+                    polygonOpacity: 0.4
+                }
+             });
+        const marker = new maptalks.Marker(
+            center,{
+                symbol : {
+                    'textFaceName' : 'sans-serif',
+                    'textName' : 'your location',
+                    'textFill' : '#34495e',
+                    'textHorizontalAlignment' : 'right',
+                    'textSize' :25
+                } 
+            }
+        );
+        //将对象添加至图层
+        map.getLayer('point').addGeometry(circle);
+        map.getLayer('polygon').addGeometry(marker);
+    }
+    //地图放大
+    if (action.type === "menuClick" && action.payload.command==="zoom_in") {
+        //放大地图
+        map.zoomIn();
+    }
+    //地图缩小
+    if (action.type === "menuClick" && action.payload.command==="zoom_out") {
+        //缩小地图
+        map.zoomOut();
+    }
+
+    
     return state;
 }
 
@@ -77,7 +124,7 @@ const mapStateToProps = (state, ownProps) => {
     const props=ownProps;
 
     return {
-        text: ownProps.ownProps
+        text: ownProps.ownProps,
     }
 }
 /**
@@ -104,7 +151,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                     command: text
                 }
             });
-        }
+        },
+
+        onLayerContorlClick:(layername) =>{
+            dispatch({
+                type:'layerControlClick',
+                payload:{
+                    command:layername
+                }
+            })
+        },
 
     }
 }

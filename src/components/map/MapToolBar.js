@@ -4,40 +4,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 //ui
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Paper from 'material-ui/Paper';
-import Menu, { MenuItem } from 'material-ui/Menu'
-import Divider from 'material-ui/Divider';
+import { withStyles, createStyleSheet } from 'material-ui/styles';
+import IconButton from 'material-ui/IconButton';
 //图标
+import ContentCopy from 'material-ui-icons/ContentCopy';
+import Flag from 'material-ui-icons/Flag';
+import Add from 'material-ui-icons/Add';
+import  Remove from 'material-ui-icons/Remove';
+import LayerControl from './LayerControl';
 
-const style = {
-    paper: {
-        display: 'inline-block',
-        float: 'left',
-        margin: '16px 32px 16px 0',
-    },
-    rightIcon: {
-        textAlign: 'center',
-        lineHeight: '24px',
-    },
+const styleSheet = createStyleSheet('MapToolBar', theme => ({
+
+  IconButton: {
+      flexDirection: 'column',
+      justifyContent: 'center ',
+  },
+}));
+
+function MapToolBar({ onClick, complete,text}) {
+
+  return (
+    <div>
+        <IconButton onClick={()=>onClick("layer_control")}>
+            {/* < LayerControl onClick={onLayerContorlClick}  layername="point"/> */}
+        </IconButton>
+        <IconButton onClick={()=>onClick("get_location")}>
+            <Flag  />
+        </IconButton>
+        <IconButton onClick={()=>onClick("zoom_in")}>
+            <Add />
+        </IconButton>
+        <IconButton onClick={()=>onClick("zoom_out")}>
+            <Remove />
+        </IconButton>     
+    </div>
+  );
 }
-
-const MapToolBar = ({ onClick, complete, text }) => {
-    return (<div>
-        <MuiThemeProvider>
-            <Paper style={style.paper}>
-                <Menu desktop={true} width={60} onClick={()=>onClick(text)}>
-                    <MenuItem>123</MenuItem>
-                </Menu>
-            </Paper>
-        </MuiThemeProvider>
-    </div>)
-};
-
 
 MapToolBar.propTypes = {
     onClick: PropTypes.func.isRequired,
     text:PropTypes.string.isRequired
 }
 
-export default MapToolBar;
+export default withStyles(styleSheet)(MapToolBar);
