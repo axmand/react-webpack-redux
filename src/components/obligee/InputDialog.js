@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
 import RootReducer from './../../redux/RootReducer';
+import { createStore } from 'redux';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -9,17 +10,10 @@ import Dialog, {
 } from 'material-ui/Dialog';
 
 
+  const InputDialog = ({ open }) => (
 
-class InputDialog extends Component {
-  state = {
-    open: false,
- 
-  };
- 
-  
- render() {
-    return (<div>
-        <Dialog open={this.state.open}>
+    <div>
+        <Dialog open={open}>
           <DialogTitle>
             {"Use Google's location service?"}
           </DialogTitle>
@@ -40,20 +34,6 @@ class InputDialog extends Component {
         </Dialog>
       </div>
     );
-  }
-}
+  
 
-function MyOnClick(){
-            alert("test");
-        };
- const mapReduce = (state = 0, action) => {
-    if (action.type === "onMyListItemClick1") {
-       
-//如何修改InputDialog的开关状态。。。
-    }
-    
-    return state;
-};
-
-RootReducer.merge(mapReduce);
 export default InputDialog;
