@@ -25,9 +25,7 @@ function MapToolBar({ onClick, complete,text}) {
 
   return (
     <div>
-        <IconButton onClick={()=>onClick("layer_control")}>
-            {/* < LayerControl onClick={onLayerContorlClick}  layername="point"/> */}
-        </IconButton>
+        <LayerControl/>
         <IconButton onClick={()=>onClick("get_location")}>
             <Flag  />
         </IconButton>
