@@ -12,111 +12,56 @@ import { createStore } from 'redux';
 class ObligeeOwnerMessage extends Component {
    
  render() {
-        const { onMyListItemClick1,onMyListItemClick2 } = this.props;
+        const { open,onMyListItemCLOSE,onMyListItemOPEN } = this.props
         return (
           <div>
-      <List>
-       <MyListItem NAME="姓名" name="peter" onClick={onMyListItemClick1}/>
-       <MyListItem NAME="身份证号码" name="00001" onClick={onMyListItemClick2}/>
-      </List>
-      <InputDialog  open={store.getState()}
-     />
+             <InputDialog  open={open} close={onMyListItemCLOSE}  />
+            <List>
+              <MyListItem NAME="姓名" name="peter" onClick={onMyListItemOPEN}/>
+              
+            </List>
       </div>
     )
 }
+
+
 }
 
 
-const reducer = (state =false, action) => {
+const reducer = (state ={ open: false }, action) => {
   switch (action.type) {
-    case 'onMyListItemClick1': return true;
-    default: return state;
+    case 'onMyListItemOPEN': 
+    {
+      console.log("onMyListItemOPEN");
+      
+       return {open:true};
+    }
+     case 'onMyListItemCLOSE': 
+    {
+      console.log("onMyListItemCLOSE");
+      return {open:false};
+    }
+    default: return {open:false};
   }
 };
 const store = createStore(reducer);
 
-/*const render = () => {
-  ReactDOM.render(
-    <InputDialog
-      open={store.getState()}
-     
-    />,
-    document.getElementById('root')
-  );
-};
 
-render();*/
 RootReducer.merge(reducer);
-store.subscribe(ObligeeOwnerMessage.props.onMyListItemClick1);
-// const mapReduce = (state = 0, action) => {
-//     if (action.type === "onMyListItemClick1") {
-        
-    
-//     }
-//     if (action.type === "onMyListItemClick2") {
-       
-       
-//     }
-//     return state;
-// }
 
-// RootReducer.merge(mapReduce);
-/**
- * 
- * @param {*} state 
- * @param {*} ownProps 
- */
-// const mapStateToProps = (state, ownProps) => {
+function mapStateToProps(state) {
+  return {
+    open: state.open
+  }
+}
 
-//     const props=ownProps;
+function mapDispatchToProps(dispatch) {
+  return {
+    onMyListItemCLOSE:  () => store.dispatch({type: 'onMyListItemCLOSE'}),
+     onMyListItemOPEN: () => store.dispatch({type: 'onMyListItemOPEN'})
+  }
+}
 
-//     return {
-//         text: ownProps.ownProps
-//     }
-// }
-// /**
-//  * 只对顶层view可见
-//  * @param {*} dispatch 
-//  * @param {*} ownProps 
-//  */
-// const mapDispatchToProps = (dispatch, ownProps) => {
-//     return {
-
-//         onClick: () => {
-//             dispatch({
-//                 type: 'menuClick2',
-//                 payload: {
-//                     hhh: 2
-//                 }
-//             })
-//         },
-//         onMyListItemClick1: () => {
-//             dispatch({
-//                 type: 'onMyListItemClick1',
-//                 payload: {
-//                     hhh: 2
-//                 }
-//             })
-//         },
-// onMyListItemClick2: () => {
-//             dispatch({
-//                 type: 'onMyListItemClick2',
-//                 payload: {
-//                     hhh: 2
-//                 }
-//             })
-//         },
-//         onMenuItemClick: (text) => {
-//             dispatch({
-//                 type: 'menuClick',
-//                 payload: {
-//                     command: text
-//                 }
-//             });
-//         }
-
-//     }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(ObligeeOwnerMessage);
-export default ObligeeOwnerMessage;
+export default connect(
+  mapStateToProps,mapDispatchToProps
+)(ObligeeOwnerMessage);
