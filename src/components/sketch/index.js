@@ -24,7 +24,7 @@ class SketchModule extends Component {
     const classes = this.props.classes;
   
     return (
-      <NavLink to="/mapeditormodule">
+      <NavLink to="/sketch">
         <ListItem button className={classes.listitem} disableGutters={true}>
           <ListItemIcon className={classes.listitemicon}>
             <MapIcon />
