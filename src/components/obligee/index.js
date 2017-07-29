@@ -55,6 +55,7 @@ class ObligeeModule extends Component {
         >
           
           <FirstDialog />
+         
           {/*<MenuItem onClick={this.handleRequestClose}>界址签章表</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>调查审核表</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>共有宗地面积分摊表</MenuItem>

@@ -16,7 +16,10 @@ import Menu, { MenuItem } from 'material-ui/Menu'
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
-import ObligeeOwnerMessage  from './ObligeeOwnerMessage'
+
+import InputDialog  from './InputDialog'
+
+
 const TabContainer = props =>
   <div style={{ padding: 20 }}>
     {props.children}
@@ -105,7 +108,9 @@ class FirstDialog extends Component {
           </AppBar>
         {this.state.index === 0 &&
           <TabContainer>
-            <ObligeeOwnerMessage ID="身份证号码" id="00001" NAME="姓名" name="PETER"/>
+            <InputDialog Title="权利人姓名" Tip="此处填写权利人姓名" DefaultValue="Peter"/>
+           <InputDialog Title="通信地址" Tip="此处填写权利人通信地址" DefaultValue="武汉市洪山区珞瑜路129号"/>
+         <InputDialog Title="权利人身份证号码" Tip="此处填写权利人身份证号码" DefaultValue="100000001"/>
           </TabContainer>}
         {this.state.index === 1 &&
           <TabContainer>

@@ -1,39 +1,69 @@
-import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-import RootReducer from './../../redux/RootReducer';
-import { createStore } from 'redux';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import { withStyles, createStyleSheet } from 'material-ui/styles'
+import Menu, { MenuItem } from 'material-ui/Menu'
+import List, { ListItem,ListItemText } from 'material-ui/List'
+import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
+import ContentCopy from 'material-ui-icons/ContentCopy';
 import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import Button from 'material-ui/Button';
+import Input from 'material-ui/Input';
+class InputDialog extends Component {
+  state = {
+    open: false,
+    OwnerName:this.props.DefaultValue
+  }
+   handleClick = event => {
+    this.setState({ open: true });
+  }
 
-
-  const InputDialog = ({ open,close }) => (
-
-    <div>
-        <Dialog open={open}>
+  handleRequestClose = () => {
+    var value=document.getElementById('inputname').value;
+    this.setState({ open: false,OwnerName:value })
+  }
+handleChanged=(text)=>{
+   var value=document.getElementById('inputname').value;
+    this.setState({ open: true,OwnerName:value })
+}
+  render() {
+    const classes = this.props.classes
+  
+    return (
+      <div >
+          <Dialog open={this.state.open}>
           <DialogTitle>
-            {"Use Google's location service?"}
+            {this.props.Title}
           </DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Let Google help apps determine location. This means sending anonymous location data to
-              Google, even when no apps are running.
+            
+             <Input id="inputname" defaultValue={this.state.OwnerName}  onChange={this.handleChanged}/>
+             <DialogContentText>
+              {this.props.Tip}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button  color="primary" onClick={close}>
-              Disagree
+            <Button  color="primary" onClick={this.handleRequestClose}>
+              确定
             </Button>
-            <Button  color="primary" onClick={close}>
-              Agree
-            </Button>
+            
           </DialogActions>
         </Dialog>
-      </div>
-    );
-  
+            <List>
 
-export default InputDialog;
+                  <ListItem button>
+         
+          <ListItemText primary={this.props.Title} secondary={this.state.OwnerName} onClick={this.handleClick}/>
+        </ListItem>
+            </List>     
+      </div>
+    )
+  } 
+}
+
+export default InputDialog
