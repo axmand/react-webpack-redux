@@ -17,8 +17,10 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 
-import InputDialog  from './InputDialog'
-
+import InputDialog  from './InputDialog';
+//import  Counter from './test'
+import { createStore } from 'redux'
+import { Provider, connect } from 'react-redux'
 
 const TabContainer = props =>
   <div style={{ padding: 20 }}>
@@ -108,9 +110,12 @@ class FirstDialog extends Component {
           </AppBar>
         {this.state.index === 0 &&
           <TabContainer>
-            <InputDialog Title="权利人姓名" Tip="此处填写权利人姓名" DefaultValue="Peter"/>
+         <Provider store={store}>
+    <App />
+  </Provider>,
+            {/* <InputDialog Title="权利人姓名" Tip="此处填写权利人姓名" DefaultValue="Peter"/>
            <InputDialog Title="通信地址" Tip="此处填写权利人通信地址" DefaultValue="武汉市洪山区珞瑜路129号"/>
-         <InputDialog Title="权利人身份证号码" Tip="此处填写权利人身份证号码" DefaultValue="100000001"/>
+         <InputDialog Title="权利人身份证号码" Tip="此处填写权利人身份证号码" DefaultValue="100000001"/> */}
           </TabContainer>}
         {this.state.index === 1 &&
           <TabContainer>
@@ -131,3 +136,60 @@ FirstDialog.propTypes = {
 };
 
 export default withStyles(styleSheet)(FirstDialog);
+
+
+// Action
+const increaseAction = { type: 'increase' }
+
+// Reducer
+function counter(state = { count: 0 }, action) {
+  const count = state.count
+  switch (action.type) {
+    case 'increase':
+      return { count: count + 1 }
+    default:
+      return state
+  }
+}
+
+// Store
+const store = createStore(counter)
+
+// Map Redux state to component props
+function mapStateToProps(state) {
+  return {
+    value: state.count
+  }
+}
+
+// Map Redux actions to component props
+function mapDispatchToProps(dispatch) {
+  return {
+    onIncreaseClick: () => dispatch(increaseAction)
+  }
+}
+
+// Connected Component
+ 
+
+
+ class Counter extends Component {
+  render() {
+    const { value, onIncreaseClick } = this.props
+    return (
+      <div>
+        <p>{value}</p>
+        <button onClick={onIncreaseClick}>Increase</button>
+      </div>
+    )
+  }
+}
+
+Counter.propTypes = {
+  value: PropTypes.number.isRequired,
+  onIncreaseClick: PropTypes.func.isRequired
+}
+const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Counter)
