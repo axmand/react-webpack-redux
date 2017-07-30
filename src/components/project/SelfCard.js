@@ -12,11 +12,17 @@ import AddIcon from 'material-ui-icons/Add'
 //img
 import reptileImage from './test.jpg';
 
-const styleSheet = createStyleSheet('SelfCard', {
+const styleSheet = createStyleSheet('SelfCard', theme =>({
   card: {
     maxWidth: 345,
+    maxHeight: 345
   },
-});
+  addicon:{
+    width: '50%',
+    height: '50%',
+    margin: '10px',
+  }
+}));
 
 class SelfCard extends Component {
 
@@ -56,7 +62,7 @@ class SelfCard extends Component {
           </Button>
         </CardActions>
       </Card>
-      <IconButton onClick={this.handleClick} >
+      <IconButton onClick={this.handleClick} className={classes.addicon}>
          <AddIcon button/>
       </IconButton>
 
