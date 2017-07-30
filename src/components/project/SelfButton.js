@@ -7,6 +7,7 @@ import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } f
 import Grid from 'material-ui/Grid';
 import Switch from 'material-ui/Switch';
 import Button from 'material-ui/Button';
+
 //自定义组件
 import SelfCard from './SelfCard'
 
@@ -66,7 +67,6 @@ class SelfButton extends Component {
           </DialogActions>
        </Dialog>
        <SelfCard/>
-
       </div>
     );
   }
