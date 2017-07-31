@@ -37,5 +37,6 @@
     "redux-actions": "^2.2.1",
     "redux-devtools": "^3.4.0",
     "redux-thunk": "^2.2.0"
-  }
+  },
+  "dependencies": {}
 }

@@ -7,33 +7,56 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { NavLink } from 'react-router-dom'
 import RootReducer from '../../redux/RootReducer'
 import PropTypes from 'prop-types'
 
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import { FormGroup, FormControlLabel } from 'material-ui/Form';
+import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField'
 import Checkbox from 'material-ui/Checkbox'
 import Button from 'material-ui/Button';
+import IconButton from 'material-ui/IconButton';
 import VisibilityIcon from 'material-ui-icons/Visibility'
-import VisibilityOffIcon from 'material-ui-icons/VisibilityOff' 
+import VisibilityOffIcon from 'material-ui-icons/VisibilityOff'
+import ClearIcon from 'material-ui-icons/Clear';
+
+import { blue } from 'material-ui/colors';
+
+import PasswordFeild from './PasswordField'
 
 const styleSheet = createStyleSheet('Login', theme => ({
   container: {
+    width: '100%',
+    height: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
 		height: '100%',
   },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+  paper: {
+    width: '360px',
+    height: '280px',
+    padding: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
   },
-  checkbox: {
-    margin: theme.spacing.unit,
+  textField: {
+    width: '310px',
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,    
+  },
+  iconButton: {
+    position: 'absolute',
+		top: 0,
+		right: 0,
   },
   button: {
+    width: '310px',
     margin: theme.spacing.unit,
   },
 }));
@@ -45,33 +68,25 @@ class Login extends Component {
 
     return (
       <div className={classes.container}>
-        <FormGroup >
-          <TextField
-            id="username"
-            label="用户名"
-            className={classes.textField}
-            margin="normal"
-            required={true}
-          />
-          <TextField
-            id="password"
-            label="密码"
-            className={classes.textField}
-            type="password"
-            autoComplete="current-password"
-            margin="normal"
-            required={true}
-          >
-                         
-          </TextField>
-          <Checkbox 
-              className={classes.checkbox}
-              icon={<VisibilityIcon />}
-              checkedIcon={<VisibilityOffIcon />}
-            /> 
-          <Button className={classes.button}>忘记密码</Button>
-          <Button raised color="primary" className={classes.button}>登录</Button>
-        </FormGroup>
+        <FormGroup>
+          <Paper className={classes.paper}>
+            <div style={{width: '310px'}}>
+              <p>用户登录</p>
+            </div>
+            <TextField
+              id="username"
+              label="用户名"
+              className={classes.textField}
+              margin="dense"
+              required={true}
+            />
+            <PasswordFeild />
+            <Button className={classes.button}>忘记密码?</Button>
+            <NavLink to="/mainview">
+              <Button raised color="primary" className={classes.button}>登&nbsp;&nbsp;录</Button>
+            </NavLink>
+          </Paper> 
+        </FormGroup>        
       </div>
     )
   }
