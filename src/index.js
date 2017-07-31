@@ -33,8 +33,8 @@ const root = document.getElementById('root')
 ReactDOM.render(
     <Provider store={store}>
 			<Router>
-				<div>
-					<Route exact path="/" component={MainView}/> 
+				<div style={{width: '1024px', height: '768px'}}>
+					<Route exact path="/" component={LoginView}/> 
 					<Route path="/mainview" component={MainView}/>
 				</div>
 			</Router>
