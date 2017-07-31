@@ -59,17 +59,8 @@ Map.propTypes = {
 //加入reducer
 const mapReduce = (state = 0, action) => {
     //图层管理
-    if (action.type=== "menuClick" && action.payload.command==="layer_control"){
-       if(action.type==="layerControlClick"&&action.payload.command==="point"){
 
-       }
-       if(action.type==="layerControlClick"&&action.payload.command==="line"){
-           
-       }
-       if(action.type==="layerControlClick"&&action.payload.command==="polygon"){
-           
-       }       
-    }
+    
     //获取当前定位
      if (action.type === "menuClick" && action.payload.command==="get_location") {
         //获取定位,由于无GPS返回固定坐标
@@ -114,6 +105,37 @@ const mapReduce = (state = 0, action) => {
 }
 
 RootReducer.merge(mapReduce);
+//加入reducer
+const layerControlReduce=(
+  state= {
+    anchorEl:undefined,
+    menuOpen:false,
+    pointIsChecked:false,
+    linetIsChecked:false,
+    polygonIsChecked:false},action)=>{
+      if(action.type==="handlePointIsChecked"){
+				console.log(state.pointIsChecked)
+				const pointIsChecked = {
+					pointIsChecked: !state.pointIsChecked
+				}
+        return	{... pointIsChecked }
+      }
+      if(action.type==="handleLineIsChecked"){
+				const linetIsChecked = {
+					linetIsChecked: !state.linetIsChecked
+				}
+        return	{... linetIsChecked }
+      }
+      if(action.type==="handlePolygonIsChecked"){
+				const polygonIsChecked = {
+					polygonIsChecked: !state.polygonIsChecked
+				}
+				return	{... polygonIsChecked }       
+      }
+      return state;
+}
+
+RootReducer.merge(layerControlReduce);
 /**
  * 
  * @param {*} state 
@@ -152,16 +174,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 }
             });
         },
-
-        onLayerContorlClick:(layername) =>{
-            dispatch({
-                type:'layerControlClick',
-                payload:{
-                    command:layername
-                }
-            })
-        },
-
+        
+        
     }
 }
 
