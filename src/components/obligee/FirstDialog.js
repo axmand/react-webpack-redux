@@ -16,9 +16,11 @@ import Menu, { MenuItem } from 'material-ui/Menu'
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
+import RootReducer from './../../redux/RootReducer';
 
-import InputDialog  from './InputDialog'
-
+import  InputCell from './InputCell'
+import { createStore } from 'redux'
+import { Provider, connect } from 'react-redux'
 
 const TabContainer = props =>
   <div style={{ padding: 20 }}>
@@ -108,9 +110,12 @@ class FirstDialog extends Component {
           </AppBar>
         {this.state.index === 0 &&
           <TabContainer>
-            <InputDialog Title="权利人姓名" Tip="此处填写权利人姓名" DefaultValue="Peter"/>
+         {/* <Provider store={store}> */}
+    <InputCell />
+  {/* </Provider> */}
+            {/* <InputDialog Title="权利人姓名" Tip="此处填写权利人姓名" DefaultValue="Peter"/>
            <InputDialog Title="通信地址" Tip="此处填写权利人通信地址" DefaultValue="武汉市洪山区珞瑜路129号"/>
-         <InputDialog Title="权利人身份证号码" Tip="此处填写权利人身份证号码" DefaultValue="100000001"/>
+         <InputDialog Title="权利人身份证号码" Tip="此处填写权利人身份证号码" DefaultValue="100000001"/> */}
           </TabContainer>}
         {this.state.index === 1 &&
           <TabContainer>
@@ -131,3 +136,25 @@ FirstDialog.propTypes = {
 };
 
 export default withStyles(styleSheet)(FirstDialog);
+
+
+// Reducer
+function reducer(state = { value:"peter",show:false }, action) {
+  const value = state.value
+   const show = state.show
+  switch (action.type) {
+    case 'showInputDialog':
+      return { value:value,show:!show }
+    
+    case 'completeInput':
+     return { value:value,show:!show }
+      
+    default:
+      return state
+  }
+}
+
+// Store
+const store = createStore(reducer);
+
+RootReducer.merge(reducer);
