@@ -62,7 +62,7 @@ class Sketch extends Component {
               </Tabs>
             </Grid>
             <Grid item xs={1}>
-              <Link to="/">
+              <Link to="/mainview">
                 <IconButton className={classes.button} aria-label="Delete">
                   <ClearIcon />
                 </IconButton>

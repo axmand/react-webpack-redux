@@ -42,8 +42,8 @@ class Map extends Component {
 
         return (
             <div>
-                <div ref='map' style={{ color: "#000", width: "100%", height: "500px" }} />
-                <MapToolBar onClick={onMenuItemClick} text="zoom_in"/>
+                <div ref='map' style={{ color: "#000", width: "100%", height: `${window.innerHeight-200}px` }} />
+                <MapToolBar style={{ right: "5px;" }} onClick={onMenuItemClick} text="zoom_in"/>
             </div>
         )
     }
