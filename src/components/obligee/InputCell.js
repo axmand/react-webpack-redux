@@ -13,9 +13,9 @@ import Input from 'material-ui/Input';
 import List, { ListItem,ListItemText } from 'material-ui/List'
 // Action
 
-var inputData;
+let inputName="";
 const completeInput = { type: 'completeInput', payload: {
-                    inputValue:inputData
+                    inputValue:inputName
                 }  }
 // Map Redux state to component props
 function mapStateToProps(state) {
@@ -29,18 +29,23 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     onShowClick: () => dispatch(showInputDialog),
-    onCompleteInput: (value) =>{
-      var inputData =  value;
-      dispatch(completeInput)}
+    onCompleteInput: () =>{
+    
+      dispatch( { type: 'completeInput', payload: {
+                    inputValue:inputName
+                }  })}
   }
 }
 
 // Connected Component
  
-
-
  class Counter extends Component {
 
+  onChanged=(e)=>
+  {
+    inputName=e.target.value;
+    console.log(inputName);
+  }
 
 
   render() {
@@ -60,11 +65,11 @@ function mapDispatchToProps(dispatch) {
           </DialogTitle>
           <DialogContent>
             
-            <Input ref="inputname" defaultValue={value}/>
+            <Input ref="NameInput" defaultValue={value} onChange={this.onChanged}/>
             
           </DialogContent>
           <DialogActions>
-            <Button  color="primary" onClick={onCompleteInput(this.refs.inputname.defaultValue)}>
+            <Button  color="primary" onClick={onCompleteInput}>
               确定
             </Button>
             
