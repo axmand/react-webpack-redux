@@ -110,9 +110,9 @@ class FirstDialog extends Component {
           </AppBar>
         {this.state.index === 0 &&
           <TabContainer>
-         {/* <Provider store={store}> */}
+          <Provider store={store}> 
     <InputCell />
-  {/* </Provider> */}
+   </Provider> 
             {/* <InputDialog Title="权利人姓名" Tip="此处填写权利人姓名" DefaultValue="Peter"/>
            <InputDialog Title="通信地址" Tip="此处填写权利人通信地址" DefaultValue="武汉市洪山区珞瑜路129号"/>
          <InputDialog Title="权利人身份证号码" Tip="此处填写权利人身份证号码" DefaultValue="100000001"/> */}
