@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import RootReducer from './../../redux/RootReducer';
 //import UI
 import Menu, { MenuItem } from 'material-ui/Menu'
 import List, { ListItem,ListItemText } from 'material-ui/List'
@@ -49,15 +48,15 @@ class LayerControl extends Component {
           }}
         >
         <MenuItem dense button >
-          <input type="checkbox"  ref={'point'} checked={pointIsChecked} onClick={handlePointIsChecked} />
+          <input type="checkbox"  checked={pointIsChecked} onClick={handlePointIsChecked} />
           <ListItemText primary={'point'} />
         </MenuItem>
         <MenuItem dense button >
-          <input type="checkbox" ref={'line'}  checked={linetIsChecked} onClick={handleLineIsChecked} />
+          <input type="checkbox" checked={linetIsChecked} onClick={handleLineIsChecked} />
           <ListItemText primary={'line'} />
         </MenuItem>
         <MenuItem dense button >
-          <input  type="checkbox" ref={'polygon'} checked={polygonIsChecked}  onClick={handlePolygonIsChecked} />
+          <input  type="checkbox" checked={polygonIsChecked}  onClick={handlePolygonIsChecked} />
           <ListItemText primary={'polygon'} />
         </MenuItem>
         <MenuItem dense button onClick={this.handleMenuOpen}>

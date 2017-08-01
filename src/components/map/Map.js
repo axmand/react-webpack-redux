@@ -30,6 +30,7 @@ class Map extends Component {
             }),
              layers : [
                 new maptalks.VectorLayer('point'),
+                new maptalks.VectorLayer('line'),
                 new maptalks.VectorLayer('polygon')
             ]
         });
@@ -41,7 +42,7 @@ class Map extends Component {
 
         return (
             <div>
-                <div ref='map' style={{ color: "#000", width: "100%", height: "500px" }} />
+                <div ref='map' style={{ color: "#000", width: "100%", height: `${window.innerHeight-200}px` }} />
                 <MapToolBar style={{ right: "5px;" }} onClick={onMenuItemClick} text="zoom_in"/>
             </div>
         )
@@ -56,11 +57,8 @@ Map.propTypes = {
     //onClick: PropTypes.func.isRequired
 }
 
-//加入reducer
+//加入reducer(mapReduce)
 const mapReduce = (state = 0, action) => {
-    //图层管理
-
-    
     //获取当前定位
      if (action.type === "menuClick" && action.payload.command==="get_location") {
         //获取定位,由于无GPS返回固定坐标
@@ -91,21 +89,18 @@ const mapReduce = (state = 0, action) => {
     }
     //地图放大
     if (action.type === "menuClick" && action.payload.command==="zoom_in") {
-        //放大地图
         map.zoomIn();
     }
     //地图缩小
     if (action.type === "menuClick" && action.payload.command==="zoom_out") {
-        //缩小地图
         map.zoomOut();
     }
-
-    
     return state;
 }
 
 RootReducer.merge(mapReduce);
-//加入reducer
+
+//加入reducer(layerControlReduce)
 const layerControlReduce=(
   state= {
     anchorEl:undefined,
@@ -113,24 +108,41 @@ const layerControlReduce=(
     pointIsChecked:false,
     linetIsChecked:false,
     polygonIsChecked:false},action)=>{
+        //点选point图层控制其显示
       if(action.type==="handlePointIsChecked"){
-				console.log(state.pointIsChecked)
-				const pointIsChecked = {
-					pointIsChecked: !state.pointIsChecked
-				}
-        return	{... pointIsChecked }
+          const pointIsChecked = {
+              pointIsChecked: !state.pointIsChecked
+            }    
+            if(pointIsChecked.pointIsChecked===true){
+              map.getLayer("point").show();
+            }else{
+              map.getLayer("point").hide();
+          }
+            return	{... pointIsChecked }
       }
+        //点选line图层控制其显示
       if(action.type==="handleLineIsChecked"){
-				const linetIsChecked = {
-					linetIsChecked: !state.linetIsChecked
-				}
-        return	{... linetIsChecked }
+          const linetIsChecked = {
+				linetIsChecked: !state.linetIsChecked
+            }
+            if(linetIsChecked.linetIsChecked===true){
+              map.getLayer("line").show();
+            }else{
+              map.getLayer("line").hide();
+          }
+            return	{... linetIsChecked }
       }
+        //点选polygon图层控制其显示
       if(action.type==="handlePolygonIsChecked"){
-				const polygonIsChecked = {
-					polygonIsChecked: !state.polygonIsChecked
-				}
-				return	{... polygonIsChecked }       
+          const polygonIsChecked = {
+              polygonIsChecked: !state.polygonIsChecked
+            }
+            if(polygonIsChecked.polygonIsChecked===true){
+                map.getLayer("polygon").show();
+            }else{
+                map.getLayer("polygon").hide();
+            }
+          return	{... polygonIsChecked }       
       }
       return state;
 }
@@ -175,7 +187,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             });
         },
         
-        
+
     }
 }
 
