@@ -14,27 +14,37 @@ import Flag from 'material-ui-icons/Flag';
 import Add from 'material-ui-icons/Add';
 import  Remove from 'material-ui-icons/Remove';
 import  Search from 'material-ui-icons/Search';
+import  RadioButtonChecked from 'material-ui-icons/RadioButtonChecked';
 //组件
 import LayerControl from './LayerControl';
 
 const styleSheet = createStyleSheet(theme => ({
   list:{
+    position:'absolute',
+    top:'40px',
+    right:'20px'
 
   },
   listitem: {
-    flexDirection: 'column',
-    justifyContent: 'center ',
-    //boxSizing: 'border-box',
-    padding: '14px 16px 15px',
-    position: 'relative',
     width: '30px',
     height: '30px',
+    flexDirection: 'column',
+    justifyContent: 'center ',
+    padding: '10px 10px 10px',
+    position: 'relative',    
+    border: 0,
   },
   listitemicon: {
-    width: '100%',
-    height: '100%',
-    margin: '0px',
+    color:'#000',
+    width: '30px',
+    height: '30px',
+    margin: '0px',   
+    background: 'rgba(255, 255, 255, .75)',//'white',
+    borderRadius: 5,
   },
+  listitemtext:{
+    fontSize:'20px'
+  }
 }));
 
 class  MapToolBar extends Component{
@@ -68,6 +78,9 @@ class  MapToolBar extends Component{
             <ListItemIcon className={classes.listitemicon}>
               <Search  />
             </ListItemIcon>                          
+            </ListItem>
+            <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
+               <RadioButtonChecked  />             
             </ListItem>
             </List>
         )

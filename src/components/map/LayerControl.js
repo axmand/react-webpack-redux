@@ -37,7 +37,15 @@ class LayerControl extends Component {
     return(
 		<div>
          <IconButton  onClick={this.handleMenuOpen}>
-            <ContentCopy />        
+            <ContentCopy 
+            style={{
+                color:'#000',
+                width: '30px',
+                height: '30px',
+                margin: '0px',   
+                background: 'rgba(255, 255, 255, .75)',//'white',
+                borderRadius: 5,
+            }}/>        
          </IconButton>
          <Menu
           anchorEl={this.state.anchorEl}

@@ -25,7 +25,7 @@ class Map extends Component {
             center:[-0.113049,51.498568],
             zoom: 14,
             baseLayer: new maptalks.TileLayer('base', {
-                urlTemplate:'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+                urlTemplate:'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',//'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 subdomains: ['a', 'b', 'c', 'd', 'e']
             }),
              layers : [
@@ -83,9 +83,19 @@ const mapReduce = (state = 0, action) => {
                 } 
             }
         );
+        const line = new maptalks.LineString([
+            center.add(-0.018,0.005),
+            center.add(0.006,0.005)
+        ], {
+            symbol: {
+            'lineColor' : '#1bbc9b',
+            'lineWidth' : 3
+            }
+      });
         //将对象添加至图层
         map.getLayer('point').addGeometry(circle);
         map.getLayer('polygon').addGeometry(marker);
+        map.getLayer('line').addGeometry(line);
     }
     //地图放大
     if (action.type === "menuClick" && action.payload.command==="zoom_in") {
@@ -118,6 +128,7 @@ const layerControlReduce=(
             }else{
               map.getLayer("point").hide();
           }
+            console.log(pointIsChecked);
             return	{... pointIsChecked }
       }
         //点选line图层控制其显示
@@ -130,6 +141,7 @@ const layerControlReduce=(
             }else{
               map.getLayer("line").hide();
           }
+            console.log(linetIsChecked);
             return	{... linetIsChecked }
       }
         //点选polygon图层控制其显示
@@ -142,6 +154,7 @@ const layerControlReduce=(
             }else{
                 map.getLayer("polygon").hide();
             }
+            console.log(polygonIsChecked);
           return	{... polygonIsChecked }       
       }
       return state;
