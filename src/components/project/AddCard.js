@@ -42,6 +42,7 @@ class AddCard extends Component {
     this.setState({ text: this.target.value });
   };
 
+
   render(){
     const classes = this.props.classes;
 
@@ -53,8 +54,27 @@ class AddCard extends Component {
  
 }
 
-SelfCard.propTypes = {
+AddCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
+
+//加入reducer
+const AddCardReduce=(
+  state= {},action)=>{
+
+}
+
+RootReducer.merge(layerControlReduce);
+
+const mapStateToProps = (state, ownProps) => {
+const props=ownProps;
+    return {
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+		} 
+}  	
 
 export default withStyles(styleSheet)(AddCard);
