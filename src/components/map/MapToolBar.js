@@ -21,11 +21,10 @@ const styleSheet = createStyleSheet('MapToolBar', theme => ({
   },
 }));
 
-function MapToolBar({ onClick, complete,text}) {
-
+function MapToolBar({ onClick,complete,text}) {
   return (
     <div>
-        <LayerControl/>
+        <LayerControl  />
         <IconButton onClick={()=>onClick("get_location")}>
             <Flag  />
         </IconButton>

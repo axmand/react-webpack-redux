@@ -1,82 +1,119 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import RootReducer from './../../redux/RootReducer';
+//import UI
 import Menu, { MenuItem } from 'material-ui/Menu'
 import List, { ListItem,ListItemText } from 'material-ui/List'
 import Checkbox from 'material-ui/Checkbox';
 import IconButton from 'material-ui/IconButton';
 import ContentCopy from 'material-ui-icons/ContentCopy';
 
-const styleSheet = createStyleSheet('LayerControl', theme => ({
-  listitem: {
-    flexDirection: 'column',
-    justifyContent: 'center ',
-  },
-}))
 
 class LayerControl extends Component {
-  state = {
-    anchorEl: undefined,
-    open: false,
-    checked: ['point'],
-  }
-
-   handleClick = event => {
-    this.setState({ open: true, anchorEl: event.currentTarget });
-  }
-
-  handleToggle = (event, value) => {
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-    console.log(checked)
-    console.log(newChecked)
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+  constructor(props){
+    super(props);
+    this.state ={
+      menuOpen:false,
     }
-
-    this.setState({
-      checked: newChecked,
-    });
-       console.log(checked)
-  };
-
-  handleRequestClose = () => {
-    this.setState({ open: false })
+    this.handleMenuOpen = this.handleMenuOpen.bind(this);
+  }
+  handleMenuOpen(event){
+      this.setState({
+         menuOpen: !this.state.menuOpen,
+         anchorEl: event.currentTarget 
+        });
   }
 
-  render() {
-    const classes = this.props.classes
-  
-    return (
-      <div >
-        <IconButton className={classes.button} onClick={this.handleClick}>
+  render(){
+		const { 
+			pointIsChecked,
+			linetIsChecked,
+			polygonIsChecked,
+			handlePointIsChecked,
+			handleLineIsChecked,
+		 handlePolygonIsChecked,
+		} = this.props
+
+    return(
+		<div>
+         <IconButton  onClick={this.handleMenuOpen}>
             <ContentCopy />        
-        </IconButton>
-        <Menu
+         </IconButton>
+         <Menu
           anchorEl={this.state.anchorEl}
-          open={this.state.open}       
+          open={this.state.menuOpen}       
           anchorOrigin={{
               horizontal:'right',
               vertical:'center',
           }}
         >
-        {['point','line','polygon'].map(value=>
-        <MenuItem dense button key={value} >
-            <Checkbox
-                onClick={event => this.handleToggle(event, value)}
-                checked={this.state.checked.indexOf(value) !== -1}
-              />
-              <ListItemText primary={`${value }`} />
+        <MenuItem dense button >
+          <input type="checkbox"  ref={'point'} checked={pointIsChecked} onClick={handlePointIsChecked} />
+          <ListItemText primary={'point'} />
         </MenuItem>
-        )}
-        <MenuItem onClick={this.handleRequestClose}>返回</MenuItem>
-        </Menu>          
+        <MenuItem dense button >
+          <input type="checkbox" ref={'line'}  checked={linetIsChecked} onClick={handleLineIsChecked} />
+          <ListItemText primary={'line'} />
+        </MenuItem>
+        <MenuItem dense button >
+          <input  type="checkbox" ref={'polygon'} checked={polygonIsChecked}  onClick={handlePolygonIsChecked} />
+          <ListItemText primary={'polygon'} />
+        </MenuItem>
+        <MenuItem dense button onClick={this.handleMenuOpen}>
+          返回
+        </MenuItem>
+        </Menu>
       </div>
     )
-  } 
+  }
+}
+/**
+ * 限定组件的一些属性
+ */
+LayerControl.PropTypes={
+			pointIsChecked:PropTypes.bool.isRequired,
+			linetIsChecked:PropTypes.bool.isRequired,
+			polygonIsChecked:PropTypes.bool.isRequired,
+			handlePointIsChecked:PropTypes.func.isRequired,
+			handleLineIsChecked:PropTypes.func.isRequired,
+		  handlePolygonIsChecked:PropTypes.func.isRequired
+}
+		
+/**
+ * 
+ * @param {*} state 
+ * @param {*} ownProps 
+ */
+const mapStateToProps = (state, ownProps) => {
+
+const props=ownProps;
+    return {
+			pointIsChecked: state.pointIsChecked,
+			linetIsChecked: state.linetIsChecked,
+			polygonIsChecked: state.polygonIsChecked
+    }
 }
 
-export default withStyles(styleSheet)(LayerControl)
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+      handlePointIsChecked:()=>{
+        dispatch({
+          type:'handlePointIsChecked'
+				})
+			},
+			handleLineIsChecked:()=>{
+        dispatch({
+          type:'handleLineIsChecked'
+				})
+			},
+			handlePolygonIsChecked:()=>{
+        dispatch({
+          type:'handlePolygonIsChecked'
+				})
+			}
+		} 
+}  		
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(LayerControl);
