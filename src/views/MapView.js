@@ -28,7 +28,7 @@ class MapView extends Component {
 
     return (
       <div>
-        <Route exact path="/" component={Map}/> 
+        <Route exact path="/mainview" component={Map}/> 
         <Route path="/sketch" component={Sketch}/>          
       </div>
     )
