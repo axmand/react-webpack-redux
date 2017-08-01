@@ -147,7 +147,7 @@ function reducer(state = { value:"peter",show:false }, action) {
       return { value:value,show:!show }
     
     case 'completeInput':
-     return { value:value,show:!show }
+     return { value:action.payload.inputValue,show:!show }
       
     default:
       return state
