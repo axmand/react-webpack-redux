@@ -25,11 +25,12 @@ class Map extends Component {
             center:[-0.113049,51.498568],
             zoom: 14,
             baseLayer: new maptalks.TileLayer('base', {
-                urlTemplate:'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+                urlTemplate:'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',//'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 subdomains: ['a', 'b', 'c', 'd', 'e']
             }),
              layers : [
                 new maptalks.VectorLayer('point'),
+                new maptalks.VectorLayer('line'),
                 new maptalks.VectorLayer('polygon')
             ]
         });
@@ -56,11 +57,8 @@ Map.propTypes = {
     //onClick: PropTypes.func.isRequired
 }
 
-//加入reducer
+//加入reducer(mapReduce)
 const mapReduce = (state = 0, action) => {
-    //图层管理
-
-    
     //获取当前定位
      if (action.type === "menuClick" && action.payload.command==="get_location") {
         //获取定位,由于无GPS返回固定坐标
@@ -85,57 +83,103 @@ const mapReduce = (state = 0, action) => {
                 } 
             }
         );
+        const line = new maptalks.LineString([
+            center.add(-0.018,0.005),
+            center.add(0.006,0.005)
+        ], {
+            symbol: {
+            'lineColor' : '#1bbc9b',
+            'lineWidth' : 3
+            }
+      });
         //将对象添加至图层
         map.getLayer('point').addGeometry(circle);
         map.getLayer('polygon').addGeometry(marker);
+        map.getLayer('line').addGeometry(line);
     }
     //地图放大
     if (action.type === "menuClick" && action.payload.command==="zoom_in") {
-        //放大地图
         map.zoomIn();
     }
     //地图缩小
     if (action.type === "menuClick" && action.payload.command==="zoom_out") {
-        //缩小地图
         map.zoomOut();
     }
-
-    
     return state;
 }
 
 RootReducer.merge(mapReduce);
-//加入reducer
+
+//加入reducer(layerControlReduce)
 const layerControlReduce=(
   state= {
-    anchorEl:undefined,
-    menuOpen:false,
     pointIsChecked:false,
     linetIsChecked:false,
     polygonIsChecked:false},action)=>{
+        //点选point图层控制其显示
       if(action.type==="handlePointIsChecked"){
-				console.log(state.pointIsChecked)
-				const pointIsChecked = {
-					pointIsChecked: !state.pointIsChecked
-				}
-        return	{... pointIsChecked }
+          const pointIsChecked = {
+              pointIsChecked: !state.pointIsChecked
+            }    
+            if(pointIsChecked.pointIsChecked===true){
+              map.getLayer("point").show();
+            }else{
+              map.getLayer("point").hide();
+          }
+            console.log(pointIsChecked);
+            return	{... pointIsChecked }
       }
+        //点选line图层控制其显示
       if(action.type==="handleLineIsChecked"){
-				const linetIsChecked = {
-					linetIsChecked: !state.linetIsChecked
-				}
-        return	{... linetIsChecked }
+          const linetIsChecked = {
+				linetIsChecked: !state.linetIsChecked
+            }
+            if(linetIsChecked.linetIsChecked===true){
+              map.getLayer("line").show();
+            }else{
+              map.getLayer("line").hide();
+          }
+            console.log(linetIsChecked);
+            return	{... linetIsChecked }
       }
+        //点选polygon图层控制其显示
       if(action.type==="handlePolygonIsChecked"){
-				const polygonIsChecked = {
-					polygonIsChecked: !state.polygonIsChecked
-				}
-				return	{... polygonIsChecked }       
+          const polygonIsChecked = {
+              polygonIsChecked: !state.polygonIsChecked
+            }
+            if(polygonIsChecked.polygonIsChecked===true){
+                map.getLayer("polygon").show();
+            }else{
+                map.getLayer("polygon").hide();
+            }
+            console.log(polygonIsChecked);
+          return	{... polygonIsChecked }       
       }
       return state;
 }
 
 RootReducer.merge(layerControlReduce);
+
+//加入real-time mapping reducer
+const realtimeMappingReduce=(
+    state={realtimeMappingIsChecked:false},action)=>{
+
+    if(action.type==="handleRealtimeMapping"){
+        const realtimeMappingIsChecked = {
+              realtimeMappingIsChecked: !state.realtimeMappingIsChecked
+            }    
+            if(realtimeMappingIsChecked.realtimeMappingIsChecked===true){
+             console.log('打开了');
+            }else{
+             console.log('没打开');
+          }
+            console.log(realtimeMappingIsChecked);
+            return	{... realtimeMappingIsChecked }
+    }
+        return state;
+}
+RootReducer.merge(realtimeMappingReduce);
+
 /**
  * 
  * @param {*} state 
@@ -175,7 +219,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             });
         },
         
-        
+
     }
 }
 

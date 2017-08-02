@@ -43,6 +43,12 @@ const styleSheet = createStyleSheet('FirstDialog', {
     textAlign: 'center',
    
   },
+  table :{
+    width: "100%",
+    border:1,
+    cellSpacing:1 
+  }
+
 });
 
 TabContainer.propTypes = {
@@ -110,9 +116,107 @@ class FirstDialog extends Component {
           </AppBar>
         {this.state.index === 0 &&
           <TabContainer>
-         {/* <Provider store={store}> */}
+<div>
+<table  border= "1" cellSpacing="0" cellPadding="0" width="100%">
+  <tbody>
+  <tr>
+    <td colSpan="18"><p ><strong>宗地基本信息表 </strong></p></td>
+  </tr>
+  <tr>
+    <td width="9%" rowSpan="5"><p >权利人<strong> </strong></p></td>
+    <td width="17%"><p >所有权 </p></td>
+    <td colSpan="16"><p >/ </p></td>
+  </tr>
+  <tr>
+    <td width="17%" rowSpan="4"><p >使用权 </p></td>
+    <td colSpan="5" rowSpan="4"><p >xxxxxxxxxxxxx</p></td>
+    <td colSpan="7"><p >权利人类型 </p></td>
+    <td colSpan="4"><p >企业 </p></td>
+  </tr>
+  <tr>
+    <td colSpan="7"><p >证件种类 </p></td>
+    <td colSpan="4"><p >营业执照 </p></td>
+  </tr>
+  <tr>
+    <td colSpan="7"><p >证件号 </p></td>
+    <td colSpan="4"><p >xxxxxxx</p></td>
+  </tr>
+  <tr>
+    <td colSpan="7"><p >通讯地址 </p></td>
+    <td colSpan="4"><p >&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td colSpan="2"><p >权利类型 </p></td>
+    <td colSpan="4"><p >国有建设用地使用权 </p></td>
+    <td colSpan="5"><p >权利性质 </p></td>
+    <td colSpan="3"><p >出让 </p></td>
+    <td colSpan="3"><p >土地权属来源证明材料 </p></td>
+    <td width="23%"><p >&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td colSpan="2"><p >坐落 </p></td>
+    <td colSpan="16"><p >南宁市五象新区云村路南侧、英岭路东侧 </p></td>
+  </tr>
+  <tr>
+    <td colSpan="2" rowSpan="2"><p >法定代表人 <br />
+      或负责人姓名 </p></td>
+    <td width="13%" rowSpan="2"><p >赵勇 </p></td>
+    <td colSpan="5"><p >证件种类 </p></td>
+    <td colSpan="7"><p >身份证 </p></td>
+    <td width="10%" rowSpan="2"><p >电话 </p></td>
+    <td colSpan="2" rowSpan="2"><p >&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td colSpan="5"><p >证件号 </p></td>
+    <td colSpan="7"><p >xxxxxxxxxxxxxxx</p></td>
+  </tr>
+  <tr>
+    <td colSpan="2" rowSpan="2"><p >代理人姓名 </p></td>
+    <td width="13%" rowSpan="2"><p >&nbsp;</p></td>
+    <td colSpan="5"><p >证件种类 </p></td>
+    <td colSpan="7"><p >&nbsp;</p></td>
+    <td width="10%" rowSpan="2"><p >电话 </p></td>
+    <td colSpan="2" rowSpan="2"><p >&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td colSpan="5"><p >证件号 </p></td>
+    <td colSpan="7"><p >&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td colSpan="2"><p >权利设定方式<u> </u></p></td>
+    <td colSpan="16"><p >地表 </p></td>
+  </tr>
+  <tr>
+    <td colSpan="2"><p >国民经济行业 <br />
+      分类代码 </p></td>
+    <td colSpan="16"><p >&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td colSpan="2"><p >预编宗地代码 </p></td>
+    <td colSpan="8"><p >&nbsp;</p></td>
+    <td colSpan="3"><p >宗地代码 </p></td>
+    <td colSpan="5"><p >450108001206GB00137</p></td>
+  </tr>
+  <tr>
+    <td colSpan="2"><p >不动产单元号 </p></td>
+    <td colSpan="16"><p >450108001206GB00137W00000000</p></td>
+  </tr>
+  <tr>
+    <td colSpan="2" rowSpan="2"><p >所在图幅号 </p></td>
+    <td colSpan="3"><p >比例尺 </p></td>
+    <td colSpan="13"><p >1:500</p></td>
+  </tr>
+  <tr>
+    <td colSpan="3"><p >图幅号 </p></td>
+    <td colSpan="13"><p >5100053700,5102553700</p></td>
+  </tr>
+
+  </tbody>
+</table>
+  </div>
+          {/* <Provider store={store}> 
     <InputCell />
-  {/* </Provider> */}
+   </Provider>  */}
             {/* <InputDialog Title="权利人姓名" Tip="此处填写权利人姓名" DefaultValue="Peter"/>
            <InputDialog Title="通信地址" Tip="此处填写权利人通信地址" DefaultValue="武汉市洪山区珞瑜路129号"/>
          <InputDialog Title="权利人身份证号码" Tip="此处填写权利人身份证号码" DefaultValue="100000001"/> */}
@@ -147,7 +251,7 @@ function reducer(state = { value:"peter",show:false }, action) {
       return { value:value,show:!show }
     
     case 'completeInput':
-     return { value:value,show:!show }
+     return { value:action.payload.inputValue,show:!show }
       
     default:
       return state

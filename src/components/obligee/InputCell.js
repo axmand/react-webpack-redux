@@ -13,9 +13,9 @@ import Input from 'material-ui/Input';
 import List, { ListItem,ListItemText } from 'material-ui/List'
 // Action
 
-var inputData;
+let inputName="";
 const completeInput = { type: 'completeInput', payload: {
-                    //inputValue:{inputData}
+                    inputValue:inputName
                 }  }
 // Map Redux state to component props
 function mapStateToProps(state) {
@@ -30,21 +30,26 @@ function mapDispatchToProps(dispatch) {
   return {
     onShowClick: () => dispatch(showInputDialog),
     onCompleteInput: () =>{
-      if(document.getElementById('inputname')!=undefined)
-        inputData= document.getElementById('inputname').value;
-      else
-        inputData="...."
-      dispatch(completeInput)}
+    
+      dispatch( { type: 'completeInput', payload: {
+                    inputValue:inputName
+                }  })}
   }
 }
 
 // Connected Component
  
-
-
  class Counter extends Component {
+
+  onChanged=(e)=>
+  {
+    inputName=e.target.value;
+    console.log(inputName);
+  }
+
+
   render() {
-    const { value, onShowClick,onCompleteInput,dialogShow } = this.props
+    const { value, onShowClick,onCompleteInput,dialogShow } = this.props;
     return (
       <div>
          <ListItem button>
@@ -60,7 +65,7 @@ function mapDispatchToProps(dispatch) {
           </DialogTitle>
           <DialogContent>
             
-            <Input id="inputname" defaultValue={value} />
+            <Input ref="NameInput" defaultValue={value} onChange={this.onChanged}/>
             
           </DialogContent>
           <DialogActions>
