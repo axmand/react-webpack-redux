@@ -16,7 +16,7 @@ import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import FolderOpenIcon from 'material-ui-icons/FolderOpen'
 //自定义组件
-import SelfButton from './SelfButton'
+import SelfContent from './SelfContent'
 
 const styleSheet = createStyleSheet('ProjectModule', theme => ({
   listitem: {
@@ -28,6 +28,15 @@ const styleSheet = createStyleSheet('ProjectModule', theme => ({
     height: '50%',
     margin: '0px',
   },
+  AppBar:{
+    flex: {
+     flex: 1,
+    },
+    root:{
+      marginTop:30,
+      width:'100%',
+    }
+  }
 }))
 
 class ProjectModule extends Component {
@@ -67,16 +76,16 @@ class ProjectModule extends Component {
             transition={<Slide direction="right" />}
           >
             <AppBar position="static">
-                <Toolbar>
-                <IconButton color="contrast" aria-label="Delete">
-                    <ClearIcon />
-                </IconButton>
+              <Toolbar>
                 <Typography type="title" color="inherit" className={classes.flex}>
                  项目管理
                 </Typography>
-                </Toolbar>
+                <IconButton color="contrast" onClick={this.handleRequestClose}  aria-label="Delete">
+                   <ClearIcon />
+                </IconButton>
+              </Toolbar>
             </AppBar>
-            <SelfButton/>
+            <SelfContent/>
           </Dialog>
         </div>
     )
