@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import { ListItem, ListItemIcon } from 'material-ui/List';
 import AccountCircleIcon from 'material-ui-icons/AccountCircle';
 
 const styleSheet = createStyleSheet('UserModule', theme => ({

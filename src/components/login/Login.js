@@ -6,23 +6,15 @@
  */
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import RootReducer from '../../redux/RootReducer'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
 import { withStyles, createStyleSheet } from 'material-ui/styles'
-import { FormGroup, FormControlLabel } from 'material-ui/Form';
+import { FormGroup } from 'material-ui/Form';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField'
-import Checkbox from 'material-ui/Checkbox'
 import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import VisibilityIcon from 'material-ui-icons/Visibility'
-import VisibilityOffIcon from 'material-ui-icons/VisibilityOff'
-import ClearIcon from 'material-ui-icons/Clear';
-
-import { blue } from 'material-ui/colors';
 
 import PasswordFeild from './PasswordField'
 
@@ -34,7 +26,6 @@ const styleSheet = createStyleSheet('Login', theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-		height: '100%',
   },
   paper: {
     width: '360px',
