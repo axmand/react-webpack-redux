@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
 
+import Map from '../map/Map'
+
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper'
@@ -71,9 +73,7 @@ class Sketch extends Component {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Paper>
-            123133
-          </Paper>        
+          <Map />       
         </Grid>
       </Grid>
     )
