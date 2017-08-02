@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import UI
 import Menu, { MenuItem } from 'material-ui/Menu'
-import List, { ListItem,ListItemText } from 'material-ui/List'
-import Checkbox from 'material-ui/Checkbox';
+import { ListItemText } from 'material-ui/List'
 import IconButton from 'material-ui/IconButton';
 import ContentCopy from 'material-ui-icons/ContentCopy';
 
@@ -14,6 +13,7 @@ class LayerControl extends Component {
     super(props);
     this.state ={
       menuOpen:false,
+      anchorEl:undefined
     }
     this.handleMenuOpen = this.handleMenuOpen.bind(this);
   }
@@ -92,9 +92,8 @@ LayerControl.PropTypes={
  * @param {*} state 
  * @param {*} ownProps 
  */
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
 
-const props=ownProps;
     return {
 			pointIsChecked: state.pointIsChecked,
 			linetIsChecked: state.linetIsChecked,
