@@ -113,8 +113,6 @@ RootReducer.merge(mapReduce);
 //加入reducer(layerControlReduce)
 const layerControlReduce=(
   state= {
-    anchorEl:undefined,
-    menuOpen:false,
     pointIsChecked:false,
     linetIsChecked:false,
     polygonIsChecked:false},action)=>{
@@ -161,6 +159,27 @@ const layerControlReduce=(
 }
 
 RootReducer.merge(layerControlReduce);
+
+//加入real-time mapping reducer
+const realtimeMappingReduce=(
+    state={realtimeMappingIsChecked:false},action)=>{
+
+    if(action.type==="handleRealtimeMapping"){
+        const realtimeMappingIsChecked = {
+              realtimeMappingIsChecked: !state.realtimeMappingIsChecked
+            }    
+            if(realtimeMappingIsChecked.realtimeMappingIsChecked===true){
+             console.log('打开了');
+            }else{
+             console.log('没打开');
+          }
+            console.log(realtimeMappingIsChecked);
+            return	{... realtimeMappingIsChecked }
+    }
+        return state;
+}
+RootReducer.merge(realtimeMappingReduce);
+
 /**
  * 
  * @param {*} state 
