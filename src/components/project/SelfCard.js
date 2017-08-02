@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
-import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import Dialog,{ DialogActions, DialogContent, DialogContentText } from 'material-ui/Dialog';
+import Card, { CardActions, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
+import Checkbox from 'material-ui/Checkbox';
 //图标
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui-icons/Add'
@@ -20,9 +20,10 @@ const styleSheet = createStyleSheet('SelfCard', theme =>({
     maxHeight: 345
   },
   addicon:{
-    width: '50%',
-    height: '50%',
-    margin: '10px',
+    width: '300px',
+    height: '300px',
+    padding: '14px 16px 15px',
+    margin: '0px',
   }
 }));
 
@@ -31,7 +32,13 @@ class SelfCard extends Component {
   state = {
     anchorEl: undefined,
     open: false,
+    checkedA: true,
+    checkedB: false,
     items: []
+  };
+
+  CheckboxChange = name => (event, checked) => {
+    this.setState({ [name]: checked });
   };
 
   handleClick = event => {
@@ -60,39 +67,28 @@ class SelfCard extends Component {
     }
     );
 
-  this.setState({
-    items: itemArray
+    this.setState({
+      items: itemArray
     });
 
     this._inputElement.value = "";
-
-    this.preventDefault();
 
   };
 
   render(){
     const classes = this.props.classes;
 
-     return (
+    return (
     <div>
-      <Card className={classes.card}>
-        <CardMedia>
-          <img src={reptileImage} alt="Contemplative Reptile" />
-        </CardMedia>
-        <CardActions>
-          <Button dense color="primary">
-            项目一
-          </Button>
-        </CardActions>
-      </Card>
+      <TodoItems entries={this.state.items}/>
       <IconButton onClick={this.handleClick} className={classes.addicon}>
          <AddIcon button/>
       </IconButton>
+
        <Dialog
           open={this.state.open}
           onRequestClose={this.handleRequestClose}
        >
-       <form onSubmit ={this.addItem}>
           <DialogContent>
             <DialogContentText>
               请输入项目名称
@@ -103,30 +99,29 @@ class SelfCard extends Component {
             <Button onClick={this.handleRequestClose} color="default">
               取消
             </Button>
-            <Button  type="submit" onClick={this.handleRequestClose} color="primary">
+            <Button  type="submit" onClick={this.addItem} color="primary">
               确认
             </Button>
           </DialogActions>
-        </form>
        </Dialog>
-       
     </div>
   );
   }
- 
 }
 
 var TodoItems = React.createClass({
-  render: function() {
-    var todoEntries = this.props.entries; 
-    
+  render() {
+    var todoEntries = this.props.entries;
     function createTasks(item) {
       return (
-      <Card key={item.key}>
+      <Card key={item.key} 
+            style={{maxWidth:345,
+                    maxHeight:345}}>
         <CardMedia>
           <img src={reptileImage} alt="Contemplative Reptile" />
         </CardMedia>
         <CardActions>
+          <Checkbox />          
           <Button dense color="primary">
             {item.text}
           </Button>
@@ -135,7 +130,6 @@ var TodoItems = React.createClass({
     }
 
     var listItems = todoEntries.map(createTasks);
-    
     return (
       <ul className="theList">
         {listItems}

@@ -12,6 +12,19 @@ import AddIcon from 'material-ui-icons/Add'
 //img
 import reptileImage from './test.jpg';
 
+//Redux state
+function mapStateToProps(state) {
+  return {
+    AddcardShow:state.show
+  }
+}
+//Redux actions
+function mapDispatchToProps(dispatch) {
+  return {
+    onShowClick: () => dispatch(showAddCard),
+  }
+}
+
 const styleSheet = createStyleSheet('AddCard', {
   card: {
     maxWidth: 345,
@@ -19,12 +32,32 @@ const styleSheet = createStyleSheet('AddCard', {
   },
 });
 
-class AddCard extends Component {
+function  CreateTasks(item) {
+      return (
+      <Card key={item.key}
+            style={{maxWidth:345,
+                    maxHeight:345}}>
+        <CardMedia>
+          <img src={reptileImage} alt="Contemplative Reptile" />
+        </CardMedia>
+        <CardActions>
+          <Button dense color="primary">
+            {item.text}
+          </Button>
+        </CardActions>
+      </Card>);
+}
 
-  state = {
+class AddCard extends Component {
+ 
+  constructor() {
+    super();
+    this.state = {
     anchorEl: undefined,
     open: false,
-  };
+    items: []
+    };
+  }
 
   handleClick = event => {
     this.setState({ open: true, anchorEl: event.currentTarget })
@@ -42,39 +75,66 @@ class AddCard extends Component {
     this.setState({ text: this.target.value });
   };
 
+  addItem = () => {
+    var itemArray = this.state.items;
+    
+    itemArray.push(
+    {
+      text: this._inputElement.value,
+      key: Date.now()
+    }
+    );
+
+    this.setState({
+      items: itemArray
+    });
+
+    this._inputElement.value = "";
+
+  };
 
   render(){
-    const classes = this.props.classes;
 
-     return (
-    <div>
-    </div>
-  );
+    const { AddcardShow,onShowClick } = this.props;
+   
+    const todoEntries = this.props.entries;
+    const listItems = todoEntries.map(CreateTasks);
+   
+    return(
+      <div>
+      
+      <ul className="theList">
+        {listItems};
+      </ul>
+      
+      <Dialog
+          open={this.handleOpen}
+          onRequestClose={this.handleRequestClose}
+       >
+          <DialogContent>
+            <DialogContentText>
+              请输入项目名称
+            </DialogContentText>
+            <input type="text" ref={(a) => this._inputElement = a} placeholder="权利人+宗地代码等"/>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleRequestClose} color="default">
+              取消
+            </Button>
+            <Button  type="submit" onClick={this.addItem} color="primary">
+              确认
+            </Button>
+          </DialogActions>
+       </Dialog>
+      </div>
+    )
   }
- 
+
 }
+
 
 AddCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
-//加入reducer
-const AddCardReduce=(
-  state= {},action)=>{
-
-}
-
-RootReducer.merge(layerControlReduce);
-
-const mapStateToProps = (state, ownProps) => {
-const props=ownProps;
-    return {
-    }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-		} 
-}  	
 
 export default withStyles(styleSheet)(AddCard);
