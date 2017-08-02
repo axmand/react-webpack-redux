@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
-import Dialog,{ DialogActions, DialogContent, DialogContentText } from 'material-ui/Dialog';
+import Dialog,{ DialogActions, DialogContent, DialogContentText,DialogTitle } from 'material-ui/Dialog';
 import Card, { CardActions, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Checkbox from 'material-ui/Checkbox';
@@ -72,7 +72,6 @@ class SelfCard extends Component {
     });
 
     this._inputElement.value = "";
-
   };
 
   render(){
@@ -81,6 +80,7 @@ class SelfCard extends Component {
     return (
     <div>
       <TodoItems entries={this.state.items}/>
+     
       <IconButton onClick={this.handleClick} className={classes.addicon}>
          <AddIcon button/>
       </IconButton>
@@ -89,10 +89,10 @@ class SelfCard extends Component {
           open={this.state.open}
           onRequestClose={this.handleRequestClose}
        >
+          <DialogTitle>
+           请输入项目名称
+          </DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              请输入项目名称
-            </DialogContentText>
             <input type="text" ref={(a) => this._inputElement = a} placeholder="权利人+宗地代码等"/>
           </DialogContent>
           <DialogActions>

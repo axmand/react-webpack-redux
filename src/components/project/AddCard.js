@@ -12,19 +12,6 @@ import AddIcon from 'material-ui-icons/Add'
 //img
 import reptileImage from './test.jpg';
 
-//Redux state
-function mapStateToProps(state) {
-  return {
-    AddcardShow:state.show
-  }
-}
-//Redux actions
-function mapDispatchToProps(dispatch) {
-  return {
-    onShowClick: () => dispatch(showAddCard),
-  }
-}
-
 const styleSheet = createStyleSheet('AddCard', {
   card: {
     maxWidth: 345,
@@ -40,6 +27,7 @@ function  CreateTasks(item) {
         <CardMedia>
           <img src={reptileImage} alt="Contemplative Reptile" />
         </CardMedia>
+        <Checkbox />   
         <CardActions>
           <Button dense color="primary">
             {item.text}
@@ -58,7 +46,7 @@ class AddCard extends Component {
     items: []
     };
   }
-
+ 
   handleClick = event => {
     this.setState({ open: true, anchorEl: event.currentTarget })
   }
@@ -94,45 +82,36 @@ class AddCard extends Component {
   };
 
   render(){
-
-    const { AddcardShow,onShowClick } = this.props;
-   
-    const todoEntries = this.props.entries;
-    const listItems = todoEntries.map(CreateTasks);
-   
+    let todoEntries = this.props.entries;
+    let listItems = todoEntries.map(CreateTasks);
     return(
       <div>
-      
       <ul className="theList">
         {listItems};
       </ul>
-      
       <Dialog
           open={this.handleOpen}
           onRequestClose={this.handleRequestClose}
-       >
-          <DialogContent>
-            <DialogContentText>
-              请输入项目名称
-            </DialogContentText>
-            <input type="text" ref={(a) => this._inputElement = a} placeholder="权利人+宗地代码等"/>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleRequestClose} color="default">
+      >
+        <DialogTitle>
+            请输入项目名称
+        </DialogTitle>
+        <DialogContent>
+          <input type="text" ref={(a) => this._inputElement = a} placeholder="权利人+宗地代码等"/>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleRequestClose} color="default">
               取消
-            </Button>
-            <Button  type="submit" onClick={this.addItem} color="primary">
+          </Button>
+          <Button  type="submit" onClick={this.addItem} color="primary">
               确认
-            </Button>
-          </DialogActions>
-       </Dialog>
+          </Button>
+        </DialogActions>
+      </Dialog>
       </div>
     )
   }
-
 }
-
-
 AddCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
