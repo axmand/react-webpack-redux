@@ -11,7 +11,7 @@ import Button from 'material-ui/Button';
 //自定义组件
 import SelfCard from './SelfCard'
 
-class SelfButton extends Component {
+class SelfContent extends Component {
   state = {
     checkedA: true,
     checkedB: false,
@@ -72,4 +72,5 @@ class SelfButton extends Component {
   }
 }
 
-export default SelfButton;
+export default SelfContent;
+

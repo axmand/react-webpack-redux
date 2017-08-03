@@ -9,13 +9,17 @@ import Paper from 'material-ui/Paper'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
+//import component
+import Map from '../map/Map';
+import SketchToolBar from './SketchToolBar';
 
 const styleSheet = createStyleSheet('Sketch', theme => ({
   root: {
     flexGrow: 1,
   },
   tab: {    
-    padding: '0px',    
+    padding: '0px',
+    height:'30px'    
   },
   label: {
     fontSize: '20px',
@@ -24,6 +28,14 @@ const styleSheet = createStyleSheet('Sketch', theme => ({
     margin: theme.spacing.unit,
   },
 }));
+
+const TabContainer = props =>
+        <Grid item xs={12}>
+            {props.children}    
+        </Grid>;
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 class Sketch extends Component {
 
@@ -47,22 +59,14 @@ class Sketch extends Component {
                 index={this.state.index}
                 onChange={this.handleChange}
                 indicatorColor="primary"
-                textColor="primary"
-              >
-                <Tab 
-                  classes={{
-                    label: this.props.classes.label
-                  }} 
-                  label="草图编辑" 
-                />
-                <Tab
-                  classes={{
-                    label: this.props.classes.label
-                  }}           
-                  label="专题图编辑" 
-                />       
+                textColor="primary">
+                <Tab classes={{label: this.props.classes.label }}
+                         label="草图编辑" />
+                <Tab classes={{label: this.props.classes.label}}           
+                         label="专题图编辑"/>       
               </Tabs>
             </Grid>
+
             <Grid item xs={1}>
               <Link to="/mainview">
                 <IconButton className={classes.button} aria-label="Delete">
