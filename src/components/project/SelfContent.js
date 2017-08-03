@@ -9,7 +9,7 @@ import Switch from 'material-ui/Switch';
 import Button from 'material-ui/Button';
 
 //自定义组件
-import SelfCard0 from './SelfCard0'
+import SelfCard from './SelfCard'
 
 class SelfContent extends Component {
   state = {
@@ -66,7 +66,7 @@ class SelfContent extends Component {
             </Button>
           </DialogActions>
        </Dialog>
-       <SelfCard0/>
+       <SelfCard/>
       </div>
     );
   }
