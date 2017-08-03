@@ -6,24 +6,23 @@ import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } f
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
+import Checkbox from 'material-ui/Checkbox';
 //图标
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui-icons/Add'
 //img
 import reptileImage from './test.jpg';
+//Redux
 
-const styleSheet = createStyleSheet('AddCard', {
-  card: {
-    maxWidth: 345,
-    maxHeight: 345
-  },
-});
-
-function  CreateTasks(item) {
+class AddCard extends Component {
+ 
+  render(){
+    console.log(this.props.entries)
+    let todoEntries = this.props.entries; 
+    
+    function  CreateTasks(item) {
       return (
-      <Card key={item.key}
-            style={{maxWidth:345,
-                    maxHeight:345}}>
+      <Card key={item.key} style={{maxWidth:300,maxHeight:345}}>
         <CardMedia>
           <img src={reptileImage} alt="Contemplative Reptile" />
         </CardMedia>
@@ -34,86 +33,22 @@ function  CreateTasks(item) {
           </Button>
         </CardActions>
       </Card>);
-}
-
-class AddCard extends Component {
- 
-  constructor() {
-    super();
-    this.state = {
-    anchorEl: undefined,
-    open: false,
-    items: []
-    };
-  }
- 
-  handleClick = event => {
-    this.setState({ open: true, anchorEl: event.currentTarget })
-  }
-
-  handleRequestClose = () => {
-    this.setState({ open: false });
-  }
-  
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleChange = () => {
-    this.setState({ text: this.target.value });
-  };
-
-  addItem = () => {
-    var itemArray = this.state.items;
+    } 
     
-    itemArray.push(
-    {
-      text: this._inputElement.value,
-      key: Date.now()
-    }
-    );
-
-    this.setState({
-      items: itemArray
-    });
-
-    this._inputElement.value = "";
-
-  };
-
-  render(){
-    let todoEntries = this.props.entries;
     let listItems = todoEntries.map(CreateTasks);
     return(
       <div>
-      <ul className="theList">
+      <ul>
         {listItems};
       </ul>
-      <Dialog
-          open={this.handleOpen}
-          onRequestClose={this.handleRequestClose}
-      >
-        <DialogTitle>
-            请输入项目名称
-        </DialogTitle>
-        <DialogContent>
-          <input type="text" ref={(a) => this._inputElement = a} placeholder="权利人+宗地代码等"/>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleRequestClose} color="default">
-              取消
-          </Button>
-          <Button  type="submit" onClick={this.addItem} color="primary">
-              确认
-          </Button>
-        </DialogActions>
-      </Dialog>
       </div>
     )
   }
 }
+
 AddCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  entries: PropTypes.array.isRequired,
 };
 
-export default withStyles(styleSheet)(AddCard);
+export default AddCard;
