@@ -38,9 +38,11 @@ class ObligeeModule extends Component {
    
   }
 
-  test=()=>
+  test= value =>
   {
-    this.setState({ open: false,firstDialogOpen:false });
+     alert(value);
+    if(value=="权籍调查表")
+      this.setState({ open: false,firstDialogOpen:false,selectedValue: value });
   }
   render() {
     const classes = this.props.classes

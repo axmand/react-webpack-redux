@@ -68,13 +68,12 @@ class FirstDialog extends Component {
     this.setState({ index });
   };
 
-  handleRequestClose = () => {
-    //this.setState({ open: false });
-    //this.props.open=false;
-  };
-
   handleOpen = () => {
     this.setState({ open: true });
+  };
+
+  handleClose = value => {
+    this.props.firstDialogClose(value);
   };
 
   render() {
@@ -86,7 +85,7 @@ class FirstDialog extends Component {
         <Dialog
           fullScreen
           open={open}
-          onRequestClose={firstDialogClose}
+          onRequestClose={() =>this.handleClose("权籍调查表")}
           transition={<Slide direction="up" />}
         >
           <AppBar className={classes.appBar}>
@@ -99,14 +98,10 @@ class FirstDialog extends Component {
             <Tab label="使用信息" />
           </Tabs>
               </Typography>
-              <Button color="contrast" onClick={firstDialogClose}>
-                 <IconButton color="contrast" onClick={firstDialogClose} aria-label="Close">
+             
+                 <IconButton color="contrast" onClick={() =>this.handleClose("权籍调查表")} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              </Button>
-              
-              
-             
             </Toolbar>
           </AppBar>
         {this.state.index === 0 &&
