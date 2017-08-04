@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Draggable from 'react-draggable';
 //ui
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 import { ListItemText } from 'material-ui/List';
@@ -14,12 +15,14 @@ import CheckBoxOutlineBlank from 'material-ui-icons/CheckBoxOutlineBlank';//构�
 import Delete from 'material-ui-icons/Delete';//删除
 import Undo from 'material-ui-icons/Undo';//撤销
 import Refresh from 'material-ui-icons/Refresh';//重做
+import Redo from  'material-ui-icons/Redo';
 import Save from 'material-ui-icons/Save';//保存
+import DragHandle from 'material-ui-icons/DragHandle';
 
 const styleSheet = createStyleSheet(theme=>({
     root:{
          height:'50px',
-         width:'512px',
+         width:'540px',
          position:'absolute',
          top:'80px',
          left:'100px',
@@ -41,50 +44,80 @@ const styleSheet = createStyleSheet(theme=>({
     },
 
 }))
-class SkechToolBar extends Component{
+class SkechToolBar1 extends Component{
+
     render(){
         const classes=this.props.classes;
+        const { onSketchToolBarClick } = this.props;
         return(
-            <div className={classes.root}  draggable={true}>
-                <Button className={classes.button}>
-                    <LocationSearching />  
-                    <ListItemText primary="展点" />
-                </Button>
-                 <Button  className={classes.button}>
-                    <Adjust />
-                    <ListItemText primary="画点" />
-                </Button>
-                 <Button  className={classes.button}>
-                    <Timeline />
-                    <ListItemText primary="连线" />
-                </Button>                               
-                 <Button  className={classes.button}>
-                    <CheckBoxOutlineBlank />
-                    <ListItemText primary="构面" />
-                </Button> 
-                 <Button  className={classes.button}>
-                    <Delete />
-                    <ListItemText primary="删除" />
-                </Button>            
-                 <Button  className={classes.button}>
-                    <Undo />
-                    <ListItemText primary="撤销" />
-                </Button>
-                 <Button  className={classes.button}>
-                    <Refresh />
-                    <ListItemText primary="重做" />
-                </Button>
-                 <Button  className={classes.button}>
-                    <Save />
-                    <ListItemText primary="保存" />
-                </Button>
-            </div>
-            
+            <Draggable handle="span">
+                <div className={classes.root} >
+                     <Button className={classes.button} >
+                        <LocationSearching />  
+                        <ListItemText primary="展点" />
+                    </Button>
+                    <Button  className={classes.button} >
+                        <Adjust />
+                        <ListItemText primary="画点" />
+                    </Button>
+                    <Button  className={classes.button} >
+                        <Timeline />
+                        <ListItemText primary="连线" />
+                    </Button>                               
+                    <Button  className={classes.button} >
+                        <CheckBoxOutlineBlank />
+                        <ListItemText primary="构面" />
+                    </Button> 
+                    <Button  className={classes.button} >
+                        <Delete />
+                        <ListItemText primary="删除" />
+                    </Button>            
+                    <Button  className={classes.button} >
+                        <Undo />
+                        <ListItemText primary="撤销" />
+                    </Button>
+                    <Button  className={classes.button} >
+                        <Redo />
+                       
+                        <ListItemText primary="重做" />
+                    </Button>
+                    <Button  className={classes.button} >
+                        <Save />
+                        <ListItemText primary="保存" />
+                    </Button>
+                    <span className="cursor">
+                        <DragHandle />
+                    </span> 
+                </div>
+            </Draggable>                    
         )
     }
 }
-SkechToolBar.PropTypes={
+
+SkechToolBar1.PropTypes={
     classes:PropTypes.object.isRequired
 }
 
-export default withStyles(styleSheet)(SkechToolBar);
+const mapStateToProps = (state, ownProps) => {
+
+    const props=ownProps;
+    return {
+        text: ownProps.ownProps,
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+         onSketchToolBarClick: (text) => {
+            dispatch({
+                type: 'sketchToolBarClick',
+                payload: {
+                    command: text
+                }
+            });
+        }
+    }
+}
+
+const SkechToolBar=withStyles(styleSheet)(SkechToolBar1);
+export default connect(mapStateToProps, mapDispatchToProps)(SkechToolBar);
