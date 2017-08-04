@@ -122,4 +122,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }  		
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(LayerControl);
+export default connect(mapStateToProps, mapDispatchToProps)(LayerControl)
