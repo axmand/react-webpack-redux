@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types';
+
+import Map from '../map/Map'
+
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper'
@@ -73,17 +75,9 @@ class Sketch extends Component {
               </Link>          
             </Grid>
           </Grid>
-          {this.state.index === 0 &&
-            <TabContainer>
-              
-              <Map />
-              <SketchToolBar />
-  
-            </TabContainer>}
-          {this.state.index === 1 &&
-            <TabContainer>
-              {'Item Two'}
-            </TabContainer>}
+        </Grid>
+        <Grid item xs={12}>
+          <Map />       
         </Grid>
       </Grid>
     )

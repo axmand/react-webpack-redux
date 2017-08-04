@@ -16,7 +16,7 @@ import reptileImage from './test.jpg';
 
 const styleSheet = createStyleSheet('SelfCard', theme =>({
   card: {
-    maxWidth: 345,
+    maxWidth: 300,
     maxHeight: 345
   },
   addicon:{
@@ -37,10 +37,6 @@ class SelfCard extends Component {
     items: []
   };
 
-  CheckboxChange = name => (event, checked) => {
-    this.setState({ [name]: checked });
-  };
-
   handleClick = event => {
     this.setState({ open: true, anchorEl: event.currentTarget })
   }
@@ -53,16 +49,12 @@ class SelfCard extends Component {
     this.setState({ open: true });
   };
 
-  handleChange = () => {
-    this.setState({ text: this.target.value });
-  };
-
   addItem = () => {
     var itemArray = this.state.items;
     
     itemArray.push(
     {
-      text: this._inputElement.value,
+      text: this.Element.value,
       key: Date.now()
     }
     );
@@ -71,7 +63,7 @@ class SelfCard extends Component {
       items: itemArray
     });
 
-    this._inputElement.value = "";
+    this.Element.value = "";
   };
 
   render(){
@@ -93,7 +85,7 @@ class SelfCard extends Component {
            请输入项目名称
           </DialogTitle>
           <DialogContent>
-            <input type="text" ref={(a) => this._inputElement = a} placeholder="权利人+宗地代码等"/>
+            <input type="text" ref={(a) => this.Element = a} placeholder="权利人+宗地代码等"/>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleRequestClose} color="default">
@@ -115,7 +107,7 @@ var TodoItems = React.createClass({
     function createTasks(item) {
       return (
       <Card key={item.key} 
-            style={{maxWidth:345,
+            style={{maxWidth:300,
                     maxHeight:345}}>
         <CardMedia>
           <img src={reptileImage} alt="Contemplative Reptile" />

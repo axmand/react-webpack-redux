@@ -6,8 +6,8 @@
  */
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+// import { connect } from 'react-redux'
+// import PropTypes from 'prop-types'
 import RootReducer from '../../redux/RootReducer'
 
 import { withStyles, createStyleSheet } from 'material-ui/styles'
