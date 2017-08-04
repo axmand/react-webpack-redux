@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
-
+import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import PeopleIcon from 'material-ui-icons/People'
-
+import SimpleDialogWrapped from './ChooseDialog'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import FirstDialog from './FirstDialog'
+
 const styleSheet = createStyleSheet('ObligeeModule', theme => ({
   listitem: {
     flexDirection: 'column',
@@ -23,16 +24,26 @@ class ObligeeModule extends Component {
   state = {
     anchorEl: undefined,
     open: false,
+    selectedValue:"",
+    firstDialogOpen:false
   }
 
   handleClick = event => {
     this.setState({ open: true, anchorEl: event.currentTarget })
   }
 
-  handleRequestClose = () => {
-    this.setState({ open: false })
+  handleRequestClose =value => {
+    if(value=="权籍调查表")
+    this.setState({ open: false,selectedValue: value,firstDialogOpen:true });
+   
   }
 
+  test= value =>
+  {
+     alert(value);
+    if(value=="权籍调查表")
+      this.setState({ open: false,firstDialogOpen:false,selectedValue: value });
+  }
   render() {
     const classes = this.props.classes
   
@@ -44,23 +55,18 @@ class ObligeeModule extends Component {
           </ListItemIcon>            
           <ListItemText primary="权利人" />
         </ListItem>
-        <Menu
-          anchorEl={this.state.anchorEl}
-          open={this.state.open}
-          onRequestClose={this.handleRequestClose}
-          anchorOrigin={{
-              horizontal:'right',
-              vertical:'center',
-          }}
-        >
+
+        <Dialog
+           
+            open={this.state.open}
+            onRequestClose={this.handleRequestClose}
           
-          <FirstDialog />
-         
-          {/*<MenuItem onClick={this.handleRequestClose}>界址签章表</MenuItem>
-          <MenuItem onClick={this.handleRequestClose}>调查审核表</MenuItem>
-          <MenuItem onClick={this.handleRequestClose}>共有宗地面积分摊表</MenuItem>
-          <MenuItem onClick={this.handleRequestClose}>属性查询</MenuItem>*/}
-        </Menu>
+          >
+            <SimpleDialogWrapped onRequestClose={this.handleRequestClose} selectedValue={this.state.selectedValue} projectName="项目二"/>
+          </Dialog>
+
+          <FirstDialog  open={this.state.firstDialogOpen} firstDialogClose={this.test}/>
+       
       </div>
     )
   }

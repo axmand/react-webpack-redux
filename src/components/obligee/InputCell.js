@@ -14,9 +14,7 @@ import List, { ListItem,ListItemText } from 'material-ui/List'
 // Action
 
 let inputName="";
-const completeInput = { type: 'completeInput', payload: {
-                    inputValue:inputName
-                }  }
+
 // Map Redux state to component props
 function mapStateToProps(state) {
   return {

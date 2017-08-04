@@ -5,22 +5,17 @@ import { withStyles, createStyleSheet } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Dialog,{ DialogActions, DialogContent, DialogContentText,DialogTitle } from 'material-ui/Dialog';
 import Card, { CardActions, CardMedia } from 'material-ui/Card';
-import Checkbox from 'material-ui/Checkbox';
 //图标
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui-icons/Add';
 //img
 import reptileImage from './test.jpg';
 //自定义
-
-const styleSheet = createStyleSheet('SelfCard', theme =>({
-  addicon:{
-    width: '300px',
-    height: '300px',
-    padding: '14px 16px 15px',
-    margin: '0px',
-  }
-}));
+import AddCard from './AddCard';
+//Redux
+import RootReducer from './../../redux/RootReducer';
+import { createStore } from 'redux'
+import { Provider, connect } from 'react-redux'
 
 class SelfCard0 extends Component {
 
@@ -41,38 +36,24 @@ class SelfCard0 extends Component {
     this.setState({ open: true });
   };
 
-  handleChange = () => {
-    this.setState({ text: this.target.value });
-  };
-  
-  addItem = () => {
-    var itemArray = this.state.items;
-    
-    itemArray.push(
-    {
-      text: this._inputElement.value,
-      key: Date.now()
-    }
-    );
-
-    this.setState({
-      items: itemArray
-    });
-
-    this._inputElement.value = "";
-  };
-  
   render(){
-    const classes = this.props.classes;
+    const { inputElement,
+            inputItems,
+            handleAddItem
+		} = this.props
 
     return (
     <div>
-      <IconButton onClick={this.handleClick} className={classes.addicon}>
+      <IconButton onClick = {this.handleClick} 
+                  style = {{  width: '300px',
+                              height: '300px',
+                              padding: '14px 16px 15px',
+                              margin: '0px',}}>
         <AddIcon button/>
       </IconButton>
       
-      <TodoItems entries={this.state.items}/>
-      
+      <AddCard entries={inputItems}/>
+     
       <Dialog
           open={this.handleOpen}
           onRequestClose={this.handleRequestClose}
@@ -81,13 +62,13 @@ class SelfCard0 extends Component {
             请输入项目名称
         </DialogTitle>
         <DialogContent>
-          <input type="text" ref={(a) => this._inputElement = a} placeholder="权利人+宗地代码等"/>
+          <input type="text" ref={(a) => this.inputElement = a} placeholder="权利人+宗地代码等"/>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleRequestClose} color="default">
               取消
           </Button>
-          <Button  type="submit" onClick={this.addItem} color="primary">
+          <Button  type="submit" onClick={handleAddItem} color="primary">
               确认
           </Button>
         </DialogActions>
@@ -97,45 +78,57 @@ class SelfCard0 extends Component {
   }
 }
 
-
-
-class TodoItems extends Component {
-  render(){
-    var todoEntries = this.props.entries;
-   
-    function CreateTasks(item) {
-      return (
-      <Card key={item.key}
-            style={{maxWidth:345,
-                    maxHeight:345}}>
-        <CardMedia>
-          <img src={reptileImage} alt="Contemplative Reptile" />
-        </CardMedia>
-        <Checkbox />   
-        <CardActions>
-          <Button dense color="primary">
-            {item.text}
-          </Button>
-        </CardActions>
-      </Card>);
-    }
-   
-    var listItems = todoEntries.map(CreateTasks);
-    return (
-      <ul className="theList">
-        {listItems}
-      </ul>
-    );
-  }
-
-}
-
 SelfCard0.propTypes = {
-  classes: PropTypes.object.isRequired,
+  inputElement: PropTypes.string.isRequired,
+  inputItems: PropTypes.array.isRequired,
+	handleAddItem:PropTypes.func.isRequired,
 };
 
-export default withStyles(styleSheet)(SelfCard0);
+//声明state和方法
+const mapStateToProps = (state,ownProps) => {
+  const SelfCardReducestate = state.SelfCardReduce;
+  return {
+      inputElement: state.inputElement,
+      inputItems: state.inputItems,
+      SelfCardReducestate: SelfCardReducestate
+  }
+}
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    handleAddItem:()=>{
+      dispatch({
+         type:'handleAddItem'
+			})
+		},
+	} 
+}  		
 
+export default connect(mapStateToProps, mapDispatchToProps)(SelfCard0);
 
+//Reducer
+const SelfCardReduce =(
+  state={
+    inputElement:'',
+    inputItems: [],
+  },action)=>{
+    const nextstate = JSON.parse(JSON.stringify(state))
+      if(action.type==="handleAddItem"){
+  
+        nextstate.inputItems.push(
+        {
+          text: state.inputElement,
+          key: Date.now()
+        }
+        )
+        nextstate.inputElement = "";
+        console.log(state)
+        console.log(nextstate)
+        return nextstate;
+      }
+      // console.log(nextstate)
+      return nextstate
+}
 
+  
+RootReducer.merge(SelfCardReduce);
