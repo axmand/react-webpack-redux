@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import { withStyles, createStyleSheet } from 'material-ui/styles';
-import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux';
 
+import { withStyles, createStyleSheet } from 'material-ui/styles';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import MapIcon from 'material-ui-icons/Map';
 
@@ -21,19 +21,34 @@ const styleSheet = createStyleSheet('SketchModule', theme => ({
 class SketchModule extends Component {
 
   render() {
-    const classes = this.props.classes;
+    const {
+      classes,
+      onClick,
+    } = this.props
   
     return (
-      <NavLink to="/sketch">
-        <ListItem button className={classes.listitem} disableGutters={true}>
-          <ListItemIcon className={classes.listitemicon}>
-            <MapIcon />
-          </ListItemIcon>            
-          <ListItemText primary="草图" />                         
-        </ListItem>
-      </NavLink>
+      <ListItem button className={classes.listitem} disableGutters={true} onClick={onClick}>
+        <ListItemIcon className={classes.listitemicon}>
+          <MapIcon />
+        </ListItemIcon>            
+        <ListItemText primary="草图" />                         
+      </ListItem>
     )
   }
 }
 
-export default withStyles(styleSheet)(SketchModule);
+const mapStateToProps = ( state ) => ({
+  ...state
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      onClick: () => {
+          dispatch({
+              type: 'MAP_SKETCH_VIEW_SWITCH',
+          })
+      },
+    }
+}
+
+export default withStyles(styleSheet)(connect(mapStateToProps, mapDispatchToProps)(SketchModule))

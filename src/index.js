@@ -24,6 +24,11 @@ import MainView from './views/MainView'
 //3.引入assets文件夹下的 icon，css等资源文件
 import RootReducer from './redux/RootReducer'
 //4.引入reducer
+
+// const initialState = Object.assign({},{
+// 	sketchDisplayState: true,
+// })
+
 const store = createStore(RootReducer.combine(),{})
 //5.doucment parent
 const root = document.getElementById('root')

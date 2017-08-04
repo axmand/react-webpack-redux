@@ -127,4 +127,4 @@ const mapDispatchToProps = (dispatch) => {
 }  		
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(LayerControl);
+export default connect(mapStateToProps, mapDispatchToProps)(LayerControl)

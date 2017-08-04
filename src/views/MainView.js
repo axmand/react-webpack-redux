@@ -38,8 +38,10 @@ class MainView extends Component {
             </Grid>
             <Grid item xs={11}>
               <Grid container direction='column' gutter={0}>
-                <Grid id='' item xs={12}>
-                  <MapView />
+                <Grid item item xs={12}>
+                  <Paper>
+                    <MapView />
+                  </Paper>
                 </Grid>
                 <Grid item xs={12}>
                   <Paper>状态栏</Paper>
