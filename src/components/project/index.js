@@ -41,22 +41,21 @@ const styleSheet = createStyleSheet('ProjectModule', theme => ({
 
 class ProjectModule extends Component {
 
-  state = {
-    anchorEl: undefined,
-    open: false,
+  constructor(props){
+    super(props);
+    this.state ={
+      open: false,
+    }
+    this.handleClick = this.handleClick.bind(this);
   }
-
   handleClick = event => {
-    this.setState({ open: true, anchorEl: event.currentTarget })
+    this.setState({ open: true })
   }
 
   handleRequestClose = () => {
     this.setState({ open: false });
   }
   
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
 
   render() {
     const classes = this.props.classes
