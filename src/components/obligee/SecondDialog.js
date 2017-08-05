@@ -21,15 +21,15 @@ import RootReducer from './../../redux/RootReducer';
 
 import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
-import ObligeeTable1 from './ObligeeTable1'
-import ObligeeTable2 from './ObligeeTable2'
-import ObligeeTable3 from './ObligeeTable3'
+import BoundaryList from './BoundaryList'
+import BoundarySignature from './BoundarySignature'
+import BoundarySpecification from './BoundarySpecification'
 const TabContainer = props =>
   <div style={{ padding: 20,overflow:"auto" }}>
     {props.children}
   </div>;
 
-const styleSheet = createStyleSheet('FirstDialog', {
+const styleSheet = createStyleSheet('SecondDialog', {
   appBar: {
     position: 'relative',
   },
@@ -59,28 +59,23 @@ const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
   },
 }));
 
-class FirstDialog extends Component {
-  state = {
-    open: false,
-    index: 0,
-  };
- 
+class SecondDialog extends Component {
+
 
   handleChange = (event, index) => {
-    this.setState({ index });
+    if(index==0)
+      this.props.changeTabIndex0();
+     if(index==1)
+       this.props.changeTabIndex1();
+      if(index==2)
+       this.props.changeTabIndex2();
   };
 
-  // handleOpen = () => {
-  //   this.setState({ open: true });
-  // };
 
-  // handleClose = value => {
-  //   this.props.firstDialogClose(value);
-  // };
 
   render() {
-    const classes = this.props.classes;
-        const { open,close } = this.props;
+    //const classes = this.props.classes;
+        const { open,close,tabIndex,changeTabIndex0, changeTabIndex1,changeTabIndex2,classes} = this.props;
 
     return (
       <div>
@@ -93,11 +88,11 @@ class FirstDialog extends Component {
           <AppBar >
              
             <Toolbar>
-               <Typography type="title" color="inherit">
-                 <Tabs index={this.state.index} onChange={this.handleChange}>
-            <Tab label="权利信息" />
-            <Tab label="宗地信息" />
-            <Tab label="使用信息" />
+               <Typography type="title" color="inherit" >
+                 <Tabs index={tabIndex} onChange={this.handleChange}>
+            <Tab label="界址标示表" />
+            <Tab label="界址签章表" />
+            <Tab label="界址说明表" />
           </Tabs>
               </Typography>
              
@@ -106,56 +101,50 @@ class FirstDialog extends Component {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <div>
-        {this.state.index === 0 &&
+        {tabIndex === 0 &&
           <TabContainer >
+             
 
-            <h1><br></br>宗地基本信息表</h1>
+            <h1 ><br></br>界址标示表</h1>
 
-  <Provider store={ObligeeTableStore}>   
+ <Provider store={store}>  
   
- <ObligeeTable1/>
+ <BoundaryList />
   
-     </Provider>   
+    </Provider>  
 
           </TabContainer>}
-        {this.state.index === 1 &&
+        {tabIndex === 1 &&
           <TabContainer>
-              <h1 ><br></br>宗地基本信息表</h1>
-    <Provider store={ObligeeTableStore}>   
-  
- <ObligeeTable2 />
-  
-     </Provider>  
+           
+              <h1 ><br></br>界址签章表</h1>
+   <BoundarySignature/>
           </TabContainer>}
-        {this.state.index === 2 &&
+        {tabIndex === 2 &&
           <TabContainer>
-              <h1 ><br></br>宗地基本信息表</h1>
-               <Provider store={ObligeeTableStore}>   
-  
- <ObligeeTable3 />
-  
-     </Provider>  
-        
+            
+              <h1 ><br></br>界址说明表</h1>
+             <BoundarySpecification />
           </TabContainer>}
-             </div>
         </Dialog>
       </div>
     );
   }
 }
 
-FirstDialog.propTypes = {
-  classes: PropTypes.object.isRequired,
+SecondDialog.propTypes = {
+  
+  tabIndex: PropTypes.number.isRequired,
 };
 
-
+//export default withStyles(styleSheet)(SecondDialog);
 
 
 // Map Redux state to component props
 function mapStateToProps(state) {
   return {
-   open:state.firstDialogOpen
+   open:state.secondDialogOpen,
+   tabIndex:state.secondTabIndex
   }
 }
 
@@ -165,15 +154,38 @@ function mapDispatchToProps(dispatch) {
    close: () => dispatch({
                 type: 'close',
                 payload: {
-                    choice: 1
+                    choice: 2,
+                    tab:this.tabIndex
                 }
             }),
+  
+ changeTabIndex0: (key) => dispatch({
+                type: 'choose',
+                payload: {
+                    choice: 2
+                }
+            }),
+   changeTabIndex1: (key) => dispatch({
+                type: 'choose',
+                payload: {
+                    choice: 3
+                }
+            }),
+
+    changeTabIndex2: (key) => dispatch({
+                type: 'choose',
+                payload: {
+                    choice: 4
+                }
+            }),
+  
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FirstDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(SecondDialog);
 
-// // Reducer
+
+// Reducer
 function reducer(state = { Owner:"peter",User:"jack" }, action) {
   
    
@@ -196,6 +208,6 @@ function reducer(state = { Owner:"peter",User:"jack" }, action) {
 }
 
 // Store
-const ObligeeTableStore = createStore(reducer);
+const store = createStore(reducer);
 
 RootReducer.merge(reducer);

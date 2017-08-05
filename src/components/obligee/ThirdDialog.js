@@ -59,24 +59,8 @@ const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
   },
 }));
 
-class FirstDialog extends Component {
-  state = {
-    open: false,
-    index: 0,
-  };
- 
+class ThirdDialog extends Component {
 
-  handleChange = (event, index) => {
-    this.setState({ index });
-  };
-
-  // handleOpen = () => {
-  //   this.setState({ open: true });
-  // };
-
-  // handleClose = value => {
-  //   this.props.firstDialogClose(value);
-  // };
 
   render() {
     const classes = this.props.classes;
@@ -94,11 +78,7 @@ class FirstDialog extends Component {
              
             <Toolbar>
                <Typography type="title" color="inherit">
-                 <Tabs index={this.state.index} onChange={this.handleChange}>
-            <Tab label="权利信息" />
-            <Tab label="宗地信息" />
-            <Tab label="使用信息" />
-          </Tabs>
+                 
               </Typography>
              
                  <IconButton color="contrast" onClick={close} aria-label="Close">
@@ -107,37 +87,15 @@ class FirstDialog extends Component {
             </Toolbar>
           </AppBar>
           <div>
-        {this.state.index === 0 &&
+       
           <TabContainer >
 
-            <h1><br></br>宗地基本信息表</h1>
+            <h1><br></br>调查审核表</h1>
 
-  <Provider store={ObligeeTableStore}>   
   
- <ObligeeTable1/>
-  
-     </Provider>   
-
-          </TabContainer>}
-        {this.state.index === 1 &&
-          <TabContainer>
-              <h1 ><br></br>宗地基本信息表</h1>
-    <Provider store={ObligeeTableStore}>   
-  
- <ObligeeTable2 />
-  
-     </Provider>  
-          </TabContainer>}
-        {this.state.index === 2 &&
-          <TabContainer>
-              <h1 ><br></br>宗地基本信息表</h1>
-               <Provider store={ObligeeTableStore}>   
-  
- <ObligeeTable3 />
-  
-     </Provider>  
+          </TabContainer>
         
-          </TabContainer>}
+        
              </div>
         </Dialog>
       </div>
@@ -145,7 +103,7 @@ class FirstDialog extends Component {
   }
 }
 
-FirstDialog.propTypes = {
+ThirdDialog.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -155,7 +113,7 @@ FirstDialog.propTypes = {
 // Map Redux state to component props
 function mapStateToProps(state) {
   return {
-   open:state.firstDialogOpen
+   open:state.thirdDialogOpen
   }
 }
 
@@ -165,37 +123,10 @@ function mapDispatchToProps(dispatch) {
    close: () => dispatch({
                 type: 'close',
                 payload: {
-                    choice: 1
+                    choice: 5
                 }
             }),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FirstDialog);
-
-// // Reducer
-function reducer(state = { Owner:"peter",User:"jack" }, action) {
-  
-   
-  switch (action.type) {
-  
-    case 'changeOwner':
-   
-    return Object.assign({}, state, {
-        	Owner: action.payload.inputValue
-      });
-
-    case 'changeUser':
-    return Object.assign({}, state, {
-        	User: action.payload.inputValue
-      });
-   
-    default:
-      return state
-  }
-}
-
-// Store
-const ObligeeTableStore = createStore(reducer);
-
-RootReducer.merge(reducer);
+export default connect(mapStateToProps, mapDispatchToProps)(ThirdDialog);
