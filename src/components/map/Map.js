@@ -113,9 +113,9 @@ RootReducer.merge(mapReduce);
 //加入reducer(layerControlReduce)
 const layerControlReduce=(
   state= {
-    pointIsChecked:false,
-    linetIsChecked:false,
-    polygonIsChecked:false},action)=>{
+    pointIsChecked:true,
+    linetIsChecked:true,
+    polygonIsChecked:true},action)=>{
         //点选point图层控制其显示
       if(action.type==="handlePointIsChecked"){
           const pointIsChecked = {
@@ -127,7 +127,8 @@ const layerControlReduce=(
               map.getLayer("point").hide();
           }
             console.log(pointIsChecked);
-            return	{... pointIsChecked }
+            return Object.assign({},state,{... pointIsChecked})
+            //return	{... pointIsChecked }
       }
         //点选line图层控制其显示
       if(action.type==="handleLineIsChecked"){
@@ -140,7 +141,7 @@ const layerControlReduce=(
               map.getLayer("line").hide();
           }
             console.log(linetIsChecked);
-            return	{... linetIsChecked }
+            return Object.assign({},state,{... linetIsChecked})
       }
         //点选polygon图层控制其显示
       if(action.type==="handlePolygonIsChecked"){
@@ -153,14 +154,14 @@ const layerControlReduce=(
                 map.getLayer("polygon").hide();
             }
             console.log(polygonIsChecked);
-          return	{... polygonIsChecked }       
+         return Object.assign({},state,{... polygonIsChecked})   
       }
-      return state;
+      return {...state};
 }
 
 RootReducer.merge(layerControlReduce);
 
-//加入real-time mapping reducer
+//加入reducer(realtimeMapping)
 const realtimeMappingReduce=(
     state={realtimeMappingIsChecked:false},action)=>{
 
@@ -180,7 +181,17 @@ const realtimeMappingReduce=(
 }
 RootReducer.merge(realtimeMappingReduce);
 
-/**
+//加入Reducer(sketchReduce)
+
+
+// const sketchReduce=(state=0,action)=>{
+//     if(action.type==="onSketchToolBarClick"&&text==="plot"){
+
+//     }
+
+// }
+// RootReducer.merge(sketchReduce);
+ /**
  * 
  * @param {*} state 
  * @param {*} ownProps 

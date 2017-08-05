@@ -23,8 +23,10 @@ class LayerControl extends Component {
          anchorEl: event.currentTarget 
         });
   }
+   
 
-  render(){
+  render(){ 
+
 		const { 
 			pointIsChecked,
 			linetIsChecked,
@@ -33,7 +35,7 @@ class LayerControl extends Component {
 			handleLineIsChecked,
 		 handlePolygonIsChecked,
 		} = this.props
-
+    console.log(pointIsChecked+"  "+linetIsChecked+"  "+polygonIsChecked);
     return(
 		<div>
          <IconButton  onClick={this.handleMenuOpen}>
@@ -94,14 +96,17 @@ LayerControl.PropTypes={
  */
 const mapStateToProps = (state) => {
 
+  const layerControlState=state.layerControlReduce;
+
     return {
-			pointIsChecked: state.pointIsChecked,
-			linetIsChecked: state.linetIsChecked,
-			polygonIsChecked: state.polygonIsChecked
+			pointIsChecked: layerControlState.pointIsChecked,
+			linetIsChecked: layerControlState.linetIsChecked,
+			polygonIsChecked: layerControlState.polygonIsChecked
     }
+
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
     return {
       handlePointIsChecked:()=>{
         dispatch({

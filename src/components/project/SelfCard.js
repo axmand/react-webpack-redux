@@ -1,40 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
-import Dialog,{ DialogActions, DialogContent, DialogContentText,DialogTitle } from 'material-ui/Dialog';
-import Card, { CardActions, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
-import Checkbox from 'material-ui/Checkbox';
+import Dialog,{ DialogActions, DialogContent,DialogTitle } from 'material-ui/Dialog';
+import Input from 'material-ui/Input';
 //图标
 import IconButton from 'material-ui/IconButton';
-import AddIcon from 'material-ui-icons/Add'
+import AddIcon from 'material-ui-icons/Add';
 //img
-import reptileImage from './test.jpg';
 //自定义
-
-
-const styleSheet = createStyleSheet('SelfCard', theme =>({
-  card: {
-    maxWidth: 300,
-    maxHeight: 345
-  },
-  addicon:{
-    width: '300px',
-    height: '300px',
-    padding: '14px 16px 15px',
-    margin: '0px',
-  }
-}));
+import AddCard from './AddCard';
+//Redux
+import RootReducer from './../../redux/RootReducer';
+import {connect} from 'react-redux'
 
 class SelfCard extends Component {
 
   state = {
     anchorEl: undefined,
     open: false,
-    checkedA: true,
-    checkedB: false,
-    items: []
   };
 
   handleClick = event => {
@@ -48,90 +32,95 @@ class SelfCard extends Component {
   handleOpen = () => {
     this.setState({ open: true });
   };
-
-  addItem = () => {
-    var itemArray = this.state.items;
-    
-    itemArray.push(
-    {
-      text: this.Element.value,
-      key: Date.now()
-    }
-    );
-
-    this.setState({
-      items: itemArray
-    });
-
-    this.Element.value = "";
-  };
+  
+  onChanged=(e)=>
+  {
+    inputName=e.target.value;
+ 
+  }
 
   render(){
-    const classes = this.props.classes;
+    const { inputItems,
+            handleAddItem
+		} = this.props
 
     return (
     <div>
-      <TodoItems entries={this.state.items}/>
+      <AddCard entries={inputItems}/>
      
-      <IconButton onClick={this.handleClick} className={classes.addicon}>
-         <AddIcon button/>
+      <IconButton onClick = {this.handleClick} 
+                  style = {{  width: '300px',
+                              height: '300px',
+                              padding: '14px 16px 15px',
+                              margin: '0px',}}>
+        <AddIcon button/>
       </IconButton>
-
-       <Dialog
+     
+      <Dialog
           open={this.state.open}
           onRequestClose={this.handleRequestClose}
-       >
-          <DialogTitle>
-           请输入项目名称
-          </DialogTitle>
-          <DialogContent>
-            <input type="text" ref={(a) => this.Element = a} placeholder="权利人+宗地代码等"/>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleRequestClose} color="default">
+      >
+        <DialogTitle>
+            请输入项目名称
+        </DialogTitle>
+        <DialogContent>
+          <Input type="text" ref="NameInput"  onChange={this.onChanged} placeholder="权利人+宗地代码等"/>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleRequestClose} color="default">
               取消
-            </Button>
-            <Button  type="submit" onClick={this.addItem} color="primary">
+          </Button>
+          <Button onClick={handleAddItem} color="primary">
               确认
-            </Button>
-          </DialogActions>
-       </Dialog>
+          </Button>
+        </DialogActions>
+      </Dialog>      
     </div>
   );
   }
 }
 
-var TodoItems = React.createClass({
-  render() {
-    var todoEntries = this.props.entries;
-    function createTasks(item) {
-      return (
-      <Card key={item.key} 
-            style={{maxWidth:300,
-                    maxHeight:345}}>
-        <CardMedia>
-          <img src={reptileImage} alt="Contemplative Reptile" />
-        </CardMedia>
-        <CardActions>
-          <Checkbox />          
-          <Button dense color="primary">
-            {item.text}
-          </Button>
-        </CardActions>
-      </Card>);
-    }
-
-    var listItems = todoEntries.map(createTasks);
-    return (
-      <ul className="theList">
-        {listItems}
-      </ul>
-    );
-  }
-});
-
 SelfCard.propTypes = {
-  classes: PropTypes.object.isRequired,
+  inputItems: PropTypes.array.isRequired,
+	handleAddItem:PropTypes.func.isRequired,
 };
 
-export default withStyles(styleSheet)(SelfCard);
+//声明state和方法
+let inputName = "";
+
+
+const mapStateToProps = (state,ownProps) => {
+
+  return {
+      inputItems: state.SelfCardReduce.inputItems,
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    handleAddItem:()=>{
+      dispatch({
+         type:'handleAddItem',
+         payload: { inputValue:inputName }
+			})
+		},
+	} 
+}  		
+
+export default connect(mapStateToProps, mapDispatchToProps)(SelfCard);
+
+//Reducer
+const SelfCardReduce =(
+  state={
+    inputItems: [],
+  },action)=>{
+    const newState = JSON.parse(JSON.stringify(state))
+      newState.inputItems.splice(-1, 0, action.payload)
+      if(action.type==="handleAddItem"){
+        return { ...state, ...newState };
+      }
+      else
+        return state
+}
+  
+RootReducer.merge(SelfCardReduce);
