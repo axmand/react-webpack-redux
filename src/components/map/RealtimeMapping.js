@@ -11,20 +11,20 @@ class RealtimeMapping extends Component {
     const {realtimeMappingIsChecked,handleRealtimeMapping}=this.props;
 
     return (
-        <div>
-          <ListItem style={{
-            flexDirection: 'column', 
-            border: 0,    
-            background: 'rgba(255, 255, 255, .75)',
-            borderRadius: 5,      
-          }}>
-            <Switch
-            onClick={handleRealtimeMapping}
-            checked={realtimeMappingIsChecked}
-            />
-            <span>实时<br/>成图</span>
-          </ListItem>
-        </div>
+      <ListItem style={{
+        flexDirection: 'column',
+        padding: '0px',
+        width: '60px', 
+        border: 0,
+        background: 'rgba(255, 255, 255, .75)',
+        borderRadius: 5,      
+      }}>
+        <Switch
+        onClick={handleRealtimeMapping}
+        checked={realtimeMappingIsChecked}
+        />
+        <span>实时<br/>成图</span>
+      </ListItem>
     );
   }
 }

@@ -35,7 +35,7 @@ class LayerControl extends Component {
 			handleLineIsChecked,
 		 handlePolygonIsChecked,
 		} = this.props
-    console.log(pointIsChecked+"  "+linetIsChecked+"  "+polygonIsChecked);
+    // console.log(pointIsChecked+"  "+linetIsChecked+"  "+polygonIsChecked);
     return(
 		<div>
          <IconButton  onClick={this.handleMenuOpen}>
