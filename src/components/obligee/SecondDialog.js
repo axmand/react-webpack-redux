@@ -22,6 +22,8 @@ import RootReducer from './../../redux/RootReducer';
 import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
 import BoundaryList from './BoundaryList'
+import BoundarySignature from './BoundarySignature'
+import BoundarySpecification from './BoundarySpecification'
 const TabContainer = props =>
   <div style={{ padding: 20,overflow:"auto" }}>
     {props.children}
@@ -58,70 +60,52 @@ const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
 }));
 
 class SecondDialog extends Component {
-  state = {
-    open: false,
-    index: 0,
-  };
- 
+
 
   handleChange = (event, index) => {
-    this.setState({ index });
+    if(index==0)
+      this.props.changeTabIndex0();
+     if(index==1)
+       this.props.changeTabIndex1();
+      if(index==2)
+       this.props.changeTabIndex2();
   };
 
 
 
-  handleClose = value => {
-    this.props.secondDialogClose(value);
-  };
-   componentWillReceiveProps=()=>{
-     
-     this.setState({index:this.props.changeTabIndex});
-     
-     console.log(this.state);
-    };
-
-//    componentDidMount=()=>{
-     
-//      this.setState({index:this.props.changeTabIndex});
-//      console.log(this.state);
-//     };
-// shouldComponentUpdate=()=>{
-     
-//      this.setState({index:this.props.changeTabIndex});
-//      console.log(this.state);
-//      return true;
-//     };
   render() {
-    const classes = this.props.classes;
-        const { open,secondDialogClose,changeTabIndex } = this.props;
-console.log(this.state.index);
+    //const classes = this.props.classes;
+        const { open,close,tabIndex,changeTabIndex0, changeTabIndex1,changeTabIndex2,classes} = this.props;
+
     return (
       <div>
         <Dialog
           fullScreen
           open={open}
-          onRequestClose={() =>this.handleClose("界址标示表")}
+          onRequestClose={close}
           transition={<Slide direction="up" />}
         >
-          <AppBar className={classes.appBar}>
+          <AppBar >
              
             <Toolbar>
-               <Typography type="title" color="inherit" className={classes.flex}>
-                 <Tabs index={this.state.index} onChange={this.handleChange}>
+               <Typography type="title" color="inherit" >
+                 <Tabs index={tabIndex} onChange={this.handleChange}>
             <Tab label="界址标示表" />
             <Tab label="界址签章表" />
             <Tab label="界址说明表" />
           </Tabs>
               </Typography>
              
-                 <IconButton color="contrast" onClick={() =>this.handleClose("界址标示表")} aria-label="Close">
+                 <IconButton color="contrast" onClick={close} aria-label="Close">
                 <CloseIcon />
               </IconButton>
             </Toolbar>
           </AppBar>
-        {this.state.index === 0 &&
+        {tabIndex === 0 &&
           <TabContainer >
-            <h1 >界址标示表</h1>
+             
+
+            <h1 ><br></br>界址标示表</h1>
 
  <Provider store={store}>  
   
@@ -130,15 +114,17 @@ console.log(this.state.index);
     </Provider>  
 
           </TabContainer>}
-        {this.state.index === 1 &&
+        {tabIndex === 1 &&
           <TabContainer>
-              <h1 >界址签章表</h1>
-  
+           
+              <h1 ><br></br>界址签章表</h1>
+   <BoundarySignature/>
           </TabContainer>}
-        {this.state.index === 2 &&
+        {tabIndex === 2 &&
           <TabContainer>
-              <h1 >界址说明表</h1>
-              
+            
+              <h1 ><br></br>界址说明表</h1>
+             <BoundarySpecification />
           </TabContainer>}
         </Dialog>
       </div>
@@ -147,11 +133,56 @@ console.log(this.state.index);
 }
 
 SecondDialog.propTypes = {
-  classes: PropTypes.object.isRequired,
-  changeTabIndex: PropTypes.number.isRequired,
+  
+  tabIndex: PropTypes.number.isRequired,
 };
 
-export default withStyles(styleSheet)(SecondDialog);
+//export default withStyles(styleSheet)(SecondDialog);
+
+
+// Map Redux state to component props
+function mapStateToProps(state) {
+  return {
+   open:state.secondDialogOpen,
+   tabIndex:state.secondTabIndex
+  }
+}
+
+// Map Redux actions to component props
+function mapDispatchToProps(dispatch) {
+  return {
+   close: () => dispatch({
+                type: 'close',
+                payload: {
+                    choice: 2,
+                    tab:this.tabIndex
+                }
+            }),
+  
+ changeTabIndex0: (key) => dispatch({
+                type: 'choose',
+                payload: {
+                    choice: 2
+                }
+            }),
+   changeTabIndex1: (key) => dispatch({
+                type: 'choose',
+                payload: {
+                    choice: 3
+                }
+            }),
+
+    changeTabIndex2: (key) => dispatch({
+                type: 'choose',
+                payload: {
+                    choice: 4
+                }
+            }),
+  
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SecondDialog);
 
 
 // Reducer
