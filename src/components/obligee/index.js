@@ -6,7 +6,7 @@ import PeopleIcon from 'material-ui-icons/People'
 import SimpleDialogWrapped from './ChooseDialog'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import FirstDialog from './FirstDialog'
-
+import SecondDialog from './SecondDialog'
 const styleSheet = createStyleSheet('ObligeeModule', theme => ({
   listitem: {
     flexDirection: 'column',
@@ -18,14 +18,16 @@ const styleSheet = createStyleSheet('ObligeeModule', theme => ({
     margin: '0px',
   },
 }));
-
+var scdIndex=2;
 class ObligeeModule extends Component {
 
   state = {
     anchorEl: undefined,
     open: false,
     selectedValue:"",
-    firstDialogOpen:false
+    firstDialogOpen:false,
+    secondDialogOpen:false,
+secondTabIndex:0
   }
 
   handleClick = event => {
@@ -34,15 +36,22 @@ class ObligeeModule extends Component {
 
   handleRequestClose =value => {
     if(value=="权籍调查表")
-    this.setState({ open: false,selectedValue: value,firstDialogOpen:true });
-   
+      this.setState({ open: false,selectedValue: value,firstDialogOpen:true });
+   if(value=="界址标示表")
+      this.setState({ open: false,selectedValue: value,secondDialogOpen:true,secondTabIndex:0 });
+   if(value=="界址签章表")
+      this.setState({ open: false,selectedValue: value,secondDialogOpen:true,secondTabIndex:1 });
   }
 
   test= value =>
   {
-     alert(value);
+     
     if(value=="权籍调查表")
       this.setState({ open: false,firstDialogOpen:false,selectedValue: value });
+    if(value=="界址标示表")
+      this.setState({ open: false,secondDialogOpen:false,selectedValue: value });
+    if(value=="界址签章表")
+      this.setState({ open: false,secondDialogOpen:false,selectedValue: value });
   }
   render() {
     const classes = this.props.classes
@@ -66,10 +75,11 @@ class ObligeeModule extends Component {
           </Dialog>
 
           <FirstDialog  open={this.state.firstDialogOpen} firstDialogClose={this.test}/>
-       
+          <SecondDialog  open={this.state.secondDialogOpen} secondDialogClose={this.test} changeTabIndex={this.state.secondTabIndex} />
       </div>
     )
   }
+
 }
 
 export default withStyles(styleSheet)(ObligeeModule);

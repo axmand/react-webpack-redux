@@ -44,8 +44,8 @@ class SimpleDialog extends Component {
 <Table>
         <TableHead>
           <TableRow>
-            <TableCell>表格类型</TableCell>
-            <TableCell>所属项目</TableCell>
+            <TableCell><p>表格类型</p></TableCell>
+            <TableCell><p>所属项目</p></TableCell>
             
           </TableRow>
         </TableHead>
@@ -90,7 +90,7 @@ class SimpleDialog extends Component {
       </Table>
       
 </Paper>
-<Button onClick={() => this.handleListItemClick("属性查询") } height="50px"  width="100%">属性查询</Button>
+<Button onClick={() => this.handleListItemClick("属性查询") } height="150px"  width="100%">属性查询</Button>
         </div>
       
     );

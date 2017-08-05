@@ -21,15 +21,13 @@ import RootReducer from './../../redux/RootReducer';
 
 import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
-import ObligeeTable1 from './ObligeeTable1'
-import ObligeeTable2 from './ObligeeTable2'
-import ObligeeTable3 from './ObligeeTable3'
+import BoundaryList from './BoundaryList'
 const TabContainer = props =>
   <div style={{ padding: 20,overflow:"auto" }}>
     {props.children}
   </div>;
 
-const styleSheet = createStyleSheet('FirstDialog', {
+const styleSheet = createStyleSheet('SecondDialog', {
   appBar: {
     position: 'relative',
   },
@@ -59,7 +57,7 @@ const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
   },
 }));
 
-class FirstDialog extends Component {
+class SecondDialog extends Component {
   state = {
     open: false,
     index: 0,
@@ -70,24 +68,39 @@ class FirstDialog extends Component {
     this.setState({ index });
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
+
 
   handleClose = value => {
-    this.props.firstDialogClose(value);
+    this.props.secondDialogClose(value);
   };
+   componentWillReceiveProps=()=>{
+     
+     this.setState({index:this.props.changeTabIndex});
+     
+     console.log(this.state);
+    };
 
+//    componentDidMount=()=>{
+     
+//      this.setState({index:this.props.changeTabIndex});
+//      console.log(this.state);
+//     };
+// shouldComponentUpdate=()=>{
+     
+//      this.setState({index:this.props.changeTabIndex});
+//      console.log(this.state);
+//      return true;
+//     };
   render() {
     const classes = this.props.classes;
-        const { open,firstDialogClose } = this.props;
-
+        const { open,secondDialogClose,changeTabIndex } = this.props;
+console.log(this.state.index);
     return (
       <div>
         <Dialog
           fullScreen
           open={open}
-          onRequestClose={() =>this.handleClose("权籍调查表")}
+          onRequestClose={() =>this.handleClose("界址标示表")}
           transition={<Slide direction="up" />}
         >
           <AppBar className={classes.appBar}>
@@ -95,46 +108,37 @@ class FirstDialog extends Component {
             <Toolbar>
                <Typography type="title" color="inherit" className={classes.flex}>
                  <Tabs index={this.state.index} onChange={this.handleChange}>
-            <Tab label="权利信息" />
-            <Tab label="宗地信息" />
-            <Tab label="使用信息" />
+            <Tab label="界址标示表" />
+            <Tab label="界址签章表" />
+            <Tab label="界址说明表" />
           </Tabs>
               </Typography>
              
-                 <IconButton color="contrast" onClick={() =>this.handleClose("权籍调查表")} aria-label="Close">
+                 <IconButton color="contrast" onClick={() =>this.handleClose("界址标示表")} aria-label="Close">
                 <CloseIcon />
               </IconButton>
             </Toolbar>
           </AppBar>
         {this.state.index === 0 &&
           <TabContainer >
-            <h1 >宗地基本信息表</h1>
+            <h1 >界址标示表</h1>
 
  <Provider store={store}>  
   
- <ObligeeTable1/>
+ <BoundaryList />
   
     </Provider>  
 
           </TabContainer>}
         {this.state.index === 1 &&
           <TabContainer>
-              <h1 >宗地基本信息表</h1>
-   <Provider store={store}>  
+              <h1 >界址签章表</h1>
   
- <ObligeeTable2 />
-  
-    </Provider> 
           </TabContainer>}
         {this.state.index === 2 &&
           <TabContainer>
-              <h1 >宗地基本信息表</h1>
-              <Provider store={store}>  
-  
- <ObligeeTable3 />
-  
-    </Provider> 
-        
+              <h1 >界址说明表</h1>
+              
           </TabContainer>}
         </Dialog>
       </div>
@@ -142,11 +146,12 @@ class FirstDialog extends Component {
   }
 }
 
-FirstDialog.propTypes = {
+SecondDialog.propTypes = {
   classes: PropTypes.object.isRequired,
+  changeTabIndex: PropTypes.number.isRequired,
 };
 
-export default withStyles(styleSheet)(FirstDialog);
+export default withStyles(styleSheet)(SecondDialog);
 
 
 // Reducer
