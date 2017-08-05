@@ -61,32 +61,32 @@ class  MapToolBar extends Component{
               <ListItem className={classes.listitem} disableGutters={true}>
                 <LayerControl  />
               </ListItem>
-             <ListItem></ListItem>
-            <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("get_location")}>
-            <ListItemIcon className={classes.listitemicon}>
-              <Flag  />
-            </ListItemIcon>
-            </ListItem>
-            <ListItem></ListItem>
-            <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_in")}>
-            <ListItemIcon className={classes.listitemicon}>
-              <Add  />
-            </ListItemIcon>                          
-            </ListItem> 
-            <ListItem></ListItem>           
-            <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
-            <ListItemIcon className={classes.listitemicon}>
-              <Remove  />
-            </ListItemIcon>                          
-            </ListItem>
-            <ListItem ></ListItem> 
-            <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
-            <ListItemIcon className={classes.listitemicon}>
-              <Search  />
-            </ListItemIcon>                          
-            </ListItem>
-            <ListItem ></ListItem> 
-            <RealtimeMapping />             
+              <ListItem />
+              <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("get_location")}>
+                <ListItemIcon className={classes.listitemicon}>
+                  <Flag  />
+                </ListItemIcon>
+              </ListItem>
+              <ListItem />
+              <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_in")}>
+                <ListItemIcon className={classes.listitemicon}>
+                  <Add  />
+                </ListItemIcon>
+              </ListItem>
+              <ListItem />
+              <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
+                <ListItemIcon className={classes.listitemicon}>
+                  <Remove  />
+                </ListItemIcon>                          
+              </ListItem>
+              <ListItem />
+              <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
+                <ListItemIcon className={classes.listitemicon}>
+                  <Search  />
+                </ListItemIcon>                          
+              </ListItem>
+              <ListItem />
+              <RealtimeMapping />             
             </List>
         )
     }
