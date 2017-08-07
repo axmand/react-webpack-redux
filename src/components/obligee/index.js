@@ -26,17 +26,6 @@ const DialogState={
 };
 class ObligeeModule extends Component {
 
-  // state = {
-  //   anchorEl: undefined,
-  //   open: false,
-  //   selectedValue:"",
-  //   firstDialogOpen:false,
-  //   secondDialogOpen:false,
-  //   secondTabIndex:0,
-  //   thirdDialogOpen:false,
-  //   forthDialogOpen:false
-  // }
-
 
 
   render() {
@@ -47,14 +36,7 @@ class ObligeeModule extends Component {
 
       <div>
         
-
-
-  
- 
-       
           <ChooseDialog projectName="项目二"/>
-         
-
           <FirstDialog   />
           <SecondDialog   />
           <ThirdDialog  />
