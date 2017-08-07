@@ -11,53 +11,75 @@ import Dialog, {
 import Button from 'material-ui/Button';
 import Input from 'material-ui/Input';
 import List, { ListItem,ListItemText } from 'material-ui/List'
-// Action
 
-let inputName="";
 
 // Map Redux state to component props
-function mapStateToProps(state) {
+function mapStateToProps1(state) {
   return {
-    value: state.value,
-    dialogShow:state.show
+    value: state.Owner,
   }
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps1(dispatch) {
   return {
-    onShowClick: () => dispatch(showInputDialog),
-    onCompleteInput: () =>{
     
-      dispatch( { type: 'completeInput', payload: {
-                    inputValue:inputName
+    onCompleteInput: (inputData) =>{
+    
+      dispatch( { type: "changeOwner", payload: {
+                    inputValue:inputData
                 }  })}
   }
 }
 
+function mapStateToProps2(state) {
+  return {
+    value: state.User,
+  }
+}
+
+// Map Redux actions to component props
+function mapDispatchToProps2(dispatch) {
+  return {
+    
+    onCompleteInput: inputName =>{
+    
+      dispatch( { type: "changeUser", payload: {
+                    inputValue:inputName
+                }  })}
+  }
+}
 // Connected Component
  
- class Counter extends Component {
+ class InputCell extends Component {
 
+  state = {
+    cellShow:false
+  };
+  showInputCell=()=>
+  {
+    this.setState({cellShow:true});
+  }
+  closeInputCell=()=>
+  {
+    this.setState({cellShow:false});
+  }
   onChanged=(e)=>
   {
-    inputName=e.target.value;
-    console.log(inputName);
+    var inputData=e.target.value;
+    this.props.onCompleteInput(inputData);
   }
 
-
   render() {
-    const { value, onShowClick,onCompleteInput,dialogShow } = this.props;
+    const { value,onCompleteInput,dialogShow,command } = this.props;
     return (
-      <div>
-         <ListItem button>
-         
-          <ListItemText primary="权利人姓名" secondary={value} onClick={onShowClick}/>
-        </ListItem>
-
-
+      <div width="100%" height="100%">
         
-         <Dialog open={dialogShow}>
+          <ListItem button>
+        
+           <ListItemText primary={value}  onClick={this.showInputCell}/> 
+        </ListItem> 
+         <Dialog open={this.state.cellShow}>
           <DialogTitle>
            权利人姓名
           </DialogTitle>
@@ -67,7 +89,7 @@ function mapDispatchToProps(dispatch) {
             
           </DialogContent>
           <DialogActions>
-            <Button  color="primary" onClick={onCompleteInput}>
+            <Button  color="primary" onClick={this.closeInputCell}>
               确定
             </Button>
             
@@ -82,16 +104,18 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-Counter.propTypes = {
+InputCell.propTypes = {
   value: PropTypes.string.isRequired,
-  onShowClick: PropTypes.func.isRequired,
    onCompleteInput: PropTypes.func.isRequired,
 }
 
-const InputCell = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Counter)
 
-export default InputCell;
-const showInputDialog = { type: 'showInputDialog',}
+export const InputCell1 = connect(
+  mapStateToProps1,
+  mapDispatchToProps1
+)(InputCell)
+
+export const InputCell2 = connect(
+  mapStateToProps2,
+  mapDispatchToProps2
+)(InputCell)
