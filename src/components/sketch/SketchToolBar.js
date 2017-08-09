@@ -43,9 +43,7 @@ const styleSheet = createStyleSheet(theme=>({
     },
 
 }))
-class SkechToolBar1 extends Component{
-
-
+class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
         const { onDrawPointClick,drawPointIsChecked } = this.props;
@@ -89,12 +87,12 @@ class SkechToolBar1 extends Component{
                         <DragHandle />
                     </span> 
                 </div>
-            </Draggable>                    
+            </Draggable>
         )
     }
 }
 
-SkechToolBar1.PropTypes={
+SkechToolBar.PropTypes={
     classes: PropTypes.object.isRequired,
     pointNum: PropTypes.number.isRequired,
 }
@@ -136,5 +134,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-const SkechToolBar=withStyles(styleSheet)(SkechToolBar1);
-export default connect(mapStateToProps, mapDispatchToProps)(SkechToolBar);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SkechToolBar));
