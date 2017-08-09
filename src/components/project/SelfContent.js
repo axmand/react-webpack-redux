@@ -7,9 +7,10 @@ import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } f
 import Grid from 'material-ui/Grid';
 import Switch from 'material-ui/Switch';
 import Button from 'material-ui/Button';
-
 //自定义组件
 import SelfCard from './SelfCard'
+//redux
+import RootReducer from './../../redux/RootReducer';
 
 class SelfContent extends Component {
   state = {
@@ -27,10 +28,6 @@ class SelfContent extends Component {
     this.setState({ open: false });
   }
   
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
   render() {
     return (
       <div>
@@ -74,3 +71,17 @@ class SelfContent extends Component {
 
 export default SelfContent;
 
+//Reducer
+const CheckBoxReduce =(
+  state={ BoxisChecked:false },action)=>{
+      if(action.type==="handleBoxisChecked"){
+        const BoxisChecked = {
+          BoxisChecked: !state.BoxisChecked
+        }     
+        return Object.assign({},state,{... BoxisChecked}) 
+      }
+      else
+        return {...state}
+}
+
+RootReducer.merge(CheckBoxReduce);

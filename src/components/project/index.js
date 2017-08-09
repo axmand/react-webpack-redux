@@ -2,11 +2,8 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 //UI
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import Menu, { MenuItem } from 'material-ui/Menu'
-import Paper from 'material-ui/Paper';
-import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog'
-import Button from 'material-ui/Button'
+import  { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import Dialog from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';

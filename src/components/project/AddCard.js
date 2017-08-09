@@ -8,23 +8,27 @@ import Checkbox from 'material-ui/Checkbox';
 //img
 import reptileImage from './test.jpg';
 //Redux
+import { connect } from 'react-redux';
 
 class AddCard extends Component {
- 
+  
   render(){
-    let todoEntries = this.props.entries; 
+		const { 
+			BoxisChecked,
+			handleBoxisChecked,
+    } = this.props
+    
+    let todoEntries = this.props.entries;
     
     function  CreateTasks(item) {
       return (
-      <Card  style={{maxWidth:300,maxHeight:345}}>
+      <Card key={item.key} style={{maxWidth:300,maxHeight:345}}>
         <CardMedia>
           <img src={reptileImage} alt="Contemplative Reptile" />
-        </CardMedia>
-       
-        <Checkbox />   
-        
+        </CardMedia>  
         <CardActions>
-          <Button  color="primary"></Button>
+          <Checkbox checked={BoxisChecked} onClick={handleBoxisChecked}/>
+          <Button color="primary">{item.text.inputValue}</Button>
         </CardActions>
       </Card>);
     } 
@@ -41,6 +45,25 @@ class AddCard extends Component {
 
 AddCard.propTypes = {
   entries: PropTypes.array.isRequired,
+  BoxisChecked:PropTypes.bool.isRequired,
+  handleBoxisChecked:PropTypes.func.isRequired,
 };
 
-export default AddCard;
+const mapStateToProps = (state,ownProps) => {
+    return {
+			BoxisChecked: state.CheckBoxReduce.BoxisChecked,
+    }
+}
+
+const mapDispatchToProps = (dispatch,ownProps) => {
+    return {
+      handleBoxisChecked:()=>{
+        dispatch({
+          type:'handleBoxisChecked'
+				})
+			},
+		} 
+}  	
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddCard);
+
