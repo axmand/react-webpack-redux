@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import RootReducer from './../../redux/RootReducer';
 import PropTypes from 'prop-types';
 import * as maptalks from 'maptalks';
+import store from '../../index'
 
 //引入地图组件
 import MapToolBar from './MapToolBar';
@@ -183,59 +184,61 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 
+const drawPoint = (event) => {
+		store.dispatch({
+			type: 'DRAW_POINT_ON_MAP_SKETCH',
+			payload: {
+				event: event,
+			}
+		})
+	}
+
 const sketchReduce=(state = { 
-    pointNum: 0,
-    drawPointIsChecked:false }, action)=>{
-        function drawPoint(event){
-            action.payload.dispatch({
-                type: 'DRAW_POINT_ON_MAP_SKETCH',
-                payload: {
-                    event: event,
-                }
-            })            
-        }
-        switch(action.type) {
-            case 'drawPointClick':
-            const newState1 = {
-                drawPointIsChecked: !state.drawPointIsChecked,
-                pointNum:state.pointNum
-            }    
-                if(newState1.drawPointIsChecked){
-                    map.on('click',drawPoint)
-                }else{
-                    map.off('click',drawPoint)
-                }
-                console.log(newState1);
+	pointNum: 0,
+	drawPointIsChecked: false }, action)=>{
+	switch(action.type) {
+		case 'drawPointClick':
+		const newState1 = {
+			drawPointIsChecked: !state.drawPointIsChecked,
+		}
+		console.log(newState1);
+		if(newState1.drawPointIsChecked){
+			console.log('bind on drawPoint function ...')
+			map.on('click',drawPoint)
+		}
+		else{
+			console.log('bind off drawPoint function ...')
+			map.off('click',drawPoint)
+		}
 
-                return {...state,...newState1}
+		return {...state,...newState1}
 
-            case 'DRAW_POINT_ON_MAP_SKETCH':
-                console.log(state);
-                const newPointNum = state.pointNum + 1
-                const newState2={
-                        pointNum: newPointNum,
-                        drawPointIsChecked:state.drawPointIsChecked
-                }
-                console.log(newState2);
-                const point_coordinate = action.payload.event.coordinate;
-                const point = new maptalks.Circle(point_coordinate, 2, {
-                symbol: {
-                                lineColor: '#6666FF',
-                                lineWidth: 2,
-                                polygonFill: '#9999FF',
-                                polygonOpacity: 0.4,
-                                'textFaceName' : 'sans-serif',
-                                'textName' : newState2.pointNum,
-                                'textFill' : '#6666FF',
-                                'textHorizontalAlignment' : 'right',
-                                'textSize' :20
-                        }
-                });
-                map.getLayer('point').addGeometry(point);
-                return {...state,...newState2}
-            default:
-                return {... state}
-        }
+		case 'DRAW_POINT_ON_MAP_SKETCH':
+			console.log(state);
+			const newPointNum = state.pointNum + 1
+			const newState2={
+				pointNum: newPointNum,
+			}
+			console.log(newState2);
+			const point_coordinate = action.payload.event.coordinate;
+			const point = new maptalks.Circle(point_coordinate, 2, {
+				symbol: {
+					lineColor: '#6666FF',
+					lineWidth: 2,
+					polygonFill: '#9999FF',
+					polygonOpacity: 0.4,
+					'textFaceName' : 'sans-serif',
+					'textName' : newState2.pointNum,
+					'textFill' : '#6666FF',
+					'textHorizontalAlignment' : 'right',
+					'textSize' :20
+				}
+			});
+			map.getLayer('point').addGeometry(point);
+			return {...state,...newState2}
+		default:
+			return {... state}
+	}
 }
 RootReducer.merge(sketchReduce);
  /**

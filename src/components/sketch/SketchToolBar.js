@@ -112,9 +112,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          onDrawPointClick: () => {
             dispatch({
                 type: 'drawPointClick',
-                payload: {
-                    dispatch: dispatch,
-                },
+                payload: dispatch,
             });
         },
         //连线
