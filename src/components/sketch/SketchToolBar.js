@@ -48,7 +48,7 @@ class SkechToolBar1 extends Component{
 
     render(){
         const classes=this.props.classes;
-        const { onSketchToolBarClick } = this.props;
+        const { onDrawPointClick } = this.props;
         return(
             <Draggable handle="span">
                 <div className={classes.root} >
@@ -56,7 +56,7 @@ class SkechToolBar1 extends Component{
                         <LocationSearching />  
                         <ListItemText primary="展点" />
                     </Button>
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onDrawPointClick}>
                         <Adjust />
                         <ListItemText primary="画点" />
                     </Button>
@@ -95,27 +95,40 @@ class SkechToolBar1 extends Component{
 }
 
 SkechToolBar1.PropTypes={
-    classes:PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    pointNum: PropTypes.number.isRequired,
 }
 
-const mapStateToProps = (state, ownProps) => {
-
-    const props=ownProps;
-    return {
-        text: ownProps.ownProps,
+const mapStateToProps = (state) => {
+  const sketchState=state.sketchReduce;
+ return {
+	    pointNum: sketchState.pointNum
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-         onSketchToolBarClick: (text) => {
+        //画点
+         onDrawPointClick: () => {
             dispatch({
-                type: 'sketchToolBarClick',
-                payload: {
-                    command: text
-                }
+								type: 'drawPointClick',
+								payload: {
+									dispatch: dispatch,
+								},
             });
-        }
+        },
+        //连线
+        onDrawLineClick: () => {
+            dispatch({
+                type: 'drawLineClick',
+            });
+        },
+        //构面
+        onDrawPolygonClick: () => {
+            dispatch({
+                type: 'drawPolygonClick',
+            });
+        }        
     }
 }
 

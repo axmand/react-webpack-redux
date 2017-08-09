@@ -69,6 +69,12 @@ class Sketch extends Component {
             <ClearIcon />
           </IconButton>
         </AppBar>
+         {this.state.index === 0 &&
+            <SketchToolBar />}
+        {this.state.index === 1 &&
+          <div>
+            {'Item Two'}
+          </div>}
       </div>            
     )
   }
