@@ -183,14 +183,46 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 
+const sketchReduce=(state = { pointNum: 0 }, action)=>{
 
-// const sketchReduce=(state=0,action)=>{
-//     if(action.type==="onSketchToolBarClick"&&text==="plot"){
-
-//     }
-
-// }
-// RootReducer.merge(sketchReduce);
+	switch(action.type) {
+		case 'drawPointClick':
+			map.on('click',(event) => {
+				action.payload.dispatch({
+						type: 'DRAW_POINT_OM_MAP_SKETCH',
+						payload: {
+							event: event,
+						}
+				})
+			})
+			return { ...state}
+		case 'DRAW_POINT_OM_MAP_SKETCH':
+			const newPointNum = state.pointNum + 1
+			const newState={
+					pointNum: newPointNum
+			}
+			console.log(newState);
+			const point_coordinate = action.payload.event.coordinate;
+			const point = new maptalks.Circle(point_coordinate, 2, {
+			symbol: {
+							lineColor: '#6666FF',
+							lineWidth: 2,
+							polygonFill: '#9999FF',
+							polygonOpacity: 0.4,
+							'textFaceName' : 'sans-serif',
+							'textName' : newState.pointNum,
+							'textFill' : '#6666FF',
+							'textHorizontalAlignment' : 'right',
+							'textSize' :20
+					}
+			});
+			map.getLayer('point').addGeometry(point);
+			return {...state,...newState}
+		default:
+			return {... state}
+	}
+}
+RootReducer.merge(sketchReduce);
  /**
  * 
  * @param {*} state 
@@ -234,4 +266,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Map);
+export default connect(mapStateToProps, mapDispatchToProps)(Map)
