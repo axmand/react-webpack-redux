@@ -121,7 +121,7 @@ const layerControlReduce=(
           const pointIsChecked = {
               pointIsChecked: !state.pointIsChecked
             }    
-            if(pointIsChecked.pointIsChecked===true){
+            if(pointIsChecked.pointIsChecked){
               map.getLayer("point").show();
             }else{
               map.getLayer("point").hide();
@@ -135,7 +135,7 @@ const layerControlReduce=(
           const linetIsChecked = {
 				linetIsChecked: !state.linetIsChecked
             }
-            if(linetIsChecked.linetIsChecked===true){
+            if(linetIsChecked.linetIsChecked){
               map.getLayer("line").show();
             }else{
               map.getLayer("line").hide();
@@ -148,7 +148,7 @@ const layerControlReduce=(
           const polygonIsChecked = {
               polygonIsChecked: !state.polygonIsChecked
             }
-            if(polygonIsChecked.polygonIsChecked===true){
+            if(polygonIsChecked.polygonIsChecked){
                 map.getLayer("polygon").show();
             }else{
                 map.getLayer("polygon").hide();
@@ -169,7 +169,7 @@ const realtimeMappingReduce=(
         const realtimeMappingIsChecked = {
               realtimeMappingIsChecked: !state.realtimeMappingIsChecked
             }    
-            if(realtimeMappingIsChecked.realtimeMappingIsChecked===true){
+            if(realtimeMappingIsChecked.realtimeMappingIsChecked){
              console.log('打开了');
             }else{
              console.log('没打开');
@@ -177,50 +177,65 @@ const realtimeMappingReduce=(
             console.log(realtimeMappingIsChecked);
             return	{... realtimeMappingIsChecked }
     }
-        return state;
+        return {... state};
 }
 RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 
-const sketchReduce=(state = { pointNum: 0 }, action)=>{
+const sketchReduce=(state = { 
+    pointNum: 0,
+    drawPointIsChecked:false }, action)=>{
+        function drawPoint(event){
+            action.payload.dispatch({
+                type: 'DRAW_POINT_ON_MAP_SKETCH',
+                payload: {
+                    event: event,
+                }
+            })            
+        }
+        switch(action.type) {
+            case 'drawPointClick':
+            const newState1 = {
+                drawPointIsChecked: !state.drawPointIsChecked,
+                pointNum:state.pointNum
+            }    
+                if(newState1.drawPointIsChecked){
+                    map.on('click',drawPoint)
+                }else{
+                    map.off('click',drawPoint)
+                }
+                console.log(newState1);
 
-	switch(action.type) {
-		case 'drawPointClick':
-			map.on('click',(event) => {
-				action.payload.dispatch({
-						type: 'DRAW_POINT_OM_MAP_SKETCH',
-						payload: {
-							event: event,
-						}
-				})
-			})
-			return { ...state}
-		case 'DRAW_POINT_OM_MAP_SKETCH':
-			const newPointNum = state.pointNum + 1
-			const newState={
-					pointNum: newPointNum
-			}
-			console.log(newState);
-			const point_coordinate = action.payload.event.coordinate;
-			const point = new maptalks.Circle(point_coordinate, 2, {
-			symbol: {
-							lineColor: '#6666FF',
-							lineWidth: 2,
-							polygonFill: '#9999FF',
-							polygonOpacity: 0.4,
-							'textFaceName' : 'sans-serif',
-							'textName' : newState.pointNum,
-							'textFill' : '#6666FF',
-							'textHorizontalAlignment' : 'right',
-							'textSize' :20
-					}
-			});
-			map.getLayer('point').addGeometry(point);
-			return {...state,...newState}
-		default:
-			return {... state}
-	}
+                return {...state,...newState1}
+
+            case 'DRAW_POINT_ON_MAP_SKETCH':
+                console.log(state);
+                const newPointNum = state.pointNum + 1
+                const newState2={
+                        pointNum: newPointNum,
+                        drawPointIsChecked:state.drawPointIsChecked
+                }
+                console.log(newState2);
+                const point_coordinate = action.payload.event.coordinate;
+                const point = new maptalks.Circle(point_coordinate, 2, {
+                symbol: {
+                                lineColor: '#6666FF',
+                                lineWidth: 2,
+                                polygonFill: '#9999FF',
+                                polygonOpacity: 0.4,
+                                'textFaceName' : 'sans-serif',
+                                'textName' : newState2.pointNum,
+                                'textFill' : '#6666FF',
+                                'textHorizontalAlignment' : 'right',
+                                'textSize' :20
+                        }
+                });
+                map.getLayer('point').addGeometry(point);
+                return {...state,...newState2}
+            default:
+                return {... state}
+        }
 }
 RootReducer.merge(sketchReduce);
  /**
@@ -243,15 +258,6 @@ const mapStateToProps = (state, ownProps) => {
  */
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-
-        onClick: () => {
-            dispatch({
-                type: 'menuClick2',
-                payload: {
-                    hhh: 2
-                }
-            })
-        },
 
         onMenuItemClick: (text) => {
             dispatch({
