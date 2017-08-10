@@ -47,7 +47,7 @@ const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
       }
       return { ...state, ...newState}
     default:
-        return state
+      return state
   }
 }
 
