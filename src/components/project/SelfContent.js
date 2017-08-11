@@ -9,8 +9,9 @@ import Switch from 'material-ui/Switch';
 import Button from 'material-ui/Button';
 //自定义组件
 import SelfCard from './SelfCard'
-//redux
+//Redux
 import RootReducer from './../../redux/RootReducer';
+import {connect} from 'react-redux'
 
 class SelfContent extends Component {
   state = {
@@ -68,20 +69,38 @@ class SelfContent extends Component {
     );
   }
 }
-
-export default SelfContent;
-
-//Reducer
-const CheckBoxReduce =(
-  state={ BoxisChecked:false },action)=>{
-      if(action.type==="handleBoxisChecked"){
-        const BoxisChecked = {
-          BoxisChecked: !state.BoxisChecked
-        }     
-        return Object.assign({},state,{... BoxisChecked}) 
-      }
-      else
-        return {...state}
+//声明State与Action
+const mapStateToProps = (state,ownProps) => {
+  return { 
+  }
 }
 
-RootReducer.merge(CheckBoxReduce);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    handleDelList:()=>{
+      dispatch({
+         type: 'handleDelList',
+			})
+    },
+	} 
+}  		
+
+export default connect(mapStateToProps, mapDispatchToProps)(SelfContent);
+
+//reducer
+const SelfContentReduce =(
+  state={
+
+  },action)=>{
+    if(action.type==="handleDelList"){
+      return state.filter(user =>
+        Number(user.id) !== Number(action.user_id)
+      );
+    }
+    else
+      return state
+}
+  
+RootReducer.merge(SelfContentReduce);
+
+

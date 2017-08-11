@@ -28,12 +28,14 @@ class SelfCard extends Component {
             showDialog,
             handleAddItem,
             handleShowDialog,
-            handleRequestClose
+            handleRequestClose,
+            ChooseList,
+            handleChooseList,
 		} = this.props
 
     return (
     <div>
-      <AddCard entries = { inputItems } id = { IdNumber } />
+      <AddCard entries = { inputItems }  handleChooseList={ () => handleChooseList(IdNumber) }/>
      
       <IconButton onClick = { handleShowDialog } 
                   style = {{  width: '300px',
@@ -74,17 +76,19 @@ SelfCard.propTypes = {
   handleAddItem:PropTypes.func.isRequired,
   handleShowDialog:PropTypes.func.isRequired,
   handleRequestClose:PropTypes.func.isRequired,
+  ChooseList: PropTypes.array.isRequired,    
+  handleChooseList:PropTypes.func.isRequired,
 };
 
 //声明state和方法
 let inputName  =  "";
 
 const mapStateToProps = (state,ownProps) => {
-
   return {
       inputItems: state.SelfCardReduce.inputItems,
       IdNumber: state.SelfCardReduce.IdNumber,
       showDialog: state.SelfCardReduce.showDialog,
+      ChooseList: state.SelfCardReduce.ChooseList,  
   }
 }
 
@@ -96,6 +100,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          payload: { inputValue:inputName },
 			})
     },
+    
+    handleChooseList:()=>{
+        dispatch({
+          type: 'handleChooseList',
+				})
+			},
     
     handleShowDialog:()=>{
       dispatch({
@@ -118,19 +128,28 @@ const SelfCardReduce =(
   state={
     inputItems: [],
     IdNumber: '',
-    showDialog: false
+    showDialog: false,
+    ChooseList: [],
   },action)=>{
     if(action.type==="handleAddItem"){
       const newState = JSON.parse(JSON.stringify(state))
       const uuidv4 = require('uuid/v4');
       let IdNumber = uuidv4();
-
+      
       newState.IdNumber = IdNumber;
       newState.showDialog = !state.showDialog;
       newState.inputItems.push({text:action.payload,key:IdNumber})
       return { ...state, ...newState };
     }
-      
+
+    if(action.type==="handleChooseList"){
+      const newState = JSON.parse(JSON.stringify(state))
+      let IdNumber = state.IdNumber
+      newState.IdNumber = IdNumber;
+      newState.ChooseList.splice(-1,0,IdNumber)
+      return { ...state, ...newState };
+    }
+    
     if(action.type==="handleShowDialog"){
       const showDialog ={showDialog: !state.showDialog} 
       return Object.assign({},state,{... showDialog})
