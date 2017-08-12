@@ -15,13 +15,13 @@ import { FormGroup } from 'material-ui/Form';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button';
-
+import Typography from 'material-ui/Typography'
 import PasswordFeild from './PasswordField'
 
 const styleSheet = createStyleSheet('Login', theme => ({
   container: {
     width: '100%',
-    height: '100%',
+    height: `${window.innerHeight}px`,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -61,8 +61,8 @@ class Login extends Component {
       <div className={classes.container}>
         <FormGroup>
           <Paper className={classes.paper}>
-            <div style={{width: '310px'}}>
-              <p>用户登录</p>
+            <div>
+              <Typography type='headline'>用户登录</Typography>
             </div>
             <TextField
               id="username"
@@ -72,7 +72,9 @@ class Login extends Component {
               required={true}
             />
             <PasswordFeild />
-            <Button className={classes.button}>忘记密码?</Button>
+            <Button className={classes.button}>
+              <Typography align='right'>忘记密码?</Typography>
+            </Button>
             <NavLink to="/mainview">
               <Button raised color="primary" className={classes.button}>登&nbsp;&nbsp;录</Button>
             </NavLink>
