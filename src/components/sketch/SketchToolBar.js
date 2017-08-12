@@ -35,7 +35,6 @@ const styleSheet = createStyleSheet(theme=>({
         flexDirection: 'column',
         justifyContent: 'center ',
         display:'inline-block',
-        //backgroud:'grey',
         minheight:'60px',
         minWidth:'60px',
         fontSize:'12px',
@@ -44,15 +43,14 @@ const styleSheet = createStyleSheet(theme=>({
     },
 
 }))
-class SkechToolBar1 extends Component{
-
+class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onDrawPointClick } = this.props;
+        const { onDrawPointClick,drawPointIsChecked } = this.props;
         return(
             <Draggable handle="span">
                 <div className={classes.root} >
-                     <Button className={classes.button} >
+                     <Button className={classes.button} checked={drawPointIsChecked}>
                         <LocationSearching />  
                         <ListItemText primary="展点" />
                     </Button>
@@ -89,12 +87,12 @@ class SkechToolBar1 extends Component{
                         <DragHandle />
                     </span> 
                 </div>
-            </Draggable>                    
+            </Draggable>
         )
     }
 }
 
-SkechToolBar1.PropTypes={
+SkechToolBar.PropTypes={
     classes: PropTypes.object.isRequired,
     pointNum: PropTypes.number.isRequired,
 }
@@ -111,26 +109,29 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         //画点
          onDrawPointClick: () => {
             dispatch({
-								type: 'drawPointClick',
-								payload: {
-									dispatch: dispatch,
-								},
+                type: 'drawPointClick',
+                payload: dispatch,
             });
         },
         //连线
         onDrawLineClick: () => {
             dispatch({
                 type: 'drawLineClick',
+                payload: {
+                    dispatch: dispatch,
+                },                
             });
         },
         //构面
         onDrawPolygonClick: () => {
             dispatch({
                 type: 'drawPolygonClick',
+                payload: {
+                    dispatch: dispatch,
+                },
             });
         }        
     }
 }
 
-const SkechToolBar=withStyles(styleSheet)(SkechToolBar1);
-export default connect(mapStateToProps, mapDispatchToProps)(SkechToolBar);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SkechToolBar));
