@@ -7,12 +7,13 @@ import Checkbox from 'material-ui/Checkbox';
 //图标
 //img
 import reptileImage from './test.jpg';
+//Redux
 
 class AddCard extends Component {
 
   render(){
 		const { 
-			handleChooseList,
+      handleChooseList,
     } = this.props
     
     let todoEntries = this.props.entries;
@@ -45,4 +46,4 @@ AddCard.propTypes = {
   handleChooseList:PropTypes.func.isRequired,
 };
 
-export default (AddCard);
+export default AddCard;

@@ -14,6 +14,8 @@ import ClearIcon from 'material-ui-icons/Clear';
 import FolderOpenIcon from 'material-ui-icons/FolderOpen'
 //自定义组件
 import SelfContent from './SelfContent'
+//redux
+import RootReducer from './../../redux/RootReducer';
 
 const styleSheet = createStyleSheet('ProjectModule', theme => ({
   listitem: {
@@ -57,7 +59,7 @@ class ProjectModule extends Component {
 
   render() {
     const classes = this.props.classes
-    
+
     return (
         <div>
           <ListItem button className={classes.listitem} disableGutters={true} onClick={this.handleClick}>
@@ -90,3 +92,4 @@ class ProjectModule extends Component {
 }
 
 export default withStyles(styleSheet)(ProjectModule)
+

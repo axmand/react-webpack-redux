@@ -12,7 +12,6 @@ import AddIcon from 'material-ui-icons/Add';
 //自定义
 import AddCard from './AddCard';
 //Redux
-import RootReducer from './../../redux/RootReducer';
 import {connect} from 'react-redux'
 
 class SelfCard extends Component {
@@ -29,13 +28,12 @@ class SelfCard extends Component {
             handleAddItem,
             handleShowDialog,
             handleRequestClose,
-            ChooseList,
             handleChooseList,
 		} = this.props
 
     return (
     <div>
-      <AddCard entries = { inputItems }  handleChooseList={ () => handleChooseList(IdNumber) }/>
+      <AddCard entries = { inputItems }  handleChooseList={ ()=> handleChooseList(IdNumber) }/>
      
       <IconButton onClick = { handleShowDialog } 
                   style = {{  width: '300px',
@@ -76,7 +74,6 @@ SelfCard.propTypes = {
   handleAddItem:PropTypes.func.isRequired,
   handleShowDialog:PropTypes.func.isRequired,
   handleRequestClose:PropTypes.func.isRequired,
-  ChooseList: PropTypes.array.isRequired,    
   handleChooseList:PropTypes.func.isRequired,
 };
 
@@ -85,10 +82,9 @@ let inputName  =  "";
 
 const mapStateToProps = (state,ownProps) => {
   return {
-      inputItems: state.SelfCardReduce.inputItems,
-      IdNumber: state.SelfCardReduce.IdNumber,
-      showDialog: state.SelfCardReduce.showDialog,
-      ChooseList: state.SelfCardReduce.ChooseList,  
+      inputItems: state.ProjectReduce.inputItems,
+      IdNumber: state.ProjectReduce.IdNumber,
+      showDialog: state.ProjectReduce.showDialog,
   }
 }
 
@@ -101,9 +97,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 			})
     },
     
-    handleChooseList:()=>{
+    handleChooseList:(id)=>{
         dispatch({
           type: 'handleChooseList',
+          id
 				})
 			},
     
@@ -122,46 +119,3 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }  		
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelfCard);
-
-//Reducer
-const SelfCardReduce =(
-  state={
-    inputItems: [],
-    IdNumber: '',
-    showDialog: false,
-    ChooseList: [],
-  },action)=>{
-    if(action.type==="handleAddItem"){
-      const newState = JSON.parse(JSON.stringify(state))
-      const uuidv4 = require('uuid/v4');
-      let IdNumber = uuidv4();
-      
-      newState.IdNumber = IdNumber;
-      newState.showDialog = !state.showDialog;
-      newState.inputItems.push({text:action.payload,key:IdNumber})
-      return { ...state, ...newState };
-    }
-
-    if(action.type==="handleChooseList"){
-      const newState = JSON.parse(JSON.stringify(state))
-      let IdNumber = state.IdNumber
-      newState.IdNumber = IdNumber;
-      newState.ChooseList.splice(-1,0,IdNumber)
-      return { ...state, ...newState };
-    }
-    
-    if(action.type==="handleShowDialog"){
-      const showDialog ={showDialog: !state.showDialog} 
-      return Object.assign({},state,{... showDialog})
-    }
-      
-    if(action.type==="handleRequestClose"){
-      const showDialog ={showDialog: !state.showDialog} 
-      return Object.assign({},state,{... showDialog})
-    }
-      
-    else
-      return state
-}
-  
-RootReducer.merge(SelfCardReduce);
