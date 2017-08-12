@@ -46,11 +46,11 @@ const styleSheet = createStyleSheet(theme=>({
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onDrawPointClick,drawPointIsChecked } = this.props;
+        const { onDrawPointClick, onDrawLineClick} = this.props;
         return(
             <Draggable handle="span">
                 <div className={classes.root} >
-                     <Button className={classes.button} checked={drawPointIsChecked}>
+                     <Button className={classes.button}>
                         <LocationSearching />  
                         <ListItemText primary="展点" />
                     </Button>
@@ -58,7 +58,7 @@ class SkechToolBar extends Component{
                         <Adjust />
                         <ListItemText primary="画点" />
                     </Button>
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onDrawLineClick}>
                         <Timeline />
                         <ListItemText primary="连线" />
                     </Button>                               
@@ -93,8 +93,7 @@ class SkechToolBar extends Component{
 }
 
 SkechToolBar.PropTypes={
-    classes: PropTypes.object.isRequired,
-    pointNum: PropTypes.number.isRequired,
+    classes: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -117,18 +116,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onDrawLineClick: () => {
             dispatch({
                 type: 'drawLineClick',
-                payload: {
-                    dispatch: dispatch,
-                },                
+                payload:dispatch,                
             });
         },
         //构面
         onDrawPolygonClick: () => {
             dispatch({
                 type: 'drawPolygonClick',
-                payload: {
-                    dispatch: dispatch,
-                },
+                payload:dispatch,
             });
         }        
     }

@@ -16,7 +16,7 @@ import MapToolBar from './MapToolBar';
  * @type {maptalks.Map}
  * 全局的地图对象和方法
  */
-let map,drawPoint;
+let map;
 
 /**
  * 地图组件
@@ -134,7 +134,6 @@ const layerControlReduce = (
         }
         console.log(pointIsChecked);
         return Object.assign({}, state, { ...pointIsChecked })
-        //return	{... pointIsChecked }
     }
     //点选line图层控制其显示
     if (action.type === "handleLineIsChecked") {
@@ -188,32 +187,122 @@ const realtimeMappingReduce = (
 RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
-const sketchReduce = (state = { pointNum: 0, drawPointIsChecked: false, drawLineIsChecked: false }, action) => {
-    switch (action.type) {
-        case 'drawPointClick':
-            drawPoint = drawPoint ||function (e) {
+let drawPoint,drawLine,point,line,getPoint,clearPoiArr;
+//初始化线面的点集数组
+let poiArr=new Array(),
+    points=new Array();
+const sketchReduce = (state = { 
+    pointNum: 0, 
+    drawPointIsChecked: false,
+    drawLineIsChecked: false,
+    drawPolygonIsChecked:false}, action) => {
+        //用于连线和构面时获取被选中的点并存放在poiArr数组中
+        getPoint=getPoint ||function(e){
+            poiArr.push(e.target);
+            const id=e.target._id;
+            map.getLayer('point').getGeometryById(id).updateSymbol([{ 'polygonFill': '#f00'}]);
+            console.log(poiArr);
+        }
+        //用于清空点集
+        clearPoiArr=clearPoiArr || function(){
+            poiArr=[];
+            console.log('cleared array')
+        }
+        //用于画点
+        drawPoint = drawPoint ||function (e) {
                 state.pointNum++;
-                let point = new maptalks.Circle(e.coordinate, 2, {
+                point = new maptalks.Circle(e.coordinate,2,
+                    {
+                        'id':state.pointNum,
+                        'draggable':true,
+                        'symbol':[
+                            {
+                                'lineColor': '#6666FF',
+                                'lineWidth': 2,
+                                'polygonFill': '#9999FF',
+                                'polygonOpacity': 0.4},
+
+                            {
+                                'textFaceName': 'sans-serif',
+                                'textName': state.pointNum,
+                                'textFill': '#6666FF',
+                                'textHorizontalAlignment': 'right',
+                                'textSize': 20}
+                            ]
+                    } 
+                );
+                points.push(point);
+                point.on('click',getPoint)
+                map.getLayer('point').addGeometry(point);       
+            };
+        //用于画线
+        drawLine = drawLine ||function () {
+            console.log(poiArr.length);
+            if(poiArr.length===2){
+                line = new maptalks.ConnectorLine(poiArr[0], poiArr[1], {
+                    showOn : 'always', 
+                    arrowStyle : 'classic',
+                    arrowPlacement : null,
                     symbol: {
-                        lineColor: '#6666FF',
-                        lineWidth: 2,
-                        polygonFill: '#9999FF',
-                        polygonOpacity: 0.4,
-                        'textFaceName': 'sans-serif',
-                        'textName': state.pointNum,
-                        'textFill': '#6666FF',
-                        'textHorizontalAlignment': 'right',
-                        'textSize': 20
+                        lineColor: '#34495e',
+                        ineWidth: 2
                     }
                 });
-                map.getLayer('point').addGeometry(point);
-            };
+                map.getLayer('line').addGeometry(line);                   
+            } 
+            if(poiArr.length>2){
+                const i=poiArr.length-2;
+                    line = new maptalks.ConnectorLine(poiArr[i], poiArr[i+1], {
+                        showOn : 'always', 
+                        arrowStyle : 'classic',
+                        arrowPlacement : null,
+                        symbol: {
+                            lineColor: '#34495e',
+                            lineWidth: 2
+                        }
+                    });
+                    map.getLayer('line').addGeometry(line);             
+            }
+        };
+
+    switch (action.type) {
+           
+        case 'drawPointClick':
+            if(state.drawLineIsChecked){
+                map.off('click',drawLine)
+            }
             !state.drawPointIsChecked ? map.on('click', drawPoint):map.off('click',drawPoint);
-            return {...state,...{drawPointIsChecked:!state.drawLineIsChecked}};
-        case 'DRAW_POINT_ON_MAP_SKETCH':
-            return { ...state }
+            const newState1={
+                pointNum:state.pointNum,
+                drawPointIsChecked:!state.drawPointIsChecked,
+                drawLineIsChecked:false,
+                drawPolygonIsChecked:false,
+            }
+            return {...state,...newState1};
+
+        case 'drawLineClick':            
+            if(state.drawPointIsChecked){
+                map.off('click',drawPoint)
+            }
+             !state.drawLineIsChecked ? map.on('click', drawLine):map.off('click',drawLine);
+             //待修改
+             if(!state.drawLineIsChecked){
+                 clearPoiArr;
+             }
+
+            console.log('draw line');        
+            const newState2={
+                pointNum:state.pointNum,
+                drawPointIsChecked:false,
+                drawLineIsChecked:!state.drawLineIsChecked,
+                drawPolygonIsChecked:false,
+            }
+         
+            return {...state,...newState2};
+
         default:
             return { ...state }
+        
     }
 }
 RootReducer.merge(sketchReduce);
