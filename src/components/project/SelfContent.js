@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
-import { FormLabel, FormControl, FormControlLabel } from 'material-ui/Form';
-import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
-import Grid from 'material-ui/Grid';
+import { FormLabel, FormControlLabel } from 'material-ui/Form';
+import Dialog,{ DialogActions, DialogContent, DialogContentText } from 'material-ui/Dialog';
 import Switch from 'material-ui/Switch';
 import Button from 'material-ui/Button';
 //自定义组件
@@ -16,19 +15,30 @@ import RootReducer from './../../redux/RootReducer';
 class SelfContent extends Component {
 
   render() {
-    const { handleDelete,handleShowDelDialog,showDelDialog,handleCloseDelDialog } = this.props
+    const { 
+      handleDelete,
+      handleShowDelDialog,
+      showDelDialog,
+      handleCloseDelDialog,
+      SwitchChecked,
+      handleSwitchChange,
+      ButtonDisabled
+    } = this.props
     
     return (
       <div>
         <FormControlLabel
           control={
-            <Switch/>
+            <Switch
+               checked = { SwitchChecked }
+               onChange = { handleSwitchChange }
+            />
           }
           label="编辑"
         />
        <FormLabel>
-          <Button onClick={ handleShowDelDialog }>删除</Button>
-          <Button>完成</Button>
+          <Button onClick={ handleShowDelDialog } disabled = { ButtonDisabled }>删除</Button>
+          <Button disabled = { ButtonDisabled }>完成</Button>
        </FormLabel>
       
        <Dialog
@@ -60,6 +70,9 @@ SelfContent.propTypes = {
   handleCloseDelDialog:PropTypes.func.isRequired,
   handleShowDelDialog:PropTypes.func.isRequired,
   showDelDialog:PropTypes.bool.isRequired,
+  SwitchChecked:PropTypes.bool.isRequired,
+  handleSwitchChange:PropTypes.func.isRequired,
+  ButtonDisabled:PropTypes.bool.isRequired,
 }
 
 //声明State与Action
@@ -67,6 +80,8 @@ const mapStateToProps = (state,ownProps) => {
 
   return {
      showDelDialog: state.ProjectReduce.showDelDialog,
+     SwitchChecked: state.ProjectReduce.SwitchChecked,
+     ButtonDisabled: state.ProjectReduce.ButtonDisabled
   }
 }
 
@@ -89,6 +104,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          type: 'handleCloseDelDialog',
 			})
     },
+
+    handleSwitchChange:()=>{
+      dispatch({
+        type: 'handleSwitchChange',
+      })
+    }
 	} 
 }  		
 
@@ -102,6 +123,8 @@ const ProjectReduce =(
     IdNumber: '',
     showDialog: false,
     showDelDialog: false,
+    SwitchChecked: false,
+    ButtonDisabled: true,
   },action)=>{
     
     let newState = JSON.parse(JSON.stringify(state))
@@ -161,6 +184,12 @@ const ProjectReduce =(
       return { ...state, ...newState };
     }
     
+    if(action.type==="handleSwitchChange"){
+      newState.SwitchChecked = !state.SwitchChecked
+      newState.ButtonDisabled = !state.ButtonDisabled
+      return { ...state, ...newState };
+    }
+
     else
       return state
 }

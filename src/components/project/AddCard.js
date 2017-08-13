@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
 import Card, { CardActions, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -8,7 +9,6 @@ import Checkbox from 'material-ui/Checkbox';
 //img
 import reptileImage from './test.jpg';
 //Redux
-import {connect} from 'react-redux'
 
 class AddCard extends Component {
 
@@ -36,8 +36,8 @@ class AddCard extends Component {
 }
 
 AddCard.propTypes = {
-  entries: PropTypes.array.isRequired,
+  entries: PropTypes.object.isRequired,
   handleChooseList:PropTypes.func.isRequired,
 };
 
-export default AddCard;
+export default (AddCard);

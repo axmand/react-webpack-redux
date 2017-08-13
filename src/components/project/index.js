@@ -15,7 +15,7 @@ import FolderOpenIcon from 'material-ui-icons/FolderOpen'
 //自定义组件
 import SelfContent from './SelfContent'
 //redux
-import RootReducer from './../../redux/RootReducer';
+
 
 const styleSheet = createStyleSheet('ProjectModule', theme => ({
   listitem: {

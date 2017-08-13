@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
+import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
 import Button from 'material-ui/Button';
 import Dialog,{ DialogActions, DialogContent,DialogTitle } from 'material-ui/Dialog';
@@ -13,6 +13,15 @@ import AddIcon from 'material-ui-icons/Add';
 import AddCard from './AddCard';
 //Redux
 import {connect} from 'react-redux'
+
+const styleSheet = createStyleSheet('SelfCard', theme => ({
+  box:{
+    display: 'flex',
+    flexFlow: 'row wrap',
+    alignContent: 'spaceAround',
+    flexBasis: 'auto'
+  }
+}));
 
 class SelfCard extends Component {
 
@@ -29,11 +38,12 @@ class SelfCard extends Component {
             handleShowDialog,
             handleRequestClose,
             handleChooseList,
+            classes
 		} = this.props
 
     return (
     <div>
-      <div>
+      <div className = {classes.box}>
         {inputItems.map( todo => 
           <AddCard
           {...todo} 
@@ -41,15 +51,15 @@ class SelfCard extends Component {
           handleChooseList={ ()=> handleChooseList(todo.key) } 
           />
         )}
+       
+        <IconButton onClick = { handleShowDialog } 
+          style = {{  width: '300px',
+                      height: '300px',
+                      padding: '14px 16px 15px',
+                      margin: '0px',}}>
+          <AddIcon/>
+        </IconButton>
       </div>
-     
-      <IconButton onClick = { handleShowDialog } 
-                  style = {{  width: '300px',
-                              height: '300px',
-                              padding: '14px 16px 15px',
-                              margin: '0px',}}>
-        <AddIcon/>
-      </IconButton>
      
       <Dialog
           open={ showDialog } 
@@ -126,4 +136,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 	} 
 }  		
 
-export default connect(mapStateToProps, mapDispatchToProps)(SelfCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SelfCard));
