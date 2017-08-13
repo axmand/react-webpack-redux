@@ -2,11 +2,8 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 //UI
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import Menu, { MenuItem } from 'material-ui/Menu'
-import Paper from 'material-ui/Paper';
-import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog'
-import Button from 'material-ui/Button'
+import  { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import Dialog from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -17,6 +14,8 @@ import ClearIcon from 'material-ui-icons/Clear';
 import FolderOpenIcon from 'material-ui-icons/FolderOpen'
 //自定义组件
 import SelfContent from './SelfContent'
+//redux
+import RootReducer from './../../redux/RootReducer';
 
 const styleSheet = createStyleSheet('ProjectModule', theme => ({
   listitem: {
@@ -48,6 +47,7 @@ class ProjectModule extends Component {
     }
     this.handleClick = this.handleClick.bind(this);
   }
+ 
   handleClick = event => {
     this.setState({ open: true })
   }
@@ -59,7 +59,7 @@ class ProjectModule extends Component {
 
   render() {
     const classes = this.props.classes
-    
+
     return (
         <div>
           <ListItem button className={classes.listitem} disableGutters={true} onClick={this.handleClick}>
@@ -92,3 +92,4 @@ class ProjectModule extends Component {
 }
 
 export default withStyles(styleSheet)(ProjectModule)
+
