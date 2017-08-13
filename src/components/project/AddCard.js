@@ -8,6 +8,7 @@ import Checkbox from 'material-ui/Checkbox';
 //img
 import reptileImage from './test.jpg';
 //Redux
+import {connect} from 'react-redux'
 
 class AddCard extends Component {
 
@@ -16,26 +17,19 @@ class AddCard extends Component {
       handleChooseList,
     } = this.props
     
-    let todoEntries = this.props.entries;
-    
-    function  CreateTasks(item) {
-      return (
+    let item = this.props.entries;
+
+    return(
+      <div>
       <Card key={ item.key } style={{maxWidth:300,maxHeight:345}}>
         <CardMedia>
           <img src={ reptileImage } alt="Contemplative Reptile" />
         </CardMedia>  
         <CardActions>
-          <Checkbox onClick={ handleChooseList } />
+          <Checkbox onClick={  handleChooseList } />
           <Button color="primary">{ item.text.inputValue }</Button>
         </CardActions>
-      </Card>);
-    } 
-
-    let listItems = todoEntries.map(CreateTasks);
-
-    return(
-      <div>
-        {listItems}
+      </Card>
       </div>
     )
   }

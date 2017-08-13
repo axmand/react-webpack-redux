@@ -66,7 +66,6 @@ SelfContent.propTypes = {
 const mapStateToProps = (state,ownProps) => {
 
   return {
-     // inputItems: state.ProjectReduce.inputItems,
      showDelDialog: state.ProjectReduce.showDelDialog,
   }
 }
@@ -118,6 +117,7 @@ const ProjectReduce =(
     }
 
     if(action.type==="handleChooseList"){
+ 
       let listItems = newState.inputItems.map( todo => {
         if ( todo.key === action.id ) {
           return {
@@ -156,7 +156,7 @@ const ProjectReduce =(
     if(action.type==="handleDelete"){
       const inputItems = state.inputItems
       newState.showDelDialog = !state.showDelDialog;
-      let listItems = newState.inputItems.filter( todo =>{return todo.checked === false } )
+      let listItems = newState.inputItems.filter( (todo) =>{return todo.checked === false } )
       newState.inputItems = listItems
       return { ...state, ...newState };
     }

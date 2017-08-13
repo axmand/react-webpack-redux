@@ -33,7 +33,15 @@ class SelfCard extends Component {
 
     return (
     <div>
-      <AddCard entries = { inputItems }  handleChooseList={ ()=> handleChooseList(IdNumber) }/>
+      <div>
+        {inputItems.map( todo => 
+          <AddCard
+          {...todo} 
+          entries = { todo }
+          handleChooseList={ ()=> handleChooseList(todo.key) } 
+          />
+        )}
+      </div>
      
       <IconButton onClick = { handleShowDialog } 
                   style = {{  width: '300px',
@@ -96,14 +104,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          payload: { inputValue:inputName },
 			})
     },
-    
+
     handleChooseList:(id)=>{
         dispatch({
           type: 'handleChooseList',
           id
 				})
 			},
-    
+
     handleShowDialog:()=>{
       dispatch({
          type: 'handleShowDialog',
