@@ -10,11 +10,21 @@ import Checkbox from 'material-ui/Checkbox';
 import reptileImage from './test.jpg';
 //Redux
 
+const styleSheet = createStyleSheet(theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+  input: {
+    display: 'none',
+  },
+}));
+
 class AddCard extends Component {
 
   render(){
 		const { 
       handleChooseList,
+      classes
     } = this.props
     
     let item = this.props.entries;
@@ -27,7 +37,10 @@ class AddCard extends Component {
         </CardMedia>  
         <CardActions>
           <Checkbox onClick={  handleChooseList } />
-          <Button color="primary">{ item.text.inputValue }</Button>
+          <input accept="bak,dwg,BAK,DWG" className={classes.input} id="file" multiple type="file"  />
+          <label htmlFor="file">
+          <Button color="primary" component="span">{ item.text.inputValue }</Button>
+          </label >
         </CardActions>
       </Card>
       </div>
@@ -40,4 +53,4 @@ AddCard.propTypes = {
   handleChooseList:PropTypes.func.isRequired,
 };
 
-export default (AddCard);
+export default withStyles(styleSheet)(AddCard);
