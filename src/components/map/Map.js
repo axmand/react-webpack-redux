@@ -16,7 +16,7 @@ import MapToolBar from './MapToolBar';
  * @type {maptalks.Map}
  * 全局的地图对象和方法
  */
-let map,drawPoint;
+let map;
 
 /**
  * 地图组件
@@ -39,6 +39,7 @@ class Map extends Component {
                 new maptalks.VectorLayer('polygon')
             ]
         });
+        map.setZoom(20);
     }
 
     render() {
@@ -134,7 +135,6 @@ const layerControlReduce = (
         }
         console.log(pointIsChecked);
         return Object.assign({}, state, { ...pointIsChecked })
-        //return	{... pointIsChecked }
     }
     //点选line图层控制其显示
     if (action.type === "handleLineIsChecked") {
@@ -188,33 +188,191 @@ const realtimeMappingReduce = (
 RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
-const sketchReduce = (state = { pointNum: 0, drawPointIsChecked: false, drawLineIsChecked: false }, action) => {
-    switch (action.type) {
-        case 'drawPointClick':
-            drawPoint = drawPoint ||function (e) {
+//初始化相关量
+let drawPoint,drawLine,drawPolygon,
+     point,line,polygon,
+     getPoint,clearPoiArr,
+     clickEventBind;
+//初始化线面的点集数组
+let poiArr=new Array(),
+    poiId=new Array(),
+    poiCoor=new Array(),
+    points=new Array();
+const sketchReduce = (state = { 
+    pointNum: 0, 
+    drawPointIsChecked: false,
+    drawLineIsChecked: false,
+    drawPolygonIsChecked:false}, action) => {
+//用于连线和构面时获取被选中的点并存放在poiArr数组中
+        getPoint=getPoint ||function(e){
+            poiArr.push(e.target);
+            poiCoor.push(e.target._coordinates); 
+            const id=e.target._id;
+            poiId.push(id);
+            map.getLayer('point').getGeometryById(id).updateSymbol([{ 'polygonFill': '#f00'}]); 
+        }
+//用于清空点集
+        clearPoiArr=clearPoiArr || function(){
+
+            for(var i=0;i<poiId.length;i++){
+                map.getLayer('point').getGeometryById(poiId[i]).updateSymbol([{ 'polygonFill': '#9999FF'}]);
+            }
+            poiArr=[];
+            poiId=[];
+            poiCoor=[];
+            console.log('cleared array');}        
+        
+//用于判断click事件的绑定
+       clickEventBind=clickEventBind || function(status){
+            if(status==='drawPoint'){
+                console.log(status)
+                if(!state.drawLineIsChecked){
+                    map.off('click',drawLine);
+                    map.off('dblclick',clearPoiArr)
+                }
+                if(!state.drawPolygonIsChecked){
+                    map.off('click',drawPolygon);
+                    map.off('dblclick',clearPoiArr)
+                }                                  
+            }
+            if(status==='drawLine'){
+                console.log(status)
+                if(!state.drawPointIsChecked){
+                    map.off('click',drawPoint)
+                }
+                if(!state.drawPolygonIsChecked){
+                    map.off('click',drawPolygon)
+                    map.off('dblclick',clearPoiArr)
+                }                                  
+            }
+            if(status==='drawPolygon'){
+                console.log(status)
+                if(!state.drawPointIsChecked){
+                    map.off('click',drawPoint)
+                }
+                if(!state.drawLineIsChecked){
+                    map.off('click',drawLine)
+                    map.off('dblclick',clearPoiArr)
+                }                                
+            }                       
+        }      
+//用于画点
+        drawPoint = drawPoint ||function (e) {
                 state.pointNum++;
-                let point = new maptalks.Circle(e.coordinate, 2, {
+                point = new maptalks.Circle(e.coordinate,2,
+                    {
+                        'id':state.pointNum,
+                        'draggable':true,
+                        'symbol':[
+                            {
+                                'lineColor': '#6666FF',
+                                'lineWidth': 2,
+                                'polygonFill': '#9999FF',
+                                'polygonOpacity': 0.4},
+
+                            {
+                                'textFaceName': 'sans-serif',
+                                'textName': state.pointNum,
+                                'textFill': '#6666FF',
+                                'textHorizontalAlignment': 'right',
+                                'textSize': 20}
+                            ]
+                    } 
+                );
+                points.push(point);
+                point.on('click',getPoint)
+                map.getLayer('point').addGeometry(point);       
+            };
+//用于画线
+        drawLine = drawLine ||function () {
+            console.log(poiArr.length);
+            if(poiArr.length===2){
+                line = new maptalks.ConnectorLine(poiArr[0], poiArr[1], {
+                    showOn : 'always', 
+                    arrowStyle : 'classic',
+                    arrowPlacement : null,
                     symbol: {
-                        lineColor: '#6666FF',
-                        lineWidth: 2,
-                        polygonFill: '#9999FF',
-                        polygonOpacity: 0.4,
-                        'textFaceName': 'sans-serif',
-                        'textName': state.pointNum,
-                        'textFill': '#6666FF',
-                        'textHorizontalAlignment': 'right',
-                        'textSize': 20
+                        lineColor: '#34495e',
+                        ineWidth: 2
                     }
                 });
-                map.getLayer('point').addGeometry(point);
-            };
-            !state.drawPointIsChecked ? map.on('click', drawPoint):map.off('click',drawPoint);
-            return {...state,...{drawPointIsChecked:!state.drawLineIsChecked}};
-        case 'DRAW_POINT_ON_MAP_SKETCH':
-            return { ...state }
-        default:
-            return { ...state }
-    }
+                map.getLayer('line').addGeometry(line);                   
+            } 
+            if(poiArr.length>2){
+                const i=poiArr.length-2;
+                    line = new maptalks.ConnectorLine(poiArr[i], poiArr[i+1], {
+                        showOn : 'always', 
+                        arrowStyle : 'classic',
+                        arrowPlacement : null,
+                        symbol: {
+                            lineColor: '#34495e',
+                            lineWidth: 2
+                        }
+                    });
+                    map.getLayer('line').addGeometry(line);             
+            }
+        };
+//用于画地块
+         drawPolygon = drawPolygon ||function () {
+             console.log(poiCoor.length);
+             if(poiCoor.length>=3){
+                 polygon = new maptalks.Polygon(poiCoor, {
+                    symbol: {
+                    'lineColor' : '#34495e',
+                    'lineWidth' : 2,
+                    'polygonFill' : 'rgb(135,196,240)',
+                    'polygonOpacity' : 0.6
+                    }
+                });
+                map.getLayer('polygon').addGeometry(polygon);
+             }
+        }
+///////
+        switch (action.type) {
+            
+            case 'drawPointClick':
+                clickEventBind('drawPoint');
+                !state.drawPointIsChecked ? map.on('click', drawPoint):map.off('click',drawPoint);
+                const newState1={
+                    pointNum:state.pointNum,
+                    drawPointIsChecked:!state.drawPointIsChecked,
+                    drawLineIsChecked:false,
+                    drawPolygonIsChecked:false,
+                }
+                return {...state,...newState1};
+
+            case 'drawLineClick':  
+                clickEventBind('drawLine');
+                !state.drawLineIsChecked ? map.on('click', drawLine):map.off('click',drawLine);
+                !state.drawLineIsChecked ? map.on('dblclick', clearPoiArr):map.off('dblclick',clearPoiArr);   
+                const newState2={
+                    pointNum:state.pointNum,
+                    drawPointIsChecked:false,
+                    drawLineIsChecked:!state.drawLineIsChecked,
+                    drawPolygonIsChecked:false,
+                }  
+                return {...state,...newState2};
+
+            case  'drawPolygonClick':
+                clickEventBind('drawPolygon');
+                !state.drawPolygonIsChecked ? map.on('click', drawPolygon):map.off('click',drawPolygon);
+                !state.drawPolygonIsChecked ? map.on('dblclick', clearPoiArr):map.off('dblclick',clearPoiArr);
+                //待修改
+                if(!state.drawPolygonIsChecked){
+                    clearPoiArr();
+                }                       
+                const newState3={
+                    pointNum:state.pointNum,
+                    drawPointIsChecked:false,
+                    drawLineIsChecked:false,
+                    drawPolygonIsChecked:!state.drawPolygonIsChecked,
+                }
+                return {...state,...newState3};        
+
+            default:
+                return { ...state }
+            
+        }
 }
 RootReducer.merge(sketchReduce);
 /**
