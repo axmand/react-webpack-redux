@@ -46,7 +46,7 @@ const styleSheet = createStyleSheet(theme=>({
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onDrawPointClick, onDrawLineClick} = this.props;
+        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick} = this.props;
         return(
             <Draggable handle="span">
                 <div className={classes.root} >
@@ -62,7 +62,7 @@ class SkechToolBar extends Component{
                         <Timeline />
                         <ListItemText primary="连线" />
                     </Button>                               
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onDrawPolygonClick}>
                         <CheckBoxOutlineBlank />
                         <ListItemText primary="构面" />
                     </Button> 
