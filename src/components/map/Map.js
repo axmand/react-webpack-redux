@@ -48,7 +48,7 @@ class Map extends Component {
 
         return (
             <div>
-                <div ref='map' style={{ color: "#000", width: "100%", height: `${window.innerHeight - 20}px` }} />
+                <div ref='map' style={{ color: "#000", width: '100%', height: `${window.innerHeight}px` }} />
                 <MapToolBar onClick={onMenuItemClick} text="zoom_in" />
             </div>
         )
@@ -215,7 +215,7 @@ const sketchReduce = (state = {
         clearPoiArr=clearPoiArr || function(){
 
             for(var i=0;i<poiId.length;i++){
-                map.getLayer('point').getGeometryById(poiId[i]).updateSymbol([{ 'polygonFill': '#9999FF'}]);
+                map.getLayer('point').getGeometryById(poiId[i]).updateSymbol([{ 'polygonFill': '#0000FF'}]);
             }
             poiArr=[];
             poiId=[];
@@ -231,8 +231,7 @@ const sketchReduce = (state = {
                     map.off('dblclick',clearPoiArr)
                 }
                 if(!state.drawPolygonIsChecked){
-                    map.off('click',drawPolygon);
-                    map.off('dblclick',clearPoiArr)
+                    map.off('dblclick',drawPolygon)
                 }                                  
             }
             if(status==='drawLine'){
@@ -241,8 +240,7 @@ const sketchReduce = (state = {
                     map.off('click',drawPoint)
                 }
                 if(!state.drawPolygonIsChecked){
-                    map.off('click',drawPolygon)
-                    map.off('dblclick',clearPoiArr)
+                    map.off('dblclick',drawPolygon)
                 }                                  
             }
             if(status==='drawPolygon'){
@@ -265,15 +263,15 @@ const sketchReduce = (state = {
                         'draggable':true,
                         'symbol':[
                             {
-                                'lineColor': '#6666FF',
+                                'lineColor': '#0000FF',
                                 'lineWidth': 2,
-                                'polygonFill': '#9999FF',
-                                'polygonOpacity': 0.4},
+                                'polygonFill': '#0000FF',
+                                'polygonOpacity': 1},
 
                             {
                                 'textFaceName': 'sans-serif',
                                 'textName': state.pointNum,
-                                'textFill': '#6666FF',
+                                'textFill': '#FFFFFF',
                                 'textHorizontalAlignment': 'right',
                                 'textSize': 20}
                             ]
@@ -292,7 +290,7 @@ const sketchReduce = (state = {
                     arrowStyle : 'classic',
                     arrowPlacement : null,
                     symbol: {
-                        lineColor: '#34495e',
+                        lineColor: '#FF0000',
                         ineWidth: 2
                     }
                 });
@@ -305,7 +303,7 @@ const sketchReduce = (state = {
                         arrowStyle : 'classic',
                         arrowPlacement : null,
                         symbol: {
-                            lineColor: '#34495e',
+                            lineColor: '#FF0000',
                             lineWidth: 2
                         }
                     });
@@ -318,14 +316,15 @@ const sketchReduce = (state = {
              if(poiCoor.length>=3){
                  polygon = new maptalks.Polygon(poiCoor, {
                     symbol: {
-                    'lineColor' : '#34495e',
+                    'lineColor' : '#FF0000',
                     'lineWidth' : 2,
-                    'polygonFill' : 'rgb(135,196,240)',
+                    'polygonFill' : '#FFFFFF',
                     'polygonOpacity' : 0.6
                     }
                 });
                 map.getLayer('polygon').addGeometry(polygon);
              }
+            clearPoiArr();
         }
 ///////
         switch (action.type) {
@@ -355,8 +354,8 @@ const sketchReduce = (state = {
 
             case  'drawPolygonClick':
                 clickEventBind('drawPolygon');
-                !state.drawPolygonIsChecked ? map.on('click', drawPolygon):map.off('click',drawPolygon);
-                !state.drawPolygonIsChecked ? map.on('dblclick', clearPoiArr):map.off('dblclick',clearPoiArr);
+
+                !state.drawPolygonIsChecked ? map.on('dblclick', drawPolygon):map.off('dblclick',drawPolygon);
                 //待修改
                 if(!state.drawPolygonIsChecked){
                     clearPoiArr();
