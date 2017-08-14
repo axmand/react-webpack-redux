@@ -35,7 +35,6 @@ const styleSheet = createStyleSheet(theme=>({
         flexDirection: 'column',
         justifyContent: 'center ',
         display:'inline-block',
-        //backgroud:'grey',
         minheight:'60px',
         minWidth:'60px',
         fontSize:'12px',
@@ -44,44 +43,42 @@ const styleSheet = createStyleSheet(theme=>({
     },
 
 }))
-class SkechToolBar1 extends Component{
-
+class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onSketchToolBarClick } = this.props;
+        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
         return(
             <Draggable handle="span">
                 <div className={classes.root} >
-                     <Button className={classes.button} >
+                     <Button className={classes.button}>
                         <LocationSearching />  
                         <ListItemText primary="展点" />
                     </Button>
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onDrawPointClick}>
                         <Adjust />
                         <ListItemText primary="画点" />
                     </Button>
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onDrawLineClick}>
                         <Timeline />
                         <ListItemText primary="连线" />
                     </Button>                               
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onDrawPolygonClick}>
                         <CheckBoxOutlineBlank />
                         <ListItemText primary="构面" />
                     </Button> 
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onDeleteClick}>
                         <Delete />
                         <ListItemText primary="删除" />
                     </Button>            
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onUndoClick}>
                         <Undo />
                         <ListItemText primary="撤销" />
                     </Button>
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onRedoClick}>
                         <Redo />
-                       
                         <ListItemText primary="重做" />
                     </Button>
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onSaveClick}>
                         <Save />
                         <ListItemText primary="保存" />
                     </Button>
@@ -89,35 +86,74 @@ class SkechToolBar1 extends Component{
                         <DragHandle />
                     </span> 
                 </div>
-            </Draggable>                    
+            </Draggable>
         )
     }
 }
 
-SkechToolBar1.PropTypes={
-    classes:PropTypes.object.isRequired
+SkechToolBar.PropTypes={
+    classes: PropTypes.object.isRequired
 }
 
-const mapStateToProps = (state, ownProps) => {
-
-    const props=ownProps;
-    return {
-        text: ownProps.ownProps,
+const mapStateToProps = (state) => {
+  const sketchState=state.sketchReduce;
+ return {
+	    pointNum: sketchState.pointNum
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-         onSketchToolBarClick: (text) => {
+        //画点
+         onDrawPointClick: () => {
             dispatch({
-                type: 'sketchToolBarClick',
-                payload: {
-                    command: text
-                }
+                type: 'drawPointClick',
+                payload: dispatch,
             });
-        }
+        },
+        //连线
+        onDrawLineClick: () => {
+            dispatch({
+                type: 'drawLineClick',
+                payload:dispatch,                
+            });
+        },
+        //构面
+        onDrawPolygonClick: () => {
+            dispatch({
+                type: 'drawPolygonClick',
+                payload:dispatch,
+            });
+        },
+        //删除
+        onDeleteClick: () => {
+            dispatch({
+                type: 'deleteClick',
+                payload:dispatch,
+            });
+        },
+        //撤销
+        onUndoClick: () => {
+            dispatch({
+                type: 'undoClick',
+                payload:dispatch,
+            });
+        },        
+        //重做
+        onRedoClick:()=>{
+            dispatch({
+                type:'redoClick',
+                payload:dispatch,
+            });
+        },
+        //保存
+        onSaveClick:()=>{
+            dispatch({
+                type:'saveClick',
+                payload:dispatch,
+            });
+        }        
     }
 }
 
-const SkechToolBar=withStyles(styleSheet)(SkechToolBar1);
-export default connect(mapStateToProps, mapDispatchToProps)(SkechToolBar);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SkechToolBar));

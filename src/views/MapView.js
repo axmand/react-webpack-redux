@@ -25,7 +25,7 @@ class MapView extends Component {
     return (
       <div className={classes.root}>
         {sketchDisplayState && <Sketch /> }
-        <Map />	
+        <Map />
       </div>
     )
   }
@@ -47,7 +47,7 @@ const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
       }
       return { ...state, ...newState}
     default:
-        return state
+      return state
   }
 }
 

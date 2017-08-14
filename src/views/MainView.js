@@ -5,7 +5,7 @@
  * 
  */
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
@@ -18,8 +18,8 @@ import Paper from 'material-ui/Paper';
 
 const styleSheet = createStyleSheet('MainView', theme => ({
   root: {
-		flexGrow: 1,
-		height: '100%',
+    flexGrow: 1,
+    height: '100%',
   },
 }));
 
@@ -32,28 +32,25 @@ class MainView extends Component {
     return (
       <div className={classes.root}>
         <Router>
-          <Grid container gutter={0}>
+          <Grid container={true} spacing={0}>
             <Grid item xs={1}>
               <NavigationView />
             </Grid>
-            <Grid item xs={11}>
-              <Grid container direction='column' gutter={0}>
-                <Grid item item xs={12}>
+            <Grid item xs={11} >
+              <Grid container direction='column' spacing={0}>
+                <Grid item xl={12}>
                   <Paper>
                     <MapView />
                   </Paper>
-                </Grid>
-                <Grid item xs={12}>
-                  <Paper>状态栏</Paper>
+                  <div style={{ position: 'fixed', bottom: '15px', marginLeft: '15px',fontSize:'16px',textShadow:'5px 2px 6px #aaa'}}>打印机已丢失连接.....</div>
                 </Grid>
               </Grid>
-            </Grid>     
+            </Grid>
           </Grid>
         </Router>
       </div>
     )
   }
-  
 }
 
 MainView.propTypes = {
