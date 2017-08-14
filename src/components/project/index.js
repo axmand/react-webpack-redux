@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 //UI
 import  { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import Dialog from 'material-ui/Dialog'
+import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -28,13 +28,19 @@ const styleSheet = createStyleSheet('ProjectModule', theme => ({
     margin: '0px',
   },
   AppBar:{
-    flex: {
-     flex: 1,
-    },
     root:{
       marginTop:30,
       width:'100%',
-    }
+    },
+    position: 'relative'
+  },
+  flex: {
+     flex: 1,
+  },
+ 
+  dialog:{
+    width: '800px',
+    height: '800px',
   }
 }))
 
@@ -68,11 +74,14 @@ class ProjectModule extends Component {
             </ListItemIcon>            
             <ListItemText primary="项目管理" />
           </ListItem>
+          
           <Dialog
             fullScreen
+            //contentStyle={{maxWidth:'800'}}
+            //className={classes.dialog}
             open={this.state.open}
             onRequestClose={this.handleRequestClose}
-            transition={<Slide direction="right" />}
+            transition={<Slide direction="up" />}
           >
             <AppBar position="static">
               <Toolbar>
@@ -84,8 +93,12 @@ class ProjectModule extends Component {
                 </IconButton>
               </Toolbar>
             </AppBar>
-            <SelfContent/>
+
+            <DialogContent style={{overflowY:'auto'}}>
+              <SelfContent/>
+            </DialogContent>
           </Dialog>
+           
         </div>
     )
   }

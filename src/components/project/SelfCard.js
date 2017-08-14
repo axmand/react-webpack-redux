@@ -20,6 +20,7 @@ const styleSheet = createStyleSheet('SelfCard', theme => ({
     flexFlow: 'row wrap',
     alignContent: 'spaceAround',
     flexBasis: 'auto',
+    padding: '10px',   
   }
 }));
 

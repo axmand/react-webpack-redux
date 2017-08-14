@@ -11,9 +11,6 @@ import reptileImage from './test.jpg';
 //Redux
 
 const styleSheet = createStyleSheet(theme => ({
-  button: {
-    margin: theme.spacing.unit,
-  },
   input: {
     display: 'none',
   },
@@ -30,8 +27,8 @@ class AddCard extends Component {
     let item = this.props.entries;
 
     return(
-      <div>
-      <Card key={ item.key } style={{maxWidth:300,maxHeight:345}}>
+      <div style={{padding:'10px'}}>
+      <Card key={ item.key } style={{Width:300,Height:345}}>
         <CardMedia>
           <img src={ reptileImage } alt="Contemplative Reptile" />
         </CardMedia>  

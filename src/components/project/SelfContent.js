@@ -36,7 +36,7 @@ class SelfContent extends Component {
           }
           label="编辑"
         />
-       <FormLabel>
+       <FormLabel  >
           <Button onClick={ handleShowDelDialog } disabled = { ButtonDisabled }>删除</Button>
           <Button disabled = { ButtonDisabled }>完成</Button>
        </FormLabel>
