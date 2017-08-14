@@ -2,10 +2,28 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import UI
+import { withStyles, createStyleSheet } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu'
 import { ListItemText } from 'material-ui/List'
 import IconButton from 'material-ui/IconButton';
 import ContentCopy from 'material-ui-icons/ContentCopy';
+
+const styleSheet = createStyleSheet(theme=>({
+  icon:{
+    color:'#000',
+    width: '30px',
+    height: '30px',
+    margin: '0px',   
+    background: 'rgba(255, 255, 255, .75)',//'white',
+    borderRadius: 5
+  },
+  menu:{
+    paddingTop: '0px',
+    paddingBottom:'0px',
+
+  }
+
+}))
 
 
 class LayerControl extends Component {
@@ -26,7 +44,7 @@ class LayerControl extends Component {
    
 
   render(){ 
-
+    const classes=this.props.classes;
 		const { 
 			pointIsChecked,
 			linetIsChecked,
@@ -38,38 +56,27 @@ class LayerControl extends Component {
     // console.log(pointIsChecked+"  "+linetIsChecked+"  "+polygonIsChecked);
     return(
 		<div>
-         <IconButton  onClick={this.handleMenuOpen}>
-            <ContentCopy 
-            style={{
-                color:'#000',
-                width: '30px',
-                height: '30px',
-                margin: '0px',   
-                background: 'rgba(255, 255, 255, .75)',//'white',
-                borderRadius: 5,
-            }}/>        
+         <IconButton  onClick={this.handleMenuOpen} >
+            <ContentCopy className={classes.icon}/>        
          </IconButton>
          <Menu
+         className={classes.menu}
           anchorEl={this.state.anchorEl}
           open={this.state.menuOpen}       
-          anchorOrigin={{
-              horizontal:'right',
-              vertical:'center',
-          }}
         >
-        <MenuItem dense button >
+        <MenuItem dense button className={classes.menuitem}>
           <input type="checkbox"  checked={pointIsChecked} onClick={handlePointIsChecked} />
-          <ListItemText primary={'point'} />
+          <ListItemText primary={'界址点'} />
         </MenuItem>
-        <MenuItem dense button >
+        <MenuItem dense button className={classes.menuitem}>
           <input type="checkbox" checked={linetIsChecked} onClick={handleLineIsChecked} />
-          <ListItemText primary={'line'} />
+          <ListItemText primary={'界址线'} />
         </MenuItem>
-        <MenuItem dense button >
+        <MenuItem dense button className={classes.menuitem}>
           <input  type="checkbox" checked={polygonIsChecked}  onClick={handlePolygonIsChecked} />
-          <ListItemText primary={'polygon'} />
+          <ListItemText primary={'宗地'} />
         </MenuItem>
-        <MenuItem dense button onClick={this.handleMenuOpen}>
+        <MenuItem dense button onClick={this.handleMenuOpen} className={classes.menuitem}>
           返回
         </MenuItem>
         </Menu>
@@ -81,6 +88,7 @@ class LayerControl extends Component {
  * 限定组件的一些属性
  */
 LayerControl.PropTypes={
+      classes: PropTypes.object.isRequired,
 			pointIsChecked:PropTypes.bool.isRequired,
 			linetIsChecked:PropTypes.bool.isRequired,
 			polygonIsChecked:PropTypes.bool.isRequired,
@@ -127,4 +135,4 @@ const mapDispatchToProps = (dispatch) => {
 }  		
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(LayerControl)
+export default withStyles(styleSheet)(connect(mapStateToProps, mapDispatchToProps)(LayerControl))

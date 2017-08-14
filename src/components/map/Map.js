@@ -193,7 +193,9 @@ let drawPoint,drawLine,drawPolygon,deleteObj,
      point,line,polygon,target,
      getPoint,clearPoiArr,getObj,
      clickEventBind;
-let objIsClicked= false;
+let lineIsClicked = false,
+    PolygonIsClicked = false,
+    showConfirmDeletion = false;
 //初始化线面的点集数组
 let poiArr=new Array(),
     poiId=new Array(),
@@ -207,7 +209,8 @@ const sketchReduce = (state = {
     deleteIsChecked:false,
     undoIsChecked:false,
     redoIsChecked:false,
-    saveIsChecked:false}, action) => {
+    saveIsChecked:false,
+    showDelDialog:false}, action) => {
 //用于连线和构面时获取被选中的点并存放在poiArr数组中
         getPoint=getPoint ||function(e){
             target=e.target;
@@ -215,13 +218,13 @@ const sketchReduce = (state = {
             poiCoor.push(target._coordinates); 
             const id=target._id;
             poiId.push(id);
-            target.updateSymbol([{ 'polygonFill': '#f00'}]); 
+            target.updateSymbol([{ 'polygonFill': '#00FFFF','lineColor': '#00FFFF'}]); 
+            console.log(state.deleteIsChecked)
         }
 //用于清空点集
         clearPoiArr=clearPoiArr || function(){
-
             for(var i=0;i<poiId.length;i++){
-                map.getLayer('point').getGeometryById(poiId[i]).updateSymbol([{ 'polygonFill': '#0000FF'}]);
+                map.getLayer('point').getGeometryById(poiId[i]).updateSymbol([{ 'polygonFill': '#0000FF','lineColor': '#0000FF'}]);
             }
             poiArr=[];
             poiId=[];
@@ -231,13 +234,29 @@ const sketchReduce = (state = {
         getObj = getObj ||function(e){
             target=e.target;
             console.log(target);
-            objIsClicked=!objIsClicked;
-            console.log(objIsClicked);
-            if(objIsClicked){
-                target.updateSymbol({ 'lineColor': '#f00'});
-            }else{
-                target.updateSymbol({ 'lineColor': '#FF0000'});
+            if(target.type==='Polygon'){
+                PolygonIsClicked=!PolygonIsClicked;
+                if(PolygonIsClicked){
+                    target.updateSymbol({'lineColor': '#00FFFF'});
+                }
+                if(!PolygonIsClicked){
+                    target.updateSymbol({ 'lineColor': '#FF0000'});
+                }
             }
+            if(target.type==='LineString'){
+                lineIsClicked=!lineIsClicked;
+                if(lineIsClicked){
+                    target.updateSymbol({ 'lineColor': '#00FFFF'});
+                }
+                if(!lineIsClicked){
+                    target.updateSymbol({ 'lineColor': '#FF0000'});
+                }
+            }
+            console.log(!state.deleteIsChecked)
+            // if(!state.deleteIsChecked){
+            //     const showDelDialog1 ={showDelDialog: !state.showDelDialog} 
+            //     return Object.assign({},state,{... showDelDialog1});                
+            // }
         }
 //用于判断click事件的绑定
        clickEventBind=clickEventBind || function(status){
@@ -349,8 +368,7 @@ const sketchReduce = (state = {
                     });
                     line.on('click',getObj);
                     map.getLayer('line').addGeometry(line);             
-            }
-        };
+            }};
 //用于画地块
         drawPolygon = drawPolygon ||function () {
              console.log(poiCoor.length);
@@ -366,11 +384,9 @@ const sketchReduce = (state = {
                 polygon.on('click',getObj);
                 map.getLayer('polygon').addGeometry(polygon);
              }
-            clearPoiArr();
-        }
+            clearPoiArr();}
 //用于删除对象
         deleteObj = deleteObj ||function (){
-            console.log(target);
             target.remove();
         }
 ///////
@@ -424,19 +440,29 @@ const sketchReduce = (state = {
 
             case 'deleteClick':
                 clickEventBind('delete');
-                !state.deleteIsChecked ? map.on('click', deleteObj):map.off('click',deleteObj);
+                // if(target!=null){
+                //     showDelDialog
+                // }
                 const newState4={
-                    pointNum:state.pointNum,
                     drawPointIsChecked:false,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:false,
-                    deleteIsChecked:!state.deleteIsChecked,
+                    deleteIsChecked:!state.deleteIsChecked,                    
                     undoIsChecked:false,
                     redoIsChecked:false,
                     saveIsChecked:false
                 }
-                return {...state,...newState4};    
+                return {...state,...newState4}; 
 
+            case 'handleCloseDelDialog':
+                const showDelDialog1 ={showDelDialog: !state.showDelDialog} 
+                return Object.assign({},state,{... showDelDialog1});
+
+            case 'handleDelete':
+                map.on('click', deleteObj);
+                const  showDelDialog2 ={showDelDialog: !state.showDelDialog}
+                return Object.assign({},state,{... showDelDialog2});
+                
             case 'undoClick':
                 console.log('撤销');
 
@@ -451,6 +477,8 @@ const sketchReduce = (state = {
                 console.log('保存');
 
                 return { ...state }
+
+
 
             default:
                 return { ...state }
