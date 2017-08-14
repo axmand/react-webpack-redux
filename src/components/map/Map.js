@@ -223,13 +223,18 @@ const sketchReduce = (state = {
         }
 //用于清空点集
         clearPoiArr=clearPoiArr || function(){
-            for(var i=0;i<poiId.length;i++){
-                map.getLayer('point').getGeometryById(poiId[i]).updateSymbol([{ 'polygonFill': '#0000FF','lineColor': '#0000FF'}]);
-            }
+            //判断点集是否为空
+            const obj=map.getLayer('point').getGeometryById(poiId[0])
+            if(obj){
+                for(var i=0;i<poiId.length;i++){ 
+                    map.getLayer('point').getGeometryById(poiId[i]).updateSymbol([{ 'polygonFill': '#0000FF','lineColor': '#0000FF'}]);                     
+                }   
+            }                
             poiArr=[];
             poiId=[];
             poiCoor=[];
-            console.log('cleared array');}        
+            console.log('cleared array'); 
+        }        
 //用于获取线面对象
         getObj = getObj ||function(e){
             target=e.target;
@@ -252,11 +257,6 @@ const sketchReduce = (state = {
                     target.updateSymbol({ 'lineColor': '#FF0000'});
                 }
             }
-            console.log(!state.deleteIsChecked)
-            // if(!state.deleteIsChecked){
-            //     const showDelDialog1 ={showDelDialog: !state.showDelDialog} 
-            //     return Object.assign({},state,{... showDelDialog1});                
-            // }
         }
 //用于判断click事件的绑定
        clickEventBind=clickEventBind || function(status){
@@ -302,14 +302,7 @@ const sketchReduce = (state = {
                 console.log(status)
                 if(!state.drawPointIsChecked){
                     map.off('click',drawPoint)
-                }
-                if(!state.drawLineIsChecked){
-                    map.off('click',drawLine)
-                    map.off('dblclick',clearPoiArr)
-                }
-                if(!state.drawPolygonIsChecked){
-                    map.off('dblclick',drawPolygon)
-                }                                                   
+                }                                                  
             }                                   
         }      
 //用于画点
@@ -394,6 +387,7 @@ const sketchReduce = (state = {
             
             case 'drawPointClick':
                 clickEventBind('drawPoint');
+                clearPoiArr();
                 !state.drawPointIsChecked ? map.on('click', drawPoint):map.off('click',drawPoint);
                 const newState1={
                     pointNum:state.pointNum,
@@ -409,6 +403,7 @@ const sketchReduce = (state = {
 
             case 'drawLineClick':  
                 clickEventBind('drawLine');
+                clearPoiArr();
                 !state.drawLineIsChecked ? map.on('click', drawLine):map.off('click',drawLine);
                 !state.drawLineIsChecked ? map.on('dblclick', clearPoiArr):map.off('dblclick',clearPoiArr);   
                 const newState2={
@@ -425,6 +420,7 @@ const sketchReduce = (state = {
 
             case  'drawPolygonClick':
                 clickEventBind('drawPolygon');
+                clearPoiArr();
                 !state.drawPolygonIsChecked ? map.on('dblclick', drawPolygon):map.off('dblclick',drawPolygon);                  
                 const newState3={
                     pointNum:state.pointNum,
@@ -439,27 +435,26 @@ const sketchReduce = (state = {
                 return {...state,...newState3};        
 
             case 'deleteClick':
+                console.log(state);
                 clickEventBind('delete');
-                // if(target!=null){
-                //     showDelDialog
-                // }
                 const newState4={
                     drawPointIsChecked:false,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:false,
-                    deleteIsChecked:!state.deleteIsChecked,                    
+                    deleteIsChecked:!state.deleteIsChecked, 
+                    showDelDialog:!state.showDelDialog,                   
                     undoIsChecked:false,
                     redoIsChecked:false,
                     saveIsChecked:false
                 }
-                return {...state,...newState4}; 
+                return Object.assign({},state,{... newState4});
 
             case 'handleCloseDelDialog':
                 const showDelDialog1 ={showDelDialog: !state.showDelDialog} 
                 return Object.assign({},state,{... showDelDialog1});
 
             case 'handleDelete':
-                map.on('click', deleteObj);
+                 deleteObj();
                 const  showDelDialog2 ={showDelDialog: !state.showDelDialog}
                 return Object.assign({},state,{... showDelDialog2});
                 

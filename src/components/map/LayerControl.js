@@ -4,24 +4,32 @@ import PropTypes from 'prop-types';
 //import UI
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu'
-import { ListItemText } from 'material-ui/List'
-import IconButton from 'material-ui/IconButton';
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import ContentCopy from 'material-ui-icons/ContentCopy';
 
 const styleSheet = createStyleSheet(theme=>({
-  icon:{
-    color:'#000',
-    width: '30px',
-    height: '30px',
-    margin: '0px',   
-    background: 'rgba(255, 255, 255, .75)',//'white',
-    borderRadius: 5
+  root:{
+    top:'80px',
+    left:'1680px'
   },
-  menu:{
-    paddingTop: '0px',
-    paddingBottom:'0px',
+  listitem: {
+      width: '50px',
+      height: '50px',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      padding: '5px 5px 5px', 
+      border: 0,    
+      background: 'rgba(255, 255, 255, .75)',
+      borderRadius: 5,
+    },
+  listitemicon: {
+      color:'#000',
+      width: '30px',
+      height: '30px',
+      margin: '0px',   
+    },
 
-  }
+
 
 }))
 
@@ -53,31 +61,33 @@ class LayerControl extends Component {
 			handleLineIsChecked,
 		 handlePolygonIsChecked,
 		} = this.props
-    // console.log(pointIsChecked+"  "+linetIsChecked+"  "+polygonIsChecked);
+
     return(
-		<div>
-         <IconButton  onClick={this.handleMenuOpen} >
-            <ContentCopy className={classes.icon}/>        
-         </IconButton>
-         <Menu
-         className={classes.menu}
-          anchorEl={this.state.anchorEl}
-          open={this.state.menuOpen}       
-        >
-        <MenuItem dense button className={classes.menuitem}>
+		<div className={classes.root} >
+      <ListItem button className={classes.listitem} disableGutters={true}  onClick={this.handleMenuOpen}>
+        <ListItemIcon className={classes.listitemicon}>
+          <ContentCopy  />
+          </ListItemIcon>
+      </ListItem>
+      <Menu
+        className={classes.menu}
+        anchorEl={this.state.anchorEl}
+        open={this.state.menuOpen}       
+      >
+        <MenuItem className={classes.menuitem}>
           <input type="checkbox"  checked={pointIsChecked} onClick={handlePointIsChecked} />
           <ListItemText primary={'界址点'} />
         </MenuItem>
-        <MenuItem dense button className={classes.menuitem}>
+        <MenuItem className={classes.menuitem}>
           <input type="checkbox" checked={linetIsChecked} onClick={handleLineIsChecked} />
           <ListItemText primary={'界址线'} />
         </MenuItem>
-        <MenuItem dense button className={classes.menuitem}>
+        <MenuItem className={classes.menuitem}>
           <input  type="checkbox" checked={polygonIsChecked}  onClick={handlePolygonIsChecked} />
           <ListItemText primary={'宗地'} />
         </MenuItem>
-        <MenuItem dense button onClick={this.handleMenuOpen} className={classes.menuitem}>
-          返回
+        <MenuItem onClick={this.handleMenuOpen} className={classes.menuitem}>
+          <ListItemText primary={'返回'} />
         </MenuItem>
         </Menu>
       </div>
