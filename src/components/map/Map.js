@@ -438,9 +438,6 @@ const sketchReduce = (state = {
                 console.log(state);
                 clickEventBind('delete');
                 const newState4={
-                    drawPointIsChecked:false,
-                    drawLineIsChecked:false,
-                    drawPolygonIsChecked:false,
                     deleteIsChecked:!state.deleteIsChecked, 
                     showDelDialog:!state.showDelDialog,                   
                     undoIsChecked:false,
