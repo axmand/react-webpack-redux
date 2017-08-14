@@ -189,10 +189,11 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 //初始化相关量
-let drawPoint,drawLine,drawPolygon,
-     point,line,polygon,
-     getPoint,clearPoiArr,
+let drawPoint,drawLine,drawPolygon,deleteObj,
+     point,line,polygon,target,
+     getPoint,clearPoiArr,getObj,
      clickEventBind;
+let objIsClicked= false;
 //初始化线面的点集数组
 let poiArr=new Array(),
     poiId=new Array(),
@@ -202,14 +203,20 @@ const sketchReduce = (state = {
     pointNum: 0, 
     drawPointIsChecked: false,
     drawLineIsChecked: false,
-    drawPolygonIsChecked:false}, action) => {
+    drawPolygonIsChecked:false,
+    deleteIsChecked:false,
+    undoIsChecked:false,
+    redoIsChecked:false,
+    saveIsChecked:false}, action) => {
 //用于连线和构面时获取被选中的点并存放在poiArr数组中
         getPoint=getPoint ||function(e){
-            poiArr.push(e.target);
-            poiCoor.push(e.target._coordinates); 
-            const id=e.target._id;
+            target=e.target;
+            poiArr.push(target);
+            poiCoor.push(target._coordinates); 
+            const id=target._id;
             poiId.push(id);
-            map.getLayer('point').getGeometryById(id).updateSymbol([{ 'polygonFill': '#f00'}]); 
+            //map.getLayer('point').getGeometryById(id).
+            target.updateSymbol([{ 'polygonFill': '#f00'}]); 
         }
 //用于清空点集
         clearPoiArr=clearPoiArr || function(){
@@ -221,7 +228,16 @@ const sketchReduce = (state = {
             poiId=[];
             poiCoor=[];
             console.log('cleared array');}        
-        
+//用于获取线面对象
+        getObj = getObj ||function(e){
+            target=e.target;
+            objIsClicked=!objIsClicked;
+            if(objIsClicked){
+                target.updateSymbol([{ 'lineColor': '#f00'}]);
+            }else{
+                target.updateSymbol([{ 'lineColor': '#FF0000'}]);
+            }
+        }
 //用于判断click事件的绑定
        clickEventBind=clickEventBind || function(status){
             if(status==='drawPoint'){
@@ -232,7 +248,10 @@ const sketchReduce = (state = {
                 }
                 if(!state.drawPolygonIsChecked){
                     map.off('dblclick',drawPolygon)
-                }                                  
+                }
+                if(!state.deleteIsChecked){
+                    map.off('click',deleteObj)
+                }                                   
             }
             if(status==='drawLine'){
                 console.log(status)
@@ -241,7 +260,10 @@ const sketchReduce = (state = {
                 }
                 if(!state.drawPolygonIsChecked){
                     map.off('dblclick',drawPolygon)
-                }                                  
+                }  
+                if(!state.deleteIsChecked){
+                    map.off('click',deleteObj)
+                }                                 
             }
             if(status==='drawPolygon'){
                 console.log(status)
@@ -251,8 +273,24 @@ const sketchReduce = (state = {
                 if(!state.drawLineIsChecked){
                     map.off('click',drawLine)
                     map.off('dblclick',clearPoiArr)
-                }                                
-            }                       
+                }
+                if(!state.deleteIsChecked){
+                    map.off('click',deleteObj)
+                }                                 
+            }
+            if(status==='delete'){
+                console.log(status)
+                if(!state.drawPointIsChecked){
+                    map.off('click',drawPoint)
+                }
+                if(!state.drawLineIsChecked){
+                    map.off('click',drawLine)
+                    map.off('dblclick',clearPoiArr)
+                }
+                if(!state.drawPolygonIsChecked){
+                    map.off('dblclick',drawPolygon)
+                }                                                   
+            }                                   
         }      
 //用于画点
         drawPoint = drawPoint ||function (e) {
@@ -286,14 +324,15 @@ const sketchReduce = (state = {
             console.log(poiArr.length);
             if(poiArr.length===2){
                 line = new maptalks.ConnectorLine(poiArr[0], poiArr[1], {
-                    showOn : 'always', 
-                    arrowStyle : 'classic',
-                    arrowPlacement : null,
-                    symbol: {
-                        lineColor: '#FF0000',
-                        ineWidth: 2
+                    'showOn' : 'always', 
+                    'arrowStyle' : 'classic',
+                    'arrowPlacement' : null,
+                    'symbol': {
+                        'lineColor': '#FF0000',
+                        'ineWidth': 2
                     }
                 });
+                line.on('click',getObj);
                 map.getLayer('line').addGeometry(line);                   
             } 
             if(poiArr.length>2){
@@ -307,11 +346,12 @@ const sketchReduce = (state = {
                             lineWidth: 2
                         }
                     });
+                    line.on('click',getObj);
                     map.getLayer('line').addGeometry(line);             
             }
         };
 //用于画地块
-         drawPolygon = drawPolygon ||function () {
+        drawPolygon = drawPolygon ||function () {
              console.log(poiCoor.length);
              if(poiCoor.length>=3){
                  polygon = new maptalks.Polygon(poiCoor, {
@@ -322,9 +362,15 @@ const sketchReduce = (state = {
                     'polygonOpacity' : 0.6
                     }
                 });
+                polygon.on('click',getObj);
                 map.getLayer('polygon').addGeometry(polygon);
              }
             clearPoiArr();
+        }
+//用于删除对象
+        deleteObj = deleteObj ||function (){
+            console.log(target);
+            target.remove();
         }
 ///////
         switch (action.type) {
@@ -337,6 +383,10 @@ const sketchReduce = (state = {
                     drawPointIsChecked:!state.drawPointIsChecked,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:false,
+                    deleteIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false
                 }
                 return {...state,...newState1};
 
@@ -349,24 +399,57 @@ const sketchReduce = (state = {
                     drawPointIsChecked:false,
                     drawLineIsChecked:!state.drawLineIsChecked,
                     drawPolygonIsChecked:false,
+                    deleteIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false
                 }  
                 return {...state,...newState2};
 
             case  'drawPolygonClick':
                 clickEventBind('drawPolygon');
-
-                !state.drawPolygonIsChecked ? map.on('dblclick', drawPolygon):map.off('dblclick',drawPolygon);
-                //待修改
-                if(!state.drawPolygonIsChecked){
-                    clearPoiArr();
-                }                       
+                !state.drawPolygonIsChecked ? map.on('dblclick', drawPolygon):map.off('dblclick',drawPolygon);                  
                 const newState3={
                     pointNum:state.pointNum,
                     drawPointIsChecked:false,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:!state.drawPolygonIsChecked,
+                    deleteIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false
                 }
                 return {...state,...newState3};        
+
+            case 'deleteClick':
+                clickEventBind('delete');
+                !state.deleteIsChecked ? map.on('click', deleteObj):map.off('click',deleteObj);
+                const newState4={
+                    pointNum:state.pointNum,
+                    drawPointIsChecked:false,
+                    drawLineIsChecked:false,
+                    drawPolygonIsChecked:false,
+                    deleteIsChecked:!state.deleteIsChecked,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false
+                }
+                return {...state,...newState4};    
+
+            case 'undoClick':
+                console.log('撤销');
+
+                return { ...state }
+
+            case 'redoClick':
+                console.log('重做');
+
+                return { ...state }
+
+            case 'saveClick':
+                console.log('保存');
+
+                return { ...state }
 
             default:
                 return { ...state }

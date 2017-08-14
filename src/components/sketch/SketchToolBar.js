@@ -46,7 +46,7 @@ const styleSheet = createStyleSheet(theme=>({
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick} = this.props;
+        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
         return(
             <Draggable handle="span">
                 <div className={classes.root} >
@@ -66,20 +66,19 @@ class SkechToolBar extends Component{
                         <CheckBoxOutlineBlank />
                         <ListItemText primary="构面" />
                     </Button> 
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onDeleteClick}>
                         <Delete />
                         <ListItemText primary="删除" />
                     </Button>            
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onUndoClick}>
                         <Undo />
                         <ListItemText primary="撤销" />
                     </Button>
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onRedoClick}>
                         <Redo />
-                       
                         <ListItemText primary="重做" />
                     </Button>
-                    <Button  className={classes.button} >
+                    <Button  className={classes.button} onClick={onSaveClick}>
                         <Save />
                         <ListItemText primary="保存" />
                     </Button>
@@ -123,6 +122,34 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onDrawPolygonClick: () => {
             dispatch({
                 type: 'drawPolygonClick',
+                payload:dispatch,
+            });
+        },
+        //删除
+        onDeleteClick: () => {
+            dispatch({
+                type: 'deleteClick',
+                payload:dispatch,
+            });
+        },
+        //撤销
+        onUndoClick: () => {
+            dispatch({
+                type: 'undoClick',
+                payload:dispatch,
+            });
+        },        
+        //重做
+        onRedoClick:()=>{
+            dispatch({
+                type:'redoClick',
+                payload:dispatch,
+            });
+        },
+        //保存
+        onSaveClick:()=>{
+            dispatch({
+                type:'saveClick',
                 payload:dispatch,
             });
         }        
