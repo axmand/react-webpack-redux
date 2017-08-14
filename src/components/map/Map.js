@@ -215,7 +215,6 @@ const sketchReduce = (state = {
             poiCoor.push(target._coordinates); 
             const id=target._id;
             poiId.push(id);
-            //map.getLayer('point').getGeometryById(id).
             target.updateSymbol([{ 'polygonFill': '#f00'}]); 
         }
 //用于清空点集
@@ -231,11 +230,13 @@ const sketchReduce = (state = {
 //用于获取线面对象
         getObj = getObj ||function(e){
             target=e.target;
+            console.log(target);
             objIsClicked=!objIsClicked;
+            console.log(objIsClicked);
             if(objIsClicked){
-                target.updateSymbol([{ 'lineColor': '#f00'}]);
+                target.updateSymbol({ 'lineColor': '#f00'});
             }else{
-                target.updateSymbol([{ 'lineColor': '#FF0000'}]);
+                target.updateSymbol({ 'lineColor': '#FF0000'});
             }
         }
 //用于判断click事件的绑定
