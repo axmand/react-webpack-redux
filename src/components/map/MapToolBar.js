@@ -22,7 +22,7 @@ import RealtimeMapping from './RealtimeMapping';
 const styleSheet = createStyleSheet(theme => ({
   list:{
     position:'absolute',
-    top:'40px',
+    top:'80px',
     right:'20px',
     width: '80px'
   },
