@@ -42,11 +42,6 @@ const styleSheet = createStyleSheet(theme => ({
     height: '30px',
     margin: '0px',   
   },
-  radionbutton:{
-    width: '50%',
-    height: '50%',
-    margin: '0px',
-  },
 }));
 
 class  MapToolBar extends Component{

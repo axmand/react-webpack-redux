@@ -8,29 +8,16 @@ import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import ContentCopy from 'material-ui-icons/ContentCopy';
 
 const styleSheet = createStyleSheet(theme=>({
-  root:{
-    top:'80px',
-    left:'1680px'
-  },
   listitem: {
-      width: '50px',
-      height: '50px',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      padding: '5px 5px 5px', 
-      border: 0,    
-      background: 'rgba(255, 255, 255, .75)',
-      borderRadius: 5,
+    width: '50px',
+    height: '50px',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: '5px 5px 5px', 
+    border: 0,    
+    background: 'rgba(255, 255, 255, .75)',
+    borderRadius: 5,
     },
-  listitemicon: {
-      color:'#000',
-      width: '30px',
-      height: '30px',
-      margin: '0px',   
-    },
-
-
-
 }))
 
 
@@ -63,11 +50,18 @@ class LayerControl extends Component {
 		} = this.props
 
     return(
-		<div className={classes.root} >
+		<div>
       <ListItem button className={classes.listitem} disableGutters={true}  onClick={this.handleMenuOpen}>
-        <ListItemIcon className={classes.listitemicon}>
+        <ListItemIcon 
+          style={{
+            color:'#000',
+            width: '24px',
+            height: '24px',
+            margin: '0px',              
+          }}
+        >
           <ContentCopy  />
-          </ListItemIcon>
+        </ListItemIcon>
       </ListItem>
       <Menu
         className={classes.menu}
