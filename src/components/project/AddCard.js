@@ -7,7 +7,7 @@ import Button from 'material-ui/Button';
 import Checkbox from 'material-ui/Checkbox';
 //图标
 //img
-import reptileImage from './test.jpg';
+import reptileImage from './test2.jpg';
 //Redux
 
 const styleSheet = createStyleSheet(theme => ({
@@ -27,8 +27,8 @@ class AddCard extends Component {
     let item = this.props.entries;
 
     return(
-      <div style={{padding:'10px'}}>
-      <Card key={ item.key } style={{Width:300,Height:345}}>
+      <div style={{padding:'20px'}}>
+      <Card key={ item.key } style={{maxWidth:300,maxHeight:345}}>
         <CardMedia>
           <img src={ reptileImage } alt="Contemplative Reptile" />
         </CardMedia>  
