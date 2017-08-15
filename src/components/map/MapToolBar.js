@@ -22,7 +22,7 @@ import RealtimeMapping from './RealtimeMapping';
 const styleSheet = createStyleSheet(theme => ({
   list:{
     position:'absolute',
-    top:'40px',
+    top:'80px',
     right:'20px',
     width: '80px'
   },
@@ -30,10 +30,10 @@ const styleSheet = createStyleSheet(theme => ({
     width: '50px',
     height: '50px',
     flexDirection: 'column',
-    justifyContent: 'center ',
+    justifyContent: 'center',
     padding: '5px 5px 5px', 
     border: 0,    
-    background: 'rgba(255, 255, 255, .75)',//'white',
+    background: 'rgba(255, 255, 255, .75)',
     borderRadius: 5,
   },
   listitemicon: {

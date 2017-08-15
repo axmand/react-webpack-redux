@@ -2,10 +2,36 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import UI
+import { withStyles, createStyleSheet } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu'
-import { ListItemText } from 'material-ui/List'
-import IconButton from 'material-ui/IconButton';
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import ContentCopy from 'material-ui-icons/ContentCopy';
+
+const styleSheet = createStyleSheet(theme=>({
+  root:{
+    top:'80px',
+    left:'1680px'
+  },
+  listitem: {
+      width: '50px',
+      height: '50px',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      padding: '5px 5px 5px', 
+      border: 0,    
+      background: 'rgba(255, 255, 255, .75)',
+      borderRadius: 5,
+    },
+  listitemicon: {
+      color:'#000',
+      width: '30px',
+      height: '30px',
+      margin: '0px',   
+    },
+
+
+
+}))
 
 
 class LayerControl extends Component {
@@ -26,7 +52,7 @@ class LayerControl extends Component {
    
 
   render(){ 
-
+    const classes=this.props.classes;
 		const { 
 			pointIsChecked,
 			linetIsChecked,
@@ -35,42 +61,33 @@ class LayerControl extends Component {
 			handleLineIsChecked,
 		 handlePolygonIsChecked,
 		} = this.props
-    // console.log(pointIsChecked+"  "+linetIsChecked+"  "+polygonIsChecked);
+
     return(
-		<div>
-         <IconButton  onClick={this.handleMenuOpen}>
-            <ContentCopy 
-            style={{
-                color:'#000',
-                width: '30px',
-                height: '30px',
-                margin: '0px',   
-                background: 'rgba(255, 255, 255, .75)',//'white',
-                borderRadius: 5,
-            }}/>        
-         </IconButton>
-         <Menu
-          anchorEl={this.state.anchorEl}
-          open={this.state.menuOpen}       
-          anchorOrigin={{
-              horizontal:'right',
-              vertical:'center',
-          }}
-        >
-        <MenuItem dense button >
+		<div className={classes.root} >
+      <ListItem button className={classes.listitem} disableGutters={true}  onClick={this.handleMenuOpen}>
+        <ListItemIcon className={classes.listitemicon}>
+          <ContentCopy  />
+          </ListItemIcon>
+      </ListItem>
+      <Menu
+        className={classes.menu}
+        anchorEl={this.state.anchorEl}
+        open={this.state.menuOpen}       
+      >
+        <MenuItem className={classes.menuitem}>
           <input type="checkbox"  checked={pointIsChecked} onClick={handlePointIsChecked} />
-          <ListItemText primary={'point'} />
+          <ListItemText primary={'界址点'} />
         </MenuItem>
-        <MenuItem dense button >
+        <MenuItem className={classes.menuitem}>
           <input type="checkbox" checked={linetIsChecked} onClick={handleLineIsChecked} />
-          <ListItemText primary={'line'} />
+          <ListItemText primary={'界址线'} />
         </MenuItem>
-        <MenuItem dense button >
+        <MenuItem className={classes.menuitem}>
           <input  type="checkbox" checked={polygonIsChecked}  onClick={handlePolygonIsChecked} />
-          <ListItemText primary={'polygon'} />
+          <ListItemText primary={'宗地'} />
         </MenuItem>
-        <MenuItem dense button onClick={this.handleMenuOpen}>
-          返回
+        <MenuItem onClick={this.handleMenuOpen} className={classes.menuitem}>
+          <ListItemText primary={'返回'} />
         </MenuItem>
         </Menu>
       </div>
@@ -81,6 +98,7 @@ class LayerControl extends Component {
  * 限定组件的一些属性
  */
 LayerControl.PropTypes={
+      classes: PropTypes.object.isRequired,
 			pointIsChecked:PropTypes.bool.isRequired,
 			linetIsChecked:PropTypes.bool.isRequired,
 			polygonIsChecked:PropTypes.bool.isRequired,
@@ -127,4 +145,4 @@ const mapDispatchToProps = (dispatch) => {
 }  		
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(LayerControl)
+export default withStyles(styleSheet)(connect(mapStateToProps, mapDispatchToProps)(LayerControl))
