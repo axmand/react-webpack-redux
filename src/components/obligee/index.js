@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import PeopleIcon from 'material-ui-icons/People'
+
 import ChooseDialog from './ChooseDialog'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import FirstDialog from './FirstDialog'

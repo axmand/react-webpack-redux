@@ -5,7 +5,8 @@ import Button from 'material-ui/Button';
 import Avatar from 'material-ui/Avatar';
 
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
-import PersonIcon from 'material-ui-icons/Person';
+import FontAwesome from 'react-fontawesome'
+// import PersonIcon from 'material-ui-icons/Person';
 import AddIcon from 'material-ui-icons/Add';
 import Typography from 'material-ui/Typography';
 import blue from 'material-ui/colors/blue';
@@ -28,10 +29,11 @@ const styleSheet = createStyleSheet(() => ({
     flexDirection: 'column',
     justifyContent: 'center ',
   },
-  listitemicon: {
-    width: '50%',
-    height: '50%',
-    margin: '0px',
+  listItemText: {
+    padding: '0px',
+    lineHeight: '32px',
+    padding: '2px',
+    color: '#ffffff',
   },
 }));
 
@@ -44,10 +46,24 @@ class ChooseTableDialog extends Component {
     return (
       <div>
       <ListItem button className={classes.listitem} disableGutters={true} onClick={clickIcon}>
-          <ListItemIcon className={classes.listitemicon}>
-            <PeopleIcon />
-          </ListItemIcon>            
-          <ListItemText primary="权利人" />
+          <ListItemIcon>
+            <FontAwesome
+              name='group'
+              size='2x'
+              style={{
+                width: '34.28px',
+                height: '32px',
+                margin: '0px',
+                padding: '2px',
+                color: '#C1C6C9',
+              }}
+            />
+          </ListItemIcon>
+          <ListItemText 
+            primary="权利人"
+            disableTypography={true}
+            className={classes.listItemText}
+          />
         </ListItem>
         <Dialog
            
