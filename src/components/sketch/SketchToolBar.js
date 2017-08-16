@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
 //ui
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import { ListItemText } from 'material-ui/List';
 import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
@@ -20,7 +20,7 @@ import Redo from  'material-ui-icons/Redo';
 import Save from 'material-ui-icons/Save';//保存
 import DragHandle from 'material-ui-icons/DragHandle';
 
-const styleSheet = createStyleSheet(theme=>({
+const styles={
     root:{
          height:'50px',
          width:'540px',
@@ -43,7 +43,7 @@ const styleSheet = createStyleSheet(theme=>({
         border:0,
     },
 
-}))
+};
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
@@ -199,4 +199,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SkechToolBar));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{name:'SkechToolBar'})(SkechToolBar));

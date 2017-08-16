@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //ui
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import IconButton from 'material-ui/IconButton';
 //图标
@@ -19,7 +19,7 @@ import  RadioButtonChecked from 'material-ui-icons/RadioButtonChecked';
 import LayerControl from './LayerControl';
 import RealtimeMapping from './RealtimeMapping';
 
-const styleSheet = createStyleSheet(theme => ({
+const styles ={
   list:{
     position:'absolute',
     top:'80px',
@@ -42,7 +42,7 @@ const styleSheet = createStyleSheet(theme => ({
     height: '30px',
     margin: '0px',   
   },
-}));
+};
 
 class  MapToolBar extends Component{
 
@@ -91,4 +91,4 @@ MapToolBar.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styleSheet)(MapToolBar);
+export default withStyles(styles,{name:'MapToolBar'})(MapToolBar);
