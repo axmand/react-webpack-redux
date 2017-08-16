@@ -60,7 +60,7 @@ class Map extends Component {
  * 限定组件的一些属性
  */
 Map.propTypes = {
-    onClick: PropTypes.func.isRequired
+    //onClick: PropTypes.func.isRequired
 }
 
 //加入reducer(mapReduce)
@@ -89,19 +89,9 @@ const mapReduce = (state = 0, action) => {
                 }
             }
         );
-        const line = new maptalks.LineString([
-            center.add(-0.018, 0.005),
-            center.add(0.006, 0.005)
-        ], {
-                symbol: {
-                    'lineColor': '#1bbc9b',
-                    'lineWidth': 3
-                }
-            });
         //将对象添加至图层
         map.getLayer('point').addGeometry(circle);
-        map.getLayer('polygon').addGeometry(marker);
-        map.getLayer('line').addGeometry(line);
+        map.getLayer('point').addGeometry(marker);
     }
     //地图放大
     if (action.type === "menuClick" && action.payload.command === "zoom_in") {
@@ -196,11 +186,7 @@ let drawPoint,drawLine,drawPolygon,deleteObj,mapUndo,mapRedo,
 let lineIsClicked = false,
     PolygonIsClicked = false,
     showConfirmDeletion = false;
-//初始化撤销和重做的相关变量
-let undoArr=new Array(),
-    redoArr= new Array(),
-    undo =[],
-    redo=[];
+
 //初始化线面的点集数组
 let poiArr=new Array(),
     poiId=new Array(),
@@ -335,12 +321,7 @@ const sketchReduce = (state = {
                 );
                 points.push(point);
                 point.on('click',getPoint)
-                map.getLayer('point').addGeometry(point); 
-                undo={
-                    undoType:'drawPoint',
-                    undoObj:point
-                }
-                undoArr.push(undo);      
+                map.getLayer('point').addGeometry(point);     
             };
 //用于画线
         drawLine = drawLine ||function () {
@@ -356,12 +337,7 @@ const sketchReduce = (state = {
                     }
                 });
                 line.on('click',getObj);
-                map.getLayer('line').addGeometry(line);   
-                undo={
-                    undoType:'drawLine',
-                    undoObj:line
-                }
-                undoArr.push(undo);                  
+                map.getLayer('line').addGeometry(line);                 
             } 
             if(poiArr.length>2){
                 const i=poiArr.length-2;
@@ -375,13 +351,10 @@ const sketchReduce = (state = {
                         }
                     });
                     line.on('click',getObj);
-                    map.getLayer('line').addGeometry(line);  
-                    undo={
-                        undoType:'drawLine',
-                        undoObj:line
-                    }
-                    undoArr.push(undo);                                 
-            }};
+                    map.getLayer('line').addGeometry(line);                              
+            }
+           
+        };
 //用于画地块
         drawPolygon = drawPolygon ||function () {
              console.log(poiCoor.length);
@@ -396,65 +369,16 @@ const sketchReduce = (state = {
                 });
                 polygon.on('click',getObj);
                 map.getLayer('polygon').addGeometry(polygon);
-                undo={
-                    undoType:'drawPolygon',
-                    undoObj:polygon
-                }
-                undoArr.push(undo);  
+             }else{
+                 alert('小于三点无法构面!</br>');
              }
             clearPoiArr();}
 //用于删除对象
         deleteObj = deleteObj ||function (){
-            target.remove();
-            undo={
-                undoType:'deleteObj',
-                undoObj:target
-            }
-            undoArr.push(undo);             
+            target.remove();          
         }
 //撤销
-        mapUndo = mapUndo ||function(){
-            if(undoArr.length ===0){
-                return;
-            }
-            undo=undoArr[undoArr.length-1];
-            switch(undo.type){
-                case 'drawPoint':
-                undo.undoObj.remove();
-                undoArr.splice(undoArr.length- 1,1)
-                redoArr.push(undo);//把现在撤销的数据加到恢复的数组中
-                return;
-
-                case 'drawLine':
-                undo.undoObj.remove();
-                undoArr.splice(undoArr.length- 1,1)
-                return;
-                
-                case 'drawPolygon':
-                undo.undoObj.remove();
-                undoArr.splice(undoArr.length- 1,1)                
-                return;
-
-                case 'deleteObj':
-                    if(undo.undoObj.type==='point'){
-                        map.getLayer('point').addGeometry(undo.undoObj);
-                        undoArr.splice(undoArr.length- 1,1)
-                    }
-                    if(undo.undoObj.type==='LineString'){
-                        map.getLayer('line').addGeometry(undo.undoObj);
-                        undoArr.splice(undoArr.length- 1,1)
-
-                    }
-                    if(undo.undoObj.type==='Polygon'){
-                        map.getLayer('polygon').addGeometry(undo.undoObj);
-                        undoArr.splice(undoArr.length- 1,1)
-                    }
-                return;
-                default:
-                return;
-            }
-        }
-
+       
 //重做
 
 
@@ -534,6 +458,7 @@ const sketchReduce = (state = {
                 
             case 'undoClick':
                 console.log('撤销');
+               //drawTool.undo();
 
                 return { ...state }
 

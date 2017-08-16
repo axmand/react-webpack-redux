@@ -35,8 +35,9 @@ RealtimeMapping.propTypes = {
 };
 
 const mapStateToProps = (state) => {
+  const realtimeMappingState =state.realtimeMappingReduce
     return {
-        realtimeMappingIsChecked:state.realtimeMappingIsChecked
+        realtimeMappingIsChecked:realtimeMappingState.realtimeMappingIsChecked
     }
 }
 
