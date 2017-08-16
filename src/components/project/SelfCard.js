@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 //UI
 import Button from 'material-ui/Button';
 import Dialog,{ DialogActions, DialogContent,DialogTitle } from 'material-ui/Dialog';
@@ -14,7 +14,7 @@ import AddCard from './AddCard';
 //Redux
 import {connect} from 'react-redux'
 
-const styleSheet = createStyleSheet('SelfCard', theme => ({
+const styles = {
   box:{
     display: 'flex',
     flexFlow: 'row wrap',
@@ -22,7 +22,7 @@ const styleSheet = createStyleSheet('SelfCard', theme => ({
     flexBasis: 'auto',
     padding: '10px',   
   }
-}));
+};
 
 class SelfCard extends Component {
 
@@ -137,4 +137,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 	} 
 }  		
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SelfCard));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{name:'SelfCard'})(SelfCard));

@@ -16,7 +16,7 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography'
-import PasswordFeild from './PasswordField'
+// import PasswordFeild from './PasswordField'
 
 const styleSheet = createStyleSheet('Login', theme => ({
   container: {
@@ -76,7 +76,6 @@ class Login extends Component {
               margin="dense"
               required={true}
             />
-            <PasswordFeild />
             <div style={{display: 'flex', width: '310px', justifyContent: 'flex-end'}}>
               <Button className={classes.buttonForgetPassword}>
                 <Typography>忘记密码?</Typography>
