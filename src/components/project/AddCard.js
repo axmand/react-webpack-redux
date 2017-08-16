@@ -5,6 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Checkbox from 'material-ui/Checkbox';
+import Typography from 'material-ui/Typography';
 //图标
 //img
 import reptileImage from './test2.jpg';
@@ -21,23 +22,20 @@ class AddCard extends Component {
   render(){
 		const { 
       handleChooseList,
-      classes
+      handleContentClose2
     } = this.props
     
     let item = this.props.entries;
 
     return(
       <div style={{padding:'20px'}}>
-      <Card key={ item.key } style={{maxWidth:300,maxHeight:345}}>
-        <CardMedia>
-          <img src={ reptileImage } alt="Contemplative Reptile" />
-        </CardMedia>  
-        <CardActions>
+      <Card key={ item.key } style={{maxWidth:300,maxHeight:250,}}>
+        <img src={ reptileImage } alt="Contemplative Reptile" onClick={ handleContentClose2 } style={{justifyContent:'center'}}/>
+        <CardActions >
           <Checkbox onClick={  handleChooseList } />
-          <input accept="bak,dwg,BAK,DWG" className={classes.input} id="file" multiple type="file"  />
-          <label htmlFor="file">
-          <Button color="primary" component="span">{ item.text.inputValue }</Button>
-          </label >
+          <Typography component="p">
+            { item.text.inputValue }
+          </Typography>
         </CardActions>
       </Card>
       </div>
@@ -48,6 +46,7 @@ class AddCard extends Component {
 AddCard.propTypes = {
   entries: PropTypes.object.isRequired,
   handleChooseList:PropTypes.func.isRequired,
+  handleContentClose2:PropTypes.func.isRequired
 };
 
 export default withStyles(styles,{name:'AddCard'})(AddCard);
