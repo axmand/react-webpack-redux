@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu'
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import CheckBox from 'material-ui/Checkbox'
 import ContentCopy from 'material-ui-icons/ContentCopy';
 
 const styles ={
@@ -69,15 +70,15 @@ class LayerControl extends Component {
         open={this.state.menuOpen}       
       >
         <MenuItem className={classes.menuitem}>
-          <input type="checkbox"  checked={pointIsChecked} onClick={handlePointIsChecked} />
+          <CheckBox checked={pointIsChecked} onChange={handlePointIsChecked} />
           <ListItemText primary={'界址点'} />
         </MenuItem>
         <MenuItem className={classes.menuitem}>
-          <input type="checkbox" checked={linetIsChecked} onClick={handleLineIsChecked} />
+          <CheckBox checked={linetIsChecked} onChange={handleLineIsChecked} />
           <ListItemText primary={'界址线'} />
         </MenuItem>
         <MenuItem className={classes.menuitem}>
-          <input  type="checkbox" checked={polygonIsChecked}  onClick={handlePolygonIsChecked} />
+          <CheckBox checked={polygonIsChecked}  onChange={handlePolygonIsChecked} />
           <ListItemText primary={'宗地'} />
         </MenuItem>
         <MenuItem onClick={this.handleMenuOpen} className={classes.menuitem}>
