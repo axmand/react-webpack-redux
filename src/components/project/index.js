@@ -11,7 +11,8 @@ import Typography from 'material-ui/Typography';
 //图标
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import FolderOpenIcon from 'material-ui-icons/FolderOpen'
+import FontAwesome from 'react-fontawesome'
+// import FolderOpenIcon from 'material-ui-icons/FolderOpen'
 //自定义组件
 import SelfContent from './SelfContent'
 //redux
@@ -22,10 +23,11 @@ const styleSheet = createStyleSheet('ProjectModule', theme => ({
     flexDirection: 'column',
     justifyContent: 'center ',
   },
-  listitemicon: {
-    width: '50%',
-    height: '50%',
-    margin: '0px',
+  listItemText: {
+    padding: '0px',
+    lineHeight: '32px',
+    padding: '2px',
+    color: '#ffffff',
   },
   AppBar:{
     root:{
@@ -70,10 +72,24 @@ class ProjectModule extends Component {
     return (
         <div>
           <ListItem button className={classes.listitem} disableGutters={true} onClick={this.handleClick}>
-            <ListItemIcon className={classes.listitemicon}>
-              <FolderOpenIcon />
+            <ListItemIcon>
+              <FontAwesome
+                name='folder-o'
+                size='2x'
+                style={{
+                  width: '29.71px',
+                  height: '32px',
+                  margin: '0px',
+                  padding: '2px',
+                  color: '#C1C6C9',
+                }}
+              />
             </ListItemIcon>            
-            <ListItemText primary="项目管理" />
+            <ListItemText
+              primary="项目管理"
+              disableTypography={true}
+              className={classes.listItemText}
+            />
           </ListItem>
           
           <Dialog

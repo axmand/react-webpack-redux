@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 
 import { ListItem, ListItemIcon } from 'material-ui/List';
-import AccountCircleIcon from 'material-ui-icons/AccountCircle';
+import FontAwesome from 'react-fontawesome'
+// import AccountCircleIcon from 'material-ui-icons/AccountCircle';
 
 const styleSheet = createStyleSheet('UserModule', theme => ({
   listitem: {
@@ -18,7 +19,17 @@ class UserModule extends Component {
     return (
           <ListItem button className={classes.listitem}>
             <ListItemIcon>
-              <AccountCircleIcon />
+              <FontAwesome 
+                name='user'
+                size='lg'
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  margin: '0px',
+                  padding: '2px',
+                  color: '#C1C6C9',
+                }}
+              />
             </ListItemIcon>
           </ListItem>
     )

@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import PrintIcon from 'material-ui-icons/Print';
+import FontAwesome from 'react-fontawesome'
+// import PrintIcon from 'material-ui-icons/Print';
 
 const styleSheet = createStyleSheet('PrintModule', theme => ({
   listitem: {
@@ -10,10 +11,11 @@ const styleSheet = createStyleSheet('PrintModule', theme => ({
     flexDirection: 'column',
     justifyContent: 'center ',
   },
-  listitemicon: {
-    width: '50%',
-    height: '50%',
-    margin: '0px',
+  listItemText: {
+    padding: '0px',
+    lineHeight: '32px',
+    padding: '2px',
+    color: '#ffffff',
   },
 }));
 
@@ -23,12 +25,26 @@ class PrintModule extends Component {
     const classes = this.props.classes;
   
     return (
-          <ListItem button className={classes.listitem} disableGutters={true}>
-            <ListItemIcon className={classes.listitemicon}>
-              <PrintIcon />
-            </ListItemIcon>            
-            <ListItemText primary="打印" />
-          </ListItem>
+      <ListItem button className={classes.listitem} disableGutters={true}>
+        <ListItemIcon>
+          <FontAwesome
+            name='print'
+            size='2x'
+            style={{
+              width: '29.71px',
+              height: '32px',
+              margin: '0px',
+              padding: '2px',
+              color: '#C1C6C9',
+            }}
+          />
+        </ListItemIcon>            
+        <ListItemText
+          disableTypography={true}
+          className={classes.listItemText}
+          primary="打印"
+        />
+      </ListItem>
     )
   }
 }
