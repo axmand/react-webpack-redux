@@ -1,24 +1,23 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux';
 
-import { withStyles, createStyleSheet } from 'material-ui/styles';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import { withStyles } from 'material-ui/styles';
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import FontAwesome from 'react-fontawesome'
 // import MapIcon from 'material-ui-icons/Map';
 
-const styleSheet = createStyleSheet('SketchModule', theme => ({
+const styleSheet = {
   listitem: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center ',
   },
   listItemText: {
-    padding: '0px',
     lineHeight: '32px',
     padding: '2px',
     color: '#ffffff',
   },
-}));
+}
 
 class SketchModule extends Component {
 
@@ -67,4 +66,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withStyles(styleSheet)(connect(mapStateToProps, mapDispatchToProps)(SketchModule))
+export default withStyles(styleSheet,{name:'SketchModule'})(connect(mapStateToProps, mapDispatchToProps)(SketchModule))

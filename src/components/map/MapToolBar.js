@@ -2,19 +2,17 @@
  * 
  */
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //ui
 import { withStyles } from 'material-ui/styles';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import IconButton from 'material-ui/IconButton';
+import List, { ListItem, ListItemIcon } from 'material-ui/List'
 //图标
-import ContentCopy from 'material-ui-icons/ContentCopy';
+// import ContentCopy from 'material-ui-icons/ContentCopy';
 import Flag from 'material-ui-icons/Flag';
 import Add from 'material-ui-icons/Add';
 import  Remove from 'material-ui-icons/Remove';
 import  Search from 'material-ui-icons/Search';
-import  RadioButtonChecked from 'material-ui-icons/RadioButtonChecked';
+// import  RadioButtonChecked from 'material-ui-icons/RadioButtonChecked';
 //组件
 import LayerControl from './LayerControl';
 import RealtimeMapping from './RealtimeMapping';

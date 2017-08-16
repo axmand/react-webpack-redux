@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 import NavigationView from './NavigationView'
 import MapView from './MapView'
 
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 

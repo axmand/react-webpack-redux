@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 
 import UserModule from '../components/user'
 import ProjectModule from '../components/project'

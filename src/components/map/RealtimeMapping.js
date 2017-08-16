@@ -30,8 +30,8 @@ class RealtimeMapping extends Component {
 }
 
 RealtimeMapping.propTypes = {
-  // realtimeMappingIsChecked:PropTypes.bool.isRequired,
-  // handleRealtimeMapping:PropTypes.func.isRequired
+  realtimeMappingIsChecked:PropTypes.bool.isRequired,
+  handleRealtimeMapping:PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {

@@ -5,7 +5,7 @@ import Draggable from 'react-draggable';
 //ui
 import { withStyles } from 'material-ui/styles';
 import { ListItemText } from 'material-ui/List';
-import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
+import Dialog,{ DialogActions, DialogContent, DialogContentText } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 
 //import icon
@@ -15,7 +15,7 @@ import Timeline from 'material-ui-icons/Timeline';//连线
 import CheckBoxOutlineBlank from 'material-ui-icons/CheckBoxOutlineBlank';//构面
 import Delete from 'material-ui-icons/Delete';//删除
 import Undo from 'material-ui-icons/Undo';//撤销
-import Refresh from 'material-ui-icons/Refresh';//重做
+// import Refresh from 'material-ui-icons/Refresh';//重做
 import Redo from  'material-ui-icons/Redo';
 import Save from 'material-ui-icons/Save';//保存
 import DragHandle from 'material-ui-icons/DragHandle';

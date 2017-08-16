@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 
 import { ListItem, ListItemIcon } from 'material-ui/List';
 import FontAwesome from 'react-fontawesome'

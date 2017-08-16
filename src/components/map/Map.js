@@ -60,7 +60,7 @@ class Map extends Component {
  * 限定组件的一些属性
  */
 Map.propTypes = {
-    //onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired
 }
 
 //加入reducer(mapReduce)

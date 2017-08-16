@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { createStyleSheet, withStyles } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Avatar from 'material-ui/Avatar';
 
@@ -15,7 +15,7 @@ import { Provider, connect } from 'react-redux'
 import Paper from 'material-ui/Paper';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import PeopleIcon from 'material-ui-icons/People'
-const styleSheet = createStyleSheet(() => ({
+const styles = {
   avatar: {
     background: blue[100],
     color: blue[600],
@@ -35,7 +35,7 @@ const styleSheet = createStyleSheet(() => ({
     padding: '2px',
     color: '#ffffff',
   },
-}));
+}
 
 class ChooseTableDialog extends Component {
 
@@ -203,5 +203,5 @@ clickIcon:()=>dispatch({
   })
 }
 }
-const ChooseDialog = withStyles(styleSheet)(ChooseTableDialog);
+const ChooseDialog = withStyles(styles,{name:'ChooseTableDialog'})(ChooseTableDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseDialog);

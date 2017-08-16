@@ -8,7 +8,7 @@ import Tabs, { Tab } from 'material-ui/Tabs'
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 //import component
-import Map from '../map/Map';
+// import Map from '../map/Map';
 import SketchToolBar from './SketchToolBar';
 
 const styles ={
@@ -79,6 +79,10 @@ class Sketch extends Component {
     )
   }
 }
+
+Sketch.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
 /**
  * 
  * @param {*} state 

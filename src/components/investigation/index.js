@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import FontAwesome from 'react-fontawesome'
 // import DevicesIcon from 'material-ui-icons/Devices'
 
@@ -13,7 +13,6 @@ const styles = {
     justifyContent: 'center ',
   },
   listItemText: {
-    padding: '0px',
     lineHeight: '32px',
     padding: '2px',
     color: '#ffffff',
