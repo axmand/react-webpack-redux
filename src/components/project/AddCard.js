@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 //UI
 import Card, { CardActions, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -10,11 +10,11 @@ import Checkbox from 'material-ui/Checkbox';
 import reptileImage from './test2.jpg';
 //Redux
 
-const styleSheet = createStyleSheet(theme => ({
+const styles = {
   input: {
     display: 'none',
   },
-}));
+};
 
 class AddCard extends Component {
 
@@ -50,4 +50,4 @@ AddCard.propTypes = {
   handleChooseList:PropTypes.func.isRequired,
 };
 
-export default withStyles(styleSheet)(AddCard);
+export default withStyles(styles,{name:'AddCard'})(AddCard);

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
 import { FormLabel, FormControlLabel } from 'material-ui/Form';
 import Dialog,{ DialogActions, DialogContent, DialogContentText } from 'material-ui/Dialog';
