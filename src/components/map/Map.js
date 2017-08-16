@@ -179,19 +179,18 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 //初始化相关量
-let drawPoint,drawLine,drawPolygon,deleteObj,mapUndo,mapRedo,
+let drawPoint,drawLine,drawPolygon,deleteObj,
      point,line,polygon,target,
      getPoint,clearPoiArr,getObj,
      clickEventBind;
 let lineIsClicked = false,
-    PolygonIsClicked = false,
-    showConfirmDeletion = false;
+    PolygonIsClicked = false;
 
 //初始化线面的点集数组
-let poiArr=new Array(),
-    poiId=new Array(),
-    poiCoor=new Array(),
-    points=new Array();
+let poiArr=[],
+    poiId=[],
+    poiCoor=[];
+
 const sketchReduce = (state = { 
     pointNum: 0, 
     drawPointIsChecked: false,
@@ -210,7 +209,6 @@ const sketchReduce = (state = {
             const id=target._id;
             poiId.push(id);
             target.updateSymbol([{ 'polygonFill': '#00FFFF','lineColor': '#00FFFF'}]); 
-            console.log(state.deleteIsChecked)
         }
 //用于清空点集
         clearPoiArr=clearPoiArr || function(){
@@ -319,7 +317,6 @@ const sketchReduce = (state = {
                             ]
                     } 
                 );
-                points.push(point);
                 point.on('click',getPoint)
                 map.getLayer('point').addGeometry(point);     
             };
@@ -436,16 +433,21 @@ const sketchReduce = (state = {
                 return {...state,...newState3};        
 
             case 'deleteClick':
-                console.log(state);
+                console.log(target);
                 clickEventBind('delete');
-                const newState4={
-                    deleteIsChecked:!state.deleteIsChecked, 
-                    showDelDialog:!state.showDelDialog,                   
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false
+                if(target){
+                    const newState4={
+                        deleteIsChecked:!state.deleteIsChecked, 
+                        showDelDialog:!state.showDelDialog,                   
+                        undoIsChecked:false,
+                        redoIsChecked:false,
+                        saveIsChecked:false
+                    }
+                 return Object.assign({},state,{... newState4});                       
+                }else{
+                    alert('未选中对象，无法删除！')
                 }
-                return Object.assign({},state,{... newState4});
+            return{...state}
 
             case 'handleCloseDelDialog':
                 const showDelDialog1 ={showDelDialog: !state.showDelDialog} 
@@ -471,8 +473,6 @@ const sketchReduce = (state = {
                 console.log('保存');
 
                 return { ...state }
-
-
 
             default:
                 return { ...state }
