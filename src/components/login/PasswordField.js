@@ -16,7 +16,7 @@ import Checkbox from 'material-ui/Checkbox'
 import VisibilityIcon from 'material-ui-icons/Visibility'
 import VisibilityOffIcon from 'material-ui-icons/VisibilityOff' 
 
-const styleSheet = createStyleSheet('Login', theme => ({
+const styleSheet = createStyleSheet('PasswordField', theme => ({
   root: {
 		position: 'relative',
 		display: 'inline-block',

@@ -18,8 +18,6 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography'
 import PasswordFeild from './PasswordField'
 
-import { white } from 'material-ui/colors';
-
 const styleSheet = createStyleSheet('Login', theme => ({
   container: {
     width: '100%',
