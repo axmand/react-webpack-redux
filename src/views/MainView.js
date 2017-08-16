@@ -16,12 +16,12 @@ import { withStyles, createStyleSheet } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 
-const styleSheet = createStyleSheet('MainView', theme => ({
+const styles = {
   root: {
     flexGrow: 1,
     height: '100%',
   },
-}));
+}
 
 //前置存在login登录页，此页作为第二页
 class MainView extends Component {
@@ -57,4 +57,4 @@ MainView.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styleSheet)(MainView);
+export default withStyles(styles)(MainView);

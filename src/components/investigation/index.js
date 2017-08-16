@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome'
 
 import Menu, { MenuItem } from 'material-ui/Menu'
 
-const styleSheet = createStyleSheet('InvestigationModule', theme => ({
+const styles = {
   listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
@@ -18,7 +18,7 @@ const styleSheet = createStyleSheet('InvestigationModule', theme => ({
     padding: '2px',
     color: '#ffffff',
   },
-}))
+}
 
 class InvestigationModule extends Component {
 
@@ -80,4 +80,4 @@ class InvestigationModule extends Component {
   } 
 }
 
-export default withStyles(styleSheet)(InvestigationModule)
+export default withStyles(styles)(InvestigationModule)

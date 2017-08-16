@@ -5,7 +5,7 @@ import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import FontAwesome from 'react-fontawesome'
 // import PrintIcon from 'material-ui-icons/Print';
 
-const styleSheet = createStyleSheet('PrintModule', theme => ({
+const styles = {
   listitem: {
     display: 'flex',
     flexDirection: 'column',
@@ -17,7 +17,7 @@ const styleSheet = createStyleSheet('PrintModule', theme => ({
     padding: '2px',
     color: '#ffffff',
   },
-}));
+}
 
 class PrintModule extends Component {
 
@@ -49,4 +49,4 @@ class PrintModule extends Component {
   }
 }
 
-export default withStyles(styleSheet)(PrintModule);
+export default withStyles(styles)(PrintModule);

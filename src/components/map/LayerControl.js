@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import UI
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu'
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import ContentCopy from 'material-ui-icons/ContentCopy';
 
-const styleSheet = createStyleSheet(theme=>({
+const styles ={
   listitem: {
     width: '50px',
     height: '50px',
@@ -18,7 +18,7 @@ const styleSheet = createStyleSheet(theme=>({
     background: 'rgba(255, 255, 255, .75)',
     borderRadius: 5,
     },
-}))
+}
 
 
 class LayerControl extends Component {
@@ -139,4 +139,4 @@ const mapDispatchToProps = (dispatch) => {
 }  		
 
 
-export default withStyles(styleSheet)(connect(mapStateToProps, mapDispatchToProps)(LayerControl))
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(LayerControl))

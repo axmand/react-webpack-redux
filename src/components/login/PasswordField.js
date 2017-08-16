@@ -16,7 +16,7 @@ import Checkbox from 'material-ui/Checkbox'
 import VisibilityIcon from 'material-ui-icons/Visibility'
 import VisibilityOffIcon from 'material-ui-icons/VisibilityOff' 
 
-const styleSheet = createStyleSheet('PasswordField', theme => ({
+const styles = theme => ({
   root: {
 		position: 'relative',
 		display: 'inline-block',
@@ -35,7 +35,7 @@ const styleSheet = createStyleSheet('PasswordField', theme => ({
   button: {
     margin: theme.spacing.unit,
   },
-}));
+})
 
 class PasswordField extends Component {
 
@@ -102,4 +102,4 @@ const loginReduce = (state = 0, action) => {
 
 RootReducer.merge(loginReduce);
 
-export default withStyles(styleSheet)(PasswordField);
+export default withStyles(styles)(PasswordField);

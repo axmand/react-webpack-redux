@@ -5,11 +5,11 @@ import { ListItem, ListItemIcon } from 'material-ui/List';
 import FontAwesome from 'react-fontawesome'
 // import AccountCircleIcon from 'material-ui-icons/AccountCircle';
 
-const styleSheet = createStyleSheet('UserModule', theme => ({
+const styles = {
   listitem: {
     display: 'flex',
   },
-}));
+}
 
 class UserModule extends Component {
 
@@ -37,4 +37,4 @@ class UserModule extends Component {
   
 }
 
-export default withStyles(styleSheet)(UserModule);
+export default withStyles(styles)(UserModule);

@@ -8,11 +8,11 @@ import RootReducer from '../redux/RootReducer';
 import Map from '../components/map/Map'
 import Sketch from '../components/sketch/Sketch'
 
-const styleSheet = createStyleSheet('MapView', theme => ({
+const styles = {
   root: {
     width: '100%',
   },
-}));
+}
 
 class MapView extends Component {
 
@@ -67,4 +67,4 @@ const mapStateToProps = ( state ) => {
   }
 }
 
-export default withStyles(styleSheet)(connect(mapStateToProps)(MapView));
+export default withStyles(styles)(connect(mapStateToProps)(MapView));

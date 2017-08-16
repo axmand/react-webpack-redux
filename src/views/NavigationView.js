@@ -11,14 +11,14 @@ import PrintModule from '../components/print'
 import List, { ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
-const styleSheet = createStyleSheet('NavigationPanel', theme => ({
+const styles = {
   root: {
     width: '100%',
     height: '100%',
     backgroundColor: '#455A64',
     opacity: '0.95',
   },
-}));
+}
 
 class NavigationPanel extends Component {
 
@@ -48,4 +48,4 @@ class NavigationPanel extends Component {
   
 }
 
-export default withStyles(styleSheet)(NavigationPanel);
+export default withStyles(styles)(NavigationPanel);

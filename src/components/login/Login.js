@@ -18,7 +18,7 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography'
 import PasswordFeild from './PasswordField'
 
-const styleSheet = createStyleSheet('Login', theme => ({
+const styles = theme => ({
   container: {
     width: '100%',
     height: `${window.innerHeight}px`,
@@ -55,7 +55,7 @@ const styleSheet = createStyleSheet('Login', theme => ({
     padding: '0px',
     margin: theme.spacing.unit,
   },
-}));
+})
 
 class Login extends Component {
 
@@ -111,4 +111,4 @@ const loginReduce = (state = 0, action) => {
 
 RootReducer.merge(loginReduce);
 
-export default withStyles(styleSheet)(Login);
+export default withStyles(styles)(Login);
