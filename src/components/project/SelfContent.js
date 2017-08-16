@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
 //UI
 import { FormLabel, FormControlLabel } from 'material-ui/Form';
 import Dialog,{ DialogActions, DialogContent, DialogContentText } from 'material-ui/Dialog';
@@ -16,7 +15,7 @@ class SelfContent extends Component {
 
   render() {
     const { 
-      handleDelete,
+      handleDeleteCard,
       handleShowDelDialog,
       showDelDialog,
       handleCloseDelDialog,
@@ -54,7 +53,7 @@ class SelfContent extends Component {
             <Button onClick={ handleCloseDelDialog } color="default">
               取消
             </Button>
-            <Button onClick={ handleDelete } color="primary">
+            <Button onClick={ handleDeleteCard } color="primary">
               确认
             </Button>
           </DialogActions>
@@ -66,7 +65,7 @@ class SelfContent extends Component {
 }
 
 SelfContent.propTypes = {
-  handleDelete:PropTypes.func.isRequired,
+  handleDeleteCard:PropTypes.func.isRequired,
   handleCloseDelDialog:PropTypes.func.isRequired,
   handleShowDelDialog:PropTypes.func.isRequired,
   showDelDialog:PropTypes.bool.isRequired,
@@ -87,9 +86,9 @@ const mapStateToProps = (state,ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleDelete:()=>{
+    handleDeleteCard:()=>{
       dispatch({
-         type: 'handleDelete',
+         type: 'handleDeleteCard',
 			})
     },
 
@@ -140,7 +139,6 @@ const ProjectReduce =(
     }
 
     if(action.type==="handleChooseList"){
- 
       let listItems = newState.inputItems.map( todo => {
         if ( todo.key === action.id ) {
           return {
@@ -150,9 +148,7 @@ const ProjectReduce =(
         }
         return todo;
       })
-    
       newState.inputItems = listItems
-
       return { ...state, ...newState };
     }
     
@@ -176,7 +172,7 @@ const ProjectReduce =(
       return Object.assign({},state,{... showDelDialog})
     }
 
-    if(action.type==="handleDelete"){
+    if(action.type==="handleDeleteCard"){
       const inputItems = state.inputItems
       newState.showDelDialog = !state.showDelDialog;
       let listItems = newState.inputItems.filter( (todo) =>{return todo.checked === false } )

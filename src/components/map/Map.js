@@ -189,13 +189,18 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 //初始化相关量
-let drawPoint,drawLine,drawPolygon,deleteObj,
+let drawPoint,drawLine,drawPolygon,deleteObj,mapUndo,mapRedo,
      point,line,polygon,target,
      getPoint,clearPoiArr,getObj,
      clickEventBind;
 let lineIsClicked = false,
     PolygonIsClicked = false,
     showConfirmDeletion = false;
+//初始化撤销和重做的相关变量
+let undoArr=new Array(),
+    redoArr= new Array(),
+    undo =[],
+    redo=[];
 //初始化线面的点集数组
 let poiArr=new Array(),
     poiId=new Array(),
@@ -330,7 +335,12 @@ const sketchReduce = (state = {
                 );
                 points.push(point);
                 point.on('click',getPoint)
-                map.getLayer('point').addGeometry(point);       
+                map.getLayer('point').addGeometry(point); 
+                undo={
+                    undoType:'drawPoint',
+                    undoObj:point
+                }
+                undoArr.push(undo);      
             };
 //用于画线
         drawLine = drawLine ||function () {
@@ -346,7 +356,12 @@ const sketchReduce = (state = {
                     }
                 });
                 line.on('click',getObj);
-                map.getLayer('line').addGeometry(line);                   
+                map.getLayer('line').addGeometry(line);   
+                undo={
+                    undoType:'drawLine',
+                    undoObj:line
+                }
+                undoArr.push(undo);                  
             } 
             if(poiArr.length>2){
                 const i=poiArr.length-2;
@@ -360,7 +375,12 @@ const sketchReduce = (state = {
                         }
                     });
                     line.on('click',getObj);
-                    map.getLayer('line').addGeometry(line);             
+                    map.getLayer('line').addGeometry(line);  
+                    undo={
+                        undoType:'drawLine',
+                        undoObj:line
+                    }
+                    undoArr.push(undo);                                 
             }};
 //用于画地块
         drawPolygon = drawPolygon ||function () {
@@ -376,12 +396,69 @@ const sketchReduce = (state = {
                 });
                 polygon.on('click',getObj);
                 map.getLayer('polygon').addGeometry(polygon);
+                undo={
+                    undoType:'drawPolygon',
+                    undoObj:polygon
+                }
+                undoArr.push(undo);  
              }
             clearPoiArr();}
 //用于删除对象
         deleteObj = deleteObj ||function (){
             target.remove();
+            undo={
+                undoType:'deleteObj',
+                undoObj:target
+            }
+            undoArr.push(undo);             
         }
+//撤销
+        mapUndo = mapUndo ||function(){
+            if(undoArr.length ===0){
+                return;
+            }
+            undo=undoArr[undoArr.length-1];
+            switch(undo.type){
+                case 'drawPoint':
+                undo.undoObj.remove();
+                undoArr.splice(undoArr.length- 1,1)
+                redoArr.push(undo);//把现在撤销的数据加到恢复的数组中
+                return;
+
+                case 'drawLine':
+                undo.undoObj.remove();
+                undoArr.splice(undoArr.length- 1,1)
+                return;
+                
+                case 'drawPolygon':
+                undo.undoObj.remove();
+                undoArr.splice(undoArr.length- 1,1)                
+                return;
+
+                case 'deleteObj':
+                    if(undo.undoObj.type==='point'){
+                        map.getLayer('point').addGeometry(undo.undoObj);
+                        undoArr.splice(undoArr.length- 1,1)
+                    }
+                    if(undo.undoObj.type==='LineString'){
+                        map.getLayer('line').addGeometry(undo.undoObj);
+                        undoArr.splice(undoArr.length- 1,1)
+
+                    }
+                    if(undo.undoObj.type==='Polygon'){
+                        map.getLayer('polygon').addGeometry(undo.undoObj);
+                        undoArr.splice(undoArr.length- 1,1)
+                    }
+                return;
+                default:
+                return;
+            }
+        }
+
+//重做
+
+
+
 ///////
         switch (action.type) {
             

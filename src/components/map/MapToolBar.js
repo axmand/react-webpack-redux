@@ -19,7 +19,7 @@ import  RadioButtonChecked from 'material-ui-icons/RadioButtonChecked';
 import LayerControl from './LayerControl';
 import RealtimeMapping from './RealtimeMapping';
 
-const styles = {
+const styles ={
   list:{
     position:'absolute',
     top:'80px',
@@ -91,4 +91,4 @@ MapToolBar.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(MapToolBar);
+export default withStyles(styles,{name:'MapToolBar'})(MapToolBar);

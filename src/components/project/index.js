@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 //UI
 import  { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog'
@@ -18,7 +18,7 @@ import SelfContent from './SelfContent'
 //redux
 
 
-const styleSheet = createStyleSheet('ProjectModule', theme => ({
+const styles= {
   listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
@@ -38,12 +38,14 @@ const styleSheet = createStyleSheet('ProjectModule', theme => ({
   },
   flex: {
      flex: 1,
-  }, 
+  },
   dialog:{
-    width: '800px',
-    height: '800px',
+    width: '1450px',
+    height: '850px',
+    marginTop:20,
+    marginLeft:300
   }
-}))
+};
 
 class ProjectModule extends Component {
 
@@ -92,8 +94,7 @@ class ProjectModule extends Component {
           
           <Dialog
             fullScreen
-            //contentStyle={{maxWidth:'800'}}
-            //className={classes.dialog}
+            className={classes.dialog}
             open={this.state.open}
             onRequestClose={this.handleRequestClose}
             transition={<Slide direction="up" />}
@@ -119,5 +120,5 @@ class ProjectModule extends Component {
   }
 }
 
-export default withStyles(styleSheet)(ProjectModule)
+export default withStyles(styles,{name: 'ProjectModule'})(ProjectModule)
 
