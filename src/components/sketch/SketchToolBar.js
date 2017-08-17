@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
 //ui
 import { withStyles } from 'material-ui/styles';
-import { ListItemText } from 'material-ui/List';
 import Dialog,{ DialogActions, DialogContent, DialogContentText } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
+import Typograghy from 'material-ui/Typography'
 
 //import icon
 import LocationSearching from  'material-ui-icons/LocationSearching';//展点
@@ -18,26 +18,27 @@ import Undo from 'material-ui-icons/Undo';//撤销
 // import Refresh from 'material-ui-icons/Refresh';//重做
 import Redo from  'material-ui-icons/Redo';
 import Save from 'material-ui-icons/Save';//保存
+import CreateIcon from 'material-ui-icons/Create';//保存
 import DragHandle from 'material-ui-icons/DragHandle';
 
 const styles={
     root:{
          height:'50px',
-         width:'540px',
+         width:'500px',
          position:'absolute',
          top:'80px',
          left:'100px',
+         display: 'flex',
+         alignItem: 'center',
          background: 'rgba(255, 255, 255, .75)',
          border:'solid 1px 	#606060',
          borderRadius: 8,
          boxShadow: '2px 2px 2px 2px rgba(0, 0, 0, 0.2)'
     },   
     button:{
-        flexDirection: 'column',
-        justifyContent: 'center ',
         display:'inline-block',
-        minheight:'60px',
-        minWidth:'60px',
+        minheight:'50px',
+        minWidth:'50px',
         fontSize:'12px',
         padding:0,
         border:0
@@ -53,42 +54,47 @@ class SkechToolBar extends Component{
         return( 
             <Draggable handle="span">
                 <div className={classes.root} >
-                     <Button className={classes.button}>
+                    <Button className={classes.button}>
                         <LocationSearching />  
-                        <ListItemText primary="展点" />
+                        <Typograghy>展点</Typograghy>
                     </Button>
                     <Button  className={classes.button} style={{backgroundColor: drawPointIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawPointClick} >
                         <Adjust />
-                        <ListItemText primary="画点" />
+                        <Typograghy>画点</Typograghy>
                     </Button>
                     <Button  className={classes.button} style={{backgroundColor: drawLineIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawLineClick}>
                         <Timeline />
-                        <ListItemText primary="连线" />
+                        <Typograghy>连线</Typograghy>
                     </Button>                               
                     <Button  className={classes.button} style={{backgroundColor: drawPolygonIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawPolygonClick}>
                         <CheckBoxOutlineBlank />
-                        <ListItemText primary="构面" />
+                        <Typograghy>构面</Typograghy>
                     </Button> 
                     <Button  className={classes.button} style={{backgroundColor: showDelDialog ? '#D1E9E9' : 'transparent'}} onClick={onDeleteClick}>
                         <Delete />
-                        <ListItemText primary="删除" />
+                        <Typograghy>删除</Typograghy>
                     </Button>            
                     <Button  className={classes.button} style={{backgroundColor: undoIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onUndoClick}>
                         <Undo />
-                        <ListItemText primary="撤销" />
+                        <Typograghy>撤销</Typograghy>
                     </Button>
                     <Button  className={classes.button} style={{backgroundColor: redoIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onRedoClick}>
                         <Redo />
-                        <ListItemText primary="重做" />
+                        <Typograghy>重做</Typograghy>
                     </Button>
                     <Button  className={classes.button} style={{backgroundColor: saveIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onSaveClick}>
                         <Save />
-                        <ListItemText primary="保存" />
+                        <Typograghy>保存</Typograghy>
                     </Button>
-                    <span className="cursor">
-                        <DragHandle />
-                    </span> 
-
+                    <Button  className={classes.button} style={{backgroundColor: saveIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onSaveClick}>
+                        <CreateIcon />
+                        <Typograghy>签章</Typograghy>
+                    </Button>
+										<Button  className={classes.button} style={{backgroundColor: saveIsChecked ? '#D1E9E9' : 'transparent'}}>
+											<span className="cursor">
+													<DragHandle />
+											</span> 
+										</Button>
                     <Dialog
                         open={ showDelDialog }
                         onRequestClose={ handleCloseDelDialog }>

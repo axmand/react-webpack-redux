@@ -16,6 +16,8 @@ const styleSheet = {
     lineHeight: '32px',
     padding: '2px',
     color: '#ffffff',
+    fontFamily: "微软雅黑",
+    fontWeight: 'bold',
   },
 }
 
@@ -46,7 +48,7 @@ class SketchModule extends Component {
           primary="草图"
           disableTypography={true}
           className={classes.listItemText}
-        />                         
+        />
       </ListItem>
     )
   }
