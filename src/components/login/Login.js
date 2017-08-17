@@ -8,7 +8,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import RootReducer from '../../redux/RootReducer'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 import { withStyles } from 'material-ui/styles'
 import { FormGroup } from 'material-ui/Form';
@@ -16,7 +16,7 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography'
-// import PasswordFeild from './PasswordField'
+import PasswordFeild from './PasswordField'
 
 const styles = theme => ({
   container: {
@@ -76,6 +76,7 @@ class Login extends Component {
               margin="dense"
               required={true}
             />
+            <PasswordFeild />
             <div style={{display: 'flex', width: '310px', justifyContent: 'flex-end'}}>
               <Button className={classes.buttonForgetPassword}>
                 <Typography>忘记密码?</Typography>
@@ -96,9 +97,9 @@ class Login extends Component {
 /**
  * 限定组件的一些属性
  */
-// Login.propTypes = {
-//     onClick: PropTypes.func.isRequired
-// }
+Login.propTypes = {
+    onChange: PropTypes.func.isRequired
+}
 
 //加入reducer
 const loginReduce = (state = 0, action) => {

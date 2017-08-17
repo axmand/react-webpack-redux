@@ -10,7 +10,7 @@ import React, { Component } from 'react'
 // import PropTypes from 'prop-types'
 import RootReducer from '../../redux/RootReducer'
 
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 import TextField from 'material-ui/TextField'
 import Checkbox from 'material-ui/Checkbox'
 import VisibilityIcon from 'material-ui-icons/Visibility'

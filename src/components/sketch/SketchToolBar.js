@@ -40,7 +40,7 @@ const styles={
         minWidth:'60px',
         fontSize:'12px',
         padding:0,
-        border:0,
+        border:0
     },
 
 };
@@ -49,38 +49,39 @@ class SkechToolBar extends Component{
         const classes=this.props.classes;
         const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
         const { handleDelete,handleShowDelDialog,showDelDialog,handleCloseDelDialog } = this.props
-        return(
+        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, } = this.props;
+        return( 
             <Draggable handle="span">
                 <div className={classes.root} >
                      <Button className={classes.button}>
                         <LocationSearching />  
                         <ListItemText primary="展点" />
                     </Button>
-                    <Button  className={classes.button} onClick={onDrawPointClick}>
+                    <Button  className={classes.button} style={{backgroundColor: drawPointIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawPointClick} >
                         <Adjust />
                         <ListItemText primary="画点" />
                     </Button>
-                    <Button  className={classes.button} onClick={onDrawLineClick}>
+                    <Button  className={classes.button} style={{backgroundColor: drawLineIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawLineClick}>
                         <Timeline />
                         <ListItemText primary="连线" />
                     </Button>                               
-                    <Button  className={classes.button} onClick={onDrawPolygonClick}>
+                    <Button  className={classes.button} style={{backgroundColor: drawPolygonIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawPolygonClick}>
                         <CheckBoxOutlineBlank />
                         <ListItemText primary="构面" />
                     </Button> 
-                    <Button  className={classes.button} onClick={onDeleteClick}>
+                    <Button  className={classes.button} style={{backgroundColor: showDelDialog ? '#D1E9E9' : 'transparent'}} onClick={onDeleteClick}>
                         <Delete />
                         <ListItemText primary="删除" />
                     </Button>            
-                    <Button  className={classes.button} onClick={onUndoClick}>
+                    <Button  className={classes.button} style={{backgroundColor: undoIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onUndoClick}>
                         <Undo />
                         <ListItemText primary="撤销" />
                     </Button>
-                    <Button  className={classes.button} onClick={onRedoClick}>
+                    <Button  className={classes.button} style={{backgroundColor: redoIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onRedoClick}>
                         <Redo />
                         <ListItemText primary="重做" />
                     </Button>
-                    <Button  className={classes.button} onClick={onSaveClick}>
+                    <Button  className={classes.button} style={{backgroundColor: saveIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onSaveClick}>
                         <Save />
                         <ListItemText primary="保存" />
                     </Button>
@@ -117,6 +118,7 @@ SkechToolBar.PropTypes={
     handleCloseDelDialog:PropTypes.func.isRequired,
     handleShowDelDialog:PropTypes.func.isRequired,
     showDelDialog:PropTypes.bool.isRequired,
+    drawPointIsChecked:PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => {
@@ -124,6 +126,12 @@ const mapStateToProps = (state) => {
 
  return {
         showDelDialog: sketchState.showDelDialog,
+        drawPointIsChecked:sketchState.drawPointIsChecked,
+        drawLineIsChecked:sketchState.drawLineIsChecked,
+        drawPolygonIsChecked:sketchState.drawPolygonIsChecked,
+        undoIsChecked:sketchState.undoIsChecked,
+        redoIsChecked:sketchState.redoIsChecked,
+        saveIsChecked:sketchState.saveIsChecked
     }
 }
 
@@ -180,21 +188,21 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         
         handleDelete:()=>{
-        dispatch({
-            type: 'handleDelete',
-                })
+            dispatch({
+                type: 'handleDelete',
+                    })
         },
 
         handleShowDelDialog:()=>{
-        dispatch({
-            type: 'handleShowDelDialog',
-                })
+            dispatch({
+                type: 'handleShowDelDialog',
+                    })
         },
 
         handleCloseDelDialog:()=>{
-        dispatch({
-            type: 'handleCloseDelDialog',
-                })
+            dispatch({
+                type: 'handleCloseDelDialog',
+                    })
         },
     }
 }

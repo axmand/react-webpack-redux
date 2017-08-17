@@ -51,7 +51,7 @@ class Sketch extends Component {
       <div className={classes.root}>
         <AppBar position="static" color='default'>
           <Tabs          
-            index={this.state.index}
+            value={this.state.index}
             onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
