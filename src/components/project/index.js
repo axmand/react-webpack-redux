@@ -28,6 +28,8 @@ const styles= {
     lineHeight: '32px',
     padding: '2px',
     color: '#ffffff',
+    fontFamily: "微软雅黑",
+    fontWeight: 'bold',
   },
   AppBar:{
     root:{

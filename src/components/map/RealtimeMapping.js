@@ -10,7 +10,8 @@ const styles ={
   listItem: {
     flexDirection: 'column',
     padding: '0px',
-    width: '60px', 
+    width: '40px',
+    height: '90px',
     border: 0,
     background: 'rgba(255, 255, 255, .75)',
     borderRadius: 5,
@@ -25,8 +26,12 @@ class RealtimeMapping extends Component {
     return (
       <ListItem className={classes.listItem}>
         <Switch
-          onChange={handleRealtimeMapping}
           checked={realtimeMappingIsChecked}
+          onChange={handleRealtimeMapping}          
+          aria-label="RealtimeMappingCheckBox"
+          styles={{
+            width: '30px',
+          }}
         />
         <span>实时<br/>成图</span>
       </ListItem>

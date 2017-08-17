@@ -6,22 +6,28 @@ import { withStyles } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu'
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import CheckBox from 'material-ui/Checkbox'
-import ContentCopy from 'material-ui-icons/ContentCopy';
+import FontAwesome from 'react-fontawesome'
+// import ContentCopy from 'material-ui-icons/ContentCopy';
 
 const styles ={
   listitem: {
-    width: '50px',
-    height: '50px',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: '5px 5px 5px', 
-    border: 0,    
-    background: 'rgba(255, 255, 255, .75)',
-    borderRadius: 5,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      height: '40px',
+      padding: '0px',
+      border: 0,    
+      background: 'rgba(255, 255, 255, .75)',
+      borderRadius: 5,
     },
   menu: {
-    left: '0px',
+    top: '88px !important',
+    left: '824px !important',
+    width: '120px',
   },
+  listItemText: {
+    padding: '0px',
+  }
 }
 
 
@@ -60,15 +66,18 @@ class LayerControl extends Component {
     return(
       <div>
         <ListItem button className={classes.listitem} disableGutters={true}  onClick={this.handleMenuOpen}>
-          <ListItemIcon 
-            style={{
-              color:'#000',
-              width: '24px',
-              height: '24px',
-              margin: '0px',              
-            }}
-          >
-            <ContentCopy  />
+          <ListItemIcon>
+            <FontAwesome
+              name='clone'
+              size='lg'
+              style={{
+                width: '21.33px',
+                height: '21.33px',
+                marginRight: '0px',
+                marginTop: '5.33px',
+                color: '#000000',
+              }}
+            />
           </ListItemIcon>
         </ListItem>
         <Menu
@@ -77,17 +86,37 @@ class LayerControl extends Component {
           open={this.state.menuOpen}
           onRequestClose={this.handleRequestClose}
         >
-          <MenuItem className={classes.menuitem}>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={true} disabled={true} />
+            <ListItemText
+              primary={'影像底图'}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
             <CheckBox checked={pointIsChecked} onChange={handlePointIsChecked} />
-            <ListItemText primary={'界址点'} />
+            <ListItemText 
+              primary={'界址点'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
           </MenuItem>
-          <MenuItem className={classes.menuitem}>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
             <CheckBox checked={linetIsChecked} onChange={handleLineIsChecked} />
-            <ListItemText primary={'界址线'} />
+            <ListItemText 
+              primary={'界址线'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
           </MenuItem>
-          <MenuItem className={classes.menuitem}>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
             <CheckBox checked={polygonIsChecked}  onChange={handlePolygonIsChecked} />
-            <ListItemText primary={'宗地'} />
+            <ListItemText 
+              primary={'宗地'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
           </MenuItem>
         </Menu>
       </div>
