@@ -60,7 +60,7 @@ class Map extends Component {
  * 限定组件的一些属性
  */
 Map.propTypes = {
-    onClick: PropTypes.func.isRequired
+    onMenuItemClick: PropTypes.func.isRequired
 }
 
 //加入reducer(mapReduce)
@@ -185,6 +185,7 @@ const realtimeMappingReduce = (
     }
     return { ...state };
 }
+
 RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)

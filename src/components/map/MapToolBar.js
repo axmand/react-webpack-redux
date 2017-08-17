@@ -50,10 +50,9 @@ class MapToolBar extends Component{
         const { onClick }= this.props;
 
         return(
+          <div>
             <List className={classes.list}>
-              <ListItem className={classes.listitem} disableGutters={true}>
-                <LayerControl  />
-              </ListItem>
+              <LayerControl  />
               <ListItem />
               <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("get_location")}>
                 <ListItemIcon className={classes.listitemicon}>
@@ -81,6 +80,7 @@ class MapToolBar extends Component{
               <ListItem />
               <RealtimeMapping />             
             </List>
+          </div>
         )
     }
 }
