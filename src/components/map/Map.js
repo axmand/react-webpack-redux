@@ -89,19 +89,9 @@ const mapReduce = (state = 0, action) => {
                 }
             }
         );
-        const line = new maptalks.LineString([
-            center.add(-0.018, 0.005),
-            center.add(0.006, 0.005)
-        ], {
-                symbol: {
-                    'lineColor': '#1bbc9b',
-                    'lineWidth': 3
-                }
-            });
         //将对象添加至图层
         map.getLayer('point').addGeometry(circle);
-        map.getLayer('polygon').addGeometry(marker);
-        map.getLayer('line').addGeometry(line);
+        map.getLayer('point').addGeometry(marker);
     }
     //地图放大
     if (action.type === "menuClick" && action.payload.command === "zoom_in") {
@@ -190,23 +180,18 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 //初始化相关量
-let drawPoint,drawLine,drawPolygon,deleteObj,mapUndo,mapRedo,
+let drawPoint,drawLine,drawPolygon,deleteObj,
      point,line,polygon,target,
      getPoint,clearPoiArr,getObj,
      clickEventBind;
 let lineIsClicked = false,
-    PolygonIsClicked = false,
-    showConfirmDeletion = false;
-//初始化撤销和重做的相关变量
-let undoArr=new Array(),
-    redoArr= new Array(),
-    undo =[],
-    redo=[];
+    PolygonIsClicked = false;
+
 //初始化线面的点集数组
-let poiArr=new Array(),
-    poiId=new Array(),
-    poiCoor=new Array(),
-    points=new Array();
+let poiArr=[],
+    poiId=[],
+    poiCoor=[];
+
 const sketchReduce = (state = { 
     pointNum: 0, 
     drawPointIsChecked: false,
@@ -225,7 +210,6 @@ const sketchReduce = (state = {
             const id=target._id;
             poiId.push(id);
             target.updateSymbol([{ 'polygonFill': '#00FFFF','lineColor': '#00FFFF'}]); 
-            console.log(state.deleteIsChecked)
         }
 //用于清空点集
         clearPoiArr=clearPoiArr || function(){
@@ -334,14 +318,8 @@ const sketchReduce = (state = {
                             ]
                     } 
                 );
-                points.push(point);
                 point.on('click',getPoint)
-                map.getLayer('point').addGeometry(point); 
-                undo={
-                    undoType:'drawPoint',
-                    undoObj:point
-                }
-                undoArr.push(undo);      
+                map.getLayer('point').addGeometry(point);     
             };
 //用于画线
         drawLine = drawLine ||function () {
@@ -357,12 +335,7 @@ const sketchReduce = (state = {
                     }
                 });
                 line.on('click',getObj);
-                map.getLayer('line').addGeometry(line);   
-                undo={
-                    undoType:'drawLine',
-                    undoObj:line
-                }
-                undoArr.push(undo);                  
+                map.getLayer('line').addGeometry(line);                 
             } 
             if(poiArr.length>2){
                 const i=poiArr.length-2;
@@ -376,13 +349,10 @@ const sketchReduce = (state = {
                         }
                     });
                     line.on('click',getObj);
-                    map.getLayer('line').addGeometry(line);  
-                    undo={
-                        undoType:'drawLine',
-                        undoObj:line
-                    }
-                    undoArr.push(undo);                                 
-            }};
+                    map.getLayer('line').addGeometry(line);                              
+            }
+           
+        };
 //用于画地块
         drawPolygon = drawPolygon ||function () {
              console.log(poiCoor.length);
@@ -397,65 +367,16 @@ const sketchReduce = (state = {
                 });
                 polygon.on('click',getObj);
                 map.getLayer('polygon').addGeometry(polygon);
-                undo={
-                    undoType:'drawPolygon',
-                    undoObj:polygon
-                }
-                undoArr.push(undo);  
+             }else{
+                 alert('小于三点无法构面!</br>');
              }
             clearPoiArr();}
 //用于删除对象
         deleteObj = deleteObj ||function (){
-            target.remove();
-            undo={
-                undoType:'deleteObj',
-                undoObj:target
-            }
-            undoArr.push(undo);             
+            target.remove();          
         }
 //撤销
-        mapUndo = mapUndo ||function(){
-            if(undoArr.length ===0){
-                return;
-            }
-            undo=undoArr[undoArr.length-1];
-            switch(undo.type){
-                case 'drawPoint':
-                undo.undoObj.remove();
-                undoArr.splice(undoArr.length- 1,1)
-                redoArr.push(undo);//把现在撤销的数据加到恢复的数组中
-                return;
-
-                case 'drawLine':
-                undo.undoObj.remove();
-                undoArr.splice(undoArr.length- 1,1)
-                return;
-                
-                case 'drawPolygon':
-                undo.undoObj.remove();
-                undoArr.splice(undoArr.length- 1,1)                
-                return;
-
-                case 'deleteObj':
-                    if(undo.undoObj.type==='point'){
-                        map.getLayer('point').addGeometry(undo.undoObj);
-                        undoArr.splice(undoArr.length- 1,1)
-                    }
-                    if(undo.undoObj.type==='LineString'){
-                        map.getLayer('line').addGeometry(undo.undoObj);
-                        undoArr.splice(undoArr.length- 1,1)
-
-                    }
-                    if(undo.undoObj.type==='Polygon'){
-                        map.getLayer('polygon').addGeometry(undo.undoObj);
-                        undoArr.splice(undoArr.length- 1,1)
-                    }
-                return;
-                default:
-                return;
-            }
-        }
-
+       
 //重做
 
 
@@ -513,16 +434,21 @@ const sketchReduce = (state = {
                 return {...state,...newState3};        
 
             case 'deleteClick':
-                console.log(state);
+                console.log(target);
                 clickEventBind('delete');
-                const newState4={
-                    deleteIsChecked:!state.deleteIsChecked, 
-                    showDelDialog:!state.showDelDialog,                   
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false
+                if(target){
+                    const newState4={
+                        deleteIsChecked:!state.deleteIsChecked, 
+                        showDelDialog:!state.showDelDialog,                   
+                        undoIsChecked:false,
+                        redoIsChecked:false,
+                        saveIsChecked:false
+                    }
+                 return Object.assign({},state,{... newState4});                       
+                }else{
+                    alert('未选中对象，无法删除！')
                 }
-                return Object.assign({},state,{... newState4});
+            return{...state}
 
             case 'handleCloseDelDialog':
                 const showDelDialog1 ={showDelDialog: !state.showDelDialog} 
@@ -535,6 +461,7 @@ const sketchReduce = (state = {
                 
             case 'undoClick':
                 console.log('撤销');
+               //drawTool.undo();
 
                 return { ...state }
 
@@ -547,8 +474,6 @@ const sketchReduce = (state = {
                 console.log('保存');
 
                 return { ...state }
-
-
 
             default:
                 return { ...state }

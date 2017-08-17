@@ -40,10 +40,10 @@ RealtimeMapping.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  const RealtimeMappingState=state.realtimeMappingReduce
-  return {
-    realtimeMappingIsChecked: RealtimeMappingState.realtimeMappingIsChecked,
-  }
+  const realtimeMappingState = state.realtimeMappingReduce
+    return {
+        realtimeMappingIsChecked: realtimeMappingState.realtimeMappingIsChecked
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {
