@@ -191,6 +191,8 @@ let lineIsClicked = false,
 let poiArr=[],
     poiId=[],
     poiCoor=[];
+let actionArr=[],
+    redoArr=[];
 
 const sketchReduce = (state = { 
     pointNum: 0, 
@@ -294,7 +296,8 @@ const sketchReduce = (state = {
                     map.off('click',drawPoint)
                 }                                                  
             }                                   
-        }      
+        };      
+
 //用于画点
         drawPoint = drawPoint ||function (e) {
                 state.pointNum++;
@@ -319,7 +322,8 @@ const sketchReduce = (state = {
                     } 
                 );
                 point.on('click',getPoint)
-                map.getLayer('point').addGeometry(point);     
+                map.getLayer('point').addGeometry(point); 
+                actionArr.push(point);    
             };
 //用于画线
         drawLine = drawLine ||function () {
@@ -335,7 +339,8 @@ const sketchReduce = (state = {
                     }
                 });
                 line.on('click',getObj);
-                map.getLayer('line').addGeometry(line);                 
+                map.getLayer('line').addGeometry(line);   
+                actionArr.push(line);                 
             } 
             if(poiArr.length>2){
                 const i=poiArr.length-2;
@@ -349,7 +354,8 @@ const sketchReduce = (state = {
                         }
                     });
                     line.on('click',getObj);
-                    map.getLayer('line').addGeometry(line);                              
+                    map.getLayer('line').addGeometry(line); 
+                    actionArr.push(line);                                  
             }
            
         };
@@ -367,13 +373,15 @@ const sketchReduce = (state = {
                 });
                 polygon.on('click',getObj);
                 map.getLayer('polygon').addGeometry(polygon);
+                actionArr.push(polygon);     
              }else{
                  alert('小于三点无法构面!</br>');
              }
             clearPoiArr();}
 //用于删除对象
         deleteObj = deleteObj ||function (){
-            target.remove();          
+            target.remove();
+            target=null;          
         }
 //撤销
        
@@ -461,7 +469,10 @@ const sketchReduce = (state = {
                 
             case 'undoClick':
                 console.log('撤销');
-               //drawTool.undo();
+                console.log(actionArr[actionArr.length-1]);
+                console.log(actionArr.length);
+                actionArr[actionArr.length-1].undoEdit();
+ 
 
                 return { ...state }
 
