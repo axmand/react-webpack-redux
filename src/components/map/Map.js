@@ -17,6 +17,7 @@ import MapToolBar from './MapToolBar';
  * 全局的地图对象和方法
  */
 let map;
+let drawTool;
 
 /**
  * 地图组件
@@ -40,6 +41,14 @@ class Map extends Component {
             ]
         });
         map.setZoom(20);
+        //将画图工具添加至地图
+        drawTool = new maptalks.DrawTool({
+            mode: 'Polygon',
+            symbol : {
+                'lineColor' : '#000',
+                'lineWidth' : 5
+            }
+          }).addTo(map).disable();
     }
 
     render() {
@@ -299,31 +308,26 @@ const sketchReduce = (state = {
         };      
 
 //用于画点
-        drawPoint = drawPoint ||function (e) {
-                state.pointNum++;
-                point = new maptalks.Circle(e.coordinate,2,
-                    {
-                        'id':state.pointNum,
-                        'draggable':true,
-                        'symbol':[
-                            {
-                                'lineColor': '#0000FF',
-                                'lineWidth': 2,
-                                'polygonFill': '#0000FF',
-                                'polygonOpacity': 1},
-
-                            {
-                                'textFaceName': 'sans-serif',
-                                'textName': state.pointNum,
-                                'textFill': '#FFFFFF',
-                                'textHorizontalAlignment': 'right',
-                                'textSize': 20}
-                            ]
-                    } 
-                );
-                point.on('click',getPoint)
-                map.getLayer('point').addGeometry(point); 
-                actionArr.push(point);    
+        drawPoint = drawPoint ||function () {
+                drawTool.setMode('Circle').enable();
+                drawTool.on('drawstart',function(param){                
+                    state.pointNum++;
+                    drawTool.setSymbol({
+                        'lineColor': '#0000FF',
+                        'lineWidth': 2,
+                        'polygonFill': '#0000FF',
+                        'textFaceName': 'sans-serif',
+                        'textName': state.pointNum,
+                        'textFill': '#FFFFFF',
+                        'textHorizontalAlignment': 'right',
+                        'textSize': 20});                    
+                        console.log(state.pointNum);
+                });
+                drawTool.on('drawend', function (param) { 
+                    param.geometry.setRadius(2);  
+                    map.getLayer('point').addGeometry(param.geometry);
+                  });
+                
             };
 //用于画线
         drawLine = drawLine ||function () {
@@ -393,9 +397,10 @@ const sketchReduce = (state = {
         switch (action.type) {
             
             case 'drawPointClick':
-                clickEventBind('drawPoint');
-                clearPoiArr();
-                !state.drawPointIsChecked ? map.on('click', drawPoint):map.off('click',drawPoint);
+                // clickEventBind('drawPoint');
+                // clearPoiArr();
+                // !state.drawPointIsChecked ? map.on('click', drawPoint):map.off('click',drawPoint);
+                drawPoint();
                 const newState1={
                     pointNum:state.pointNum,
                     drawPointIsChecked:!state.drawPointIsChecked,
