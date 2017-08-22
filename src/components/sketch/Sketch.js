@@ -10,6 +10,7 @@ import ClearIcon from 'material-ui-icons/Clear';
 //import component
 // import Map from '../map/Map';
 import SketchToolBar from './SketchToolBar';
+import ThematicMap from './ThematicMap';
 
 const styles ={
   root: {
@@ -72,8 +73,12 @@ class Sketch extends Component {
          {this.state.index === 0 &&
             <SketchToolBar />}
         {this.state.index === 1 &&
-          <div>
-            {'Item Two'}
+          <div style={{
+            height:'973px',
+            width:'1744px',
+            background:'white'
+          }}>
+          <ThematicMap />
           </div>}
       </div>            
     )
