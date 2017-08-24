@@ -189,8 +189,11 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 //初始化相关量
-let target,label,deleteObj,clickObj,addLabel;
-let drawPointStart,drawPointEnd,drawPoint,drawToolOn,
+let target,label,labels=[],length,
+    addLabel,
+    deleteObj,clickObj,
+    computeAngle;
+let drawPoint,drawToolOn,
      drawLineStart,drawLineEnd,drawLine,
      drawPolygonStart,drawPolygonEnd,drawPolygon;
 let PointIsClicked = false,
@@ -214,7 +217,10 @@ const sketchReduce = (state = {
             console.log(target);
             if(target._jsonType==="Circle"){
                 PointIsClicked=!PointIsClicked;
-                drawTool.disable();
+                console.log(drawTool);
+                if(drawTool.getMode()==='Polygon'){
+                    drawTool.disable();
+                }
                 if(PointIsClicked){
                     target.updateSymbol({ 'polygonFill': '#00FFFF','lineColor': '#00FFFF'}); 
                 }
@@ -244,13 +250,29 @@ const sketchReduce = (state = {
             }
         }
 
-
+//用于计算标签的角度
+computeAngle = computeAngle ||function(coordinates){
+    let a=coordinates[0];
+    let b=coordinates[1];
+    let angle=360-Math.atan((a.y-b.y)/(a.x-b.x))*180/Math.PI;
+    return angle;
+}
 //用于添加标签
-addLabel = addLabel ||function(content){
-    label = new maptalks.Label(content,[],{
-
+addLabel = addLabel ||function(content,coordinates,layer){
+    let rotation = computeAngle(coordinates);
+    let coord = new maptalks.Coordinate({ x : (coordinates[0].x+coordinates[1].x)/2, y :  (coordinates[0].y+coordinates[1].y)/2});
+    label = new maptalks.Label(content,coord,{
+         'draggable' : true,
+          'box': false,
+          'symbol' : {
+            'textWeight' : 'bold',
+            'textRotation':rotation,
+            'textFaceName' : 'sans-serif',
+            'textFill' : '#34495e',
+            'textSize' : 18,}
     })
-
+    labels.push(label);
+    layer.addGeometry(labels[labels.length-1]);
 }
 //打开画图工具
 drawToolOn = drawToolOn ||function(){
@@ -278,15 +300,30 @@ drawToolOn = drawToolOn ||function(){
             point.on('click',clickObj)
         }
 //画线时drawTool的绑定事件
+       drawLineStart = drawLineStart ||function(){
+           drawTool.setSymbol({
+                'lineColor': '#FF0000',
+                'lineWidth': 2,
+                });    
+       }
        drawLineEnd = drawLineEnd ||function(param){
+           length= map.computeGeometryLength(param.geometry);
+           param.geometry.config('length',length);
+           let content=param.geometry.options.length;
+           let coordinates = param.geometry._coordinates;
+
+           addLabel(content,coordinates,map.getLayer('line'));
            map.getLayer('line').addGeometry(param.geometry);
            param.geometry.on('click',clickObj);
        }
-        drawLine = drawLine ||function(){
+
+        drawLine = drawLine ||function(){ 
             drawTool.setMode('LineString').enable();
-            drawTool.setSymbol({'lineColor': '#FF0000','ineWidth': 2});                   
+            drawTool.on('drawstart', drawLineStart);  
             drawTool.on('drawend', drawLineEnd);    
         }
+
+
 //构面时drawTool的绑定事件
        drawPolygonEnd = drawPolygonEnd ||function(param){
            map.getLayer('polygon').addGeometry(param.geometry);
