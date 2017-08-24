@@ -251,25 +251,44 @@ const sketchReduce = (state = {
         }
 
 //用于计算标签的角度
-computeAngle = computeAngle ||function(coordinates){
-    let a=coordinates[0];
-    let b=coordinates[1];
-    let angle=360-Math.atan((a.y-b.y)/(a.x-b.x))*180/Math.PI;
+computeAngle = computeAngle || function(coordinates){
+    let a = coordinates[0];
+    let b = coordinates[1];
+    // console.log(a)
+    // console.log(b)
+    let angle = Math.atan((a.y-b.y)/(a.x-b.x)) * 180 / Math.PI;
+    // let angle = Math.atan2(a.y-b.y, a.x-b.x) * 180 / Math.PI;
+    // console.log(angle)
+    if (angle >= 0) 
+    {
+        angle = - angle - 12
+    }
+    else
+    {
+        angle = - angle + 12
+    }
     return angle;
 }
 //用于添加标签
-addLabel = addLabel ||function(content,coordinates,layer){
+addLabel = addLabel || function(content,coordinates,layer){
     let rotation = computeAngle(coordinates);
     let coord = new maptalks.Coordinate({ x : (coordinates[0].x+coordinates[1].x)/2, y :  (coordinates[0].y+coordinates[1].y)/2});
     label = new maptalks.Label(content,coord,{
-         'draggable' : true,
-          'box': false,
-          'symbol' : {
+        'draggable' : true,
+        'box': false,
+        'symbol': {
             'textWeight' : 'bold',
-            'textRotation':rotation,
-            'textFaceName' : 'sans-serif',
+            'textRotation': rotation,
+            'textFaceName' : '宋体',
             'textFill' : '#34495e',
-            'textSize' : 18,}
+            'textSize' : 16.8,
+
+            'textDy': -16,
+
+            'textHorizontalAlignment': 'auto',
+            'textVerticalAlignment': 'auto',
+            'textAlign': 'auto',
+        }
     })
     labels.push(label);
     layer.addGeometry(labels[labels.length-1]);
@@ -282,17 +301,23 @@ drawToolOn = drawToolOn ||function(){
 //画点时drawTool的绑定事件
         drawPoint = drawPoint ||function(e){
             state.pointNum++;
-            let point =new maptalks.Circle(e.coordinate,2,
+            let point =new maptalks.Circle(e.coordinate, 0.5,
                 {           
-                    'symbol':{
-                        'lineColor': '#0000FF',
-                        'lineWidth': 2,
-                        'polygonFill': '#0000FF',
-                        'textFaceName': 'sans-serif',
+                    'symbol': {
+                        'lineColor': '#000000',
+                        'lineWidth': 1,
+                        'polygonFill': '#FFFFFF',
+
                         'textName': state.pointNum,
-                        'textFill': '#FFFFFF',
-                        'textHorizontalAlignment': 'right',
-                        'textSize': 20
+                        'textFaceName': '宋体',                        
+                        'textSize': 18,
+                        'textFill': '#000000',
+
+                        'textDy': -14,
+
+                        'textHorizontalAlignment': 'auto',
+                        'textVerticalAlignment': 'auto',
+                        'textAlign': 'auto',
                     }
                 }
             );
@@ -300,16 +325,16 @@ drawToolOn = drawToolOn ||function(){
             point.on('click',clickObj)
         }
 //画线时drawTool的绑定事件
-       drawLineStart = drawLineStart ||function(){
+       drawLineStart = drawLineStart || function(){
            drawTool.setSymbol({
-                'lineColor': '#FF0000',
+                'lineColor': '#000000',
                 'lineWidth': 2,
                 });    
        }
-       drawLineEnd = drawLineEnd ||function(param){
+       drawLineEnd = drawLineEnd || function(param){
            length= map.computeGeometryLength(param.geometry);
            param.geometry.config('length',length);
-           let content=param.geometry.options.length;
+           let content=param.geometry.options.length.toFixed(2);
            let coordinates = param.geometry._coordinates;
 
            addLabel(content,coordinates,map.getLayer('line'));
@@ -318,7 +343,7 @@ drawToolOn = drawToolOn ||function(){
            
        }
 
-        drawLine = drawLine ||function(){ 
+        drawLine = drawLine || function(){ 
             drawTool.setMode('LineString').enable();
             drawTool.on('drawstart', drawLineStart);  
             drawTool.on('drawend', drawLineEnd);    
@@ -333,10 +358,11 @@ drawToolOn = drawToolOn ||function(){
         drawPolygon = drawPolygon ||function(){
             drawTool.setMode('Polygon').enable();
             drawTool.setSymbol({
-                 'lineColor' : '#FF0000',
-                 'lineWidth' : 2,
-                 'polygonFill' : '#FFFFFF',
-                'polygonOpacity' : 0.6});                 
+                'lineColor' : '#000000',
+                'lineWidth' : 3,
+                'polygonFill' : '#FFFFFF',
+                'polygonOpacity' : 0.6
+            });                 
             drawTool.on('drawend', drawPolygonEnd);   
         }
 //用于删除对象
