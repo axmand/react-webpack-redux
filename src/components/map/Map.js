@@ -17,6 +17,7 @@ import MapToolBar from './MapToolBar';
  * 全局的地图对象和方法
  */
 let map;
+let drawTool;
 
 /**
  * 地图组件
@@ -40,6 +41,14 @@ class Map extends Component {
             ]
         });
         map.setZoom(20);
+        //将画图工具添加至地图
+        drawTool = new maptalks.DrawTool({
+            mode: 'Polygon',
+            symbol : {
+                'lineColor' : '#000',
+                'lineWidth' : 5
+            }
+          }).addTo(map).disable();
     }
 
     render() {
@@ -180,17 +189,16 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 //初始化相关量
-let drawPoint,drawLine,drawPolygon,deleteObj,
-     point,line,polygon,target,
-     getPoint,clearPoiArr,getObj,
-     clickEventBind;
-let lineIsClicked = false,
+let target,label,labels=[],length,
+    addLabel,
+    deleteObj,clickObj,
+    computeAngle;
+let drawPoint,drawToolOn,
+     drawLineStart,drawLineEnd,drawLine,
+     drawPolygonStart,drawPolygonEnd,drawPolygon;
+let PointIsClicked = false,
+    lineIsClicked = false,
     PolygonIsClicked = false;
-
-//初始化线面的点集数组
-let poiArr=[],
-    poiId=[],
-    poiCoor=[];
 
 const sketchReduce = (state = { 
     pointNum: 0, 
@@ -202,44 +210,27 @@ const sketchReduce = (state = {
     redoIsChecked:false,
     saveIsChecked:false,
     showDelDialog:false}, action) => {
-//用于连线和构面时获取被选中的点并存放在poiArr数组中
-        getPoint=getPoint ||function(e){
-            target=e.target;
-            poiArr.push(target);
-            poiCoor.push(target._coordinates); 
-            const id=target._id;
-            poiId.push(id);
-            target.updateSymbol([{ 'polygonFill': '#00FFFF','lineColor': '#00FFFF'}]); 
-        }
-//用于清空点集
-        clearPoiArr=clearPoiArr || function(){
-            //判断点集是否为空
-            const obj=map.getLayer('point').getGeometryById(poiId[0])
-            if(obj){
-                for(var i=0;i<poiId.length;i++){ 
-                    map.getLayer('point').getGeometryById(poiId[i]).updateSymbol([{ 'polygonFill': '#0000FF','lineColor': '#0000FF'}]);                     
-                }   
-            }                
-            poiArr=[];
-            poiId=[];
-            poiCoor=[];
-            console.log('cleared array'); 
-        }        
-//用于获取线面对象
-        getObj = getObj ||function(e){
+
+//用于获取点线面对象
+    clickObj = clickObj ||function(e){
             target=e.target;
             console.log(target);
-            if(target.type==='Polygon'){
-                PolygonIsClicked=!PolygonIsClicked;
-                if(PolygonIsClicked){
-                    target.updateSymbol({'lineColor': '#00FFFF'});
+            if(target._jsonType==="Circle"){
+                PointIsClicked=!PointIsClicked;
+                console.log(drawTool);
+                if(drawTool.getMode()==='Polygon'){
+                    drawTool.disable();
                 }
-                if(!PolygonIsClicked){
-                    target.updateSymbol({ 'lineColor': '#FF0000'});
+                if(PointIsClicked){
+                    target.updateSymbol({ 'polygonFill': '#00FFFF','lineColor': '#00FFFF'}); 
+                }
+                if(!PointIsClicked){
+                    target.updateSymbol({ 'polygonFill': '#0000FF','lineColor': '#0000FF'});
                 }
             }
-            if(target.type==='LineString'){
+            if(target._jsonType==="LineString"){
                 lineIsClicked=!lineIsClicked;
+                drawTool.disable();
                 if(lineIsClicked){
                     target.updateSymbol({ 'lineColor': '#00FFFF'});
                 }
@@ -247,133 +238,137 @@ const sketchReduce = (state = {
                     target.updateSymbol({ 'lineColor': '#FF0000'});
                 }
             }
+            if(target._jsonType==="Polygon"){
+                PolygonIsClicked=!PolygonIsClicked;
+                drawTool.disable();
+                if(PolygonIsClicked){
+                    target.updateSymbol({'lineColor': '#00FFFF'});  
+                }
+                if(!PolygonIsClicked){
+                    target.updateSymbol({ 'lineColor': '#FF0000'});
+                }
+            }
         }
-//用于判断click事件的绑定
-       clickEventBind=clickEventBind || function(status){
-            if(status==='drawPoint'){
-                console.log(status)
-                if(!state.drawLineIsChecked){
-                    map.off('click',drawLine);
-                    map.off('dblclick',clearPoiArr)
-                }
-                if(!state.drawPolygonIsChecked){
-                    map.off('dblclick',drawPolygon)
-                }
-                if(!state.deleteIsChecked){
-                    map.off('click',deleteObj)
-                }                                   
-            }
-            if(status==='drawLine'){
-                console.log(status)
-                if(!state.drawPointIsChecked){
-                    map.off('click',drawPoint)
-                }
-                if(!state.drawPolygonIsChecked){
-                    map.off('dblclick',drawPolygon)
-                }  
-                if(!state.deleteIsChecked){
-                    map.off('click',deleteObj)
-                }                                 
-            }
-            if(status==='drawPolygon'){
-                console.log(status)
-                if(!state.drawPointIsChecked){
-                    map.off('click',drawPoint)
-                }
-                if(!state.drawLineIsChecked){
-                    map.off('click',drawLine)
-                    map.off('dblclick',clearPoiArr)
-                }
-                if(!state.deleteIsChecked){
-                    map.off('click',deleteObj)
-                }                                 
-            }
-            if(status==='delete'){
-                console.log(status)
-                if(!state.drawPointIsChecked){
-                    map.off('click',drawPoint)
-                }                                                  
-            }                                   
-        }      
-//用于画点
-        drawPoint = drawPoint ||function (e) {
-                state.pointNum++;
-                point = new maptalks.Circle(e.coordinate,2,
-                    {
-                        'id':state.pointNum,
-                        'draggable':true,
-                        'symbol':[
-                            {
-                                'lineColor': '#0000FF',
-                                'lineWidth': 2,
-                                'polygonFill': '#0000FF',
-                                'polygonOpacity': 1},
 
-                            {
-                                'textFaceName': 'sans-serif',
-                                'textName': state.pointNum,
-                                'textFill': '#FFFFFF',
-                                'textHorizontalAlignment': 'right',
-                                'textSize': 20}
-                            ]
-                    } 
-                );
-                point.on('click',getPoint)
-                map.getLayer('point').addGeometry(point);     
-            };
-//用于画线
-        drawLine = drawLine ||function () {
-            console.log(poiArr.length);
-            if(poiArr.length===2){
-                line = new maptalks.ConnectorLine(poiArr[0], poiArr[1], {
-                    'showOn' : 'always', 
-                    'arrowStyle' : 'classic',
-                    'arrowPlacement' : null,
+//用于计算标签的角度
+computeAngle = computeAngle || function(coordinates){
+    let a = coordinates[0];
+    let b = coordinates[1];
+    // console.log(a)
+    // console.log(b)
+    let angle = Math.atan((a.y-b.y)/(a.x-b.x)) * 180 / Math.PI;
+    // let angle = Math.atan2(a.y-b.y, a.x-b.x) * 180 / Math.PI;
+    // console.log(angle)
+    if (angle >= 0) 
+    {
+        angle = - angle - 12
+    }
+    else
+    {
+        angle = - angle + 12
+    }
+    return angle;
+}
+//用于添加标签
+addLabel = addLabel || function(content,coordinates,layer){
+    let rotation = computeAngle(coordinates);
+    let coord = new maptalks.Coordinate({ x : (coordinates[0].x+coordinates[1].x)/2, y :  (coordinates[0].y+coordinates[1].y)/2});
+    label = new maptalks.Label(content,coord,{
+        'draggable' : true,
+        'box': false,
+        'symbol': {
+            'textWeight' : 'bold',
+            'textRotation': rotation,
+            'textFaceName' : '宋体',
+            'textFill' : '#34495e',
+            'textSize' : 16.8,
+
+            'textDy': -16,
+
+            'textHorizontalAlignment': 'auto',
+            'textVerticalAlignment': 'auto',
+            'textAlign': 'auto',
+        }
+    })
+    labels.push(label);
+    layer.addGeometry(labels[labels.length-1]);
+}
+//打开画图工具
+drawToolOn = drawToolOn ||function(){
+    drawTool.enable();
+    console.log('on');
+}
+//画点时drawTool的绑定事件
+        drawPoint = drawPoint ||function(e){
+            state.pointNum++;
+            let point =new maptalks.Circle(e.coordinate, 0.5,
+                {           
                     'symbol': {
-                        'lineColor': '#FF0000',
-                        'ineWidth': 2
+                        'lineColor': '#000000',
+                        'lineWidth': 1,
+                        'polygonFill': '#FFFFFF',
+
+                        'textName': state.pointNum,
+                        'textFaceName': '宋体',                        
+                        'textSize': 18,
+                        'textFill': '#000000',
+
+                        'textDy': -14,
+
+                        'textHorizontalAlignment': 'auto',
+                        'textVerticalAlignment': 'auto',
+                        'textAlign': 'auto',
                     }
-                });
-                line.on('click',getObj);
-                map.getLayer('line').addGeometry(line);                 
-            } 
-            if(poiArr.length>2){
-                const i=poiArr.length-2;
-                    line = new maptalks.ConnectorLine(poiArr[i], poiArr[i+1], {
-                        showOn : 'always', 
-                        arrowStyle : 'classic',
-                        arrowPlacement : null,
-                        symbol: {
-                            lineColor: '#FF0000',
-                            lineWidth: 2
-                        }
-                    });
-                    line.on('click',getObj);
-                    map.getLayer('line').addGeometry(line);                              
-            }
+                }
+            );
+            map.getLayer('point').addGeometry(point);
+            point.on('click',clickObj)
+        }
+//画线时drawTool的绑定事件
+       drawLineStart = drawLineStart || function(){
+           drawTool.setSymbol({
+                'lineColor': '#000000',
+                'lineWidth': 2,
+                });    
+       }
+       drawLineEnd = drawLineEnd || function(param){
+           length= map.computeGeometryLength(param.geometry);
+           param.geometry.config('length',length);
+           let content=param.geometry.options.length.toFixed(2);
+           let coordinates = param.geometry._coordinates;
+
+           addLabel(content,coordinates,map.getLayer('line'));
+           map.getLayer('line').addGeometry(param.geometry);
+           param.geometry.on('click',clickObj);
            
-        };
-//用于画地块
-        drawPolygon = drawPolygon ||function () {
-             console.log(poiCoor.length);
-             if(poiCoor.length>=3){
-                 polygon = new maptalks.Polygon(poiCoor, {
-                    symbol: {
-                    'lineColor' : '#FF0000',
-                    'lineWidth' : 2,
-                    'polygonFill' : '#FFFFFF',
-                    'polygonOpacity' : 0.6
-                    }
-                });
-                polygon.on('click',getObj);
-                map.getLayer('polygon').addGeometry(polygon);
-             }else{
-                 alert('小于三点无法构面!</br>');
-             }
-            clearPoiArr();}
+       }
+
+        drawLine = drawLine || function(){ 
+            drawTool.setMode('LineString').enable();
+            drawTool.on('drawstart', drawLineStart);  
+            drawTool.on('drawend', drawLineEnd);    
+        }
+
+
+//构面时drawTool的绑定事件
+       drawPolygonEnd = drawPolygonEnd ||function(param){
+           map.getLayer('polygon').addGeometry(param.geometry);
+           param.geometry.on('click',clickObj);
+       }
+        drawPolygon = drawPolygon ||function(){
+            drawTool.setMode('Polygon').enable();
+            drawTool.setSymbol({
+                'lineColor' : '#000000',
+                'lineWidth' : 3,
+                'polygonFill' : '#FFFFFF',
+                'polygonOpacity' : 0.6
+            });                 
+            drawTool.on('drawend', drawPolygonEnd);   
+        }
 //用于删除对象
         deleteObj = deleteObj ||function (){
-            target.remove();          
+            target.remove();
+            target=null;          
         }
 //撤销
        
@@ -383,11 +378,23 @@ const sketchReduce = (state = {
 
 ///////
         switch (action.type) {
-            
+            //画点           
             case 'drawPointClick':
-                clickEventBind('drawPoint');
-                clearPoiArr();
-                !state.drawPointIsChecked ? map.on('click', drawPoint):map.off('click',drawPoint);
+            drawTool.disable();
+            map.off('click',drawToolOn);
+            if(!state.drawPointIsChecked){
+                if(state.drawPolygonIsChecked){
+                    drawTool.off('drawstart',drawPolygonStart); 
+                    drawTool.off('drawend', drawPolygonEnd);
+                };
+                if(state.drawLineIsChecked){
+                    drawTool.off('drawstart',drawLineStart); 
+                    drawTool.off('drawend', drawLineEnd);
+                }                 
+                map.on('click',drawPoint)
+            }else{
+                map.off('click',drawPoint)
+            }
                 const newState1={
                     pointNum:state.pointNum,
                     drawPointIsChecked:!state.drawPointIsChecked,
@@ -400,11 +407,26 @@ const sketchReduce = (state = {
                 }
                 return {...state,...newState1};
 
-            case 'drawLineClick':  
-                clickEventBind('drawLine');
-                clearPoiArr();
-                !state.drawLineIsChecked ? map.on('click', drawLine):map.off('click',drawLine);
-                !state.drawLineIsChecked ? map.on('dblclick', clearPoiArr):map.off('dblclick',clearPoiArr);   
+            //画线
+            case 'drawLineClick': 
+                if(!state.drawLineIsChecked){            
+                    //判断事件绑定
+                    if(state.drawPointIsChecked){
+                        map.off('click',drawPoint)
+                    };
+                    if(state.drawPolygonIsChecked){
+                        drawTool.off('drawstart',drawPolygonStart); 
+                        drawTool.off('drawend', drawPolygonEnd);
+                    };
+                    //开始画线
+                    if(!drawTool.isEnabled()){
+                        map.on('click',drawToolOn); 
+                    }                     
+                    drawLine(); 
+            
+                }else{
+                    drawTool.disable();
+                }
                 const newState2={
                     pointNum:state.pointNum,
                     drawPointIsChecked:false,
@@ -414,13 +436,29 @@ const sketchReduce = (state = {
                     undoIsChecked:false,
                     redoIsChecked:false,
                     saveIsChecked:false
-                }  
+                } 
                 return {...state,...newState2};
 
+            //构面
             case  'drawPolygonClick':
-                clickEventBind('drawPolygon');
-                clearPoiArr();
-                !state.drawPolygonIsChecked ? map.on('dblclick', drawPolygon):map.off('dblclick',drawPolygon);                  
+                if(!state.drawPolygonIsChecked){
+                //判断事件绑定
+                    if(state.drawPointIsChecked){
+                        map.off('click',drawPoint)
+                    }
+                    if(state.drawLineIsChecked){
+                        drawTool.off('drawstart',drawLineStart); 
+                        drawTool.off('drawend', drawLineEnd);
+                    } 
+                 //开始构面
+                if(!drawTool.isEnabled()){
+                     map.on('click',drawToolOn); 
+                 } 
+                 drawPolygon();
+          
+                }else{
+                    drawTool.disable();
+                }
                 const newState3={
                     pointNum:state.pointNum,
                     drawPointIsChecked:false,
@@ -431,11 +469,11 @@ const sketchReduce = (state = {
                     redoIsChecked:false,
                     saveIsChecked:false
                 }
-                return {...state,...newState3};        
+                return {...state,...newState3};   
 
+            //删除
             case 'deleteClick':
                 console.log(target);
-                clickEventBind('delete');
                 if(target){
                     const newState4={
                         deleteIsChecked:!state.deleteIsChecked, 
@@ -447,8 +485,9 @@ const sketchReduce = (state = {
                  return Object.assign({},state,{... newState4});                       
                 }else{
                     alert('未选中对象，无法删除！')
+                    return{...state}
                 }
-            return{...state}
+            
 
             case 'handleCloseDelDialog':
                 const showDelDialog1 ={showDelDialog: !state.showDelDialog} 
@@ -460,8 +499,6 @@ const sketchReduce = (state = {
                 return Object.assign({},state,{... showDelDialog2});
                 
             case 'undoClick':
-                console.log('撤销');
-               //drawTool.undo();
 
                 return { ...state }
 
