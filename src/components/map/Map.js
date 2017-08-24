@@ -315,6 +315,7 @@ drawToolOn = drawToolOn ||function(){
            addLabel(content,coordinates,map.getLayer('line'));
            map.getLayer('line').addGeometry(param.geometry);
            param.geometry.on('click',clickObj);
+           
        }
 
         drawLine = drawLine ||function(){ 
