@@ -1,50 +1,62 @@
 
-/* whole page--dialog
-    avatar,typography,div--?,button--(icon+typography)
+/* whole page
+--dialog
+---dialogContent
+----list
+-----listItem  avatar
+               +listItemText
+               +button  icon+typography
+               +button flat
+
+index page--{userModule button}--index(user) page---{ImageDownload button}---ImageDownload page   <handleClick +open>
+                                                    {logOut button}---loginIn page    <navLink>
+
 */
 
-import React , {Component} from 'react';
-import {connect} from 'react-redux';
+import React , { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import UI
-import {withStyles} from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Avatar from 'material-ui/Avatar';
-import List,{ListItem,ListItemAvatar,ListItemIcon,ListItemText} from 'material-ui/List';
-import Dialog,{DialogContent} from 'material-ui/Dialog';
+import List,{ ListItem,ListItemAvatar,ListItemIcon,ListItemText,ListItemSecondaryAction } from 'material-ui/List';
+import Dialog,{ DialogContent } from 'material-ui/Dialog';
 import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
+import RootReducer from './../../redux/RootReducer';
+import { NavLink } from 'react-router-dom';
+import uuidv4 from 'uuid/v4';
 //import icon
 import FontAwesome from 'react-fontawesome'
-import Person from 'material-ui-icons/Person';
 import Bluetooth from 'material-ui-icons/Bluetooth';
 import Devices from 'material-ui-icons/Devices';
 import Photo from 'material-ui-icons/Photo';
 //import color
 import blue from 'material-ui/colors/blue';
+//import page
+
+import LoginView from '../../views/LoginView';
 
 
 
-
-
-const userInfo = ['用户名','ID','单位','职位'];
-const loginInfo = ['时间','地址'];
-
-
+// inset css
 const styles = {
+  
+  dialog:{
+    width: '35%',
+    height: '80%',
+    marginTop:'30px',
+    marginLeft:'100px',
+  },
+
   listItem: {
     display: 'flex',
     flexDirection: 'column',
     justify:'space-between',
     paddingLeft: '0px',
   },
-  listItemUser:{
-    display: 'flex',
-    flexDirection: 'row',
-    justify:'space-between',
-    paddingLeft: '0px',
 
-  },
   listItemText: {
     lineHeight: '20px',
     color: '#ffffff',
@@ -52,17 +64,18 @@ const styles = {
     fontWeight: 'bold',
     justify:'center',
     align:'center',
-  },
-  Dialog:{
-    display:'flex',
-    alignItem:'flex-end',
-    width: '50%',
-    height: '90%',
-    marginTop:'3%',
-    marginLeft:'10%',
-    justify:'space-between',
     justifyContent:'center',
   },
+
+  // specially for the three buttons in a row
+  listItemUser:{
+    display: 'flex',
+    flexDirection: 'row',
+    justify:'space-around',
+    paddingLeft: '0px',
+
+  },
+
   button:{
     width:80,
     height:30,
@@ -72,27 +85,43 @@ const styles = {
     background: blue[300],
     borderRadius:3,
     border:0,
-    padding: '0 3px',
+    padding: 0,
   },
+//specially for those mixed button
   buttonAttach:{
         display:'inline-block',
+        padding:0,
+        marginRight:'18px',
+        justify:'center',
+        justifyContent:'center',
 
   },
+
   icon:{
     width:'48px',
     height:'48px',
   },
-  row: {
-    display: 'flex',
-    justifyContent: 'center',
-    },
-  Typography:{
+
+  typography:{
     fontFamily:'微软雅黑',
     fontWeight:'bold',
     fontSize:'16px'
-  }
+  },
+  //specially for those descriptional(or definitional) typography
+  labelUser:{
+    width:'110px',
+    padding:0,
+  },
+//specically for those state text
+  userStateText:{
+    background:blue[100],
+    borderRadius:'5px',
+    justify:'center',
+    justifyContent:'center',
+    width:'120px',
+    textAlign:'center',
+  },
 
-  
 };
 
 class UserModule extends Component {
@@ -101,19 +130,40 @@ class UserModule extends Component {
     super(props);
     this.state ={
       open: false,
+      openImage:false,
     }
     this.handleClick = this.handleClick.bind(this);
+    this.handleClickImage = this.handleClickImage.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
+    this.handleRequestCloseImage = this.handleRequestCloseImage.bind(this);    
   }
  
   handleClick = event => {
     this.setState({ open: true })
   }
+  handleClickImage = event => {
+    this.setState({ openImage: true })
+  }
 
   handleRequestClose = () => {
     this.setState({ open: false });
   }
+  handleRequestCloseImage = () => {
+    this.setState({ openImage: false });
+  }
+
   render() {
     const classes = this.props.classes;
+    const {
+      userAvatar,
+      userName,
+      userID,
+      userCompany,
+      userJob,
+      lastLoginTime,
+      lastLoginAddress,
+    }=this.props;
+    const imageLists=[{imageName:'1',imageSize:'1'},{imageName:'2',imageSize:'2'}];
   
     return (
       <div>
@@ -138,7 +188,8 @@ class UserModule extends Component {
             />
           </ListItem>
 
-            <Dialog
+          <Dialog
+            fullScreen
             className={classes.dialog}
             open={this.state.open}
             onRequestClose={this.handleRequestClose}
@@ -152,44 +203,39 @@ class UserModule extends Component {
 
                 <ListItem>
                   <ListItemAvatar>
-                    <Avatar>
-                      <Person />
-                    </Avatar>
+                    <Avatar alt='avatar' src={userAvatar}/>
+
                   </ListItemAvatar>
                 </ListItem>
 
                 <ListItem>
-                  <ListItemText primary="用户名"/>
-                  <ListItemText primary="这里是用户名"/>
+                  <ListItemText disableTypography className={classes.labelUser} primary="用户名"/>
+                  <ListItemText disableTypography className={classes.userStateText} primary={userName}/>
                 </ListItem> 
 
                 <ListItem>
-                  <ListItemText disableTypography 
-                  style={{
-                    width:'40px'
-                  }}
-                   primary="用户ID"/>
-                  <ListItemText primary="这里是用户ID"/>
+                  <ListItemText disableTypography className={classes.labelUser} primary="用户ID"/>
+                  <ListItemText disableTypography className={classes.userStateText} primary={userID}/>
                 </ListItem>
 
                 <ListItem>
-                  <ListItemText primary="单位"/>
-                  <ListItemText primary="这里是单位名称"/>
+                  <ListItemText  disableTypography className={classes.labelUser} primary="单位"/>
+                  <ListItemText disableTypography className={classes.userStateText} primary={userCompany} />
                 </ListItem> 
 
                 <ListItem>
-                  <ListItemText primary="职位"/>
-                  <ListItemText primary="这里是职位名称"/>
+                  <ListItemText  disableTypography className={classes.labelUser}  primary="职位"/>
+                  <ListItemText disableTypography className={classes.userStateText} primary={userJob}/>
                 </ListItem>
 
                 <ListItem>
-                  <ListItemText primary="上次登录时间"/>
-                  <ListItemText primary="state.time"/>
+                  <ListItemText  disableTypography className={classes.labelUser}  primary="上次登录时间"/>
+                  <ListItemText disableTypography className={classes.userStateText} primary={lastLoginTime}/>
                 </ListItem>  
 
                 <ListItem>
-                  <ListItemText primary="上次登录地址"/>
-                  <ListItemText primary="state.localhost"/>
+                  <ListItemText disableTypography className={classes.labelUser}   primary="上次登录地址"/>
+                  <ListItemText disableTypography className={classes.userStateText} primary={lastLoginAddress}/>
                 </ListItem>
 
                 <Divider />
@@ -197,28 +243,76 @@ class UserModule extends Component {
                 <ListItem className={classes.listItemUser }>
                   <Button className={classes.buttonAttach}>
                     <Bluetooth className={classes.icon}/>
-                    <Typography className={classes.Typography}>蓝牙连接</Typography>
+                    <Typography className={classes.typography} bold>蓝牙连接</Typography>
                   </Button>
 
                   <Button className={classes.buttonAttach}>
                     <Devices className={classes.icon}/>
-                    <Typography className={classes.Typography}>连接到电脑</Typography>
+                    <Typography className={classes.typography} bold>连接到电脑</Typography>
                   </Button>
 
-                  <Button className={classes.buttonAttach}>
+                  <Button className={classes.buttonAttach} onClick={this.handleClickImage}>
                     <Photo className={classes.icon}/> 
-                    <Typography className={classes.Typography}>影像下载</Typography>
+                    <Typography className={classes.typography} bold>影像下载</Typography>
                   </Button>
                 </ListItem>
 
-                <listItem style={{
-                  alignItem:'flex-end'
+                <ListItem style={{
+                  justifyContent:'flex-end',
+                  paddingTop:'50px',
+                  paddingBottom:'0px',
+                  marginBottom:'0px'
                 }}>
-              <Button color="blue" flat className={classes.button}>退 出 登 录</Button>
-                </listItem> 
+                  <NavLink to="/">
+                    <Button flat style={{background:blue[100],}}>退 出 登 录</Button>
+                  </NavLink>
+
+                </ListItem> 
               </List>
             </DialogContent>
           </Dialog>
+          <Dialog
+                fullScreen
+                className={classes.dialog}
+                open={this.state.openImage}
+                onRequestClose={this.handleRequestCloseImage}
+    
+                position='absolute'
+                left='100px'
+                top='20px'
+              >
+                <DialogContent>
+                  <List>
+                    <ListItem>
+                      <ListItemText disableTypography className={classes.labelUser} primary="影像名称"/>
+                      <ListItemText disableTypography className={classes.labelUser} primary='影像大小'/>
+                    </ListItem> 
+                    <Divider/>
+                    {imageLists.map(imageList =>
+                        
+                            <ListItem>
+                                <ListItemText key={uuidv4()} disableTypography className={classes.labelUser} primary={imageList.imageName}/>
+                                <ListItemText key={uuidv4()} disableTypography className={classes.labelUser} primary={imageList.imageSize}/>
+                                <ListItemSecondaryAction>
+                                    <Button flat className={classes.button}>确认</Button>
+                                </ListItemSecondaryAction>
+                                <Divider/> 
+                            </ListItem>
+                            
+                        )                   
+                    }
+                    <ListItem>
+                                <ListItemText key={uuidv4()} disableTypography className={classes.labelUser} primary='123'/>
+                                <ListItemText key={uuidv4()} disableTypography className={classes.labelUser} primary='1233'/>
+                                <ListItemSecondaryAction>
+                                    <Button flat className={classes.button}>确认</Button>
+                                </ListItemSecondaryAction>
+                                <Divider/> 
+                            </ListItem>
+
+                  </List>
+                </DialogContent>
+              </Dialog>
         </div>
     )
   }
@@ -226,4 +320,38 @@ class UserModule extends Component {
 }
 
 
-export default withStyles(styles)(UserModule);
+//import reducer
+const userReduce = (state = {
+  userAvatar:'./avatar.png',
+  userName:'武大珞珈',
+  userID:'123456',
+  userCompany:'南宁市国土测绘地理信息中心',
+  userJob:'地籍测量员',
+  lastLoginTime:'2017/08/24/21:38',
+  lastLoginAddress:'115.101.26'
+}, action) => {
+
+    return {...state};
+}
+RootReducer.merge(userReduce);
+
+//state?
+const mapStateToProps = (state) => {
+  const userState=state.userReduce;
+
+ return {
+        userAvatar:userState.userAvatar,
+        userName:userState.userName,
+        userID:userState.userID,
+        userCompany:userState.userCompany,
+        userJob:userState.userJob,
+        lastLoginTime:userState.lastLoginTime,
+        lastLoginAddress:userState.lastLoginAddress
+    }
+}
+
+
+
+
+
+export default connect(mapStateToProps)(withStyles(styles)(UserModule));
