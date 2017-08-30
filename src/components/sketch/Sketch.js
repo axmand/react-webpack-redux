@@ -73,13 +73,8 @@ class Sketch extends Component {
          {this.state.index === 0 &&
             <SketchToolBar />}
         {this.state.index === 1 &&
-          <div style={{
-            height:'973px',
-            width:'1744px',
-            background:'white'
-          }}>
           <ThematicMap />
-          </div>}
+          }
       </div>            
     )
   }
