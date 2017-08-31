@@ -199,12 +199,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                     })
         },
 
-        handleShowDelDialog:()=>{
-            dispatch({
-                type: 'handleShowDelDialog',
-                    })
-        },
-
         handleCloseDelDialog:()=>{
             dispatch({
                 type: 'handleCloseDelDialog',
