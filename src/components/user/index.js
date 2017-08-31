@@ -50,6 +50,13 @@ const styles = {
     marginLeft:'100px',
   },
 
+  dialogImage:{
+    width:'80%',
+    height:'80%',
+    marginTop:'30px',
+    marginLeft:'100px',
+  },
+
   listItem: {
     display: 'flex',
     flexDirection: 'column',
@@ -89,12 +96,30 @@ const styles = {
   },
 //specially for those mixed button
   buttonAttach:{
-        display:'inline-block',
-        padding:0,
-        marginRight:'18px',
-        justify:'center',
-        justifyContent:'center',
+    display:'inline-block',
+    padding:0,
+    marginRight:'18px',
+    justify:'center',
+    justifyContent:'center',
 
+  },
+
+  // buttonLogout:{
+  //   background:blue[100],
+  //   // color:'white',
+  //   borderRadius:'3px',
+  //   border:0,
+  //   padding:0,
+  // },
+
+  buttonSecondaryAction:{
+    width:'40px',
+    height:'20px',
+
+    border:0,
+    padding:0,
+    borderRadius:'3px',
+    fontWeight:'bold',
   },
 
   icon:{
@@ -120,6 +145,9 @@ const styles = {
     justifyContent:'center',
     width:'120px',
     textAlign:'center',
+  },
+  navLink:{
+    textDecoration:'none',
   },
 
 };
@@ -263,8 +291,14 @@ class UserModule extends Component {
                   paddingBottom:'0px',
                   marginBottom:'0px'
                 }}>
-                  <NavLink to="/">
-                    <Button flat style={{background:blue[100],}}>退 出 登 录</Button>
+                  <NavLink className={classes.navLink} to="/">
+                    <Button flat style={{
+                      background:blue[100],
+                      border:0,
+                      padding:0,
+                      borderRadius:'3px',
+                      fontWeight:'bold',
+                      }}>退 出 登 录</Button>
                   </NavLink>
 
                 </ListItem> 
@@ -273,7 +307,7 @@ class UserModule extends Component {
           </Dialog>
           <Dialog
                 fullScreen
-                className={classes.dialog}
+                className={classes.dialog,classes.dialogImage}
                 open={this.state.openImage}
                 onRequestClose={this.handleRequestCloseImage}
     
@@ -294,7 +328,7 @@ class UserModule extends Component {
                                 <ListItemText key={uuidv4()} disableTypography className={classes.labelUser} primary={imageList.imageName}/>
                                 <ListItemText key={uuidv4()} disableTypography className={classes.labelUser} primary={imageList.imageSize}/>
                                 <ListItemSecondaryAction>
-                                    <Button flat className={classes.button}>确认</Button>
+                                    <Button flat style={{ background:blue[100],}} className={classes.buttonSecondaryAction}>确认</Button>
                                 </ListItemSecondaryAction>
                                 <Divider/> 
                             </ListItem>
@@ -305,7 +339,7 @@ class UserModule extends Component {
                                 <ListItemText key={uuidv4()} disableTypography className={classes.labelUser} primary='123'/>
                                 <ListItemText key={uuidv4()} disableTypography className={classes.labelUser} primary='1233'/>
                                 <ListItemSecondaryAction>
-                                    <Button flat className={classes.button}>确认</Button>
+                                    <Button flat style={{ background:blue[100],}} className={classes.buttonSecondaryAction}>确认</Button>
                                 </ListItemSecondaryAction>
                                 <Divider/> 
                             </ListItem>
