@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import RootReducer from './../../redux/RootReducer';
 import PropTypes from 'prop-types';
 import * as maptalks from 'maptalks';
+import { SnapTool } from 'maptalks.snapto'
 
 //引入地图组件
 import MapToolBar from './MapToolBar';
@@ -17,7 +18,7 @@ import MapToolBar from './MapToolBar';
  * 全局的地图对象和方法
  */
 let map;
-let drawTool;
+let drawTool, snap;
 
 /**
  * 地图组件
@@ -25,31 +26,41 @@ let drawTool;
  */
 class Map extends Component {
 
-    componentDidMount() {
-        const mapDiv = this.refs.map;
-        map = new maptalks.Map(mapDiv, {
-            center: [-0.113049, 51.498568],
-            zoom: 14,
-            baseLayer: new maptalks.TileLayer('base', {
-                urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',//'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-                subdomains: ['a', 'b', 'c', 'd', 'e']
-            }),
-            layers: [
-                new maptalks.VectorLayer('point'),
-                new maptalks.VectorLayer('line'),
-                new maptalks.VectorLayer('polygon')
-            ]
-        });
-        map.setZoom(20);
-        //将画图工具添加至地图
-        drawTool = new maptalks.DrawTool({
-            mode: 'Polygon',
-            symbol : {
-                'lineColor' : '#000',
-                'lineWidth' : 5
-            }
-          }).addTo(map).disable();
-    }
+	componentDidMount() {
+		const mapDiv = this.refs.map;
+		map = new maptalks.Map(mapDiv, {
+				center: [-0.113049, 51.498568],
+				zoom: 14,
+				baseLayer: new maptalks.TileLayer('base', {
+						urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',//'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+						subdomains: ['a', 'b', 'c', 'd', 'e']
+				}),
+				layers: [
+						new maptalks.VectorLayer('point'),
+						new maptalks.VectorLayer('line'),
+						new maptalks.VectorLayer('polygon')
+				]
+		});
+		map.setZoom(20);
+		//将画图工具添加至地图
+		drawTool = new maptalks.DrawTool({
+				mode: 'Polygon',
+				symbol : {
+						'lineColor' : '#000',
+						'lineWidth' : 5
+				}
+		}).addTo(map).disable();
+		
+		snap = new SnapTool({
+				tolerance: 20,
+				mode : 'point'
+		})
+		snap.addTo(map);
+		snap.setLayer(map.getLayer('point'))
+		snap.setLayer(map.getLayer('line'))
+		snap.setLayer(map.getLayer('polygon'))
+        
+	}
 
     render() {
 
@@ -305,29 +316,29 @@ drawToolOn = drawToolOn ||function(){
 }
 //用于画点
         drawPoint = drawPoint ||function(e){
-            recoverObj();
-            state.pointNum++;
-            let point =new maptalks.Circle(e.coordinate, 0.5,
-                {
-                    'id': state.pointNum, 
-                    'isClicked':false,         
-                    'symbol': {
-                        'lineColor': '#000000',
-                        'lineWidth': 1,
-                        'polygonFill': '#FFFFFF',
+					recoverObj();
+					state.pointNum++;
+					let point =new maptalks.Circle(e.coordinate, 2,
+						{
+							'id': state.pointNum, 
+							'isClicked':false,         
+							'symbol': {
+								'lineColor': '#000000',
+								'lineWidth': 1,
+								'polygonFill': '#FFFFFF',
 
-                        'textName': state.pointNum,
-                        'textFaceName': '宋体',                        
-                        'textSize': 18,
-                        'textFill': '#000000',
+								'textName': state.pointNum,
+								'textFaceName': '宋体',                        
+								'textSize': 18,
+								'textFill': '#000000',
 
-                        'textDy': -14,
-                        'textAlign': 'auto',
-                    }
-                }
-            );
-            map.getLayer('point').addGeometry(point);
-            point.on('click',clickObj)
+								'textDy': -14,
+								'textAlign': 'auto',
+							}
+						}
+					);
+					map.getLayer('point').addGeometry(point);
+					point.on('click',clickObj)
         }
 
 //画线时drawTool的绑定事件
