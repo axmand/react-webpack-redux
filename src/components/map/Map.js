@@ -274,9 +274,8 @@ recoverObj = recoverObj ||function(){
 }
 
 //用于计算标签的角度
-computeAngle = computeAngle || function(coordinates){
-    let a = coordinates[0];
-    let b = coordinates[1];
+computeAngle = computeAngle || function(a,b){
+
     let angle = Math.atan((a.y-b.y)/(a.x-b.x)) * 180 / Math.PI;
     if (angle >= 0) 
     {
@@ -289,9 +288,9 @@ computeAngle = computeAngle || function(coordinates){
     return angle;
 }
 //用于添加标签
-addLabel = addLabel || function(content,coordinates,layer){
-    let rotation = computeAngle(coordinates);
-    let coord = new maptalks.Coordinate({ x : (coordinates[0].x+coordinates[1].x)/2, y :  (coordinates[0].y+coordinates[1].y)/2});
+addLabel = addLabel || function(content,startPoi,endPoi,layer){
+    let rotation = computeAngle(startPoi,endPoi);
+    let coord = new maptalks.Coordinate({ x : (startPoi.x+endPoi.x)/2, y :  (startPoi.y+endPoi.y)/2});
     label = new maptalks.Label(content,coord,{
         'draggable' : true,
         'box': false,
@@ -343,13 +342,22 @@ drawToolOn = drawToolOn ||function(){
 
 //画线时drawTool的绑定事件
        drawLineEnd = drawLineEnd || function(param){
-           length= map.computeGeometryLength(param.geometry);
-           param.geometry.config('length',length);
-           param.geometry.config('isClicked',false);
-           let content=param.geometry.options.length.toFixed(2);
-           let coordinates = param.geometry._coordinates;
+           let coorArr=param.geometry._coordinates;
+           //为折线的每条线段添加长度标注
+           for(let i=0;i<coorArr.length-1;i++){
+               //每条线段的起点和终点坐标
+               let startPoi=coorArr[i],
+                    endPoi=coorArr[i+1];
+                //计算每条线段的长度
+                length= map.computeLength(startPoi,endPoi);
+                param.geometry.config('length',length);
+                let content=param.geometry.options.length.toFixed(2);
+                addLabel(content,startPoi,endPoi,map.getLayer('line'));
+           }
+                param.geometry.config('isClicked',false);
 
-           addLabel(content,coordinates,map.getLayer('line'));
+
+
            map.getLayer('line').addGeometry(param.geometry);
            param.geometry.on('click',clickObj); 
            recoverObj();    
