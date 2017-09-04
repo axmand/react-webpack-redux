@@ -276,22 +276,41 @@ recoverObj = recoverObj ||function(){
 //用于计算标签的角度
 computeAngle = computeAngle || function(a,b){
 
-    let angle = Math.atan((a.y-b.y)/(a.x-b.x)) * 180 / Math.PI;
-    if (angle >= 0) 
-    {
-        angle = - angle - 12
-    }
-    else
-    {
-        angle = - angle + 12
-    }
-    return angle;
+	const mapProjection = map.getProjection()
+	// console.log(mapProjection)
+
+	const aProject = mapProjection.project(a)
+	const bProject = mapProjection.project(b)
+	// console.log(aProject)
+	// console.log(bProject)
+
+	// let angle = Math.atan((aProject.y-bProject.y)/(aProject.x-bProject.x)) * 180 / Math.PI;
+	const angle = Math.atan2((bProject.y - aProject.y), (bProject.x - aProject.x)) * 180 / Math.PI;
+	// console.log(angle)
+
+	// if (angle >= 0) 
+	// {
+	// 		angle = - angle
+	// }
+	// else
+	// {
+	// 		angle = - angle
+	// }
+  return -angle;
 }
 //用于添加标签
 addLabel = addLabel || function(content,startPoi,endPoi,layer){
     let rotation = computeAngle(startPoi,endPoi);
     let coord = new maptalks.Coordinate({ x : (startPoi.x+endPoi.x)/2, y :  (startPoi.y+endPoi.y)/2});
-    label = new maptalks.Label(content,coord,{
+		
+		const rotation_rad = rotation / 180 * Math.PI
+		const dx = 16 * Math.sin(rotation_rad)
+		const dy = -16 * Math.cos(rotation_rad)
+
+		// console.log(rotation)
+		// console.log(dx + '    ' + dy)
+
+		label = new maptalks.Label(rotation,coord,{
         'draggable' : true,
         'box': false,
         'symbol': {
@@ -301,8 +320,12 @@ addLabel = addLabel || function(content,startPoi,endPoi,layer){
             'textFill' : '#34495e',
             'textSize' : 16.8,
 
-            'textDy': -16,
-            'textAlign': 'auto',
+						'textDx': dx,
+						'textDy': dy,
+						
+						'textHorizontalAlignment': 'middle',
+						'textVerticalAlignment': 'middle',
+            'textAlign': 'center',
         }
     })
     labels.push(label);
