@@ -319,29 +319,29 @@ drawToolOn = drawToolOn ||function(){
 }
 //用于画点
         drawPoint = drawPoint ||function(e){
-            recoverObj();
-            state.pointNum++;
-            let point =new maptalks.Circle(e.coordinate, 0.5,
-                {
-                    'id': state.pointNum, 
-                    'isClicked':false,         
-                    'symbol': {
-                        'lineColor': '#000000',
-                        'lineWidth': 1,
-                        'polygonFill': '#FFFFFF',
+					recoverObj();
+					state.pointNum++;
+					let point =new maptalks.Circle(e.coordinate, 2,
+						{
+							'id': state.pointNum, 
+							'isClicked':false,         
+							'symbol': {
+								'lineColor': '#000000',
+								'lineWidth': 1,
+								'polygonFill': '#FFFFFF',
 
-                        'textName': state.pointNum,
-                        'textFaceName': '宋体',                        
-                        'textSize': 18,
-                        'textFill': '#000000',
+								'textName': state.pointNum,
+								'textFaceName': '宋体',                        
+								'textSize': 18,
+								'textFill': '#000000',
 
-                        'textDy': -14,
-                        'textAlign': 'auto',
-                    }
-                }
-            );
-            map.getLayer('point').addGeometry(point);
-            point.on('click',clickObj)
+								'textDy': -14,
+								'textAlign': 'auto',
+							}
+						}
+					);
+					map.getLayer('point').addGeometry(point);
+					point.on('click',clickObj)
         }
 
 //画线时drawTool的绑定事件
