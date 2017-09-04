@@ -306,6 +306,12 @@ addLabel = addLabel || function(content,startPoi,endPoi,layer){
 		const dx = 16 * Math.sin(rotation_rad)
 		const dy = -16 * Math.cos(rotation_rad)
 
+		if ((rotation > 90 && rotation < 180) || (rotation > -180 && rotation < -90))
+		{
+			rotation += 180
+		}
+
+
 		label = new maptalks.Label(content,coord,{
         'draggable' : true,
         'box': false,
