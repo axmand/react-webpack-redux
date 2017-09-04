@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import RootReducer from './../../redux/RootReducer';
 import PropTypes from 'prop-types';
 import * as maptalks from 'maptalks';
+import { SnapTool } from "maptalks.snapto";
 
 //引入地图组件
 import MapToolBar from './MapToolBar';
@@ -18,6 +19,7 @@ import MapToolBar from './MapToolBar';
  */
 let map;
 let drawTool;
+let snap;
 
 /**
  * 地图组件
@@ -49,6 +51,14 @@ class Map extends Component {
                 'lineWidth' : 5
             }
           }).addTo(map).disable();
+           //为界址点图层添加snapto工具
+           snap=new SnapTool({
+                tolerance: 5,
+                mode : 'point'
+            });
+            snap.addTo(map);
+            snap.setLayer( map.getLayer("point"));
+            
     }
 
     render() {
@@ -289,13 +299,18 @@ addLabel = addLabel || function(content,startPoi,endPoi,layer){
             'textFaceName' : '宋体',
             'textFill' : '#34495e',
             'textSize' : 16.8,
-
             'textDy': -16,
             'textAlign': 'auto',
         }
     })
     labels.push(label);
-    layer.addGeometry(labels[labels.length-1]);
+    for(let i=0;i<labels.length;i++){
+        labels[i].on('click',function(){
+            labels[i].startEditText();
+            drawTool.disable();
+        })
+    }
+    layer.addGeometry(label);
 }
 //打开画图工具
 drawToolOn = drawToolOn ||function(){
@@ -345,8 +360,6 @@ drawToolOn = drawToolOn ||function(){
            }
                 param.geometry.config('isClicked',false);
 
-
-
            map.getLayer('line').addGeometry(param.geometry);
            param.geometry.on('click',clickObj); 
            recoverObj();    
@@ -393,19 +406,20 @@ drawToolOn = drawToolOn ||function(){
         switch (action.type) {
             //画点           
             case 'drawPointClick':
-            drawTool.disable();
-            map.off('click',drawToolOn);
-            if(!state.drawPointIsChecked){
-                if(state.drawPolygonIsChecked){
-                    drawTool.off('drawend', drawPolygonEnd);
-                };
-                if(state.drawLineIsChecked){
-                    drawTool.off('drawend', drawLineEnd);
-                }                 
-                map.on('click',drawPoint)
-            }else{
-                map.off('click',drawPoint)
-            }
+                drawTool.disable();
+                snap.disable();
+                map.off('click',drawToolOn);
+                if(!state.drawPointIsChecked){
+                    if(state.drawPolygonIsChecked){
+                        drawTool.off('drawend', drawPolygonEnd);                      
+                    };
+                    if(state.drawLineIsChecked){
+                        drawTool.off('drawend', drawLineEnd);                 
+                    }                 
+                    map.on('click',drawPoint)
+                }else{
+                    map.off('click',drawPoint)
+                }
                 const newState1={
                     pointNum:state.pointNum,
                     drawPointIsChecked:!state.drawPointIsChecked,
@@ -420,22 +434,17 @@ drawToolOn = drawToolOn ||function(){
 
             //画线
             case 'drawLineClick': 
-                if(!state.drawLineIsChecked){            
-                    //判断事件绑定
-                    if(state.drawPointIsChecked){
-                        map.off('click',drawPoint)
-                    };
-                    if(state.drawPolygonIsChecked){
-                        drawTool.off('drawend', drawPolygonEnd);
-                    };
+                if(!state.drawLineIsChecked){
+                    map.off('click',drawPoint)
+                    drawTool.off('drawend', drawPolygonEnd);
                     //开始画线
                     if(!drawTool.isEnabled()){
                         map.on('click',drawToolOn); 
                     }                     
                     drawLine(); 
-            
                 }else{
                     drawTool.disable();
+                    map.off('click',drawToolOn); 
                 }
                 const newState2={
                     pointNum:state.pointNum,
@@ -452,21 +461,16 @@ drawToolOn = drawToolOn ||function(){
             //构面
             case  'drawPolygonClick':
                 if(!state.drawPolygonIsChecked){
-                //判断事件绑定
-                    if(state.drawPointIsChecked){
-                        map.off('click',drawPoint)
-                    }
-                    if(state.drawLineIsChecked){
-                        drawTool.off('drawend', drawLineEnd);
+                    map.off('click',drawPoint)
+                    drawTool.off('drawend', drawLineEnd);
+                    //开始构面
+                    if(!drawTool.isEnabled()){
+                        map.on('click',drawToolOn); 
                     } 
-                 //开始构面
-                if(!drawTool.isEnabled()){
-                     map.on('click',drawToolOn); 
-                 } 
-                 drawPolygon();
-          
+                    drawPolygon();
                 }else{
                     drawTool.disable();
+                    map.off('click',drawToolOn); 
                 }
                 const newState3={
                     pointNum:state.pointNum,
@@ -491,7 +495,7 @@ drawToolOn = drawToolOn ||function(){
                         redoIsChecked:false,
                         saveIsChecked:false
                     }
-                 return Object.assign({},state,{... newState4});                       
+                    return Object.assign({},state,{... newState4});                       
                 }else{
                     alert('未选中对象，无法删除！')
                     return{...state}
