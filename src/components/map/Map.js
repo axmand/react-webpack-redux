@@ -128,9 +128,11 @@ RootReducer.merge(mapReduce);
 //加入reducer(layerControlReduce)
 const layerControlReduce = (
     state = {
-        pointIsChecked: true,
-        linetIsChecked: true,
-        polygonIsChecked: true
+			topographicMapIsChecked: false,
+			tianDiTuIsChecked: false,
+			pointIsChecked: true,
+			linetIsChecked: true,
+			polygonIsChecked: true
     }, action) => {
     //点选point图层控制其显示
     if (action.type === "handlePointIsChecked") {
