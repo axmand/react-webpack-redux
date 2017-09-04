@@ -306,10 +306,7 @@ addLabel = addLabel || function(content,startPoi,endPoi,layer){
 		const dx = 16 * Math.sin(rotation_rad)
 		const dy = -16 * Math.cos(rotation_rad)
 
-		// console.log(rotation)
-		// console.log(dx + '    ' + dy)
-
-		label = new maptalks.Label(rotation,coord,{
+		label = new maptalks.Label(content,coord,{
         'draggable' : true,
         'box': false,
         'symbol': {
@@ -318,12 +315,10 @@ addLabel = addLabel || function(content,startPoi,endPoi,layer){
             'textFaceName' : '宋体',
             'textFill' : '#34495e',
             'textSize' : 16.8,
-
-						'textDx': dx,
-						'textDy': dy,
-						
-						'textHorizontalAlignment': 'middle',
-						'textVerticalAlignment': 'middle',
+			'textDx': dx,
+			'textDy': dy,
+			'textHorizontalAlignment': 'middle',
+			'textVerticalAlignment': 'middle',
             'textAlign': 'center',
         }
     })
@@ -382,7 +377,9 @@ drawToolOn = drawToolOn ||function(){
                 let content=param.geometry.options.length.toFixed(2);
                 addLabel(content,startPoi,endPoi,map.getLayer('line'));
            }
-                param.geometry.config('isClicked',false);
+           param.geometry.config('labels',labels);
+           labels=[];
+           param.geometry.config('isClicked',false);
 
            map.getLayer('line').addGeometry(param.geometry);
            param.geometry.on('click',clickObj); 
@@ -398,7 +395,25 @@ drawToolOn = drawToolOn ||function(){
 
 //构面时drawTool的绑定事件
        drawPolygonEnd = drawPolygonEnd ||function(param){
+           let coorArr=param.geometry._coordinates;
+           let startPoi=[],
+                endPoi=[];
+           //为地块添加每段边长的注记
+           for(let i=0;i<coorArr.length;i++){
+               //每条线段的起点和终点坐标
+              if(i<coorArr.length-1){
+                  startPoi=coorArr[i];
+                  endPoi=coorArr[i+1];
+              }else{
+                  startPoi=coorArr[i];
+                  endPoi=coorArr[0];
+              }
+              length= map.computeLength(startPoi,endPoi);
+              let content=length.toFixed(2);
+              addLabel(content,startPoi,endPoi,map.getLayer('polygon'));
+           }
             param.geometry.config('isClicked',false);
+            console.log(param.geometry);
             map.getLayer('polygon').addGeometry(param.geometry);
             param.geometry.on('click',clickObj);
             recoverObj();
@@ -418,6 +433,13 @@ drawToolOn = drawToolOn ||function(){
 //用于删除对象
         deleteObj = deleteObj ||function (){
             target.remove();
+            if(target._jsonType==="LineString"){
+                let line_labels=target.options.labels;
+                for(let i=0;i<line_labels.length;i++){
+                    line_labels[i].remove();
+                }
+            }
+            
             target=null;          
         }
 //撤销
