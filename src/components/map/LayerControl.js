@@ -54,10 +54,14 @@ class LayerControl extends Component {
 
   render(){ 
     const classes=this.props.classes;
-		const { 
+		const {
+      topographicMapIsChecked,
+      tianDiTuIsChecked,
 			pointIsChecked,
 			linetIsChecked,
-			polygonIsChecked,
+      polygonIsChecked,
+      handleTopographicMapIsChecked,
+      handleTianDiTuIsIsChecked,
 			handlePointIsChecked,
 			handleLineIsChecked,
 		  handlePolygonIsChecked,
@@ -89,7 +93,23 @@ class LayerControl extends Component {
           <MenuItem className={classes.menuitem} disableGutters={true}>
             <CheckBox checked={true} disabled={true} />
             <ListItemText
-              primary={'影像底图'}
+              primary={'影像图'}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={topographicMapIsChecked} onChange={handleTopographicMapIsChecked} />
+            <ListItemText 
+              primary={'地形图'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={tianDiTuIsChecked} onChange={handleTianDiTuIsIsChecked} />
+            <ListItemText 
+              primary={'天地图'} 
               disableTypography={true}
               className={classes.listItemText}
             />
@@ -128,9 +148,13 @@ class LayerControl extends Component {
  */
 LayerControl.PropTypes={
       classes: PropTypes.object.isRequired,
+      topographicMapIsChecked:PropTypes.bool.isRequired,
+			tianDiTuIsChecked:PropTypes.bool.isRequired,
 			pointIsChecked:PropTypes.bool.isRequired,
 			linetIsChecked:PropTypes.bool.isRequired,
-			polygonIsChecked:PropTypes.bool.isRequired,
+      polygonIsChecked:PropTypes.bool.isRequired,
+      handleTopographicMapIsChecked:PropTypes.func.isRequired,
+			handleTianDiTuIsIsChecked:PropTypes.func.isRequired,
 			handlePointIsChecked:PropTypes.func.isRequired,
 			handleLineIsChecked:PropTypes.func.isRequired,
 		  handlePolygonIsChecked:PropTypes.func.isRequired
@@ -146,6 +170,8 @@ const mapStateToProps = (state) => {
   const layerControlState=state.layerControlReduce;
 
     return {
+      handleTopographicMapIsChecked: layerControlState.handleTopographicMapIsChecked,
+			tianDiTuIsChecked: layerControlState.tianDiTuIsChecked,
 			pointIsChecked: layerControlState.pointIsChecked,
 			linetIsChecked: layerControlState.linetIsChecked,
 			polygonIsChecked: layerControlState.polygonIsChecked
@@ -155,6 +181,16 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+      handleTopographicMapIsChecked:()=>{
+        dispatch({
+          type:'handleTopographicMapIsChecked'
+				})
+			},
+			handleTianDiTuIsIsChecked:()=>{
+        dispatch({
+          type:'handleTianDiTuIsIsChecked'
+				})
+			},
       handlePointIsChecked:()=>{
         dispatch({
           type:'handlePointIsChecked'
