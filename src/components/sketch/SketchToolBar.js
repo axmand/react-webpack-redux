@@ -13,6 +13,8 @@ import LocationSearching from  'material-ui-icons/LocationSearching';//展点
 import Adjust from 'material-ui-icons/Adjust';//画点
 import Timeline from 'material-ui-icons/Timeline';//连线
 import CheckBoxOutlineBlank from 'material-ui-icons/CheckBoxOutlineBlank';//构面
+import ViewCarousel from 'material-ui-icons/ViewCarousel';//阳台
+import Description from 'material-ui-icons/Description';//标注
 import Delete from 'material-ui-icons/Delete';//删除
 import Undo from 'material-ui-icons/Undo';//撤销
 // import Refresh from 'material-ui-icons/Refresh';//重做
@@ -24,7 +26,7 @@ import DragHandle from 'material-ui-icons/DragHandle';
 const styles={
     root:{
          height:'50px',
-         width:'500px',
+         width:'600px',
          position:'absolute',
          top:'80px',
          left:'100px',
@@ -48,9 +50,9 @@ const styles={
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
+        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onBalconyClick,onaddLabelClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
         const { handleDelete,handleShowDelDialog,showDelDialog,handleCloseDelDialog } = this.props
-        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, } = this.props;
+        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,balconyIsChecked,addLabelIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, } = this.props;
         return( 
             <Draggable handle="span">
                 <div className={classes.root} >
@@ -64,11 +66,19 @@ class SkechToolBar extends Component{
                     </Button>
                     <Button  className={classes.button} style={{backgroundColor: drawLineIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawLineClick}>
                         <Timeline />
-                        <Typograghy>连线</Typograghy>
+                        <Typograghy>四至</Typograghy>
                     </Button>                               
                     <Button  className={classes.button} style={{backgroundColor: drawPolygonIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawPolygonClick}>
                         <CheckBoxOutlineBlank />
-                        <Typograghy>构面</Typograghy>
+                        <Typograghy>宗地</Typograghy>
+                    </Button> 
+                    <Button  className={classes.button} style={{backgroundColor: balconyIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onBalconyClick}>
+                        <ViewCarousel />
+                        <Typograghy>阳台</Typograghy>
+                    </Button> 
+                    <Button  className={classes.button} style={{backgroundColor: addLabelIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onaddLabelClick}>
+                        <Description />
+                        <Typograghy>标注</Typograghy>
                     </Button> 
                     <Button  className={classes.button} style={{backgroundColor: showDelDialog ? '#D1E9E9' : 'transparent'}} onClick={onDeleteClick}>
                         <Delete />
@@ -125,6 +135,10 @@ SkechToolBar.PropTypes={
     handleShowDelDialog:PropTypes.func.isRequired,
     showDelDialog:PropTypes.bool.isRequired,
     drawPointIsChecked:PropTypes.bool.isRequired,
+    drawLineIsChecked:PropTypes.bool.isRequired,
+    drawPolygonIsChecked:PropTypes.bool.isRequired,
+    balconyIsChecked:PropTypes.bool.isRequired,
+    addLabelIsChecked:PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => {
@@ -135,6 +149,8 @@ const mapStateToProps = (state) => {
         drawPointIsChecked:sketchState.drawPointIsChecked,
         drawLineIsChecked:sketchState.drawLineIsChecked,
         drawPolygonIsChecked:sketchState.drawPolygonIsChecked,
+        balconyIsChecked:sketchState.balconyIsChecked,
+        addLabelIsChecked:sketchState.addLabelIsChecked,
         undoIsChecked:sketchState.undoIsChecked,
         redoIsChecked:sketchState.redoIsChecked,
         saveIsChecked:sketchState.saveIsChecked
@@ -161,6 +177,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onDrawPolygonClick: () => {
             dispatch({
                 type: 'drawPolygonClick',
+                payload:dispatch,
+            });
+        },
+        //画阳台
+        onBalconyClick:()=>{
+            dispatch({
+                type: 'balconyClick',
+                payload:dispatch,
+            });
+        },
+        //  添加标注
+        onaddLabelClick:()=>{
+            dispatch({
+                type: 'addLabelClick',
                 payload:dispatch,
             });
         },

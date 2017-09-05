@@ -199,19 +199,22 @@ RootReducer.merge(realtimeMappingReduce);
 
 //加入Reducer(sketchReduce)
 //初始化相关量
-let target,label,labels=[],length,clickedObj=[],
-    addLabel,
-    deleteObj,clickObj,recoverObj,
+let target,labels=[],length,clickedObj=[],
+    addObjLabel,addObjLabelEnd,deleteObj,clickObj,recoverObj,
     computeAngle;
 let drawPoint,drawToolOn,
      drawLineEnd,drawLine,
-     drawPolygonEnd,drawPolygon;
+     drawPolygonEnd,drawPolygon,
+     drawBalconyEnd,drawBalcony,
+     addLabel,labelEditEnd;
 
 const sketchReduce = (state = { 
     pointNum: 0, 
     drawPointIsChecked: false,
     drawLineIsChecked: false,
     drawPolygonIsChecked:false,
+    balconyIsChecked:false,
+    addLabelIsChecked:false,
     deleteIsChecked:false,
     undoIsChecked:false,
     redoIsChecked:false,
@@ -254,88 +257,88 @@ const sketchReduce = (state = {
             }
         }
 //用于清除对象被选中的高亮效果
-recoverObj = recoverObj ||function(){
-    let num = clickedObj.length;
-    for(let i=0;i<num;i++){
-        if(clickedObj[i]._jsonType==="Circle"){ 
-            clickedObj[i].options.isClicked = false;
-            clickedObj[i].updateSymbol({ 'lineColor': '#000000','polygonFill': '#FFFFFF'});
-        }
-        if(clickedObj[i]._jsonType==="LineString"){ 
-            clickedObj[i].options.isClicked = false;
-            clickedObj[i].updateSymbol({'lineColor': '#000000'});
-        }
-        if(clickedObj[i]._jsonType==="Polygon"){ 
-            clickedObj[i].options.isClicked = false;
-            clickedObj[i].updateSymbol({'lineColor': '#000000'});
+    recoverObj = recoverObj ||function(){
+        let num = clickedObj.length;
+        for(let i=0;i<num;i++){
+            if(clickedObj[i]._jsonType==="Circle"){ 
+                clickedObj[i].options.isClicked = false;
+                clickedObj[i].updateSymbol({ 'lineColor': '#000000','polygonFill': '#FFFFFF'});
+            }
+            if(clickedObj[i]._jsonType==="LineString"){ 
+                clickedObj[i].options.isClicked = false;
+                clickedObj[i].updateSymbol({'lineColor': '#000000'});
+            }
+            if(clickedObj[i]._jsonType==="Polygon"){ 
+                clickedObj[i].options.isClicked = false;
+                clickedObj[i].updateSymbol({'lineColor': '#000000'});
+            }
         }
     }
-}
 
 //用于计算标签的角度
-computeAngle = computeAngle || function(a,b){
+    computeAngle = computeAngle || function(a,b){
 
-	const mapProjection = map.getProjection()
-	// console.log(mapProjection)
+        const mapProjection = map.getProjection()
+        // console.log(mapProjection)
 
-	const aProject = mapProjection.project(a)
-	const bProject = mapProjection.project(b)
-	// console.log(aProject)
-	// console.log(bProject)
+        const aProject = mapProjection.project(a)
+        const bProject = mapProjection.project(b)
+        // console.log(aProject)
+        // console.log(bProject)
 
-	// let angle = Math.atan((aProject.y-bProject.y)/(aProject.x-bProject.x)) * 180 / Math.PI;
-	const angle = Math.atan2((bProject.y - aProject.y), (bProject.x - aProject.x)) * 180 / Math.PI;
-	// console.log(angle)
+        // let angle = Math.atan((aProject.y-bProject.y)/(aProject.x-bProject.x)) * 180 / Math.PI;
+        const angle = Math.atan2((bProject.y - aProject.y), (bProject.x - aProject.x)) * 180 / Math.PI;
+        // console.log(angle)
 
-	// if (angle >= 0) 
-	// {
-	// 		angle = - angle
-	// }
-	// else
-	// {
-	// 		angle = - angle
-	// }
-  return -angle;
-}
-//用于添加标签
-addLabel = addLabel || function(content,startPoi,endPoi,layer){
-    let rotation = computeAngle(startPoi,endPoi);
-    let coord = new maptalks.Coordinate({ x : (startPoi.x+endPoi.x)/2, y :  (startPoi.y+endPoi.y)/2});
-		
-		const rotation_rad = rotation / 180 * Math.PI
-		const dx = 16 * Math.sin(rotation_rad)
-		const dy = -16 * Math.cos(rotation_rad)
-
-		label = new maptalks.Label(content,coord,{
-        'draggable' : true,
-        'box': false,
-        'symbol': {
-            'textWeight' : 'bold',
-            'textRotation': rotation,
-            'textFaceName' : '宋体',
-            'textFill' : '#34495e',
-            'textSize' : 16.8,
-			'textDx': dx,
-			'textDy': dy,
-			'textHorizontalAlignment': 'middle',
-			'textVerticalAlignment': 'middle',
-            'textAlign': 'center',
-        }
-    })
-    labels.push(label);
-    for(let i=0;i<labels.length;i++){
-        labels[i].on('click',function(){
-            labels[i].startEditText();
-            drawTool.disable();
-        })
+        // if (angle >= 0) 
+        // {
+        // 		angle = - angle
+        // }
+        // else
+        // {
+        // 		angle = - angle
+        // }
+        return -angle;
     }
-    layer.addGeometry(label);
-}
+//用于添加四至和宗地的线段标注
+    addObjLabel = addObjLabel || function(content,startPoi,endPoi,layer){
+        let rotation = computeAngle(startPoi,endPoi);
+        let coord = new maptalks.Coordinate({ x : (startPoi.x+endPoi.x)/2, y :  (startPoi.y+endPoi.y)/2});
+            
+            const rotation_rad = rotation / 180 * Math.PI
+            const dx = 16 * Math.sin(rotation_rad)
+            const dy = -16 * Math.cos(rotation_rad)
+
+            let label = new maptalks.Label(content,coord,{
+            'draggable' : true,
+            'box': false,
+            'symbol': {
+                'textWeight' : 'bold',
+                'textRotation': rotation,
+                'textFaceName' : '宋体',
+                'textFill' : '#34495e',
+                'textSize' : 16.8,
+                'textDx': dx,
+                'textDy': dy,
+                'textHorizontalAlignment': 'middle',
+                'textVerticalAlignment': 'middle',
+                'textAlign': 'center',
+            }
+        })
+        labels.push(label);
+        label.on('click',function(){
+            label.startEditText();
+            drawTool.disable();
+            map.on('dblclick',drawToolOn)
+        })
+        layer.addGeometry(label);
+    }
+
 //打开画图工具
-drawToolOn = drawToolOn ||function(){
-    drawTool.enable();
-    console.log('on');
-}
+    drawToolOn = drawToolOn ||function(){
+        drawTool.enable();
+        console.log('on');
+    }
 //用于画点
         drawPoint = drawPoint ||function(e){
 					recoverObj();
@@ -375,7 +378,7 @@ drawToolOn = drawToolOn ||function(){
                 length= map.computeLength(startPoi,endPoi);
                 param.geometry.config('length',length);
                 let content=param.geometry.options.length.toFixed(2);
-                addLabel(content,startPoi,endPoi,map.getLayer('line'));
+                addObjLabel(content,startPoi,endPoi,map.getLayer('line'));
            }
            param.geometry.config('labels',labels);
            labels=[];
@@ -410,13 +413,15 @@ drawToolOn = drawToolOn ||function(){
               }
               length= map.computeLength(startPoi,endPoi);
               let content=length.toFixed(2);
-              addLabel(content,startPoi,endPoi,map.getLayer('polygon'));
+              addObjLabel(content,startPoi,endPoi,map.getLayer('polygon'));
            }
-            param.geometry.config('isClicked',false);
-            console.log(param.geometry);
-            map.getLayer('polygon').addGeometry(param.geometry);
-            param.geometry.on('click',clickObj);
-            recoverObj();
+           param.geometry.config('labels',labels);
+           labels=[];
+           param.geometry.config('isClicked',false);
+           param.geometry.config('polygonType','ZD');
+           map.getLayer('polygon').addGeometry(param.geometry);
+           param.geometry.on('click',clickObj); 
+           recoverObj();
        }
 //用于构面
         drawPolygon = drawPolygon ||function(){
@@ -430,6 +435,55 @@ drawToolOn = drawToolOn ||function(){
             });                 
             drawTool.on('drawend', drawPolygonEnd);   
         }
+//画阳台时绑定的事件
+        drawBalconyEnd = drawBalconyEnd ||function(param){
+            param.geometry.config('isClicked',false);
+            param.geometry.config('polygonType','YT');
+            map.getLayer('polygon').addGeometry(param.geometry);
+            param.geometry.on('click',clickObj);
+            recoverObj();
+        }
+        drawBalcony = drawBalcony ||function(){
+            recoverObj();
+            drawTool.setMode('Polygon').enable();
+            drawTool.setSymbol({
+                'lineColor' : '#000000',
+                'lineWidth' : 3,
+                'lineDasharray' : [10, 5, 10, 5],
+                'polygonFill' : '#FFFFFF',
+                'polygonOpacity' : 0.6
+            });                 
+            drawTool.on('drawend', drawBalconyEnd);   
+        }
+//添加自定义标注
+        addLabel = addLabel ||function(e){
+            recoverObj();
+            let label = new maptalks.Label('label',e.coordinate,
+            {
+                'draggable' : true,
+                'box': false,
+                'symbol': {
+                    'textWeight' : 'bold',
+                    'textFaceName' : '宋体',
+                    'textFill' : '#34495e',
+                    'textSize' : 16.8,
+                    'textHorizontalAlignment': 'middle',
+                    'textVerticalAlignment': 'middle',
+                    'textAlign': 'center',
+                }
+            });
+            map.getLayer('point').addGeometry(label);
+            label.on('click',function(){
+                label.startEditText();
+                map.off('click',addLabel);
+            })
+            //双击表示编辑结束
+            map.on('dblclick',labelEditEnd)
+        }
+        labelEditEnd= labelEditEnd ||function(){
+            map.on('click',addLabel);
+        }
+     
 //用于删除对象
         deleteObj = deleteObj ||function (){
             target.remove();
@@ -439,7 +493,12 @@ drawToolOn = drawToolOn ||function(){
                     line_labels[i].remove();
                 }
             }
-            
+            if(target._jsonType==="Polygon"){
+                let polygon_labels=target.options.labels;
+                for(let i=0;i<polygon_labels.length;i++){
+                    polygon_labels[i].remove();
+                }                
+            }
             target=null;          
         }
 //撤销
@@ -454,15 +513,22 @@ drawToolOn = drawToolOn ||function(){
             case 'drawPointClick':
                 drawTool.disable();
                 snap.disable();
-                map.off('click',drawToolOn);
+                map.off('dblclick',drawToolOn);
                 if(!state.drawPointIsChecked){
                     if(state.drawPolygonIsChecked){
                         drawTool.off('drawend', drawPolygonEnd);                      
                     };
                     if(state.drawLineIsChecked){
                         drawTool.off('drawend', drawLineEnd);                 
-                    }                 
-                    map.on('click',drawPoint)
+                    };      
+                    if(state.balconyIsChecked){
+                        drawTool.off('drawend', drawBalconyEnd);
+                    };
+                    if(state.addLabelIsChecked){
+                        map.off('click',addLabel);
+                        map.off('dblclick',labelEditEnd);
+                    };
+                    map.on('click',drawPoint);
                 }else{
                     map.off('click',drawPoint)
                 }
@@ -471,6 +537,8 @@ drawToolOn = drawToolOn ||function(){
                     drawPointIsChecked:!state.drawPointIsChecked,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:false,
+                    balconyIsChecked:false,
+                    addLabelIsChecked:false,
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
@@ -483,10 +551,10 @@ drawToolOn = drawToolOn ||function(){
                 if(!state.drawLineIsChecked){
                     map.off('click',drawPoint)
                     drawTool.off('drawend', drawPolygonEnd);
-                    //开始画线
-                    if(!drawTool.isEnabled()){
-                        map.on('click',drawToolOn); 
-                    }                     
+                    drawTool.off('drawend', drawBalconyEnd);
+                    map.off('click',addLabel);
+                    map.off('dblclick',labelEditEnd);
+                    //开始画线                  
                     drawLine(); 
                 }else{
                     drawTool.disable();
@@ -497,6 +565,8 @@ drawToolOn = drawToolOn ||function(){
                     drawPointIsChecked:false,
                     drawLineIsChecked:!state.drawLineIsChecked,
                     drawPolygonIsChecked:false,
+                    balconyIsChecked:false,
+                    addLabelIsChecked:false,
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
@@ -509,10 +579,10 @@ drawToolOn = drawToolOn ||function(){
                 if(!state.drawPolygonIsChecked){
                     map.off('click',drawPoint)
                     drawTool.off('drawend', drawLineEnd);
+                    drawTool.off('drawend', drawBalconyEnd);
+                    map.off('click',addLabel);
+                    map.off('dblclick',labelEditEnd);
                     //开始构面
-                    if(!drawTool.isEnabled()){
-                        map.on('click',drawToolOn); 
-                    } 
                     drawPolygon();
                 }else{
                     drawTool.disable();
@@ -523,25 +593,83 @@ drawToolOn = drawToolOn ||function(){
                     drawPointIsChecked:false,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:!state.drawPolygonIsChecked,
+                    balconyIsChecked:false,
+                    addLabelIsChecked:false,
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
                     saveIsChecked:false
                 }
                 return {...state,...newState3};   
+            //阳台
+            case  'balconyClick':
+                if(!state.balconyIsChecked){
+                    map.off('click',drawPoint)
+                    drawTool.off('drawend', drawLineEnd);
+                    drawTool.off('drawend', drawPolygonEnd);
+                    map.off('click',addLabel);
+                    map.off('dblclick',labelEditEnd);
+                    //开始构面
+                    drawBalcony();
+                }else{
+                        drawTool.disable();
+                        map.off('click',drawToolOn); 
+                    }
+                const newState4={
+                    pointNum:state.pointNum,
+                    drawPointIsChecked:false,
+                    drawLineIsChecked:false,
+                    drawPolygonIsChecked:false,
+                    balconyIsChecked:!state.balconyIsChecked,
+                    addLabelIsChecked:false,
+                    deleteIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false
+                }
+                return {...state,...newState4};   
+            //添加自定义注记
+            case 'addLabelClick':
+                drawTool.disable();
+                map.off('click',drawToolOn);
+                map.off('click',drawPoint);
+                map.off('dblclick',drawToolOn);
+                drawTool.off('drawend', drawLineEnd);
+                drawTool.off('drawend', drawPolygonEnd);
+                drawTool.off('drawend', drawBalconyEnd);
+                if(!state.addLabelIsChecked){
+                    map.on('click',addLabel);
+                }else{
+                    map.off('click',addLabel);
+                    map.off('dblclick',labelEditEnd);
+                }          
+
+                const newState5={
+                    pointNum:state.pointNum,
+                    drawPointIsChecked:false,
+                    drawLineIsChecked:false,
+                    drawPolygonIsChecked:false,
+                    balconyIsChecked:false,
+                    addLabelIsChecked:!state.addLabelIsChecked,
+                    deleteIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false
+                }
+                return {...state,...newState5};   
 
             //删除
             case 'deleteClick':
                 console.log(target);
                 if(target){
-                    const newState4={
+                    const newState6={
                         deleteIsChecked:!state.deleteIsChecked, 
                         showDelDialog:!state.showDelDialog,                   
                         undoIsChecked:false,
                         redoIsChecked:false,
                         saveIsChecked:false
                     }
-                    return Object.assign({},state,{... newState4});                       
+                    return Object.assign({},state,{... newState6});                       
                 }else{
                     alert('未选中对象，无法删除！')
                     return{...state}
