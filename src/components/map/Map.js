@@ -128,11 +128,9 @@ RootReducer.merge(mapReduce);
 //加入reducer(layerControlReduce)
 const layerControlReduce = (
     state = {
-			topographicMapIsChecked: false,
-			tianDiTuIsChecked: false,
-			pointIsChecked: true,
-			linetIsChecked: true,
-			polygonIsChecked: true
+        pointIsChecked: true,
+        linetIsChecked: true,
+        polygonIsChecked: true
     }, action) => {
     //点选point图层控制其显示
     if (action.type === "handlePointIsChecked") {
@@ -278,65 +276,58 @@ const sketchReduce = (state = {
     }
 
 //用于计算标签的角度
-computeAngle = computeAngle || function(a,b){
+    computeAngle = computeAngle || function(a,b){
 
-	const mapProjection = map.getProjection()
-	// console.log(mapProjection)
+        const mapProjection = map.getProjection()
+        // console.log(mapProjection)
 
-	const aProject = mapProjection.project(a)
-	const bProject = mapProjection.project(b)
-	// console.log(aProject)
-	// console.log(bProject)
+        const aProject = mapProjection.project(a)
+        const bProject = mapProjection.project(b)
+        // console.log(aProject)
+        // console.log(bProject)
 
-	// let angle = Math.atan((aProject.y-bProject.y)/(aProject.x-bProject.x)) * 180 / Math.PI;
-	const angle = Math.atan2((bProject.y - aProject.y), (bProject.x - aProject.x)) * 180 / Math.PI;
-	// console.log(angle)
+        // let angle = Math.atan((aProject.y-bProject.y)/(aProject.x-bProject.x)) * 180 / Math.PI;
+        const angle = Math.atan2((bProject.y - aProject.y), (bProject.x - aProject.x)) * 180 / Math.PI;
+        // console.log(angle)
 
-	// if (angle >= 0) 
-	// {
-	// 		angle = - angle
-	// }
-	// else
-	// {
-	// 		angle = - angle
-	// }
-  return -angle;
-}
-//用于添加标签
-addLabel = addLabel || function(content,startPoi,endPoi,layer){
-    let rotation = computeAngle(startPoi,endPoi);
-    let coord = new maptalks.Coordinate({ x : (startPoi.x+endPoi.x)/2, y :  (startPoi.y+endPoi.y)/2});
-		
-		const rotation_rad = rotation / 180 * Math.PI
-		const dx = 16 * Math.sin(rotation_rad)
-		const dy = -16 * Math.cos(rotation_rad)
+        // if (angle >= 0) 
+        // {
+        // 		angle = - angle
+        // }
+        // else
+        // {
+        // 		angle = - angle
+        // }
+        return -angle;
+    }
+//用于添加四至和宗地的线段标注
+    addObjLabel = addObjLabel || function(content,startPoi,endPoi,layer){
+        let rotation = computeAngle(startPoi,endPoi);
+        let coord = new maptalks.Coordinate({ x : (startPoi.x+endPoi.x)/2, y :  (startPoi.y+endPoi.y)/2});
+            
+            const rotation_rad = rotation / 180 * Math.PI
+            const dx = 16 * Math.sin(rotation_rad)
+            const dy = -16 * Math.cos(rotation_rad)
 
-		if ((rotation > 90 && rotation < 180) || (rotation > -180 && rotation < -90))
-		{
-			rotation += 180
-		}
-
-
-		label = new maptalks.Label(content,coord,{
-        'draggable' : true,
-        'box': false,
-        'symbol': {
-            'textWeight' : 'bold',
-            'textRotation': rotation,
-            'textFaceName' : '宋体',
-            'textFill' : '#34495e',
-            'textSize' : 16.8,
-			'textDx': dx,
-			'textDy': dy,
-			'textHorizontalAlignment': 'middle',
-			'textVerticalAlignment': 'middle',
-            'textAlign': 'center',
-        }
-    })
-    labels.push(label);
-    for(let i=0;i<labels.length;i++){
-        labels[i].on('click',function(){
-            labels[i].startEditText();
+            let label = new maptalks.Label(content,coord,{
+            'draggable' : true,
+            'box': false,
+            'symbol': {
+                'textWeight' : 'bold',
+                'textRotation': rotation,
+                'textFaceName' : '宋体',
+                'textFill' : '#34495e',
+                'textSize' : 16.8,
+                'textDx': dx,
+                'textDy': dy,
+                'textHorizontalAlignment': 'middle',
+                'textVerticalAlignment': 'middle',
+                'textAlign': 'center',
+            }
+        })
+        labels.push(label);
+        label.on('click',function(){
+            label.startEditText();
             drawTool.disable();
             map.on('dblclick',drawToolOn)
         })
