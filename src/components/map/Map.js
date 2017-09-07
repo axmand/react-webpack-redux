@@ -37,10 +37,16 @@ class Map extends Component {
                 subdomains: ['a', 'b', 'c', 'd', 'e']
             }),
             layers: [
+<<<<<<< HEAD
                 new maptalks.VectorLayer('point'),
                 new maptalks.VectorLayer('line'),
                 new maptalks.VectorLayer('polygon'),
                 new maptalks.VectorLayer('label')
+=======
+                new maptalks.VectorLayer('polygon'),
+                new maptalks.VectorLayer('line'),              
+                new maptalks.VectorLayer('point')
+>>>>>>> f0756c771f68e9d273adb276c2d59ae046d8fc36
             ]
         });
         map.setZoom(20);
@@ -49,7 +55,7 @@ class Map extends Component {
             mode: 'Polygon',
             symbol : {
                 'lineColor' : '#000',
-                'lineWidth' : 5
+                'lineWidth' : 3
             }
           }).addTo(map).disable();
            //为界址点图层添加snapto工具
@@ -303,16 +309,7 @@ const sketchReduce = (state = {
 
         // let angle = Math.atan((aProject.y-bProject.y)/(aProject.x-bProject.x)) * 180 / Math.PI;
         const angle = Math.atan2((bProject.y - aProject.y), (bProject.x - aProject.x)) * 180 / Math.PI;
-        // console.log(angle)
 
-        // if (angle >= 0) 
-        // {
-        // 		angle = - angle
-        // }
-        // else
-        // {
-        // 		angle = - angle
-        // }
         return -angle;
     }
 //用于添加四至和宗地的线段标注
@@ -323,6 +320,11 @@ const sketchReduce = (state = {
             const rotation_rad = rotation / 180 * Math.PI
             const dx = 16 * Math.sin(rotation_rad)
             const dy = -16 * Math.cos(rotation_rad)
+
+            if ((rotation > 90 && rotation < 180) || (rotation > -180 && rotation < -90))
+            {
+                rotation += 180
+            }
 
             let label = new maptalks.Label(content,coord,{
             'draggable' : true,
@@ -357,7 +359,7 @@ const sketchReduce = (state = {
         drawPoint = drawPoint ||function(e){
 					recoverObj();
 					state.pointNum++;
-					let point =new maptalks.Circle(e.coordinate, 2,
+					let point =new maptalks.Circle(e.coordinate, 0.5,
 						{
 							'id': state.pointNum, 
 							'isClicked':false,         
