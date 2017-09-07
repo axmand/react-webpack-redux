@@ -33,13 +33,14 @@ class Map extends Component {
             center: [-0.113049, 51.498568],
             zoom: 14,
             baseLayer: new maptalks.TileLayer('base', {
-                urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',//'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+                urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
                 subdomains: ['a', 'b', 'c', 'd', 'e']
             }),
             layers: [
                 new maptalks.VectorLayer('point'),
                 new maptalks.VectorLayer('line'),
-                new maptalks.VectorLayer('polygon')
+                new maptalks.VectorLayer('polygon'),
+                new maptalks.VectorLayer('label')
             ]
         });
         map.setZoom(20);
@@ -58,7 +59,7 @@ class Map extends Component {
             });
             snap.addTo(map);
             snap.setLayer( map.getLayer("point"));
-            
+            //snap.disable();
     }
 
     render() {
@@ -129,8 +130,9 @@ RootReducer.merge(mapReduce);
 const layerControlReduce = (
     state = {
         pointIsChecked: true,
-        linetIsChecked: true,
-        polygonIsChecked: true
+        lineIsChecked: true,
+        polygonIsChecked: true,
+        labelIsChecked:true
     }, action) => {
     //点选point图层控制其显示
     if (action.type === "handlePointIsChecked") {
@@ -147,16 +149,16 @@ const layerControlReduce = (
     }
     //点选line图层控制其显示
     if (action.type === "handleLineIsChecked") {
-        const linetIsChecked = {
-            linetIsChecked: !state.linetIsChecked
+        const lineIsChecked = {
+            lineIsChecked: !state.lineIsChecked
         }
-        if (linetIsChecked.linetIsChecked) {
+        if (lineIsChecked.lineIsChecked) {
             map.getLayer("line").show();
         } else {
             map.getLayer("line").hide();
         }
-        console.log(linetIsChecked);
-        return Object.assign({}, state, { ...linetIsChecked })
+        console.log(lineIsChecked);
+        return Object.assign({}, state, { ...lineIsChecked })
     }
     //点选polygon图层控制其显示
     if (action.type === "handlePolygonIsChecked") {
@@ -170,6 +172,19 @@ const layerControlReduce = (
         }
         console.log(polygonIsChecked);
         return Object.assign({}, state, { ...polygonIsChecked })
+    }
+    //点选注记图层控制其显示
+    if (action.type === "handleLabelIsChecked") {
+        const labelIsChecked = {
+            labelIsChecked: !state.labelIsChecked
+        }
+        if (labelIsChecked.labelIsChecked) {
+            map.getLayer("label").show();
+        } else {
+            map.getLayer("label").hide();
+        }
+        console.log(labelIsChecked);
+        return Object.assign({}, state, { ...labelIsChecked })
     }
     return { ...state };
 }
@@ -216,6 +231,7 @@ const sketchReduce = (state = {
     balconyIsChecked:false,
     addLabelIsChecked:false,
     deleteIsChecked:false,
+    chooseObjIsChecked:false,
     undoIsChecked:false,
     redoIsChecked:false,
     saveIsChecked:false,
@@ -237,7 +253,6 @@ const sketchReduce = (state = {
             }
             if(target._jsonType==="LineString"){
                 target.options.isClicked = ! target.options.isClicked;
-                drawTool.disable();
                 if(target.options.isClicked){
                     target.updateSymbol({ 'lineColor': '#00FFFF'});
                 }
@@ -247,7 +262,6 @@ const sketchReduce = (state = {
             }
             if(target._jsonType==="Polygon"){
                 target.options.isClicked = ! target.options.isClicked;
-                drawTool.disable();
                 if(target.options.isClicked){
                     target.updateSymbol({'lineColor': '#00FFFF'});  
                 }
@@ -259,6 +273,7 @@ const sketchReduce = (state = {
 //用于清除对象被选中的高亮效果
     recoverObj = recoverObj ||function(){
         let num = clickedObj.length;
+        target=null;  
         for(let i=0;i<num;i++){
             if(clickedObj[i]._jsonType==="Circle"){ 
                 clickedObj[i].options.isClicked = false;
@@ -301,7 +316,7 @@ const sketchReduce = (state = {
         return -angle;
     }
 //用于添加四至和宗地的线段标注
-    addObjLabel = addObjLabel || function(content,startPoi,endPoi,layer){
+    addObjLabel = addObjLabel || function(content,startPoi,endPoi){
         let rotation = computeAngle(startPoi,endPoi);
         let coord = new maptalks.Coordinate({ x : (startPoi.x+endPoi.x)/2, y :  (startPoi.y+endPoi.y)/2});
             
@@ -327,11 +342,10 @@ const sketchReduce = (state = {
         })
         labels.push(label);
         label.on('click',function(){
-            label.startEditText();
             drawTool.disable();
-            map.on('dblclick',drawToolOn)
+            label.startEditText();
         })
-        layer.addGeometry(label);
+        map.getLayer('label').addGeometry(label);
     }
 
 //打开画图工具
@@ -378,7 +392,7 @@ const sketchReduce = (state = {
                 length= map.computeLength(startPoi,endPoi);
                 param.geometry.config('length',length);
                 let content=param.geometry.options.length.toFixed(2);
-                addObjLabel(content,startPoi,endPoi,map.getLayer('line'));
+                addObjLabel(content,startPoi,endPoi);
            }
            param.geometry.config('labels',labels);
            labels=[];
@@ -413,7 +427,7 @@ const sketchReduce = (state = {
               }
               length= map.computeLength(startPoi,endPoi);
               let content=length.toFixed(2);
-              addObjLabel(content,startPoi,endPoi,map.getLayer('polygon'));
+              addObjLabel(content,startPoi,endPoi);
            }
            param.geometry.config('labels',labels);
            labels=[];
@@ -472,7 +486,7 @@ const sketchReduce = (state = {
                     'textAlign': 'center',
                 }
             });
-            map.getLayer('point').addGeometry(label);
+            map.getLayer('label').addGeometry(label);
             label.on('click',function(){
                 label.startEditText();
                 map.off('click',addLabel);
@@ -515,19 +529,11 @@ const sketchReduce = (state = {
                 snap.disable();
                 map.off('dblclick',drawToolOn);
                 if(!state.drawPointIsChecked){
-                    if(state.drawPolygonIsChecked){
-                        drawTool.off('drawend', drawPolygonEnd);                      
-                    };
-                    if(state.drawLineIsChecked){
-                        drawTool.off('drawend', drawLineEnd);                 
-                    };      
-                    if(state.balconyIsChecked){
-                        drawTool.off('drawend', drawBalconyEnd);
-                    };
-                    if(state.addLabelIsChecked){
-                        map.off('click',addLabel);
-                        map.off('dblclick',labelEditEnd);
-                    };
+                    drawTool.off('drawend', drawPolygonEnd);                      
+                    drawTool.off('drawend', drawLineEnd);                     
+                    drawTool.off('drawend', drawBalconyEnd);
+                    map.off('click',addLabel);
+                    map.off('dblclick',labelEditEnd);
                     map.on('click',drawPoint);
                 }else{
                     map.off('click',drawPoint)
@@ -539,6 +545,7 @@ const sketchReduce = (state = {
                     drawPolygonIsChecked:false,
                     balconyIsChecked:false,
                     addLabelIsChecked:false,
+                    chooseObjIsChecked:false,
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
@@ -554,11 +561,14 @@ const sketchReduce = (state = {
                     drawTool.off('drawend', drawBalconyEnd);
                     map.off('click',addLabel);
                     map.off('dblclick',labelEditEnd);
+                    snap.enable();
                     //开始画线                  
                     drawLine(); 
+                    map.on('dblclick',drawToolOn);
                 }else{
                     drawTool.disable();
-                    map.off('click',drawToolOn); 
+                    snap.disable();
+                    map.off('dblclick',drawToolOn);
                 }
                 const newState2={
                     pointNum:state.pointNum,
@@ -567,6 +577,7 @@ const sketchReduce = (state = {
                     drawPolygonIsChecked:false,
                     balconyIsChecked:false,
                     addLabelIsChecked:false,
+                    chooseObjIsChecked:false,
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
@@ -582,11 +593,14 @@ const sketchReduce = (state = {
                     drawTool.off('drawend', drawBalconyEnd);
                     map.off('click',addLabel);
                     map.off('dblclick',labelEditEnd);
+                    snap.enable();
                     //开始构面
                     drawPolygon();
+                    map.on('dblclick',drawToolOn);
                 }else{
                     drawTool.disable();
-                    map.off('click',drawToolOn); 
+                    snap.disable();
+                    map.off('dblclick',drawToolOn);
                 }
                 const newState3={
                     pointNum:state.pointNum,
@@ -595,6 +609,7 @@ const sketchReduce = (state = {
                     drawPolygonIsChecked:!state.drawPolygonIsChecked,
                     balconyIsChecked:false,
                     addLabelIsChecked:false,
+                    chooseObjIsChecked:false,
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
@@ -609,11 +624,14 @@ const sketchReduce = (state = {
                     drawTool.off('drawend', drawPolygonEnd);
                     map.off('click',addLabel);
                     map.off('dblclick',labelEditEnd);
+                    snap.enable();
                     //开始构面
                     drawBalcony();
+                    map.on('dblclick',drawToolOn);
                 }else{
                         drawTool.disable();
-                        map.off('click',drawToolOn); 
+                        snap.disable();
+                        map.off('dblclick',drawToolOn);
                     }
                 const newState4={
                     pointNum:state.pointNum,
@@ -622,6 +640,7 @@ const sketchReduce = (state = {
                     drawPolygonIsChecked:false,
                     balconyIsChecked:!state.balconyIsChecked,
                     addLabelIsChecked:false,
+                    chooseObjIsChecked:false,
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
@@ -631,12 +650,14 @@ const sketchReduce = (state = {
             //添加自定义注记
             case 'addLabelClick':
                 drawTool.disable();
+                snap.disable();
                 map.off('click',drawToolOn);
                 map.off('click',drawPoint);
                 map.off('dblclick',drawToolOn);
                 drawTool.off('drawend', drawLineEnd);
                 drawTool.off('drawend', drawPolygonEnd);
                 drawTool.off('drawend', drawBalconyEnd);
+                map.off('dblclick',drawToolOn);
                 if(!state.addLabelIsChecked){
                     map.on('click',addLabel);
                 }else{
@@ -651,6 +672,7 @@ const sketchReduce = (state = {
                     drawPolygonIsChecked:false,
                     balconyIsChecked:false,
                     addLabelIsChecked:!state.addLabelIsChecked,
+                    chooseObjIsChecked:false,
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
@@ -661,6 +683,7 @@ const sketchReduce = (state = {
             //删除
             case 'deleteClick':
                 console.log(target);
+                snap.disable();
                 if(target){
                     const newState6={
                         deleteIsChecked:!state.deleteIsChecked, 
@@ -684,7 +707,30 @@ const sketchReduce = (state = {
                  deleteObj();
                 const  showDelDialog2 ={showDelDialog: !state.showDelDialog}
                 return Object.assign({},state,{... showDelDialog2});
-                
+            case 'chooseObjClick':
+                if(!state.chooseObjIsChecked){
+                    drawTool.disable();
+                    map.off('click',drawToolOn);
+                    map.off('click',drawPoint);
+                    map.off('click',addLabel);
+                    map.off('dblclick',labelEditEnd);
+                    map.off('dblclick',drawToolOn);
+                }
+                const newState7={
+                    pointNum:state.pointNum,
+                    drawPointIsChecked:false,
+                    drawLineIsChecked:false,
+                    drawPolygonIsChecked:false,
+                    balconyIsChecked:false,
+                    addLabelIsChecked:false,
+                    chooseObjIsChecked:!state.chooseObjIsChecked,
+                    deleteIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false
+                }
+                return Object.assign({},state,{... newState7});   
+
             case 'undoClick':
 
                 return { ...state }
