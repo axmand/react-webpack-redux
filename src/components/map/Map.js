@@ -37,16 +37,10 @@ class Map extends Component {
                 subdomains: ['a', 'b', 'c', 'd', 'e']
             }),
             layers: [
-<<<<<<< HEAD
                 new maptalks.VectorLayer('point'),
                 new maptalks.VectorLayer('line'),
                 new maptalks.VectorLayer('polygon'),
                 new maptalks.VectorLayer('label')
-=======
-                new maptalks.VectorLayer('polygon'),
-                new maptalks.VectorLayer('line'),              
-                new maptalks.VectorLayer('point')
->>>>>>> f0756c771f68e9d273adb276c2d59ae046d8fc36
             ]
         });
         map.setZoom(20);
