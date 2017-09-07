@@ -4,7 +4,7 @@ import RootReducer from './../../redux/RootReducer';
 import PropTypes from 'prop-types';
 //import UI
 import { withStyles } from 'material-ui/styles';
-import Input from 'material-ui/Input/Input';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Typography from 'material-ui/Typography'
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
@@ -18,23 +18,25 @@ const styles={
         height: `${window.innerHeight}px` ,
         background:'white'
     },
+    paper: {
+        width: '600px',
+        height:'800px',
+        padding:'20px 100px 0 100px'
+      },
     typography:{
-        position:'absolute',
-        top:'60px',
-        left:'40%',
-        background:'#D1E9E9',
-        borderRadius: 8,
-        padding:'10px 10px 10px',
-        width:'20%'
+        padding:'10px 0 10px 0'
     },
-    mapContainer:{
-        position:'absolute',
-        left:'20%',
-        top:'15%',
-        height:'60%',
-        width:'60%',
-        background:'#D1E9E9'     
-    }
+      tablecell:{
+        width: '60px',
+        height:'10px',
+        padding:'0 10px 0 10px',
+        border:'solid 1px 	#606060',
+      },
+      tablebody:{
+        border:'solid 1px 	#606060',
+      }
+
+
 
 }
 
@@ -44,15 +46,27 @@ class ThematicMap extends Component {
         const { onStyleTypeClick } = this.props;
         return(
             <div className={classes.root}>
-                <Typography type='headline' className={classes.typography}>
-                地图标题
-                </Typography> 
+                <Paper className={classes.paper}>
+                    <Typography type='headline' className={classes.typography}>
+                    不动产单元草图
+                    </Typography> 
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell className={classes.tablecell}>土地权利人</TableCell>
+                                <TableCell className={classes.tablecell}>杨xx</TableCell>
+                                <TableCell className={classes.tablecell}>坐落</TableCell>
+                                <TableCell className={classes.tablecell}>x，y</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody className={classes.tablebody}>
+                        </TableBody>
 
-                <Paper className={classes.mapContainer}>
-                    It's a map 
-                </Paper>
+                </Table>
+            </Paper>
                 
-                <ThematicToolBar onClick={onStyleTypeClick} text="point"/>
+                
+                {/* <ThematicToolBar onClick={onStyleTypeClick} text="point"/> */}
             </div>
         )
     }
