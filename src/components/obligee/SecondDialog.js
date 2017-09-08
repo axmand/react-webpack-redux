@@ -88,7 +88,7 @@ class SecondDialog extends Component {
           <AppBar >
              
             <Toolbar>
-               <Typography type="title" color="inherit" >
+               <Typography type="title" color="inherit"  className={classes.flex}>
                  <Tabs index={tabIndex} onChange={this.handleChange}>
             <Tab label="界址标示表" />
             <Tab label="界址签章表" />
@@ -182,7 +182,8 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SecondDialog);
+var SD1=withStyles(styleSheet)(SecondDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(SD1);
 
 
 // Reducer

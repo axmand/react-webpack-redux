@@ -75,7 +75,7 @@ class ForthDialog extends Component {
           <AppBar >
              
             <Toolbar>
-               <Typography type="title" color="inherit">
+              <Typography type="title" color="inherit"  className={classes.flex}>
                  
               </Typography>
              
@@ -126,5 +126,6 @@ function mapDispatchToProps(dispatch) {
             }),
   }
 }
+var FD1=withStyles(styleSheet)(ForthDialog);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ForthDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(FD1);

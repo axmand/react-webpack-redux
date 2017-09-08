@@ -77,7 +77,7 @@ class ThirdDialog extends Component {
           <AppBar >
              
             <Toolbar>
-               <Typography type="title" color="inherit">
+                  <Typography type="title" color="inherit"  className={classes.flex}>
                  
               </Typography>
              
@@ -128,5 +128,5 @@ function mapDispatchToProps(dispatch) {
             }),
   }
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(ThirdDialog);
+var TD1=withStyles(styleSheet)(ThirdDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(TD1);

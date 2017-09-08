@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import  {InputCell1,InputCell2} from './InputCell'
+import  InputCell from './InputCell'
 class ObligeeTable2 extends Component {  
   render() {
     
@@ -8,7 +8,7 @@ class ObligeeTable2 extends Component {
      
     <tbody >
   <tr>
-    <td width="27%" colSpan="2"><InputCell1 command="changeOwner"/></td>
+    <td width="27%" colSpan="2"><InputCell command="changeOwner"/></td>
      {/* <td width="27%" colSpan="2"><p >权利设定方式<u> </u></p></td> */}
     <td width="72%" colSpan="16"><p >地表 </p></td>
   </tr>

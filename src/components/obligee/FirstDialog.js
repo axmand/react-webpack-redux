@@ -25,7 +25,7 @@ import ObligeeTable1 from './ObligeeTable1'
 import ObligeeTable2 from './ObligeeTable2'
 import ObligeeTable3 from './ObligeeTable3'
 const TabContainer = props =>
-  <div style={{ padding: 20,overflow:"auto" }}>
+  <div style={{ padding: 20, overflow: "auto" }}>
     {props.children}
   </div>;
 
@@ -36,14 +36,17 @@ const styleSheet = createStyleSheet('FirstDialog', {
   flex: {
     flex: 1,
   },
-   root: {
+  root: {
+    width: '80%',
+    height: '80%',
+
     flexGrow: 1,
-    marginTop: 30,
+    marginTop: 50,
   },
   paper: {
     padding: 16,
     textAlign: 'center',
-   
+
   },
 });
 
@@ -51,94 +54,83 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
-  root: {
-    flexGrow: 1,
-    marginTop: theme.spacing.unit * 3,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
+
 
 class FirstDialog extends Component {
   state = {
     open: false,
     index: 0,
   };
- 
+
 
   handleChange = (event, index) => {
     this.setState({ index });
   };
 
-  // handleOpen = () => {
-  //   this.setState({ open: true });
-  // };
-
-  // handleClose = value => {
-  //   this.props.firstDialogClose(value);
-  // };
 
   render() {
     const classes = this.props.classes;
-        const { open,close } = this.props;
+    const { open, close } = this.props;
 
     return (
-      <div>
+      <div >
         <Dialog
-          fullScreen
+
           open={open}
           onRequestClose={close}
           transition={<Slide direction="up" />}
         >
           <AppBar >
-             
+
             <Toolbar>
-               <Typography type="title" color="inherit">
-                 <Tabs index={this.state.index} onChange={this.handleChange}>
-            <Tab label="权利信息" />
-            <Tab label="宗地信息" />
-            <Tab label="使用信息" />
-          </Tabs>
+              <Typography type="title" color="inherit" className={classes.flex}>
+
+
+                <Tabs index={this.state.index} onChange={this.handleChange}>
+                  <Tab label="权利信息" />
+                  <Tab label="宗地信息" />
+                  <Tab label="使用信息" />
+                </Tabs>
               </Typography>
-             
-                 <IconButton color="contrast" onClick={close} aria-label="Close">
+
+              <IconButton color="contrast" onClick={close} aria-label="Close">
                 <CloseIcon />
               </IconButton>
             </Toolbar>
           </AppBar>
           <div>
-        {this.state.index === 0 &&
-          <TabContainer >
+            {this.state.index === 0 &&
+              <TabContainer >
 
-            <h1><br></br>宗地基本信息表</h1>
+                <h1><br></br>宗地基本信息表</h1>
 
-  <Provider store={ObligeeTableStore}>   
-  
- <ObligeeTable1/>
-  
-     </Provider>   
+                <Provider store={ObligeeTableStore}>
 
-          </TabContainer>}
-        {this.state.index === 1 &&
-          <TabContainer>
-              <h1 ><br></br>宗地基本信息表</h1>
-    <Provider store={ObligeeTableStore}>   
-  
- <ObligeeTable2 />
-  
-     </Provider>  
-          </TabContainer>}
-        {this.state.index === 2 &&
-          <TabContainer>
-              <h1 ><br></br>宗地基本信息表</h1>
-               <Provider store={ObligeeTableStore}>   
-  
- <ObligeeTable3 />
-  
-     </Provider>  
-        
-          </TabContainer>}
-             </div>
+                  <ObligeeTable1 />
+
+                </Provider>
+
+              </TabContainer>}
+            {this.state.index === 1 &&
+              <TabContainer>
+                <h1 ><br></br>宗地基本信息表</h1>
+                <Provider store={ObligeeTableStore}>
+
+                  <ObligeeTable2 />
+
+                </Provider>
+              </TabContainer>}
+            {this.state.index === 2 &&
+              <TabContainer>
+                <h1 ><br></br>宗地基本信息表</h1>
+                <Provider store={ObligeeTableStore}>
+
+                  <ObligeeTable3 />
+
+                </Provider>
+
+              </TabContainer>}
+          </div>
         </Dialog>
       </div>
     );
@@ -155,41 +147,50 @@ FirstDialog.propTypes = {
 // Map Redux state to component props
 function mapStateToProps(state) {
   return {
-   open:state.firstDialogOpen
+    open: state.firstDialogOpen
   }
 }
 
 // Map Redux actions to component props
 function mapDispatchToProps(dispatch) {
   return {
-   close: () => dispatch({
-                type: 'close',
-                payload: {
-                    choice: 1
-                }
-            }),
+    close: () => dispatch({
+      type: 'close',
+      payload: {
+        choice: 1
+      }
+    }),
   }
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(FirstDialog);
+var FD1 = withStyles(styleSheet)(FirstDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 // // Reducer
-function reducer(state = { Owner:"peter",User:"jack" }, action) {
-  
-   
+function reducer(state = {value: {} }, action) {
+
+  let value = state.value;
+
   switch (action.type) {
-  
+
     case 'changeOwner':
-   
-    return Object.assign({}, state, {
-        	Owner: action.payload.inputValue
+      value.owner=action.payload.inputValue;
+      return Object.assign({}, state, {
+        key: 'owner',
+        value:value
       });
 
     case 'changeUser':
-    return Object.assign({}, state, {
-        	User: action.payload.inputValue
+      value.user=action.payload.inputValue;
+      return Object.assign({}, state, {
+        key: 'user',
+        value:value
       });
-   
+
+
+      return Object.assign({}, state, {
+        User: action.payload.inputValue
+      });
+
     default:
       return state
   }

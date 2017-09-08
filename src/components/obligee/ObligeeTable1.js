@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import  {InputCell1,InputCell2} from './InputCell'
+import  InputCell from './InputCell'
 class ObligeeTable1 extends Component {  
   render() {
     //const { value, onShowClick,onCompleteInput,dialogShow } = this.props;
@@ -10,12 +10,12 @@ class ObligeeTable1 extends Component {
 
             <tr>
    
-            <td width="9%" rowSpan="5"><InputCell1 command="changeOwner"/></td> 
+            <td width="9%" rowSpan="5"><InputCell command="changeOwner" name="owner"/></td> 
             <td width="18%"><p >所有权 </p></td>
             <td width="72%" colSpan="16"><p >/ </p></td>
         </tr>
             <tr>
-            <td width="18%" rowSpan="4"><InputCell2 command="changeUser"/></td>
+            <td width="18%" rowSpan="4"><InputCell command="changeUser" name="user"/></td>
             <td width="21%" colSpan="5" rowSpan="4"><p >xxxxxxxxxxxxx</p></td>
             <td width="23%" colSpan="7"><p >权利人类型 </p></td>
             <td width="27%" colSpan="4"><p >企业 </p></td>
