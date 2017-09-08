@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
 import List, { ListItem, ListItemText } from 'material-ui/List';
@@ -29,35 +29,35 @@ const TabContainer = props =>
     {props.children}
   </div>;
 
-const styleSheet = createStyleSheet('FirstDialog', {
-  appBar: {
-    position: 'relative',
-  },
-  flex: {
-    flex: 1,
-  },
-   root: {
-    flexGrow: 1,
-    marginTop: 30,
-  },
-  paper: {
-    padding: 16,
-    textAlign: 'center',
+// const styleSheet = createStyleSheet('FirstDialog', {
+//   appBar: {
+//     position: 'relative',
+//   },
+//   flex: {
+//     flex: 1,
+//   },
+//    root: {
+//     flexGrow: 1,
+//     marginTop: 30,
+//   },
+//   paper: {
+//     padding: 16,
+//     textAlign: 'center',
    
-  },
-});
+//   },
+// });
 
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
-  root: {
-    flexGrow: 1,
-    marginTop: theme.spacing.unit * 3,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
+// const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
+//   root: {
+//     flexGrow: 1,
+//     marginTop: theme.spacing.unit * 3,
+//     backgroundColor: theme.palette.background.paper,
+//   },
+// }));
 
 class ThirdDialog extends Component {
 

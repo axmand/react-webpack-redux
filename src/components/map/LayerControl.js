@@ -2,93 +2,152 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import UI
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu'
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import ContentCopy from 'material-ui-icons/ContentCopy';
+import CheckBox from 'material-ui/Checkbox'
+import FontAwesome from 'react-fontawesome'
+// import ContentCopy from 'material-ui-icons/ContentCopy';
 
-const styleSheet = createStyleSheet(theme=>({
-  root:{
-    top:'80px',
-    left:'1680px'
-  },
+const styles ={
   listitem: {
-      width: '50px',
-      height: '50px',
+      display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      padding: '5px 5px 5px', 
+      height: '40px',
+      padding: '0px',
       border: 0,    
       background: 'rgba(255, 255, 255, .75)',
       borderRadius: 5,
     },
-  listitemicon: {
-      color:'#000',
-      width: '30px',
-      height: '30px',
-      margin: '0px',   
-    },
-
-
-
-}))
+  menu: {
+    top: '88px !important',
+    left: '824px !important',
+    width: '120px',
+  },
+  listItemText: {
+    padding: '0px',
+  }
+}
 
 
 class LayerControl extends Component {
   constructor(props){
     super(props);
     this.state ={
-      menuOpen:false,
-      anchorEl:undefined
+      menuOpen: false,
+      anchorEl: undefined
     }
     this.handleMenuOpen = this.handleMenuOpen.bind(this);
   }
+
   handleMenuOpen(event){
       this.setState({
-         menuOpen: !this.state.menuOpen,
+         menuOpen: true,
          anchorEl: event.currentTarget 
         });
   }
-   
+
+  handleRequestClose = () => {
+    this.setState({ menuOpen: false });
+  };   
 
   render(){ 
     const classes=this.props.classes;
-		const { 
+		const {
+      topographicMapIsChecked,
+      tianDiTuIsChecked,
 			pointIsChecked,
-			linetIsChecked,
-			polygonIsChecked,
+			lineIsChecked,
+      polygonIsChecked,
+      labelIsChecked,
+      handleTopographicMapIsChecked,
+      handleTianDiTuIsIsChecked,
 			handlePointIsChecked,
 			handleLineIsChecked,
-		 handlePolygonIsChecked,
+      handlePolygonIsChecked,
+      handleLabelIsChecked
 		} = this.props
 
     return(
-		<div className={classes.root} >
-      <ListItem button className={classes.listitem} disableGutters={true}  onClick={this.handleMenuOpen}>
-        <ListItemIcon className={classes.listitemicon}>
-          <ContentCopy  />
+      <div>
+        <ListItem button className={classes.listitem} disableGutters={true}  onClick={this.handleMenuOpen}>
+          <ListItemIcon>
+            <FontAwesome
+              name='clone'
+              size='lg'
+              style={{
+                width: '21.33px',
+                height: '21.33px',
+                marginRight: '0px',
+                marginTop: '5.33px',
+                color: '#000000',
+              }}
+            />
           </ListItemIcon>
-      </ListItem>
-      <Menu
-        className={classes.menu}
-        anchorEl={this.state.anchorEl}
-        open={this.state.menuOpen}       
-      >
-        <MenuItem className={classes.menuitem}>
-          <input type="checkbox"  checked={pointIsChecked} onClick={handlePointIsChecked} />
-          <ListItemText primary={'界址点'} />
-        </MenuItem>
-        <MenuItem className={classes.menuitem}>
-          <input type="checkbox" checked={linetIsChecked} onClick={handleLineIsChecked} />
-          <ListItemText primary={'界址线'} />
-        </MenuItem>
-        <MenuItem className={classes.menuitem}>
-          <input  type="checkbox" checked={polygonIsChecked}  onClick={handlePolygonIsChecked} />
-          <ListItemText primary={'宗地'} />
-        </MenuItem>
-        <MenuItem onClick={this.handleMenuOpen} className={classes.menuitem}>
-          <ListItemText primary={'返回'} />
-        </MenuItem>
+        </ListItem>
+        <Menu
+          className={classes.menu}
+          anchorEl={this.state.anchorEl}
+          open={this.state.menuOpen}
+          onRequestClose={this.handleRequestClose}
+        >
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={true} disabled={true} />
+            <ListItemText
+              primary={'影像图'}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={topographicMapIsChecked} onChange={handleTopographicMapIsChecked} />
+            <ListItemText 
+              primary={'地形图'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={tianDiTuIsChecked} onChange={handleTianDiTuIsIsChecked} />
+            <ListItemText 
+              primary={'天地图'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={pointIsChecked} onChange={handlePointIsChecked} />
+            <ListItemText 
+              primary={'界址点'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={lineIsChecked} onChange={handleLineIsChecked} />
+            <ListItemText 
+              primary={'界址线'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={polygonIsChecked}  onChange={handlePolygonIsChecked} />
+            <ListItemText 
+              primary={'宗地'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+          <MenuItem className={classes.menuitem} disableGutters={true}>
+            <CheckBox checked={labelIsChecked} onChange={handleLabelIsChecked} />
+            <ListItemText 
+              primary={'注记'} 
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
         </Menu>
       </div>
     )
@@ -99,12 +158,18 @@ class LayerControl extends Component {
  */
 LayerControl.PropTypes={
       classes: PropTypes.object.isRequired,
+      topographicMapIsChecked:PropTypes.bool.isRequired,
+			tianDiTuIsChecked:PropTypes.bool.isRequired,
 			pointIsChecked:PropTypes.bool.isRequired,
-			linetIsChecked:PropTypes.bool.isRequired,
-			polygonIsChecked:PropTypes.bool.isRequired,
+			lineIsChecked:PropTypes.bool.isRequired,
+      polygonIsChecked:PropTypes.bool.isRequired,
+      labelIsChecked:PropTypes.bool.isRequired,
+      handleTopographicMapIsChecked:PropTypes.func.isRequired,
+			handleTianDiTuIsIsChecked:PropTypes.func.isRequired,
 			handlePointIsChecked:PropTypes.func.isRequired,
 			handleLineIsChecked:PropTypes.func.isRequired,
-		  handlePolygonIsChecked:PropTypes.func.isRequired
+      handlePolygonIsChecked:PropTypes.func.isRequired,
+      handleLabelIsChecked:PropTypes.func.isRequired,
 }
 		
 /**
@@ -117,15 +182,28 @@ const mapStateToProps = (state) => {
   const layerControlState=state.layerControlReduce;
 
     return {
+      handleTopographicMapIsChecked: layerControlState.handleTopographicMapIsChecked,
+			tianDiTuIsChecked: layerControlState.tianDiTuIsChecked,
 			pointIsChecked: layerControlState.pointIsChecked,
-			linetIsChecked: layerControlState.linetIsChecked,
-			polygonIsChecked: layerControlState.polygonIsChecked
+			lineIsChecked: layerControlState.lineIsChecked,
+      polygonIsChecked: layerControlState.polygonIsChecked,
+      labelIsChecked:layerControlState.labelIsChecked
     }
 
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+      handleTopographicMapIsChecked:()=>{
+        dispatch({
+          type:'handleTopographicMapIsChecked'
+				})
+			},
+			handleTianDiTuIsIsChecked:()=>{
+        dispatch({
+          type:'handleTianDiTuIsIsChecked'
+				})
+			},
       handlePointIsChecked:()=>{
         dispatch({
           type:'handlePointIsChecked'
@@ -140,9 +218,14 @@ const mapDispatchToProps = (dispatch) => {
         dispatch({
           type:'handlePolygonIsChecked'
 				})
+      },
+      handleLabelIsChecked:()=>{
+        dispatch({
+          type:'handleLabelIsChecked'
+				})
 			}
 		} 
 }  		
 
 
-export default withStyles(styleSheet)(connect(mapStateToProps, mapDispatchToProps)(LayerControl))
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(LayerControl))

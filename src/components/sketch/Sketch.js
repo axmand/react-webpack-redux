@@ -2,16 +2,17 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles} from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs'
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 //import component
-import Map from '../map/Map';
+// import Map from '../map/Map';
 import SketchToolBar from './SketchToolBar';
+import ThematicMap from './ThematicMap';
 
-const styleSheet = createStyleSheet('Sketch', theme => ({
+const styles ={
   root: {
     position: 'absolute',
     zIndex: '999990',
@@ -29,7 +30,7 @@ const styleSheet = createStyleSheet('Sketch', theme => ({
     zIndex: '999999',
     right: '0px',
   },
-}));
+};
 
 class Sketch extends Component {
 
@@ -51,7 +52,7 @@ class Sketch extends Component {
       <div className={classes.root}>
         <AppBar position="static" color='default'>
           <Tabs          
-            index={this.state.index}
+            value={this.state.index}
             onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
@@ -72,13 +73,16 @@ class Sketch extends Component {
          {this.state.index === 0 &&
             <SketchToolBar />}
         {this.state.index === 1 &&
-          <div>
-            {'Item Two'}
-          </div>}
+          <ThematicMap />
+          }
       </div>            
     )
   }
 }
+
+Sketch.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
 /**
  * 
  * @param {*} state 
@@ -98,4 +102,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withStyles(styleSheet)(connect(mapStateToProps, mapDispatchToProps)(Sketch))
+export default withStyles(styles,{name:'Sketch'})(connect(mapStateToProps, mapDispatchToProps)(Sketch))

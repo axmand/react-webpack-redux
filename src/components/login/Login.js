@@ -8,9 +8,9 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import RootReducer from '../../redux/RootReducer'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 import { FormGroup } from 'material-ui/Form';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField'
@@ -18,9 +18,7 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography'
 import PasswordFeild from './PasswordField'
 
-import { white } from 'material-ui/colors';
-
-const styleSheet = createStyleSheet('Login', theme => ({
+const styles = theme => ({
   container: {
     width: '100%',
     height: `${window.innerHeight}px`,
@@ -57,7 +55,7 @@ const styleSheet = createStyleSheet('Login', theme => ({
     padding: '0px',
     margin: theme.spacing.unit,
   },
-}));
+})
 
 class Login extends Component {
 
@@ -99,9 +97,9 @@ class Login extends Component {
 /**
  * 限定组件的一些属性
  */
-// Login.propTypes = {
-//     onClick: PropTypes.func.isRequired
-// }
+Login.propTypes = {
+    onChange: PropTypes.func.isRequired
+}
 
 //加入reducer
 const loginReduce = (state = 0, action) => {
@@ -113,4 +111,4 @@ const loginReduce = (state = 0, action) => {
 
 RootReducer.merge(loginReduce);
 
-export default withStyles(styleSheet)(Login);
+export default withStyles(styles)(Login);

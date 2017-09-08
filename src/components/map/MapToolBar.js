@@ -2,54 +2,42 @@
  * 
  */
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //ui
-import { withStyles, createStyleSheet } from 'material-ui/styles';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import IconButton from 'material-ui/IconButton';
+import { withStyles } from 'material-ui/styles';
+import List, { ListItem, ListItemIcon } from 'material-ui/List'
 //图标
-import ContentCopy from 'material-ui-icons/ContentCopy';
-import Flag from 'material-ui-icons/Flag';
-import Add from 'material-ui-icons/Add';
-import  Remove from 'material-ui-icons/Remove';
-import  Search from 'material-ui-icons/Search';
-import  RadioButtonChecked from 'material-ui-icons/RadioButtonChecked';
+// import ContentCopy from 'material-ui-icons/ContentCopy';
+import FontAwesome from 'react-fontawesome'
+// import Flag from 'material-ui-icons/Flag';
+// import Add from 'material-ui-icons/Add';
+// import  Remove from 'material-ui-icons/Remove';
+// import  Search from 'material-ui-icons/Search';
+// import  RadioButtonChecked from 'material-ui-icons/RadioButtonChecked';
 //组件
 import LayerControl from './LayerControl';
 import RealtimeMapping from './RealtimeMapping';
 
-const styleSheet = createStyleSheet(theme => ({
+const styles ={
   list:{
     position:'absolute',
     top:'80px',
     right:'20px',
-    width: '80px'
+    width: '40px'
   },
   listitem: {
-    width: '50px',
-    height: '50px',
+    display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    padding: '5px 5px 5px', 
+    height: '40px',
+    padding: '0px',
     border: 0,    
     background: 'rgba(255, 255, 255, .75)',
     borderRadius: 5,
   },
-  listitemicon: {
-    color:'#000',
-    width: '30px',
-    height: '30px',
-    margin: '0px',   
-  },
-  radionbutton:{
-    width: '50%',
-    height: '50%',
-    margin: '0px',
-  },
-}));
+}
 
-class  MapToolBar extends Component{
+class MapToolBar extends Component{
 
     render(){
       
@@ -57,37 +45,77 @@ class  MapToolBar extends Component{
         const { onClick }= this.props;
 
         return(
+          <div>
             <List className={classes.list}>
-              <ListItem className={classes.listitem} disableGutters={true}>
-                <LayerControl  />
-              </ListItem>
-              <ListItem />
+              <LayerControl  />
+              <ListItem dense={true} />
               <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("get_location")}>
-                <ListItemIcon className={classes.listitemicon}>
-                  <Flag  />
+                <ListItemIcon>
+                  <FontAwesome
+                    name='location-arrow'
+                    size='lg'
+                    style={{
+                      width: '16.76px',
+                      height: '21.33px',
+                      marginRight: '0px',
+                      marginTop: '5.33px',
+                      color: '#000000',
+                    }}
+                  />
                 </ListItemIcon>
               </ListItem>
-              <ListItem />
+              <ListItem dense={true} />
               <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_in")}>
-                <ListItemIcon className={classes.listitemicon}>
-                  <Add  />
-                </ListItemIcon>
-              </ListItem>
-              <ListItem />
-              <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
-                <ListItemIcon className={classes.listitemicon}>
-                  <Remove  />
+                <ListItemIcon>
+                  <FontAwesome
+                    name='plus'
+                    size='lg'
+                    style={{
+                      width: '16.76px',
+                      height: '21.33px',
+                      marginRight: '0px',
+                      marginTop: '5.33px',
+                      color: '#000000',
+                    }}
+                  />
                 </ListItemIcon>                          
               </ListItem>
-              <ListItem />
+              <ListItem dense={true} />
               <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
-                <ListItemIcon className={classes.listitemicon}>
-                  <Search  />
+                <ListItemIcon>
+                  <FontAwesome
+                    name='minus'
+                    size='lg'
+                    style={{
+                      width: '16.76px',
+                      height: '21.33px',
+                      marginRight: '0px',
+                      marginTop: '5.33px',
+                      color: '#000000',
+                    }}
+                  />
                 </ListItemIcon>                          
               </ListItem>
-              <ListItem />
+              <ListItem dense={true} />
+              <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
+                <ListItemIcon>
+                  <FontAwesome
+                    name='search'
+                    size='lg'
+                    style={{
+                      width: '19.8px',
+                      height: '21.33px',
+                      marginRight: '0px',
+                      marginTop: '5.33px',
+                      color: '#000000',
+                    }}
+                  />
+                </ListItemIcon>                          
+              </ListItem>
+              <ListItem dense={true} />              
               <RealtimeMapping />             
             </List>
+          </div>
         )
     }
 }
@@ -96,4 +124,4 @@ MapToolBar.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styleSheet)(MapToolBar);
+export default withStyles(styles,{name:'MapToolBar'})(MapToolBar);

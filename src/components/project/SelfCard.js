@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 //UI
 import Button from 'material-ui/Button';
 import Dialog,{ DialogActions, DialogContent,DialogTitle } from 'material-ui/Dialog';
@@ -14,7 +14,7 @@ import AddCard from './AddCard';
 //Redux
 import {connect} from 'react-redux'
 
-const styleSheet = createStyleSheet('SelfCard', theme => ({
+const styles = {
   box:{
     display: 'flex',
     flexFlow: 'row wrap',
@@ -22,7 +22,7 @@ const styleSheet = createStyleSheet('SelfCard', theme => ({
     flexBasis: 'auto',
     padding: '10px',   
   }
-}));
+};
 
 class SelfCard extends Component {
 
@@ -39,6 +39,7 @@ class SelfCard extends Component {
             handleShowDialog,
             handleRequestClose,
             handleChooseList,
+            handleContentClose2,
             classes
 		} = this.props
 
@@ -49,13 +50,14 @@ class SelfCard extends Component {
           <AddCard
           {...todo} 
           entries = { todo }
-          handleChooseList={ ()=> handleChooseList(todo.key) } 
+          handleChooseList={ () => handleChooseList(todo.key) }
+          handleContentClose2={ () => handleContentClose2() } 
           />
         )}
        
         <IconButton onClick = { handleShowDialog } 
-          style = {{  width: '300px',
-                      height: '300px',
+          style = {{  width: '150px',
+                      height: '200px',
                       padding: '14px 16px 15px',
                       margin: '0px',}}>
           <AddIcon/>
@@ -94,6 +96,7 @@ SelfCard.propTypes = {
   handleShowDialog:PropTypes.func.isRequired,
   handleRequestClose:PropTypes.func.isRequired,
   handleChooseList:PropTypes.func.isRequired,
+  handleContentClose2:PropTypes.func.isRequired
 };
 
 //声明state和方法
@@ -121,7 +124,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: 'handleChooseList',
           id
 				})
-			},
+      },
 
     handleShowDialog:()=>{
       dispatch({
@@ -133,8 +136,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
          type: 'handleRequestClose',
 			})
-		},
+    },
+    
+    handleContentClose2:()=>{
+      dispatch({
+        type:'handleContentClose2',
+      })
+    },
 	} 
 }  		
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SelfCard));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{name:'SelfCard'})(SelfCard));

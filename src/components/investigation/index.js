@@ -1,22 +1,25 @@
 import React, {Component} from 'react'
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import DevicesIcon from 'material-ui-icons/Devices'
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import FontAwesome from 'react-fontawesome'
+// import DevicesIcon from 'material-ui-icons/Devices'
 
 import Menu, { MenuItem } from 'material-ui/Menu'
 
-const styleSheet = createStyleSheet('InvestigationModule', theme => ({
+const styles = {
   listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
   },
-  listitemicon: {
-    width: '50%',
-    height: '50%',
-    margin: '0px',
+  listItemText: {
+    lineHeight: '32px',
+    padding: '2px',
+    color: '#ffffff',
+    fontFamily: "微软雅黑",
+    fontWeight: 'bold',
   },
-}))
+}
 
 class InvestigationModule extends Component {
 
@@ -39,10 +42,24 @@ class InvestigationModule extends Component {
     return (
       <div>
         <ListItem button className={classes.listitem} disableGutters={true} onClick={this.handleClick}>
-          <ListItemIcon className={classes.listitemicon}>
-            <DevicesIcon />
+          <ListItemIcon>
+            <FontAwesome
+              name='database'
+              size='2x'
+              style={{
+                width: '27.43px',
+                height: '32px',
+                margin: '0px',
+                padding: '2px',
+                color: '#C1C6C9',
+              }}
+            />
           </ListItemIcon>            
-          <ListItemText primary="调查取证" />
+          <ListItemText
+            primary="调查取证"
+            disableTypography={true}
+            className={classes.listItemText}
+          />
         </ListItem>
         <Menu
           anchorEl={this.state.anchorEl}
@@ -64,4 +81,4 @@ class InvestigationModule extends Component {
   } 
 }
 
-export default withStyles(styleSheet)(InvestigationModule)
+export default withStyles(styles)(InvestigationModule)

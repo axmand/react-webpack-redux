@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { createStyleSheet, withStyles } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Avatar from 'material-ui/Avatar';
 
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
-import PersonIcon from 'material-ui-icons/Person';
+import FontAwesome from 'react-fontawesome'
+// import PersonIcon from 'material-ui-icons/Person';
 import AddIcon from 'material-ui-icons/Add';
 import Typography from 'material-ui/Typography';
 import blue from 'material-ui/colors/blue';
@@ -14,7 +15,7 @@ import { Provider, connect } from 'react-redux'
 import Paper from 'material-ui/Paper';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import PeopleIcon from 'material-ui-icons/People'
-const styleSheet = createStyleSheet(() => ({
+const styles = {
   avatar: {
     background: blue[100],
     color: blue[600],
@@ -28,12 +29,15 @@ const styleSheet = createStyleSheet(() => ({
     flexDirection: 'column',
     justifyContent: 'center ',
   },
-  listitemicon: {
-    width: '50%',
-    height: '50%',
-    margin: '0px',
+  listItemText: {
+    padding: '0px',
+    lineHeight: '32px',
+    padding: '2px',
+    color: '#ffffff',
+    fontFamily: "微软雅黑",
+    fontWeight: 'bold',
   },
-}));
+}
 
 class ChooseTableDialog extends Component {
 
@@ -44,10 +48,24 @@ class ChooseTableDialog extends Component {
     return (
       <div>
       <ListItem button className={classes.listitem} disableGutters={true} onClick={clickIcon}>
-          <ListItemIcon className={classes.listitemicon}>
-            <PeopleIcon />
-          </ListItemIcon>            
-          <ListItemText primary="权利人" />
+          <ListItemIcon>
+            <FontAwesome
+              name='group'
+              size='2x'
+              style={{
+                width: '34.28px',
+                height: '32px',
+                margin: '0px',
+                padding: '2px',
+                color: '#C1C6C9',
+              }}
+            />
+          </ListItemIcon>
+          <ListItemText 
+            primary="权利人"
+            disableTypography={true}
+            className={classes.listItemText}
+          />
         </ListItem>
         <Dialog
            
@@ -187,5 +205,5 @@ clickIcon:()=>dispatch({
   })
 }
 }
-const ChooseDialog = withStyles(styleSheet)(ChooseTableDialog);
+const ChooseDialog = withStyles(styles,{name:'ChooseTableDialog'})(ChooseTableDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseDialog);

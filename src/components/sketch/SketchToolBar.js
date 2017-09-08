@@ -3,91 +3,112 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
 //ui
-import { withStyles, createStyleSheet } from 'material-ui/styles';
-import { ListItemText } from 'material-ui/List';
-import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
+import { withStyles } from 'material-ui/styles';
+import Dialog,{ DialogActions, DialogContent, DialogContentText } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
+import Typograghy from 'material-ui/Typography'
 
 //import icon
 import LocationSearching from  'material-ui-icons/LocationSearching';//展点
 import Adjust from 'material-ui-icons/Adjust';//画点
 import Timeline from 'material-ui-icons/Timeline';//连线
 import CheckBoxOutlineBlank from 'material-ui-icons/CheckBoxOutlineBlank';//构面
+import ViewCarousel from 'material-ui-icons/ViewCarousel';//阳台
+import Description from 'material-ui-icons/Description';//标注
+import NearMe  from 'material-ui-icons/NearMe';//选中
 import Delete from 'material-ui-icons/Delete';//删除
 import Undo from 'material-ui-icons/Undo';//撤销
-import Refresh from 'material-ui-icons/Refresh';//重做
-import Redo from  'material-ui-icons/Redo';
+import Redo from  'material-ui-icons/Redo';//重做
 import Save from 'material-ui-icons/Save';//保存
-import DragHandle from 'material-ui-icons/DragHandle';
+import CreateIcon from 'material-ui-icons/Create';//签章
+import DragHandle from 'material-ui-icons/DragHandle';//拖动
 
-const styleSheet = createStyleSheet(theme=>({
+const styles={
     root:{
          height:'50px',
-         width:'540px',
+         width:'660px',
          position:'absolute',
          top:'80px',
          left:'100px',
+         display: 'flex',
+         alignItem: 'center',
          background: 'rgba(255, 255, 255, .75)',
          border:'solid 1px 	#606060',
          borderRadius: 8,
          boxShadow: '2px 2px 2px 2px rgba(0, 0, 0, 0.2)'
     },   
     button:{
-        flexDirection: 'column',
-        justifyContent: 'center ',
         display:'inline-block',
-        minheight:'60px',
-        minWidth:'60px',
+        minheight:'50px',
+        minWidth:'50px',
         fontSize:'12px',
         padding:0,
-        border:0,
+        border:0
     },
 
-}))
+};
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
+        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onBalconyClick,onaddLabelClick,onChooseObjClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
         const { handleDelete,handleShowDelDialog,showDelDialog,handleCloseDelDialog } = this.props
-        return(
+        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,balconyIsChecked,addLabelIsChecked,chooseObjIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, } = this.props;
+        return( 
             <Draggable handle="span">
                 <div className={classes.root} >
-                     <Button className={classes.button}>
+                    <Button className={classes.button}>
                         <LocationSearching />  
-                        <ListItemText primary="展点" />
+                        <Typograghy>展点</Typograghy>
                     </Button>
-                    <Button  className={classes.button} onClick={onDrawPointClick}>
+                    <Button  className={classes.button} style={{backgroundColor: drawPointIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawPointClick} >
                         <Adjust />
-                        <ListItemText primary="画点" />
+                        <Typograghy>画点</Typograghy>
                     </Button>
-                    <Button  className={classes.button} onClick={onDrawLineClick}>
+                    <Button  className={classes.button} style={{backgroundColor: drawLineIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawLineClick}>
                         <Timeline />
-                        <ListItemText primary="连线" />
+                        <Typograghy>四至</Typograghy>
                     </Button>                               
-                    <Button  className={classes.button} onClick={onDrawPolygonClick}>
+                    <Button  className={classes.button} style={{backgroundColor: drawPolygonIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onDrawPolygonClick}>
                         <CheckBoxOutlineBlank />
-                        <ListItemText primary="构面" />
+                        <Typograghy>宗地</Typograghy>
                     </Button> 
-                    <Button  className={classes.button} onClick={onDeleteClick}>
+                    <Button  className={classes.button} style={{backgroundColor: balconyIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onBalconyClick}>
+                        <ViewCarousel />
+                        <Typograghy>阳台</Typograghy>
+                    </Button> 
+                    <Button  className={classes.button} style={{backgroundColor: addLabelIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onaddLabelClick}>
+                        <Description />
+                        <Typograghy>标注</Typograghy>
+                    </Button>
+                    <Button  className={classes.button} style={{backgroundColor: chooseObjIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onChooseObjClick}>
+                        <NearMe />
+                        <Typograghy>选中</Typograghy>
+                    </Button>                       
+                    <Button  className={classes.button} style={{backgroundColor: showDelDialog ? '#D1E9E9' : 'transparent'}} onClick={onDeleteClick}>
                         <Delete />
-                        <ListItemText primary="删除" />
+                        <Typograghy>删除</Typograghy>
                     </Button>            
-                    <Button  className={classes.button} onClick={onUndoClick}>
+                    <Button  className={classes.button} style={{backgroundColor: undoIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onUndoClick}>
                         <Undo />
-                        <ListItemText primary="撤销" />
+                        <Typograghy>撤销</Typograghy>
                     </Button>
-                    <Button  className={classes.button} onClick={onRedoClick}>
+                    <Button  className={classes.button} style={{backgroundColor: redoIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onRedoClick}>
                         <Redo />
-                        <ListItemText primary="重做" />
+                        <Typograghy>重做</Typograghy>
                     </Button>
-                    <Button  className={classes.button} onClick={onSaveClick}>
+                    <Button  className={classes.button} style={{backgroundColor: saveIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onSaveClick}>
                         <Save />
-                        <ListItemText primary="保存" />
+                        <Typograghy>保存</Typograghy>
                     </Button>
-                    <span className="cursor">
-                        <DragHandle />
-                    </span> 
-
+                    <Button  className={classes.button} style={{backgroundColor: saveIsChecked ? '#D1E9E9' : 'transparent'}} onClick={onSaveClick}>
+                        <CreateIcon />
+                        <Typograghy>签章</Typograghy>
+                    </Button>
+										<Button  className={classes.button} style={{backgroundColor: saveIsChecked ? '#D1E9E9' : 'transparent'}}>
+											<span className="cursor">
+													<DragHandle />
+											</span> 
+										</Button>
                     <Dialog
                         open={ showDelDialog }
                         onRequestClose={ handleCloseDelDialog }>
@@ -117,6 +138,12 @@ SkechToolBar.PropTypes={
     handleCloseDelDialog:PropTypes.func.isRequired,
     handleShowDelDialog:PropTypes.func.isRequired,
     showDelDialog:PropTypes.bool.isRequired,
+    drawPointIsChecked:PropTypes.bool.isRequired,
+    drawLineIsChecked:PropTypes.bool.isRequired,
+    drawPolygonIsChecked:PropTypes.bool.isRequired,
+    balconyIsChecked:PropTypes.bool.isRequired,
+    addLabelIsChecked:PropTypes.bool.isRequired,
+    chooseObjIsChecked:PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => {
@@ -124,6 +151,15 @@ const mapStateToProps = (state) => {
 
  return {
         showDelDialog: sketchState.showDelDialog,
+        drawPointIsChecked:sketchState.drawPointIsChecked,
+        drawLineIsChecked:sketchState.drawLineIsChecked,
+        drawPolygonIsChecked:sketchState.drawPolygonIsChecked,
+        balconyIsChecked:sketchState.balconyIsChecked,
+        addLabelIsChecked:sketchState.addLabelIsChecked,
+        chooseObjIsChecked:sketchState.chooseObjIsChecked,
+        undoIsChecked:sketchState.undoIsChecked,
+        redoIsChecked:sketchState.redoIsChecked,
+        saveIsChecked:sketchState.saveIsChecked
     }
 }
 
@@ -147,6 +183,27 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onDrawPolygonClick: () => {
             dispatch({
                 type: 'drawPolygonClick',
+                payload:dispatch,
+            });
+        },
+        //画阳台
+        onBalconyClick:()=>{
+            dispatch({
+                type: 'balconyClick',
+                payload:dispatch,
+            });
+        },
+        //  添加标注
+        onaddLabelClick:()=>{
+            dispatch({
+                type: 'addLabelClick',
+                payload:dispatch,
+            });
+        },
+        //选中对象
+        onChooseObjClick:() => {
+            dispatch({
+                type: 'chooseObjClick',
                 payload:dispatch,
             });
         },
@@ -180,23 +237,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         
         handleDelete:()=>{
-        dispatch({
-            type: 'handleDelete',
-                })
-        },
-
-        handleShowDelDialog:()=>{
-        dispatch({
-            type: 'handleShowDelDialog',
-                })
+            dispatch({
+                type: 'handleDelete',
+                    })
         },
 
         handleCloseDelDialog:()=>{
-        dispatch({
-            type: 'handleCloseDelDialog',
-                })
+            dispatch({
+                type: 'handleCloseDelDialog',
+                    })
         },
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SkechToolBar));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{name:'SkechToolBar'})(SkechToolBar));

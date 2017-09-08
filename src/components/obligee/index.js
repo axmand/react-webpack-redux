@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import PeopleIcon from 'material-ui-icons/People'
+
 import ChooseDialog from './ChooseDialog'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import FirstDialog from './FirstDialog'
@@ -12,9 +12,9 @@ import ForthDialog from './ForthDialog'
 import { Provider, connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 import { createStore } from 'redux'
-const styleSheet = createStyleSheet('ObligeeModule', theme => ({
+const styles = {
  
-}));
+}
 const DialogState={
   open: false,
   selectedValue: "",
@@ -49,7 +49,7 @@ class ObligeeModule extends Component {
 
 }
 
-export default withStyles(styleSheet)(ObligeeModule);
+export default withStyles(styles,{name:'ObligeeModule'})(ObligeeModule);
 
 // Reducer
 function obligeeReducer(state = DialogState, action) {
