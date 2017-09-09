@@ -29,23 +29,23 @@ const TabContainer = props =>
     {props.children}
   </div>;
 
-// const styleSheet = createStyleSheet('SecondDialog', {
-//   appBar: {
-//     position: 'relative',
-//   },
-//   flex: {
-//     flex: 1,
-//   },
-//    root: {
-//     flexGrow: 1,
-//     marginTop: 30,
-//   },
-//   paper: {
-//     padding: 16,
-//     textAlign: 'center',
+const styleSheet = {
+  appBar: {
+    position: 'relative',
+  },
+  flex: {
+    flex: 1,
+  },
+   root: {
+    flexGrow: 1,
+    marginTop: 30,
+  },
+  paper: {
+    padding: 16,
+    textAlign: 'center',
    
-//   },
-// });
+  },
+};
 
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired,

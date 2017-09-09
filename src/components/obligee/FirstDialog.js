@@ -29,54 +29,28 @@ const TabContainer = props =>
     {props.children}
   </div>;
 
-<<<<<<< HEAD
-const styleSheet = createStyleSheet('FirstDialog', {
+const styleSheet = {
   appBar: {
     position: 'relative',
   },
   flex: {
     flex: 1,
   },
-  root: {
-    width: '80%',
-    height: '80%',
-
+   root: {
     flexGrow: 1,
-    marginTop: 50,
+    marginTop: 30,
   },
   paper: {
     padding: 16,
     textAlign: 'center',
-
-  },
-});
-=======
-// const styleSheet = createStyleSheet('FirstDialog', {
-//   appBar: {
-//     position: 'relative',
-//   },
-//   flex: {
-//     flex: 1,
-//   },
-//    root: {
-//     flexGrow: 1,
-//     marginTop: 30,
-//   },
-//   paper: {
-//     padding: 16,
-//     textAlign: 'center',
    
-//   },
-// });
->>>>>>> fa9e2ab7b63cd6c19c3c67bc2b647f81f1d4179d
+  },
+};
 
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-<<<<<<< HEAD
-
-=======
 // const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
 //   root: {
 //     flexGrow: 1,
@@ -84,7 +58,6 @@ TabContainer.propTypes = {
 //     backgroundColor: theme.palette.background.paper,
 //   },
 // }));
->>>>>>> fa9e2ab7b63cd6c19c3c67bc2b647f81f1d4179d
 
 class FirstDialog extends Component {
   state = {
