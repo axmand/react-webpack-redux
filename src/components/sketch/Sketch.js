@@ -35,7 +35,7 @@ const styles ={
 class Sketch extends Component {
 
   state = {
-    index: 0,
+    index: 1,
   }
 
   handleChange = (event, index) => {
@@ -70,11 +70,12 @@ class Sketch extends Component {
             <ClearIcon />
           </IconButton>
         </AppBar>
-         {this.state.index === 0 &&
-            <SketchToolBar />}
+        {this.state.index === 0 &&
+          <SketchToolBar />
+        }
         {this.state.index === 1 &&
           <ThematicMap />
-          }
+        }
       </div>            
     )
   }

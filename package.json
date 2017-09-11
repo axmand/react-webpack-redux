@@ -26,7 +26,7 @@
     "maptalks": "^0.28.0-beta.0",
     "maptalks.snapto": "^0.1.2",
     "material-ui": "^1.0.0-beta.8",
-    "material-ui-icons": "^1.0.0-alpha.19",
+    "material-ui-icons": "^1.0.0-beta.5",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",

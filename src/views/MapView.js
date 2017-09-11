@@ -11,6 +11,7 @@ import Sketch from '../components/sketch/Sketch'
 const styles = {
   root: {
     width: '100%',
+    height: '100%',
   },
 }
 
@@ -39,7 +40,7 @@ MapView.PropTypes={
 	sketchDisplayState: PropTypes.bool.isRequired,
 }
 
-const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
+const mapViewReduce = (state = {sketchDisplayState: true}, action) => {
   switch(action.type) {
     case 'MAP_SKETCH_VIEW_SWITCH':
       const newState = {
