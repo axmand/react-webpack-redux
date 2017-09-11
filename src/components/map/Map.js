@@ -275,7 +275,7 @@ const sketchReduce = (state = {
                     target.updateSymbol({  'lineColor': '#000000'});
                 }
             }
-            if(target._content==="label"){
+            if(target._content !== null){
                     target.startEditText();
                     map.off('click',addLabel);
                     map.on('dblclick',labelEditEnd);                    
@@ -331,25 +331,29 @@ const sketchReduce = (state = {
                 rotation += 180
             }
 
-            let label = new maptalks.Label(content,coord,{
-            'draggable' : true,
-            'box': false,
-            'symbol': {
-                'textWeight' : 'bold',
-                'textRotation': rotation,
-                'textFaceName' : '宋体',
-                'textFill' : '#34495e',
-                'textSize' : 16.8,
-                'textDx': dx,
-                'textDy': dy,
-                'textHorizontalAlignment': 'middle',
-                'textVerticalAlignment': 'middle',
-                'textAlign': 'center',
-            }
-        })
-        labels.push(label);
-        label.on('click',clickObj);
-        map.getLayer('label').addGeometry(label);
+            let objLabel = new maptalks.Label(content,coord,{
+                'draggable' : true,
+                'box': false,
+                'symbol': {
+                    'textWeight' : 'bold',
+                    'textRotation': rotation,
+                    'textFaceName' : '宋体',
+                    'textFill' : '#34495e',
+                    'textSize' : 16.8,
+                    'textDx': dx,
+                    'textDy': dy,
+                    'textHorizontalAlignment': 'middle',
+                    'textVerticalAlignment': 'middle',
+                    'textAlign': 'center',
+                }
+            });
+        map.getLayer('label').addGeometry(objLabel);
+        objLabel.on('click',function(e){
+            target=e.target;
+            objLabel.startEditText();
+            drawTool.disable();
+        });
+        labels.push(objLabel);    
     }
 
 //打开画图工具
@@ -533,7 +537,7 @@ const sketchReduce = (state = {
                     polygon_labels[i].remove();
                 }                
             }
-            if(target._content==="label"){
+            if(target._content !== null){
                 target.endEditText();
                 target.remove(); 
             }
