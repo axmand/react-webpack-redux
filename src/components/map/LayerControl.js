@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 //import UI
 import { withStyles } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu'
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import { ListItem, ListItemText } from 'material-ui/List'
 import CheckBox from 'material-ui/Checkbox'
-import FontAwesome from 'react-fontawesome'
 import ContentCopy from 'material-ui-icons/ContentCopy';
 const styles ={
   listitem: {
@@ -22,10 +21,15 @@ const styles ={
   menu: {
     top: '88px !important',
     left: '824px !important',
+    background: 'rgba(0, 0, 0, .6)',
     width: '120px',
   },
   listItemText: {
     padding: '0px',
+    color:'#b3b3b3'
+  },
+  checked:{
+    color:'#B3D9D9'
   }
 }
 
@@ -84,60 +88,66 @@ class LayerControl extends Component {
           onRequestClose={this.handleRequestClose}
         >
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={true} disabled={true} />
-            <ListItemText
-              primary={'影像图'}
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox 
+              classes={{checked:classes.checked}}
+              checked={true} 
+              disabled={true} 
             />
+            <ListItemText primary={'影像图'} disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={topographicMapIsChecked} onChange={handleTopographicMapIsChecked} />
-            <ListItemText 
-              primary={'地形图'} 
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox
+              classes={{checked:classes.checked}}            
+              checked={topographicMapIsChecked} 
+              onChange={handleTopographicMapIsChecked} 
             />
+            <ListItemText  primary={'地形图'}  disableTypography={true}  className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={tianDiTuIsChecked} onChange={handleTianDiTuIsIsChecked} />
-            <ListItemText 
-              primary={'天地图'} 
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox             
+              classes={{checked:classes.checked}}
+              checked={tianDiTuIsChecked} 
+              onChange={handleTianDiTuIsIsChecked} 
             />
+            <ListItemText  primary={'天地图'}  disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={pointIsChecked} onChange={handlePointIsChecked} />
-            <ListItemText 
-              primary={'界址点'} 
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox
+              classes={{checked:classes.checked}} 
+              checked={pointIsChecked} 
+              onChange={handlePointIsChecked} 
             />
+            <ListItemText primary={'界址点'} disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={lineIsChecked} onChange={handleLineIsChecked} />
-            <ListItemText 
-              primary={'界址线'} 
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox 
+              classes={{checked:classes.checked}}
+              checked={lineIsChecked} 
+              onChange={handleLineIsChecked} 
             />
+            <ListItemText  primary={'四至'}  disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={polygonIsChecked}  onChange={handlePolygonIsChecked} />
-            <ListItemText 
-              primary={'宗地'} 
-              disableTypography={true}
-              className={classes.listItemText}
-            />
+            <CheckBox 
+              classes={{checked:classes.checked}} 
+              checked={polygonIsChecked}  
+              onChange={handlePolygonIsChecked} 
+          />
+            <ListItemText  primary={'宗地'}  disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={labelIsChecked} onChange={handleLabelIsChecked} />
-            <ListItemText 
-              primary={'注记'} 
-              disableTypography={true}
-              className={classes.listItemText}
-            />
+            <CheckBox 
+              classes={{checked:classes.checked}}
+              checked={labelIsChecked} 
+              onChange={handleLabelIsChecked} 
+          />
+            <ListItemText  primary={'注记'}  disableTypography={true} className={classes.listItemText} />
           </MenuItem>
         </Menu>
       </div>
