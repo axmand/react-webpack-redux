@@ -59,7 +59,7 @@ class Map extends Component {
             });
             snap.addTo(map);
             snap.setLayer( map.getLayer("point"));
-            //snap.disable();
+            snap.disable();
     }
 
     render() {
@@ -90,7 +90,7 @@ const mapReduce = (state = 0, action) => {
         //获取定位,由于无GPS返回固定坐标
         const center = new maptalks.Coordinate(114.360734, 30.541093);
         map.setCenter(center);
-        const circle = new maptalks.Circle(center, 20, {
+        const circle = new maptalks.Circle(center, 5, {
             symbol: {
                 lineColor: '#34495e',
                 lineWidth: 2,
@@ -235,7 +235,13 @@ const sketchReduce = (state = {
     undoIsChecked:false,
     redoIsChecked:false,
     saveIsChecked:false,
-    showDelDialog:false}, action) => {
+    showDelDialog:false,
+    JZDLayer:JSON,
+    SZLayer:JSON,
+    ZDLayer:JSON,
+    LabelLayer:JSON,
+
+}, action) => {
 
 //用于获取点线面对象
     clickObj = clickObj ||function(e){
@@ -268,6 +274,11 @@ const sketchReduce = (state = {
                 if(!target.options.isClicked){
                     target.updateSymbol({  'lineColor': '#000000'});
                 }
+            }
+            if(target._content==="label"){
+                    target.startEditText();
+                    map.off('click',addLabel);
+                    map.on('dblclick',labelEditEnd);                    
             }
         }
 //用于清除对象被选中的高亮效果
@@ -337,10 +348,7 @@ const sketchReduce = (state = {
             }
         })
         labels.push(label);
-        label.on('click',function(){
-            drawTool.disable();
-            label.startEditText();
-        })
+        label.on('click',clickObj);
         map.getLayer('label').addGeometry(label);
     }
 
@@ -352,26 +360,39 @@ const sketchReduce = (state = {
 //用于画点
         drawPoint = drawPoint ||function(e){
 					recoverObj();
-					state.pointNum++;
+                    state.pointNum++;
+                     let content = state.pointNum;
+                     //为界址点添加点号注记
+                    let label = new maptalks.Label(content,e.coordinate,{
+                        'draggable' : true,
+                        'box': false,
+                        'symbol': {
+                            'textWeight' : 'bold',
+                            'textFaceName' : '宋体',                      
+                            'textSize': 18,
+                            'textFill': '#000000',
+                            'textDy': -14,
+                            'textAlign': 'auto',
+                        }
+                    })
+                        label.on('click',function(){
+                            drawTool.disable();
+                            label.startEditText();
+                    });
 					let point =new maptalks.Circle(e.coordinate, 0.5,
 						{
-							'id': state.pointNum, 
+                            'id': state.pointNum, 
+                            'labels':label,
+                            'picture':'',
 							'isClicked':false,         
 							'symbol': {
 								'lineColor': '#000000',
 								'lineWidth': 1,
-								'polygonFill': '#FFFFFF',
-
-								'textName': state.pointNum,
-								'textFaceName': '宋体',                        
-								'textSize': 18,
-								'textFill': '#000000',
-
-								'textDy': -14,
-								'textAlign': 'auto',
+								'polygonFill': '#FFFFFF'
 							}
 						}
-					);
+                    );
+                    map.getLayer('label').addGeometry(label);
 					map.getLayer('point').addGeometry(point);
 					point.on('click',clickObj)
         }
@@ -483,31 +504,38 @@ const sketchReduce = (state = {
                 }
             });
             map.getLayer('label').addGeometry(label);
-            label.on('click',function(){
-                label.startEditText();
-                map.off('click',addLabel);
-            })
-            //双击表示编辑结束
-            map.on('dblclick',labelEditEnd)
+            label.on('click',clickObj)
         }
         labelEditEnd= labelEditEnd ||function(){
             map.on('click',addLabel);
+            console.log('label on')
         }
      
 //用于删除对象
         deleteObj = deleteObj ||function (){
-            target.remove();
+            
+            if(target._jsonType==="Circle"){
+                target.remove(); 
+                let point_labels = target.options.labels;
+                point_labels.remove();
+            }
             if(target._jsonType==="LineString"){
+                target.remove(); 
                 let line_labels=target.options.labels;
                 for(let i=0;i<line_labels.length;i++){
                     line_labels[i].remove();
                 }
             }
             if(target._jsonType==="Polygon"){
+                target.remove(); 
                 let polygon_labels=target.options.labels;
                 for(let i=0;i<polygon_labels.length;i++){
                     polygon_labels[i].remove();
                 }                
+            }
+            if(target._content==="label"){
+                target.endEditText();
+                target.remove(); 
             }
             target=null;          
         }
@@ -679,6 +707,12 @@ const sketchReduce = (state = {
             //删除
             case 'deleteClick':
                 console.log(target);
+                drawTool.disable();
+                map.off('click',drawToolOn);
+                map.off('click',drawPoint);
+                map.off('click',addLabel);
+                map.off('dblclick',labelEditEnd);
+                map.off('dblclick',drawToolOn);
                 snap.disable();
                 if(target){
                     const newState6={
@@ -704,14 +738,13 @@ const sketchReduce = (state = {
                 const  showDelDialog2 ={showDelDialog: !state.showDelDialog}
                 return Object.assign({},state,{... showDelDialog2});
             case 'chooseObjClick':
-                if(!state.chooseObjIsChecked){
-                    drawTool.disable();
-                    map.off('click',drawToolOn);
-                    map.off('click',drawPoint);
-                    map.off('click',addLabel);
-                    map.off('dblclick',labelEditEnd);
-                    map.off('dblclick',drawToolOn);
-                }
+            console.log('choose')
+                drawTool.disable();
+                map.off('click',drawToolOn);
+                map.off('click',drawPoint);
+                map.off('click',addLabel);
+                map.off('dblclick',labelEditEnd);
+                map.off('dblclick',drawToolOn);
                 const newState7={
                     pointNum:state.pointNum,
                     drawPointIsChecked:false,
@@ -726,11 +759,11 @@ const sketchReduce = (state = {
                     saveIsChecked:false
                 }
                 return Object.assign({},state,{... newState7});   
-
+            //撤销
             case 'undoClick':
 
                 return { ...state }
-
+            //重做
             case 'redoClick':
                 console.log('重做');
 
@@ -738,8 +771,14 @@ const sketchReduce = (state = {
 
             case 'saveClick':
                 console.log('保存');
-
-                return { ...state }
+                const saveData= {
+                    saveIsChecked:true,
+                    JZDLayer:map.getLayer('point').toJSON(),
+                    SZLayer:map.getLayer('line').toJSON(),
+                    ZDLayer:map.getLayer('poligon').toJSON(),
+                    LabelLayer:map.getLayer('label').toJSON(),
+                }
+                return Object.assign({},state,{... saveData});
 
             default:
                 return { ...state }

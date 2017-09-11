@@ -8,7 +8,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Typography from 'material-ui/Typography'
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
-
+import * as maptalks from 'maptalks';
 import ThematicToolBar from './ThematicToolBar'
 
 
@@ -19,33 +19,73 @@ const styles={
         background:'white'
     },
     paper: {
+        position:'absolute',
+        left:'200px',
+        top:'100px',
         width: '600px',
         height:'800px',
-        padding:'20px 100px 0 100px'
+        padding:'10px 10px 10px 10px',
       },
     typography:{
-        padding:'10px 0 10px 0'
+        padding:'10px 0 10px 0',
+        fontFamily:'宋体',
+        fontSize:'20px',
+        fontWeight:'600',
     },
-      tablecell:{
-        width: '60px',
-        height:'10px',
+      tablecell1:{
+        width: '100px',
+        border:'solid 1px 	#606060',
+        padding:'0 10px 0 10px',
+        fontFamily:'宋体',
+        fontSize:'16px',
+        textAlign:'center',
+        color:'black'
+      },
+      tablecell2:{
+        width: '200px',
         padding:'0 10px 0 10px',
         border:'solid 1px 	#606060',
+        fontFamily:'宋体',
+        fontSize:'16px',
+        color:'black'
       },
       tablebody:{
         border:'solid 1px 	#606060',
-      }
+      },
+      map:{
+          color: "#000", 
+          width: '600px', 
+          height: '600px'},
 
 
 
 }
+let map;
 
 class ThematicMap extends Component {
+    componentDidMount() {
+        const mapDiv = this.refs.thematicmap;
+        map = new maptalks.Map(mapDiv, {
+            center: [-0.113049, 51.498568],
+            zoom: 14,
+            baseLayer: new maptalks.TileLayer('base', {
+                urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+                subdomains: ['a', 'b', 'c', 'd', 'e']
+            }),
+            layers: [
+                new maptalks.VectorLayer('point'),
+                new maptalks.VectorLayer('line'),
+                new maptalks.VectorLayer('polygon'),
+                new maptalks.VectorLayer('label')
+            ]
+        });
+        map.setZoom(20);
+    }
     render(){
         const classes = this.props.classes;
         const { onStyleTypeClick } = this.props;
         return(
-            <div className={classes.root}>
+            <div className={classes.root} >
                 <Paper className={classes.paper}>
                     <Typography type='headline' className={classes.typography}>
                     不动产单元草图
@@ -53,13 +93,17 @@ class ThematicMap extends Component {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={classes.tablecell}>土地权利人</TableCell>
-                                <TableCell className={classes.tablecell}>杨xx</TableCell>
-                                <TableCell className={classes.tablecell}>坐落</TableCell>
-                                <TableCell className={classes.tablecell}>x，y</TableCell>
+                                <TableCell className={classes.tablecell1}>土地权利人</TableCell>
+                                <TableCell className={classes.tablecell2}>杨xx</TableCell>
+                                <TableCell className={classes.tablecell1}>坐落</TableCell>
+                                <TableCell className={classes.tablecell2}>x，y</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody className={classes.tablebody}>
+                            <TableCell md-colspan="4">
+                                <div className={classes.map} ref='thematicmap' />
+                            </TableCell>
+                            
                         </TableBody>
 
                 </Table>
