@@ -236,11 +236,7 @@ const sketchReduce = (state = {
     redoIsChecked:false,
     saveIsChecked:false,
     showDelDialog:false,
-    JZDLayer:JSON,
-    SZLayer:JSON,
-    ZDLayer:JSON,
-    LabelLayer:JSON,
-
+    mapJSONData:JSON
 }, action) => {
 
 //用于获取点线面对象
@@ -777,10 +773,7 @@ const sketchReduce = (state = {
                 console.log('保存');
                 const saveData= {
                     saveIsChecked:true,
-                    JZDLayer:map.getLayer('point').toJSON(),
-                    SZLayer:map.getLayer('line').toJSON(),
-                    ZDLayer:map.getLayer('poligon').toJSON(),
-                    LabelLayer:map.getLayer('label').toJSON(),
+                    mapJSONData:map.toJSON()
                 }
                 return Object.assign({},state,{... saveData});
 

@@ -7,17 +7,16 @@ import Menu, { MenuItem } from 'material-ui/Menu'
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import CheckBox from 'material-ui/Checkbox'
 import FontAwesome from 'react-fontawesome'
-// import ContentCopy from 'material-ui-icons/ContentCopy';
-
+import ContentCopy from 'material-ui-icons/ContentCopy';
 const styles ={
   listitem: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      height: '40px',
+      height: '60px',
       padding: '0px',
       border: 0,    
-      background: 'rgba(255, 255, 255, .75)',
+      background: 'rgba(0, 0, 0, .6)',
       borderRadius: 5,
     },
   menu: {
@@ -72,19 +71,11 @@ class LayerControl extends Component {
     return(
       <div>
         <ListItem button className={classes.listitem} disableGutters={true}  onClick={this.handleMenuOpen}>
-          <ListItemIcon>
-            <FontAwesome
-              name='clone'
-              size='lg'
-              style={{
-                width: '21.33px',
-                height: '21.33px',
-                marginRight: '0px',
-                marginTop: '5.33px',
-                color: '#000000',
-              }}
-            />
-          </ListItemIcon>
+            <ContentCopy style={{
+            color:'#b3b3b3',
+            width:'40px',
+            height:'40px'
+          }}/>
         </ListItem>
         <Menu
           className={classes.menu}
