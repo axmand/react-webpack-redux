@@ -25,9 +25,8 @@ const styles = {
     justifyContent: 'center ',
   },
   listItemText: {
-    padding: '0px',
-    lineHeight: '32px',
-    padding: '2px',
+    fontSize: '24px',
+    lineHeight: '40px',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
@@ -60,6 +59,7 @@ class ProjectModule extends Component {
     } = this.props
 
     return (
+<<<<<<< HEAD
       <div>
         <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleContentShow }>
           <ListItemIcon>
@@ -73,6 +73,26 @@ class ProjectModule extends Component {
                 padding: '2px',
                 color: '#C1C6C9',
               }}
+=======
+        <div>
+          <ListItem button className={ classes.listitem } disableGutters={ true } onClick={ handleContentShow }>
+            <ListItemIcon>
+              <FontAwesome
+                name='folder-o'
+                size='4x'
+                style={{
+                  width: '59.43px',
+                  height: '64px',
+                  margin: '0px',
+                  color: '#C1C6C9',
+                }}
+              />
+            </ListItemIcon>            
+            <ListItemText
+              primary="数据导入"
+              disableTypography={ true }
+              className={classes.listItemText}
+>>>>>>> bada8658f87f53f5ee2bc6c2f6e9f881494b3a6a
             />
           </ListItemIcon>
           <ListItemText

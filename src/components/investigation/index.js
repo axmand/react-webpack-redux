@@ -13,8 +13,8 @@ const styles = {
     justifyContent: 'center ',
   },
   listItemText: {
-    lineHeight: '32px',
-    padding: '2px',
+    fontSize: '24px',
+    lineHeight: '40px',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
@@ -45,12 +45,11 @@ class InvestigationModule extends Component {
           <ListItemIcon>
             <FontAwesome
               name='database'
-              size='2x'
+              size='4x'
               style={{
-                width: '27.43px',
-                height: '32px',
+                width: '54.85px',
+                height: '64px',
                 margin: '0px',
-                padding: '2px',
                 color: '#C1C6C9',
               }}
             />

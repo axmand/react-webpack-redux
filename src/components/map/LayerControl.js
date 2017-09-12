@@ -1,56 +1,82 @@
 import React, {Component} from 'react';
+import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import UI
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles'
+import Popover from 'material-ui/Popover'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import CheckBox from 'material-ui/Checkbox'
+import ContentCopy from 'material-ui-icons/ContentCopy';
+
 import FontAwesome from 'react-fontawesome'
-// import ContentCopy from 'material-ui-icons/ContentCopy';
 
 const styles ={
   listitem: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      height: '40px',
+      height: '60px',
       padding: '0px',
       border: 0,    
-      background: 'rgba(255, 255, 255, .75)',
+      background: 'rgba(0, 0, 0, .6)',
       borderRadius: 5,
     },
   menu: {
-    top: '88px !important',
-    left: '824px !important',
+    // top: '88px !important',
+    // left: '824px !important',
+    background: 'rgba(0, 0, 0, .6)',
     width: '120px',
   },
   listItemText: {
     padding: '0px',
+    color:'#b3b3b3'
+  },
+  checked:{
+    color:'#B3D9D9'
   }
 }
 
 
 class LayerControl extends Component {
-  constructor(props){
-    super(props);
-    this.state ={
-      menuOpen: false,
-      anchorEl: undefined
-    }
-    this.handleMenuOpen = this.handleMenuOpen.bind(this);
+  // constructor(props){
+  //   super(props);
+  //   this.state ={
+  //     menuOpen: false,
+  //     anchorEl: null,
+  //     anchorOriginVertical: 'top',
+  //     anchorOriginHorizontal: 'left',
+  //     transformOriginVertical: 'top',
+  //     transformOriginHorizontal: 'right',
+  //   }
+  //   this.handleMenuOpen = this.handleMenuOpen.bind(this);
+  // }
+
+  state ={
+    menuOpen: false,
+    anchorEl: null,
+    anchorOriginVertical: 'top',
+    anchorOriginHorizontal: 'left',
+    transformOriginVertical: 'top',
+    transformOriginHorizontal: 'right',
   }
 
-  handleMenuOpen(event){
-      this.setState({
-         menuOpen: true,
-         anchorEl: event.currentTarget 
-        });
+  handleMenuOpen = () => {
+    this.setState({
+      menuOpen: true,
+      anchorEl: findDOMNode(this.button), 
+    });
+    // console.log(this.state)
   }
 
   handleRequestClose = () => {
-    this.setState({ menuOpen: false });
+    this.setState({ 
+      menuOpen: false 
+    });
   };   
+
+  button = null;
 
   render(){ 
     const classes=this.props.classes;
@@ -68,10 +94,26 @@ class LayerControl extends Component {
       handlePolygonIsChecked,
       handleLabelIsChecked
 		} = this.props
-
+    const {
+      menuOpen,
+      anchorEl,
+      anchorOriginVertical,
+      anchorOriginHorizontal,
+      transformOriginVertical,
+      transformOriginHorizontal,
+    } = this.state
+    
     return(
       <div>
-        <ListItem button className={classes.listitem} disableGutters={true}  onClick={this.handleMenuOpen}>
+        <ListItem 
+          ref={node => {
+              this.button = node;
+          }}
+          button 
+          className={classes.listitem} 
+          disableGutters={true}  
+          onClick={this.handleMenuOpen}
+        >
           <ListItemIcon>
             <FontAwesome
               name='clone'
@@ -81,74 +123,88 @@ class LayerControl extends Component {
                 height: '21.33px',
                 marginRight: '0px',
                 marginTop: '5.33px',
-                color: '#000000',
+                color: '#b3b3b3',
               }}
             />
           </ListItemIcon>
         </ListItem>
-        <Menu
-          className={classes.menu}
-          anchorEl={this.state.anchorEl}
-          open={this.state.menuOpen}
+        <Popover
+          anchorEl={anchorEl}  
+          open={menuOpen}
           onRequestClose={this.handleRequestClose}
+          anchorOrigin={{
+            vertical: anchorOriginVertical,
+            horizontal: anchorOriginHorizontal,
+          }}
+          transformOrigin={{
+            vertical: transformOriginVertical,
+            horizontal: transformOriginHorizontal,
+          }}
+          className={classes.menu}
         >
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={true} disabled={true} />
-            <ListItemText
-              primary={'影像图'}
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox 
+              classes={{checked:classes.checked}}
+              checked={true} 
+              disabled={true} 
             />
+            <ListItemText primary={'影像图'} disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={topographicMapIsChecked} onChange={handleTopographicMapIsChecked} />
-            <ListItemText 
-              primary={'地形图'} 
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox
+              classes={{checked:classes.checked}}            
+              checked={topographicMapIsChecked} 
+              onChange={handleTopographicMapIsChecked} 
             />
+            <ListItemText  primary={'地形图'}  disableTypography={true}  className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={tianDiTuIsChecked} onChange={handleTianDiTuIsIsChecked} />
-            <ListItemText 
-              primary={'天地图'} 
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox             
+              classes={{checked:classes.checked}}
+              checked={tianDiTuIsChecked} 
+              onChange={handleTianDiTuIsIsChecked} 
             />
+            <ListItemText  primary={'天地图'}  disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={pointIsChecked} onChange={handlePointIsChecked} />
-            <ListItemText 
-              primary={'界址点'} 
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox
+              classes={{checked:classes.checked}} 
+              checked={pointIsChecked} 
+              onChange={handlePointIsChecked} 
             />
+            <ListItemText primary={'界址点'} disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={lineIsChecked} onChange={handleLineIsChecked} />
-            <ListItemText 
-              primary={'界址线'} 
-              disableTypography={true}
-              className={classes.listItemText}
+            <CheckBox 
+              classes={{checked:classes.checked}}
+              checked={lineIsChecked} 
+              onChange={handleLineIsChecked} 
             />
+            <ListItemText  primary={'四至'}  disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={polygonIsChecked}  onChange={handlePolygonIsChecked} />
-            <ListItemText 
-              primary={'宗地'} 
-              disableTypography={true}
-              className={classes.listItemText}
-            />
+            <CheckBox 
+              classes={{checked:classes.checked}} 
+              checked={polygonIsChecked}  
+              onChange={handlePolygonIsChecked} 
+          />
+            <ListItemText  primary={'宗地'}  disableTypography={true} className={classes.listItemText} />
           </MenuItem>
+
           <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox checked={labelIsChecked} onChange={handleLabelIsChecked} />
-            <ListItemText 
-              primary={'注记'} 
-              disableTypography={true}
-              className={classes.listItemText}
-            />
+            <CheckBox 
+              classes={{checked:classes.checked}}
+              checked={labelIsChecked} 
+              onChange={handleLabelIsChecked} 
+          />
+            <ListItemText  primary={'注记'}  disableTypography={true} className={classes.listItemText} />
           </MenuItem>
-        </Menu>
+        </Popover>
       </div>
     )
   }

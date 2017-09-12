@@ -13,8 +13,8 @@ const styleSheet = {
     justifyContent: 'center ',
   },
   listItemText: {
-    lineHeight: '32px',
-    padding: '2px',
+    fontSize: '24px',
+    lineHeight: '40px',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
@@ -34,18 +34,17 @@ class SketchModule extends Component {
         <ListItemIcon>
           <FontAwesome
             name='edit'
-            size='2x'
+            size='4x'
             style={{
-              width: '32px',
-              height: '32px',
+              width: '64px',
+              height: '64px',
               margin: '0px',
-              padding: '2px',
               color: '#C1C6C9',
             }}
           />
         </ListItemIcon>            
         <ListItemText
-          primary="草图"
+          primary="绘制草图"
           disableTypography={true}
           className={classes.listItemText}
         />

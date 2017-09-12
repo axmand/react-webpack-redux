@@ -10,112 +10,109 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import Input from 'material-ui/Input';
-import List, { ListItem,ListItemText } from 'material-ui/List'
+import List, { ListItem, ListItemText } from 'material-ui/List'
 
 
 // Map Redux state to component props
-function mapStateToProps1(state) {
-  return {
-    value: state.Owner,
-  }
+function mapStateToProps(state,ownProps) {
+  const key =ownProps.name;
+  let obj = {};
+  obj['key2'] = key;
+  obj[key] = state.value[key];
+  return obj;
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps1(dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
-    
-    onCompleteInput: (inputData) =>{
-    
-      dispatch( { type: "changeOwner", payload: {
-                    inputValue:inputData
-                }  })}
+//修改命令 修改的字段名 修改字段的值
+    onCompleteInput: (inputData,name) => {
+
+      dispatch({
+        type: "change", 
+        payload: {
+          inputValue: inputData,
+          inputName: name
+
+        }
+      });
+    }
   }
 }
 
-function mapStateToProps2(state) {
-  return {
-    value: state.User,
-  }
-}
 
-// Map Redux actions to component props
-function mapDispatchToProps2(dispatch) {
-  return {
-    
-    onCompleteInput: inputName =>{
-    
-      dispatch( { type: "changeUser", payload: {
-                    inputValue:inputName
-                }  })}
-  }
-}
-// Connected Component
- 
- class InputCell extends Component {
+class InputCellUI extends React.PureComponent {
 
   state = {
-    cellShow:false
+    cellShow: false,
+    
   };
-  showInputCell=()=>
-  {
-    this.setState({cellShow:true});
+  showInputCell = () => {
+    this.setState({ cellShow: true });
   }
-  closeInputCell=()=>
-  {
-    this.setState({cellShow:false});
+  closeInputCell = () => {
+    this.setState({ cellShow: false });
   }
-  onChanged=(e)=>
-  {
-    var inputData=e.target.value;
-    this.props.onCompleteInput(inputData);
+  onChanged = (e) => {
+    var inputData = e.target.value;
+    this.props.onCompleteInput(inputData,this.props.name);
+  }
+
+  shouldComponentUpdate(nextProps,nextStates){
+    const {name,key2}=this.props;
+    if(!key2)
+      return true;
+    return name === key2;
   }
 
   render() {
-    const { value,onCompleteInput,dialogShow,command } = this.props;
+    const { onCompleteInput, dialogShow, key2, name,title,tips } = this.props;
+    let value ="";
+    if(name ===key2){
+      value =this.props[key2]||"";
+    }
+
+  
     return (
       <div width="100%" height="100%">
-        
-          <ListItem button>
-        
-           <ListItemText primary={value}  onClick={this.showInputCell}/> 
-        </ListItem> 
-         <Dialog open={this.state.cellShow}>
+
+        <ListItem button  onClick={this.showInputCell} >
+
+          <ListItemText primary={value}/>
+        </ListItem>
+        <Dialog open={this.state.cellShow}>
           <DialogTitle>
-           权利人姓名
+          {title}
           </DialogTitle>
           <DialogContent>
-            
-            <Input ref="NameInput" defaultValue={value} onChange={this.onChanged}/>
-            
+
+            <Input ref="NameInput" defaultValue={value} onChange={this.onChanged} />
+            <br/>
+            提示
+            <br />
+{tips}
           </DialogContent>
           <DialogActions>
-            <Button  color="primary" onClick={this.closeInputCell}>
+            <Button color="primary" onClick={this.closeInputCell}>
               确定
             </Button>
-            
+
           </DialogActions>
         </Dialog>
-            
-         
-         
-      
+
       </div>
     )
   }
 }
 
-InputCell.propTypes = {
-  value: PropTypes.string.isRequired,
-   onCompleteInput: PropTypes.func.isRequired,
+InputCellUI.propTypes = {
+  //value: PropTypes.string.isRequired,
+  onCompleteInput: PropTypes.func.isRequired,
 }
 
 
-export const InputCell1 = connect(
-  mapStateToProps1,
-  mapDispatchToProps1
-)(InputCell)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(InputCellUI)
 
-export const InputCell2 = connect(
-  mapStateToProps2,
-  mapDispatchToProps2
-)(InputCell)

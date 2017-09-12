@@ -3,28 +3,17 @@ import { withStyles } from 'material-ui/styles';
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 // import FontAwesome from 'react-fontawesome'
-// <FontAwesome
-//   name='print'
-//   size='5x'
-//   style={{
-//     width: '29.71px',
-//     height: '32px',
-//     margin: '0px',
-//     padding: '2px',
-//     color: '#C1C6C9',
-//   }}
-// />
-import PrintIcon from 'material-ui-icons/Print';
+import FileUploadIcon from 'material-ui-icons/FileUpload';
 
 const styles = {
   listitem: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center ',
-  },
-  listItemIcon: {
-		width: 85,
-		height: 85,
+	},
+	listItemIcon: {
+		width: 90,
+		height: 90,
 		margin: 0,
 		color: '#C1C6C9',
 	},
@@ -36,7 +25,7 @@ const styles = {
   },
 }
 
-class PrintModule extends Component {
+class OutputModule extends Component {
 
   render() {
     const classes = this.props.classes;
@@ -44,16 +33,16 @@ class PrintModule extends Component {
     return (
       <ListItem button className={classes.listitem} disableGutters={true}>
         <ListItemIcon>
-          <PrintIcon className={classes.listItemIcon}/>  
+          <FileUploadIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
         <ListItemText
           disableTypography={true}
           className={classes.listItemText}
-          primary="打印签章"
+          primary="数据导出"
         />
       </ListItem>
     )
   }
 }
 
-export default withStyles(styles)(PrintModule);
+export default withStyles(styles,{name:'OutputModule'})(OutputModule);
