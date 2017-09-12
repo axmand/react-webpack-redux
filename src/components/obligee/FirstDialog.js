@@ -51,13 +51,7 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-// const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
-//   root: {
-//     flexGrow: 1,
-//     marginTop: theme.spacing.unit * 3,
-//     backgroundColor: theme.palette.background.paper,
-//   },
-// }));
+
 
 class FirstDialog extends Component {
   state = {
@@ -169,30 +163,21 @@ var FD1 = withStyles(styleSheet)(FirstDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 // // Reducer
-function reducer(state = {value: {} }, action) {
+function reducer(state = {value: {"owner":"peter","user":"jack","test":"test"} }, action) {
 
   let value = state.value;
 
   switch (action.type) {
 
-    case 'changeOwner':
-      value.owner=action.payload.inputValue;
+    case 'change':
+     var inputName=action.payload.inputName;
+      value[inputName]=action.payload.inputValue;
       return Object.assign({}, state, {
-        key: 'owner',
+        
         value:value
       });
 
-    case 'changeUser':
-      value.user=action.payload.inputValue;
-      return Object.assign({}, state, {
-        key: 'user',
-        value:value
-      });
-
-
-      return Object.assign({}, state, {
-        User: action.payload.inputValue
-      });
+   
 
     default:
       return state

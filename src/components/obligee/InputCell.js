@@ -14,8 +14,8 @@ import List, { ListItem, ListItemText } from 'material-ui/List'
 
 
 // Map Redux state to component props
-function mapStateToProps(state) {
-  const key = state.key;
+function mapStateToProps(state,ownProps) {
+  const key =ownProps.name;
   let obj = {};
   obj['key2'] = key;
   obj[key] = state.value[key];
@@ -25,12 +25,15 @@ function mapStateToProps(state) {
 // Map Redux actions to component props
 function mapDispatchToProps(dispatch) {
   return {
-
-    onCompleteInput: (inputData, command) => {
+//修改命令 修改的字段名 修改字段的值
+    onCompleteInput: (inputData,name) => {
 
       dispatch({
-        type: command, payload: {
-          inputValue: inputData
+        type: "change", 
+        payload: {
+          inputValue: inputData,
+          inputName: name
+
         }
       });
     }
@@ -52,7 +55,7 @@ class InputCellUI extends React.PureComponent {
   }
   onChanged = (e) => {
     var inputData = e.target.value;
-    this.props.onCompleteInput(inputData, this.props.command);
+    this.props.onCompleteInput(inputData,this.props.name);
   }
 
   shouldComponentUpdate(nextProps,nextStates){
@@ -63,30 +66,31 @@ class InputCellUI extends React.PureComponent {
   }
 
   render() {
-    const { onCompleteInput, dialogShow, command, key2, name } = this.props;
-    let value ="未填";
+    const { onCompleteInput, dialogShow, key2, name,title,tips } = this.props;
+    let value ="";
     if(name ===key2){
-      value =this.props[key2]||"未填";
+      value =this.props[key2]||"";
     }
 
-    //1.如果变动的字段是当前inputcell指定的字段，那么执行变动
-    //2.如果字段不一致，退出render
-
+  
     return (
       <div width="100%" height="100%">
 
-        <ListItem button>
+        <ListItem button  onClick={this.showInputCell} >
 
-          <ListItemText primary={value} onClick={this.showInputCell} />
+          <ListItemText primary={value}/>
         </ListItem>
         <Dialog open={this.state.cellShow}>
           <DialogTitle>
-            权利人姓名
+          {title}
           </DialogTitle>
           <DialogContent>
 
             <Input ref="NameInput" defaultValue={value} onChange={this.onChanged} />
-
+            <br/>
+            提示
+            <br />
+{tips}
           </DialogContent>
           <DialogActions>
             <Button color="primary" onClick={this.closeInputCell}>

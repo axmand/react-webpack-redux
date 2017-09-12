@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import  InputCell from './InputCell'
+import  InputCell from './InputCell';
+import SelectCell from './SelectCell';
+
 class ObligeeTable2 extends Component {  
   render() {
     
@@ -8,52 +10,51 @@ class ObligeeTable2 extends Component {
      
     <tbody >
   <tr>
-    <td width="27%" colSpan="2"><InputCell command="changeOwner"/></td>
-     {/* <td width="27%" colSpan="2"><p >权利设定方式<u> </u></p></td> */}
-    <td width="72%" colSpan="16"><p >地表 </p></td>
+     <td width="27%" colSpan="2"><p >权利设定方式<u> </u></p></td>
+    <td width="72%" colSpan="16"><SelectCell  name="PowerSetPattern" title="权利设定方式" tips="此处选择权利设定方式" items="1 2 3"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >国民经济行业 <br />
       分类代码 </p></td>
-    <td width="72%" colSpan="16"><p >&nbsp;</p></td>
+    <td width="72%" colSpan="16"><InputCell  name="NationalEconomyIndustryClassificationCode" title="国民经济行业分类代码" tips="根据《国民经济行业分类与代码》（GB/T 4754-2011）大类标准，填写类别名称及编码。"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >预编宗地代码 </p></td>
-    <td width="25%" colSpan="8"><p >&nbsp;</p></td>
+    <td width="25%" colSpan="8"><InputCell  name="PreParcelCode" title="预编宗地代码" tips="填写预编宗地代码"/></td>
     <td width="14%" colSpan="3"><p >宗地代码 </p></td>
-    <td width="32%" colSpan="5"><p >450108001206GB00137</p></td>
+    <td width="32%" colSpan="5"><InputCell  name="ParcelCode" title="宗地代码" tips="填写宗地代码"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >不动产单元号 </p></td>
-    <td width="72%" colSpan="16"><p >450108001206GB00137W00000000</p></td>
+    <td width="72%" colSpan="16"><InputCell  name="UnitNumber" title="不动产单元号" tips="填写不动产单元号"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2" rowSpan="2"><p >所在图幅号 </p></td>
     <td width="13%" colSpan="3"><p >比例尺 </p></td>
-    <td width="59%" colSpan="13"><p >1:500</p></td>
+    <td width="59%" colSpan="13"><SelectCell  name="MapScale" title="比例尺" tips="此处选择图幅比例尺" items="1：500 1：1000 1：2000 1：5000 1：1万 1：5万"/></td>
   </tr>
   <tr>
     <td width="13%" colSpan="3"><p >图幅号 </p></td>
-    <td width="59%" colSpan="13"><p >5100053700,5102553700</p></td>
+    <td width="59%" colSpan="13"><InputCell  name="MapCode" title="图幅号" tips="填写图幅号"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2" rowSpan="4"><p >宗地四至 </p></td>
-    <td width="72%" colSpan="16"><p >北：011DBL-011DBG云村路 </p></td>
+    <td width="72%" colSpan="16"><InputCell  name="ParcelRangeNorth" title="宗地四至_北" tips="填写宗地四至_北"/></td>
   </tr>
   <tr>
-    <td width="72%" colSpan="16"><p >东：011DBG-011DBQ南宁市国圳投资有限公司 </p></td>
+    <td width="72%" colSpan="16"><InputCell  name="ParcelRangeEast" title="宗地四至_东" tips="填写宗地四至_东"/></td>
   </tr>
   <tr>
-    <td width="72%" colSpan="16"><p >南：011DBQ-011DBP国有土地 </p></td>
+    <td width="72%" colSpan="16"><InputCell  name="ParcelRangeSouth" title="宗地四至_南" tips="填写宗地四至_南"/></td>
   </tr>
   <tr>
-    <td width="72%" colSpan="16"><p >西：011DBP-011DBL英岭路 </p></td>
+    <td width="72%" colSpan="16"><InputCell  name="ParcelRangeWest" title="宗地四至_西" tips="填写宗地四至_西"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >等级 </p></td>
-    <td width="24%" colSpan="7"><p >&nbsp;</p></td>
+    <td width="24%" colSpan="7"><InputCell  name="Rank" title="等级" tips="填写根据《城镇土地分等定级规程》、《农用地质量分等规程》或《农用地定级规程》等确定的土地等别或级别"/></td>
     <td width="22%" colSpan="6"><p >价格（元） </p></td>
-    <td width="25%" colSpan="3"><p >&nbsp;</p></td>
+    <td width="25%" colSpan="3"><InputCell  name="Price" title="价格（元）" tips="填写价格"/></td>
   </tr>
  
    </tbody>
