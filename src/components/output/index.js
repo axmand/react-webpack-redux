@@ -1,9 +1,22 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Dialog, { DialogContent } from 'material-ui/Dialog'
+import Slide from 'material-ui/transitions/Slide';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+//图标
+import IconButton from 'material-ui/IconButton';
+import ClearIcon from 'material-ui-icons/Clear';
+import FontAwesome from 'react-fontawesome'
 // import FontAwesome from 'react-fontawesome'
 import FileUploadIcon from 'material-ui-icons/FileUpload';
+//redux
+import { connect } from 'react-redux'
+import RootReducer from './../../redux/RootReducer';
 
 const styles = {
   listitem: {
@@ -23,15 +36,36 @@ const styles = {
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
   },
+  flex: {
+    flex: 1,
+  },
+  dialog: {
+    width: '1650px',
+    height: '1250px',
+    marginTop: 20,
+    marginLeft: 200
+  },
+  AppBar: {
+    root: {
+      marginTop: 30,
+      width: '100%',
+    },
+    position: 'relative'
+  },
 }
 
 class OutputModule extends Component {
 
   render() {
-    const classes = this.props.classes;
+    const { handleOutputClose,
+      handleOutputShow,
+      OutputShow,
+      classes
+    } = this.props
   
     return (
-      <ListItem button className={classes.listitem} disableGutters={true}>
+    <div>
+      <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleOutputShow }>
         <ListItemIcon>
           <FileUploadIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
@@ -41,8 +75,84 @@ class OutputModule extends Component {
           primary="数据导出"
         />
       </ListItem>
+
+      <Dialog
+        fullScreen
+        className={classes.dialog}
+        open={OutputShow}
+        onRequestClose={handleOutputClose}
+        transition={<Slide direction="up" />}
+      >
+        <AppBar position="static">
+          <Toolbar>
+             <Typography type="title" color="inherit" className={classes.flex}>
+              数据导出
+                </Typography>
+            <IconButton color="contrast" onClick={handleOutputClose} aria-label="Delete">
+              <ClearIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <DialogContent style={{ overflowY: 'auto' }}>
+          111
+        </DialogContent>
+      </Dialog>
+    </div>
     )
   }
 }
 
-export default withStyles(styles,{name:'OutputModule'})(OutputModule);
+OutputModule.propTypes = {
+  handleOutputClose: PropTypes.func.isRequired,
+  handleOutputShow: PropTypes.func.isRequired,
+  OutputShow: PropTypes.bool.isRequired
+};
+
+//声明State与Action
+const mapStateToProps = (state, ownProps) => {
+
+  return {
+    OutputShow: state.OutputReduce.OutputShow,
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    handleOutputShow: () => {
+      dispatch({
+        type: 'handleOutputShow',
+      })
+    },
+
+    handleOutputClose: () => {
+      dispatch({
+        type: 'handleOutputClose',
+      })
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { name: 'OutputModule' })(OutputModule));
+//Reducer 
+const OutputReduce = (
+  state = {
+    OutputShow: false,
+  }, action) => {
+
+  let newState = JSON.parse(JSON.stringify(state))
+
+  if (action.type === "handleOutputShow") {
+    const OutputShow = { OutputShow: !state.OutputShow }
+    return Object.assign({}, state, { ...OutputShow })
+  }
+
+  if (action.type === "handleOutputClose") {
+    const OutputShow = { OutputShow: !state.OutputShow }
+    return Object.assign({}, state, { ...OutputShow })
+  }
+
+  else
+    return state
+}
+
+RootReducer.merge(OutputReduce);

@@ -42,8 +42,8 @@ const styles = {
     flex: 1,
   },
   dialog: {
-    width: '850px',
-    height: '650px',
+    width: '1650px',
+    height: '1250px',
     marginTop: 20,
     marginLeft: 200
   }
@@ -90,7 +90,7 @@ class ProjectModule extends Component {
           <AppBar position="static">
             <Toolbar>
               <Typography type="title" color="inherit" className={classes.flex}>
-                项目管理
+                数据导入
                 </Typography>
               <IconButton color="contrast" onClick={handleContentClose} aria-label="Delete">
                 <ClearIcon />
