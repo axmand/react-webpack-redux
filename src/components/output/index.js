@@ -3,7 +3,7 @@ import { withStyles } from 'material-ui/styles';
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 // import FontAwesome from 'react-fontawesome'
-import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
+import FileUploadIcon from 'material-ui-icons/FileUpload';
 
 const styles = {
   listitem: {
@@ -12,8 +12,8 @@ const styles = {
     justifyContent: 'center ',
 	},
 	listItemIcon: {
-		width: 85,
-		height: 85,
+		width: 90,
+		height: 90,
 		margin: 0,
 		color: '#C1C6C9',
 	},
@@ -25,7 +25,7 @@ const styles = {
   },
 }
 
-class BoundaryModule extends Component {
+class OutputModule extends Component {
 
   render() {
     const classes = this.props.classes;
@@ -33,16 +33,16 @@ class BoundaryModule extends Component {
     return (
       <ListItem button className={classes.listitem} disableGutters={true}>
         <ListItemIcon>
-          <PhotoCameraIcon className={classes.listItemIcon}/>
+          <FileUploadIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
         <ListItemText
           disableTypography={true}
           className={classes.listItemText}
-          primary="现场指界"
+          primary="数据导出"
         />
       </ListItem>
     )
   }
 }
 
-export default withStyles(styles,{name:'BoundaryModule'})(BoundaryModule);
+export default withStyles(styles,{name:'OutputModule'})(OutputModule);

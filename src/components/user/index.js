@@ -62,10 +62,11 @@ const styles = {
     flexDirection: 'column',
     justify:'space-between',
     paddingLeft: '0px',
+    paddingRight: '60px',
   },
 
   listItemText: {
-    lineHeight: '20px',
+    fontSize: '20px',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
@@ -190,21 +191,20 @@ class UserModule extends Component {
       userJob,
       lastLoginTime,
       lastLoginAddress,
-    }=this.props;
+    } = this.props;
     const imageLists=[{imageName:'1',imageSize:'1'},{imageName:'2',imageSize:'2'}];
   
     return (
       <div>
-          <ListItem button className={classes.listItem} disableGutters={true} onClick={this.handleClick}>
+          <ListItem button className={classes.listItem} onClick={this.handleClick}>
             <ListItemIcon>
               <FontAwesome 
                 name='user'
-                size='lg'
+                size='3x'
                 style={{
-                  width: '24px',
-                  height: '24px',
+                  width: '34.28px',
+                  height: '48px',
                   margin: '0px',
-                  padding: '2px',
                   color: '#C1C6C9',
                 }}
               />

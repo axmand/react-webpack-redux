@@ -2,8 +2,19 @@ import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import FontAwesome from 'react-fontawesome'
-// import PrintIcon from 'material-ui-icons/Print';
+// import FontAwesome from 'react-fontawesome'
+// <FontAwesome
+//   name='print'
+//   size='5x'
+//   style={{
+//     width: '29.71px',
+//     height: '32px',
+//     margin: '0px',
+//     padding: '2px',
+//     color: '#C1C6C9',
+//   }}
+// />
+import PrintIcon from 'material-ui-icons/Print';
 
 const styles = {
   listitem: {
@@ -11,9 +22,14 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center ',
   },
+  listItemIcon: {
+		width: 85,
+		height: 85,
+		margin: 0,
+		color: '#C1C6C9',
+	},
   listItemText: {
-    lineHeight: '32px',
-    padding: '2px',
+    fontSize: '24px',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
@@ -28,22 +44,12 @@ class PrintModule extends Component {
     return (
       <ListItem button className={classes.listitem} disableGutters={true}>
         <ListItemIcon>
-          <FontAwesome
-            name='print'
-            size='5x'
-            style={{
-              width: '29.71px',
-              height: '32px',
-              margin: '0px',
-              padding: '2px',
-              color: '#C1C6C9',
-            }}
-          />
+          <PrintIcon className={classes.listItemIcon}/>  
         </ListItemIcon>            
         <ListItemText
           disableTypography={true}
           className={classes.listItemText}
-          primary="打印"
+          primary="打印签章"
         />
       </ListItem>
     )

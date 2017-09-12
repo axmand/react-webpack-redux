@@ -5,10 +5,10 @@ import UserModule from '../components/user'
 import ProjectModule from '../components/project'
 import InvestigationModule from '../components/investigation'
 import BoundaryModule from '../components/boundary'
-import ObligeeModule from '../components/obligee'
-
 import SketchModule from '../components/sketch'
+import ObligeeModule from '../components/obligee'
 import PrintModule from '../components/print'
+import OutputModule from '../components/output'
 
 import List, { ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
@@ -45,7 +45,7 @@ class NavigationPanel extends Component {
           <ListItem />
           <PrintModule />
           <ListItem />
-          <PrintModule />
+          <OutputModule />
           <ListItem />
         </List>
       </div>
