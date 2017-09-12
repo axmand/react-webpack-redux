@@ -24,9 +24,8 @@ const styles= {
     justifyContent: 'center ',
   },
   listItemText: {
-    padding: '0px',
-    lineHeight: '32px',
-    padding: '2px',
+    fontSize: '24px',
+    lineHeight: '40px',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
@@ -64,18 +63,17 @@ class ProjectModule extends Component {
             <ListItemIcon>
               <FontAwesome
                 name='folder-o'
-                size='2x'
+                size='4x'
                 style={{
-                  width: '29.71px',
-                  height: '32px',
+                  width: '59.43px',
+                  height: '64px',
                   margin: '0px',
-                  padding: '2px',
                   color: '#C1C6C9',
                 }}
               />
             </ListItemIcon>            
             <ListItemText
-              primary="项目管理"
+              primary="数据导入"
               disableTypography={ true }
               className={classes.listItemText}
             />

@@ -7,13 +7,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemIcon } from 'material-ui/List'
 //图标
-// import ContentCopy from 'material-ui-icons/ContentCopy';
-import FontAwesome from 'react-fontawesome'
-// import Flag from 'material-ui-icons/Flag';
-// import Add from 'material-ui-icons/Add';
-// import  Remove from 'material-ui-icons/Remove';
-// import  Search from 'material-ui-icons/Search';
-// import  RadioButtonChecked from 'material-ui-icons/RadioButtonChecked';
+import LocationOn from 'material-ui-icons/LocationOn';
+import Add from 'material-ui-icons/Add';
+import  Remove from 'material-ui-icons/Remove';
+import  Search from 'material-ui-icons/Search';
 //组件
 import LayerControl from './LayerControl';
 import RealtimeMapping from './RealtimeMapping';
@@ -21,20 +18,25 @@ import RealtimeMapping from './RealtimeMapping';
 const styles ={
   list:{
     position:'absolute',
-    top:'80px',
-    right:'20px',
-    width: '40px'
+    top:'200px',
+    right:'40px',
+    width: '60px'
   },
   listitem: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    height: '40px',
+    height: '60px',
     padding: '0px',
     border: 0,    
-    background: 'rgba(255, 255, 255, .75)',
+    background: 'rgba(0, 0, 0, .6)',
     borderRadius: 5,
   },
+  icon:{
+    color:'#b3b3b3',
+    width:'40px',
+    height:'40px'
+  }
 }
 
 class MapToolBar extends Component{
@@ -50,67 +52,19 @@ class MapToolBar extends Component{
               <LayerControl  />
               <ListItem dense={true} />
               <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("get_location")}>
-                <ListItemIcon>
-                  <FontAwesome
-                    name='location-arrow'
-                    size='lg'
-                    style={{
-                      width: '16.76px',
-                      height: '21.33px',
-                      marginRight: '0px',
-                      marginTop: '5.33px',
-                      color: '#000000',
-                    }}
-                  />
-                </ListItemIcon>
+                  <LocationOn className={classes.icon} />
               </ListItem>
               <ListItem dense={true} />
               <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_in")}>
-                <ListItemIcon>
-                  <FontAwesome
-                    name='plus'
-                    size='lg'
-                    style={{
-                      width: '16.76px',
-                      height: '21.33px',
-                      marginRight: '0px',
-                      marginTop: '5.33px',
-                      color: '#000000',
-                    }}
-                  />
-                </ListItemIcon>                          
+                <Add className={classes.icon} />                     
               </ListItem>
               <ListItem dense={true} />
               <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
-                <ListItemIcon>
-                  <FontAwesome
-                    name='minus'
-                    size='lg'
-                    style={{
-                      width: '16.76px',
-                      height: '21.33px',
-                      marginRight: '0px',
-                      marginTop: '5.33px',
-                      color: '#000000',
-                    }}
-                  />
-                </ListItemIcon>                          
+                <Remove className={classes.icon} />           
               </ListItem>
               <ListItem dense={true} />
               <ListItem button className={classes.listitem} disableGutters={true} onClick={()=>onClick("zoom_out")}>
-                <ListItemIcon>
-                  <FontAwesome
-                    name='search'
-                    size='lg'
-                    style={{
-                      width: '19.8px',
-                      height: '21.33px',
-                      marginRight: '0px',
-                      marginTop: '5.33px',
-                      color: '#000000',
-                    }}
-                  />
-                </ListItemIcon>                          
+                <Search className={classes.icon} />    
               </ListItem>
               <ListItem dense={true} />              
               <RealtimeMapping />             

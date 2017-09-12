@@ -2,12 +2,15 @@
   "name": "react-webpack-redux",
   "version": "1.0.0",
   "description": "a biotemplate for react project",
-  "main": "index.js",
+  "main": "main.js",
+  "homepage": "./",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "packager": "electron-packager ./build ElectronTest --platform=win32 --arch=x64 --overwrite --out=./dist --electronVersion=1.7.6"
   },
   "repository": {
     "type": "git",
@@ -18,15 +21,16 @@
   "bugs": {
     "url": "https://github.com/axmand/react-webpack-redux/issues"
   },
-  "homepage": "https://github.com/axmand/react-webpack-redux#readme",
   "devDependencies": {
     "css-loader": "^0.28.4",
+    "electron": "^1.7.6",
+    "electron-packager": "^9.0.1",
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
     "maptalks": "^0.28.0-beta.0",
     "maptalks.snapto": "^0.1.2",
     "material-ui": "^1.0.0-beta.8",
-    "material-ui-icons": "^1.0.0-alpha.19",
+    "material-ui-icons": "^1.0.0-beta.5",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",

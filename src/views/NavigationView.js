@@ -3,10 +3,12 @@ import { withStyles } from 'material-ui/styles'
 
 import UserModule from '../components/user'
 import ProjectModule from '../components/project'
-import ObligeeModule from '../components/obligee'
 import InvestigationModule from '../components/investigation'
+import BoundaryModule from '../components/boundary'
 import SketchModule from '../components/sketch'
+import ObligeeModule from '../components/obligee'
 import PrintModule from '../components/print'
+import OutputModule from '../components/output'
 
 import List, { ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
@@ -33,13 +35,17 @@ class NavigationPanel extends Component {
           <ListItem />
           <ProjectModule />
           <ListItem />
-          <ObligeeModule />
-          <ListItem />
           <InvestigationModule />
+          <ListItem />
+          <BoundaryModule />
           <ListItem />
           <SketchModule />
           <ListItem />
+          <ObligeeModule />
+          <ListItem />
           <PrintModule />
+          <ListItem />
+          <OutputModule />
           <ListItem />
         </List>
       </div>

@@ -30,9 +30,8 @@ const styles = {
     justifyContent: 'center ',
   },
   listItemText: {
-    padding: '0px',
-    lineHeight: '32px',
-    padding: '2px',
+    fontSize: '24px',
+    lineHeight: '40px',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
@@ -51,10 +50,10 @@ class ChooseTableDialog extends Component {
           <ListItemIcon>
             <FontAwesome
               name='group'
-              size='2x'
+              size='4x'
               style={{
-                width: '34.28px',
-                height: '32px',
+                width: '68.54px',
+                height: '64px',
                 margin: '0px',
                 padding: '2px',
                 color: '#C1C6C9',
@@ -62,7 +61,7 @@ class ChooseTableDialog extends Component {
             />
           </ListItemIcon>
           <ListItemText 
-            primary="权利人"
+            primary="填写表格"
             disableTypography={true}
             className={classes.listItemText}
           />
