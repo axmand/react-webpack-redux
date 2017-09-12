@@ -58,8 +58,8 @@ class BoundaryList extends Component {
   </tr>
   <tr>
     <td width="67" rowSpan="2"><p >011DBN</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
+    <td width="30" rowSpan="2"><p ></p></td>
+    <td width="30" rowSpan="2"><p ></p></td>
     <td width="30" rowSpan="2"><p >&nbsp;</p></td>
     <td width="27" rowSpan="2"><p >√ </p></td>
     <td width="28" rowSpan="2"><p >&nbsp;</p></td>
