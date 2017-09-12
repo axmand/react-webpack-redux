@@ -25,39 +25,7 @@ class SelfContent extends Component {
     } = this.props
     
     return (
-      <div>
-        <FormControlLabel
-          control={
-            <Switch
-               checked = { SwitchChecked }
-               onChange = { handleSwitchChange }
-            />
-          }
-          label="编辑"
-        />
-       <FormLabel  >
-          <Button onClick={ handleShowDelDialog } disabled = { ButtonDisabled }>删除</Button>
-          <Button disabled = { ButtonDisabled }>完成</Button>
-       </FormLabel>
-      
-       <Dialog
-          open={ showDelDialog }
-          onRequestClose={ handleCloseDelDialog }
-       >
-          <DialogContent>
-            <DialogContentText>
-              确定删除所选项目？
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={ handleCloseDelDialog } color="default">
-              取消
-            </Button>
-            <Button onClick={ handleDeleteCard } color="primary">
-              确认
-            </Button>
-          </DialogActions>
-       </Dialog>
+      <div> 
        <SelfCard/>
       </div>
     );

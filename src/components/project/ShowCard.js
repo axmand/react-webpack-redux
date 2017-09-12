@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 //UI
-import Card, { CardActions } from 'material-ui/Card';
-import Checkbox from 'material-ui/Checkbox';
+import Card,{CardContent} from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 //图标
 //img
@@ -16,11 +15,11 @@ const styles = {
   },
 };
 
-class AddCard extends Component {
+class ShowCard extends Component {
 
   render(){
-		const { 
-      handleChooseList,
+	const { 
+   //   handleChooseList,
       handleContentClose2
     } = this.props
     
@@ -28,24 +27,23 @@ class AddCard extends Component {
 
     return(
       <div style={{padding:'20px'}}>
-      <Card key={ item.key } style={{maxWidth:300,maxHeight:250,}}>
+      <Card key={ item.index } style={{maxWidth:300,maxHeight:250,}}>
         <img src={ reptileImage } alt="Contemplative Reptile" onClick={ handleContentClose2 } style={{justifyContent:'center'}}/>
-        <CardActions >
-          <Checkbox onClick={  handleChooseList } />
-          <Typography component="p">
-            { item.text.inputValue }
+         <CardContent>
+          <Typography type="headline" component="h2">
+            {item}
           </Typography>
-        </CardActions>
+        </CardContent>
       </Card>
       </div>
     )
   }
 }
 
-AddCard.propTypes = {
-  entries: PropTypes.object.isRequired,
-  handleChooseList:PropTypes.func.isRequired,
+ShowCard.propTypes = {
+  entries: PropTypes.string.isRequired,
+ // handleChooseList:PropTypes.func.isRequired,
   handleContentClose2:PropTypes.func.isRequired
 };
 
-export default withStyles(styles,{name:'AddCard'})(AddCard);
+export default withStyles(styles,{name:'ShowCard'})(ShowCard);

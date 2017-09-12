@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { withStyles } from 'material-ui/styles'
 import PropTypes from 'prop-types';
 //UI
-import  { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import Dialog, { DialogContent } from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
@@ -13,12 +13,13 @@ import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import FontAwesome from 'react-fontawesome'
 //自定义组件
-import SelfContent from './SelfContent'
+import ProjectCard from './ProjectCard'
 //redux
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 
-const styles= {
+
+const styles = {
   listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
@@ -31,21 +32,21 @@ const styles= {
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
   },
-  AppBar:{
-    root:{
-      marginTop:30,
-      width:'100%',
+  AppBar: {
+    root: {
+      marginTop: 30,
+      width: '100%',
     },
     position: 'relative'
   },
   flex: {
-     flex: 1,
+    flex: 1,
   },
-  dialog:{
+  dialog: {
     width: '850px',
     height: '650px',
-    marginTop:20,
-    marginLeft:100
+    marginTop: 20,
+    marginLeft: 200
   }
 };
 
@@ -53,182 +54,187 @@ class ProjectModule extends Component {
 
   render() {
     const { handleContentClose,
-            handleContentShow,
-            ContentShow,
-            classes
-		} = this.props
+      handleContentShow,
+      ContentShow,
+      classes
+    } = this.props
 
     return (
-        <div>
-          <ListItem button className={ classes.listitem } disableGutters={ true } onClick={ handleContentShow }>
-            <ListItemIcon>
-              <FontAwesome
-                name='folder-o'
-                size='2x'
-                style={{
-                  width: '29.71px',
-                  height: '32px',
-                  margin: '0px',
-                  padding: '2px',
-                  color: '#C1C6C9',
-                }}
-              />
-            </ListItemIcon>            
-            <ListItemText
-              primary="项目管理"
-              disableTypography={ true }
-              className={classes.listItemText}
+      <div>
+        <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleContentShow }>
+          <ListItemIcon>
+            <FontAwesome
+              name='folder-o'
+              size='2x'
+              style={{
+                width: '29.71px',
+                height: '32px',
+                margin: '0px',
+                padding: '2px',
+                color: '#C1C6C9',
+              }}
             />
-          </ListItem>
-          
-          <Dialog
-            fullScreen
-            className={classes.dialog}
-            open={ ContentShow }
-            onRequestClose={ handleContentClose }
-            transition={<Slide direction="up" />}
-          >
-            <AppBar position="static">
-              <Toolbar>
-                <Typography type="title" color="inherit" className={classes.flex}>
-                 项目管理
-                </Typography>
-                <IconButton color="contrast" onClick={ handleContentClose }  aria-label="Delete">
-                   <ClearIcon />
-                </IconButton>
-              </Toolbar>
-            </AppBar>
+          </ListItemIcon>
+          <ListItemText
+            primary="项目管理"
+            disableTypography={true}
+            className={classes.listItemText}
+          />
+        </ListItem>
 
-            <DialogContent style={{overflowY:'auto'}}>
-              <SelfContent/>
-            </DialogContent>
-          </Dialog>
-        </div>
+        <Dialog
+          fullScreen
+          className={classes.dialog}
+          open={ContentShow}
+          onRequestClose={handleContentClose}
+          transition={<Slide direction="up" />}
+        >
+          <AppBar position="static">
+            <Toolbar>
+              <Typography type="title" color="inherit" className={classes.flex}>
+                项目管理
+                </Typography>
+              <IconButton color="contrast" onClick={handleContentClose} aria-label="Delete">
+                <ClearIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+
+          <DialogContent style={{ overflowY: 'auto' }}>
+            <ProjectCard />
+          </DialogContent>
+        </Dialog>
+      </div>
     )
   }
 }
 
 ProjectModule.propTypes = {
-  handleContentClose:PropTypes.func.isRequired,
-  handleContentShow:PropTypes.func.isRequired,
-  ContentShow:PropTypes.bool.isRequired
+  handleContentClose: PropTypes.func.isRequired,
+  handleContentShow: PropTypes.func.isRequired,
+  ContentShow: PropTypes.bool.isRequired
 };
 
 //声明State与Action
-const mapStateToProps = (state,ownProps) => {
+const mapStateToProps = (state, ownProps) => {
 
   return {
-     ContentShow: state.ProjectReduce.ContentShow,
+    ContentShow: state.ProjectReduce.ContentShow,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleContentShow:()=>{
-      dispatch({
-        type:'handleContentShow',
+    handleContentShow: () => {
+      fetch('http://172.16.103.250:1338/project/list')
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'handleContentShow',
+          payload: json,
+        })
       })
+      .catch(e => console.log("Oops, error", e))
+
     },
 
-    handleContentClose:()=>{
+    handleContentClose: () => {
       dispatch({
-        type:'handleContentClose',
+        type: 'handleContentClose',
       })
     },
-	} 
-}  		
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{name: 'ProjectModule'})(ProjectModule));
-
-//Reducer
-const ProjectReduce =(
-  state={
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { name: 'ProjectModule' })(ProjectModule));
+//Reducer 
+const ProjectReduce = (
+  state = {
     inputItems: [],
     IdNumber: '',
-    showDialog: false,
-    showDelDialog: false,
-    SwitchChecked: false,
     ContentShow: false,
-    ButtonDisabled: true,
-  },action)=>{
-    
-    let newState = JSON.parse(JSON.stringify(state))
+  }, action) => {
 
-    if(action.type==="handleAddItem"){
-      const uuidv4 = require('uuid/v4');
-      let IdNumber = uuidv4();
-      
-      newState.IdNumber = IdNumber;
-      newState.showDialog = !state.showDialog;
-      newState.inputItems.push({text:action.payload,key:IdNumber,checked:false})
-      return { ...state, ...newState };
-    }
+  let newState = JSON.parse(JSON.stringify(state))
 
-    if(action.type==="handleChooseList"){
-      let listItems = newState.inputItems.map( todo => {
-        if ( todo.key === action.id ) {
-          return {
-            ...todo, 
-            checked: !todo.checked
-          }
-        }
-        return todo;
-      })
-      newState.inputItems = listItems
-      return { ...state, ...newState };
-    }
-    
-    if(action.type==="handleShowDialog"){
-      const showDialog ={showDialog: !state.showDialog} 
-      return Object.assign({},state,{... showDialog})
-    }
-      
-    if(action.type==="handleRequestClose"){
-      const showDialog ={showDialog: !state.showDialog} 
-      return Object.assign({},state,{... showDialog})
-    }
-    
-    if(action.type==="handleShowDelDialog"){
-      const showDelDialog ={showDelDialog: !state.showDelDialog} 
-      return Object.assign({},state,{... showDelDialog})
-    }
-    
-    if(action.type==="handleCloseDelDialog"){
-      const showDelDialog ={showDelDialog: !state.showDelDialog} 
-      return Object.assign({},state,{... showDelDialog})
-    }
+  // if(action.type==="handleAddItem"){
+  //   const uuidv4 = require('uuid/v4');
+  //   let IdNumber = uuidv4();
 
-    if(action.type==="handleDeleteCard"){
-      const inputItems = state.inputItems
-      newState.showDelDialog = !state.showDelDialog;
-      let listItems = newState.inputItems.filter( (todo) =>{return todo.checked === false } )
-      newState.inputItems = listItems
-      return { ...state, ...newState };
-    }
-    
-    if(action.type==="handleSwitchChange"){
-      newState.SwitchChecked = !state.SwitchChecked
-      newState.ButtonDisabled = !state.ButtonDisabled
-      return { ...state, ...newState };
-    }
+  //   newState.IdNumber = IdNumber;
+  //   newState.showDialog = !state.showDialog;
+  //   newState.inputItems.push({text:action.payload,key:IdNumber,checked:false})
+  //   return { ...state, ...newState };
+  // }
 
-    if(action.type==="handleContentShow"){
-      const ContentShow ={ContentShow: !state.ContentShow} 
-      return Object.assign({},state,{... ContentShow})
-    }
+  // if(action.type==="handleChooseList"){
+  //   let listItems = newState.inputItems.map( todo => {
+  //     if ( todo.key === action.id ) {
+  //       return {
+  //         ...todo, 
+  //         checked: !todo.checked
+  //       }
+  //     }
+  //     return todo;
+  //   })
+  //   newState.inputItems = listItems
+  //   return { ...state, ...newState };
+  // }
 
-    if(action.type==="handleContentClose"){
-      const ContentShow ={ContentShow: !state.ContentShow} 
-      return Object.assign({},state,{... ContentShow})
-    }
-    
-    if(action.type==="handleContentClose2"){
-      const ContentShow ={ContentShow: !state.ContentShow} 
-      return Object.assign({},state,{... ContentShow})
-    }
-    else
-      return state
+  // if(action.type==="handleShowDialog"){
+  //   const showDialog ={showDialog: !state.showDialog} 
+  //   return Object.assign({},state,{... showDialog})
+  // }
+
+  // if(action.type==="handleRequestClose"){
+  //   const showDialog ={showDialog: !state.showDialog} 
+  //   return Object.assign({},state,{... showDialog})
+  // }
+
+  // if(action.type==="handleShowDelDialog"){
+  //   const showDelDialog ={showDelDialog: !state.showDelDialog} 
+  //   return Object.assign({},state,{... showDelDialog})
+  // }
+
+  // if(action.type==="handleCloseDelDialog"){
+  //   const showDelDialog ={showDelDialog: !state.showDelDialog} 
+  //   return Object.assign({},state,{... showDelDialog})
+  // }
+
+  // if(action.type==="handleDeleteCard"){
+  //   const inputItems = state.inputItems
+  //   newState.showDelDialog = !state.showDelDialog;
+  //   let listItems = newState.inputItems.filter( (todo) =>{return todo.checked === false } )
+  //   newState.inputItems = listItems
+  //   return { ...state, ...newState };
+  // }
+
+  // if(action.type==="handleSwitchChange"){
+  //   newState.SwitchChecked = !state.SwitchChecked
+  //   newState.ButtonDisabled = !state.ButtonDisabled
+  //   return { ...state, ...newState };
+  // }
+
+  if (action.type === "handleContentShow") {
+    let list = [];
+    list = JSON.parse(action.payload.data);
+    newState.inputItems = list.slice(0);
+    newState.ContentShow = !state.ContentShow;
+    return { ...state, ...newState }; 
+  }
+
+  if (action.type === "handleContentClose") {
+    const ContentShow = { ContentShow: !state.ContentShow }
+    return Object.assign({}, state, { ...ContentShow })
+  }
+
+  if (action.type === "handleContentClose2") {
+    const ContentShow = { ContentShow: !state.ContentShow }
+    return Object.assign({}, state, { ...ContentShow })
+  }
+  else
+    return state
 }
-  
+
 RootReducer.merge(ProjectReduce);
 
