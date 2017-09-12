@@ -40,7 +40,7 @@ MapView.PropTypes={
 	sketchDisplayState: PropTypes.bool.isRequired,
 }
 
-const mapViewReduce = (state = {sketchDisplayState: true}, action) => {
+const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
   switch(action.type) {
     case 'MAP_SKETCH_VIEW_SWITCH':
       const newState = {

@@ -236,11 +236,7 @@ const sketchReduce = (state = {
     redoIsChecked:false,
     saveIsChecked:false,
     showDelDialog:false,
-    JZDLayer:JSON,
-    SZLayer:JSON,
-    ZDLayer:JSON,
-    LabelLayer:JSON,
-
+    mapJSONData:JSON
 }, action) => {
 
 //用于获取点线面对象
@@ -275,11 +271,14 @@ const sketchReduce = (state = {
                     target.updateSymbol({  'lineColor': '#000000'});
                 }
             }
-            if(target._content !== null){
+            if(target.options.type==="Label"){
                     target.startEditText();
                     map.off('click',addLabel);
-                    map.on('dblclick',labelEditEnd);                    
+                    map.on('dblclick',labelEditEnd);   
             }
+            // if(target._content !== null){
+                 
+            // }
         }
 //用于清除对象被选中的高亮效果
     recoverObj = recoverObj ||function(){
@@ -334,6 +333,7 @@ const sketchReduce = (state = {
             let objLabel = new maptalks.Label(content,coord,{
                 'draggable' : true,
                 'box': false,
+                'type':'Label',
                 'symbol': {
                     'textWeight' : 'bold',
                     'textRotation': rotation,
@@ -370,6 +370,7 @@ const sketchReduce = (state = {
                     let label = new maptalks.Label(content,e.coordinate,{
                         'draggable' : true,
                         'box': false,
+                        'type':'Label',
                         'symbol': {
                             'textWeight' : 'bold',
                             'textFaceName' : '宋体',                      
@@ -379,7 +380,8 @@ const sketchReduce = (state = {
                             'textAlign': 'auto',
                         }
                     })
-                        label.on('click',function(){
+                        label.on('click',function(e){
+                            target = e.target;
                             drawTool.disable();
                             label.startEditText();
                     });
@@ -497,6 +499,7 @@ const sketchReduce = (state = {
             {
                 'draggable' : true,
                 'box': false,
+                'type':'Label',
                 'symbol': {
                     'textWeight' : 'bold',
                     'textFaceName' : '宋体',
@@ -537,7 +540,7 @@ const sketchReduce = (state = {
                     polygon_labels[i].remove();
                 }                
             }
-            if(target._content !== null){
+            if(target.options.type === "Label"){
                 target.endEditText();
                 target.remove(); 
             }
@@ -777,10 +780,7 @@ const sketchReduce = (state = {
                 console.log('保存');
                 const saveData= {
                     saveIsChecked:true,
-                    JZDLayer:map.getLayer('point').toJSON(),
-                    SZLayer:map.getLayer('line').toJSON(),
-                    ZDLayer:map.getLayer('poligon').toJSON(),
-                    LabelLayer:map.getLayer('label').toJSON(),
+                    mapJSONData:map.toJSON()
                 }
                 return Object.assign({},state,{... saveData});
 
