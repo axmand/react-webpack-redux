@@ -43,7 +43,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-class InputCellUI extends React.PureComponent {
+class DateInputCellUI extends React.PureComponent {
 
   state = {
     cellShow: false,
@@ -78,17 +78,17 @@ class InputCellUI extends React.PureComponent {
     return (
       <div width="100%" height="100%">
 
-        <ListItem button  onClick={this.showInputCell} >{value}
+        <ListItem button  onClick={this.showInputCell} > 
        
-        {/* <TextField
+        <Input
           id="placeholder"
         
-          fullWidth
-          multiline
+         
+      
           margin="normal"
           value={value}
-        /> */}
-          {/* <ListItemText primary={value}/> */}
+        />
+         
         </ListItem>
 
      
@@ -98,10 +98,17 @@ class InputCellUI extends React.PureComponent {
           </DialogTitle>
           <DialogContent>
 
-            {/* <Input ref="NameInput" defaultValue={value} onChange={this.onChanged} /> */}
+          <TextField
+        id="date"
+       
+        type="date"
+       
+        value={value}
+          defaultValue={value} 
+          onChange={this.onChanged}
+      />
 
-
-            <TextField
+            {/* <TextField
           id="placeholder"
         
           fullWidth
@@ -110,7 +117,7 @@ class InputCellUI extends React.PureComponent {
           value={value}
           defaultValue={value} 
           onChange={this.onChanged}
-        />
+        /> */}
             <br/>
             提示
             <br />
@@ -129,7 +136,7 @@ class InputCellUI extends React.PureComponent {
   }
 }
 
-InputCellUI.propTypes = {
+DateInputCellUI.propTypes = {
   //value: PropTypes.string.isRequired,
   onCompleteInput: PropTypes.func.isRequired,
 }
@@ -138,5 +145,5 @@ InputCellUI.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(InputCellUI)
+)(DateInputCellUI)
 
