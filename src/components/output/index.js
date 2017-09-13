@@ -8,6 +8,8 @@ import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
+import Table, {  TableBody, TableCell, TableHead, TableRow, TableSortLabel} from 'material-ui/Table';
+import Checkbox from 'material-ui/Checkbox';
 //图标
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
@@ -41,7 +43,7 @@ const styles = {
   },
   dialog: {
     width: '1650px',
-    height: '1250px',
+    height: '1150px',
     marginTop: 20,
     marginLeft: 200
   },
@@ -53,6 +55,7 @@ const styles = {
     position: 'relative'
   },
 }
+
 
 class OutputModule extends Component {
 
@@ -93,8 +96,21 @@ class OutputModule extends Component {
             </IconButton>
           </Toolbar>
         </AppBar>
+       
         <DialogContent style={{ overflowY: 'auto' }}>
-          111
+        <paper>
+          <TableHead>
+            <TableRow>
+              <TableCell checkbox>
+                <Checkbox/>
+              </TableCell>
+              <TableCell>文件夹名称</TableCell>
+              <TableCell >文件大小</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          </TableBody>
+        </paper>
         </DialogContent>
       </Dialog>
     </div>
@@ -105,7 +121,7 @@ class OutputModule extends Component {
 OutputModule.propTypes = {
   handleOutputClose: PropTypes.func.isRequired,
   handleOutputShow: PropTypes.func.isRequired,
-  OutputShow: PropTypes.bool.isRequired
+  OutputShow: PropTypes.bool.isRequired,
 };
 
 //声明State与Action

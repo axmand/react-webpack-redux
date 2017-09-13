@@ -31,7 +31,10 @@ class ProjectCard extends Component {
             handleContentClose2,
             classes
 		} = this.props
-
+    
+    const uuidv4 = require('uuid/v4');
+    let Id = uuidv4();
+    
     return (
     <div>
       <div className = {classes.box}>
@@ -39,6 +42,7 @@ class ProjectCard extends Component {
           <ShowCard
           {...todo} 
           entries = { todo }
+         // Id = {}
           handleContentClose2={ () => handleContentClose2() } 
           />
         )}

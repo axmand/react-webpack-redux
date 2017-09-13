@@ -24,10 +24,12 @@ class ShowCard extends Component {
     } = this.props
     
     let item = this.props.entries;
+  //  let itemId = this.props.Id;
+
 
     return(
       <div style={{padding:'20px'}}>
-      <Card key={ item.index } style={{width:300,height:300,}}>
+      <Card key={ item } style={{width:300,height:300,}}>
         <img src={ reptileImage } alt="Contemplative Reptile" onClick={ handleContentClose2 } style={{justifyContent:'center'}}/>
          <CardContent>
           <Typography type="headline" component="h2">
