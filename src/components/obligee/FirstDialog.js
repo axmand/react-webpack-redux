@@ -163,7 +163,7 @@ var FD1 = withStyles(styleSheet)(FirstDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 // // Reducer
-function reducer(state = {value: {"owner":"peter","user":"jack","test":"test"} }, action) {
+function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"} }, action) {
 
   let value = state.value;
 
