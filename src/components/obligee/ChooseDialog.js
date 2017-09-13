@@ -5,8 +5,8 @@ import Button from 'material-ui/Button';
 import Avatar from 'material-ui/Avatar';
 
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
-import FontAwesome from 'react-fontawesome'
-// import PersonIcon from 'material-ui-icons/Person';
+// import FontAwesome from 'react-fontawesome'
+import LibraryBooksIcon from 'material-ui-icons/LibraryBooks';
 import AddIcon from 'material-ui-icons/Add';
 import Typography from 'material-ui/Typography';
 import blue from 'material-ui/colors/blue';
@@ -28,13 +28,21 @@ const styles = {
    listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
+    paddingTop: "15%",
+    paddingBottom: "15%",
+  },
+  listItemIcon: {
+    width: "50%",
+    height: "50%",
+    margin: 0,
+    color: "#C1C6C9"
   },
   listItemText: {
-    fontSize: '24px',
-    lineHeight: '40px',
+    fontSize: '1em',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
+    padding: '0px',
   },
 }
 
@@ -48,17 +56,7 @@ class ChooseTableDialog extends Component {
       <div>
       <ListItem button className={classes.listitem} disableGutters={true} onClick={clickIcon}>
           <ListItemIcon>
-            <FontAwesome
-              name='group'
-              size='4x'
-              style={{
-                width: '68.54px',
-                height: '64px',
-                margin: '0px',
-                padding: '2px',
-                color: '#C1C6C9',
-              }}
-            />
+            <LibraryBooksIcon className={classes.listItemIcon}/>
           </ListItemIcon>
           <ListItemText 
             primary="填写表格"

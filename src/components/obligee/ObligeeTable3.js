@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import  InputCell from './InputCell';
 import SelectCell from './SelectCell';
+import DateInputCell from './DateInputCell'
 class ObligeeTable3 extends Component {  
   render() {
     
@@ -36,7 +37,7 @@ class ObligeeTable3 extends Component {
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >土地使用期限 </p></td>
-    <td width="72%" colSpan="16"><InputCell  name="LandUseStartTime" title="土地起始使用时间" tips="土地起始使用时间"/>至<InputCell  name="LandUseEndTime" title="土地结束使用时间" tips="土地结束使用时间"/></td>
+    <td width="72%" colSpan="16"><DateInputCell  name="LandUseStartTime" title="使用起始时间" tips="填写使用起始时间"/>至<DateInputCell  name="LandUseEndTime" title="使用结束时间" tips="填写使用结束时间"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >共有／共用权利人 <br />

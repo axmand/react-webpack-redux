@@ -11,7 +11,8 @@ import Typography from 'material-ui/Typography';
 //图标
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import FontAwesome from 'react-fontawesome'
+import FolderOpenIcon from 'material-ui-icons/FolderOpen';
+// import FontAwesome from 'react-fontawesome'
 //自定义组件
 import ProjectCard from './ProjectCard'
 //redux
@@ -23,13 +24,21 @@ const styles = {
   listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
+    paddingTop: "15%",
+    paddingBottom: "15%",
   },
+  listItemIcon: {
+		width: '50%',
+		height: '50%',
+		margin: 0,
+		color: '#C1C6C9',
+	},
   listItemText: {
-    fontSize: '24px',
-    lineHeight: '40px',
+    fontSize: '1em',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
+    padding: '0px',
   },
   AppBar: {
     root: {
@@ -62,16 +71,7 @@ class ProjectModule extends Component {
         <div>
           <ListItem button className={ classes.listitem } disableGutters={ true } onClick={ handleContentShow }>
             <ListItemIcon>
-              <FontAwesome
-                name='folder-o'
-                size='4x'
-                style={{
-                  width: '59.43px',
-                  height: '64px',
-                  margin: '0px',
-                  color: '#C1C6C9',
-                }}
-              />
+              <FolderOpenIcon className={classes.listItemIcon}/>
             </ListItemIcon>            
             <ListItemText
               primary="数据导入"

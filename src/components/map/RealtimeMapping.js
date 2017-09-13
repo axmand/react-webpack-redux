@@ -9,17 +9,17 @@ import Typograghy from 'material-ui/Typography'
 
 const styles ={
   listItem: {
-    flexDirection: 'column',
-    padding: '0px',
-    width: '58px',
-    height: '90px',
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "0px",
     border: 0,
-    background: 'rgba(0, 0, 0, .6)',
-    borderRadius: 5,
+    background: "rgba(0, 0, 0, .6)",
+    borderRadius: '12.5%',
   },
   text:{
-    fontSize:'18px',
-    color:'#b3b3b3'
+    fontSize:'0.75em',
+    color:'#b3b3b3',
+    paddingBottom: '15%',
 },
 bar:{},
 checked:{

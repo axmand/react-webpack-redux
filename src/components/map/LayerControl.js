@@ -1,43 +1,59 @@
-import React, {Component} from 'react';
-import { findDOMNode } from 'react-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 //import UI
-import { withStyles } from 'material-ui/styles'
-import Popover from 'material-ui/Popover'
-import Menu, { MenuItem } from 'material-ui/Menu'
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import CheckBox from 'material-ui/Checkbox'
-import ContentCopy from 'material-ui-icons/ContentCopy';
+import { withStyles } from "material-ui/styles";
+import Popover from "material-ui/Popover";
+import { FormGroup, FormControlLabel } from "material-ui/Form";
+import Menu, { MenuItem } from "material-ui/Menu";
+import { ListItem, ListItemText } from "material-ui/List";
+import Checkbox from "material-ui/Checkbox";
+import ContentCopy from "material-ui-icons/ContentCopy";
 
-import FontAwesome from 'react-fontawesome'
+import LayersIcon from "material-ui-icons/Layers";
+// import FontAwesome from 'react-fontawesome'
 
-const styles ={
+const styles = {
   listitem: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      height: '60px',
-      padding: '0px',
-      border: 0,    
-      background: 'rgba(0, 0, 0, .6)',
-      borderRadius: 5,
-    },
+    padding: "0px",
+    marggin: "0px",
+    border: 0,
+    background: "rgba(0, 0, 0, .6)",
+    borderRadius: "12.5%",
+  },
+  icon: {
+    color: "#b3b3b3",
+    width: "100%",
+    height: "100%"
+  },
   menu: {
     // top: '88px !important',
     // left: '824px !important',
-    background: 'rgba(0, 0, 0, .6)',
-    width: '120px',
+    background: "rgba(0, 0, 0, .6)",
+    width: "8%",
+  },
+  menuitem: {
+    height: '30%',
+    fontSize: "100%",
+    paddingTop: "5%",
+    paddingBottom: "5%",
+    justifyContent: 'center ',
+  },
+  checkbox: {
+    height: '30%',
+    width: '30%',
   },
   listItemText: {
-    padding: '0px',
-    color:'#b3b3b3'
+    fontSize: "1em",
+    color: "#b3b3b3",
+    paddingLeft: '5%',
+    paddingRight: '5%',
   },
-  checked:{
-    color:'#B3D9D9'
+  checked: {
+    color: "#B3D9D9"
   }
-}
-
+};
 
 class LayerControl extends Component {
   // constructor(props){
@@ -53,235 +69,430 @@ class LayerControl extends Component {
   //   this.handleMenuOpen = this.handleMenuOpen.bind(this);
   // }
 
-  state ={
+  state = {
     menuOpen: false,
     anchorEl: null,
-    anchorOriginVertical: 'top',
-    anchorOriginHorizontal: 'left',
-    transformOriginVertical: 'top',
-    transformOriginHorizontal: 'right',
-  }
+    anchorOriginVertical: "top",
+    anchorOriginHorizontal: "left",
+    transformOriginVertical: "top",
+    transformOriginHorizontal: "right"
+  };
 
   handleMenuOpen = () => {
     this.setState({
       menuOpen: true,
-      anchorEl: findDOMNode(this.button), 
+      anchorEl: findDOMNode(this.button)
     });
     // console.log(this.state)
-  }
+  };
 
   handleRequestClose = () => {
-    this.setState({ 
-      menuOpen: false 
+    this.setState({
+      menuOpen: false
     });
-  };   
+  };
 
   button = null;
 
-  render(){ 
-    const classes=this.props.classes;
-		const {
+  render() {
+    const classes = this.props.classes;
+    const {
       topographicMapIsChecked,
       tianDiTuIsChecked,
-			pointIsChecked,
-			lineIsChecked,
+      pointIsChecked,
+      lineIsChecked,
       polygonIsChecked,
       labelIsChecked,
       handleTopographicMapIsChecked,
       handleTianDiTuIsIsChecked,
-			handlePointIsChecked,
-			handleLineIsChecked,
+      handlePointIsChecked,
+      handleLineIsChecked,
       handlePolygonIsChecked,
       handleLabelIsChecked
-		} = this.props
+    } = this.props;
     const {
       menuOpen,
       anchorEl,
       anchorOriginVertical,
       anchorOriginHorizontal,
       transformOriginVertical,
-      transformOriginHorizontal,
-    } = this.state
-    
-    return(
+      transformOriginHorizontal
+    } = this.state;
+
+    return (
       <div>
-        <ListItem 
+        <ListItem
           ref={node => {
-              this.button = node;
+            this.button = node;
           }}
-          button 
-          className={classes.listitem} 
-          disableGutters={true}  
+          button
+          className={classes.listitem}
+          disableGutters={true}
           onClick={this.handleMenuOpen}
         >
-          <ListItemIcon>
-            <FontAwesome
-              name='clone'
-              size='lg'
-              style={{
-                width: '21.33px',
-                height: '21.33px',
-                marginRight: '0px',
-                marginTop: '5.33px',
-                color: '#b3b3b3',
-              }}
-            />
-          </ListItemIcon>
+          <LayersIcon className={classes.icon} />
         </ListItem>
         <Popover
-          anchorEl={anchorEl}  
+          anchorEl={anchorEl}
           open={menuOpen}
           onRequestClose={this.handleRequestClose}
           anchorOrigin={{
             vertical: anchorOriginVertical,
-            horizontal: anchorOriginHorizontal,
+            horizontal: anchorOriginHorizontal
           }}
           transformOrigin={{
             vertical: transformOriginVertical,
-            horizontal: transformOriginHorizontal,
+            horizontal: transformOriginHorizontal
           }}
           className={classes.menu}
         >
-          <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox 
-              classes={{checked:classes.checked}}
-              checked={true} 
-              disabled={true} 
+          <MenuItem className={classes.menuitem}>
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={true}
+              disabled={true}
+              className={classes.checkbox}
             />
-            <ListItemText primary={'影像图'} disableTypography={true} className={classes.listItemText} />
-          </MenuItem>
-
-          <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox
-              classes={{checked:classes.checked}}            
-              checked={topographicMapIsChecked} 
-              onChange={handleTopographicMapIsChecked} 
+            <ListItemText
+              primary={"影像图层"}
+              disableTypography={true}
+              className={classes.listItemText}
             />
-            <ListItemText  primary={'地形图'}  disableTypography={true}  className={classes.listItemText} />
           </MenuItem>
 
-          <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox             
-              classes={{checked:classes.checked}}
-              checked={tianDiTuIsChecked} 
-              onChange={handleTianDiTuIsIsChecked} 
+          <MenuItem className={classes.menuitem}>
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={topographicMapIsChecked}
+              onChange={handleTopographicMapIsChecked}
+              className={classes.checkbox}
             />
-            <ListItemText  primary={'天地图'}  disableTypography={true} className={classes.listItemText} />
-          </MenuItem>
-
-          <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox
-              classes={{checked:classes.checked}} 
-              checked={pointIsChecked} 
-              onChange={handlePointIsChecked} 
+            <ListItemText
+              primary={"地形图层"}
+              disableTypography={true}
+              className={classes.listItemText}
             />
-            <ListItemText primary={'界址点'} disableTypography={true} className={classes.listItemText} />
           </MenuItem>
 
-          <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox 
-              classes={{checked:classes.checked}}
-              checked={lineIsChecked} 
-              onChange={handleLineIsChecked} 
+          <MenuItem className={classes.menuitem}>
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={tianDiTuIsChecked}
+              onChange={handleTianDiTuIsIsChecked}
+              className={classes.checkbox}
             />
-            <ListItemText  primary={'四至'}  disableTypography={true} className={classes.listItemText} />
+            <ListItemText
+              primary={"天地图层"}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
           </MenuItem>
 
-          <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox 
-              classes={{checked:classes.checked}} 
-              checked={polygonIsChecked}  
-              onChange={handlePolygonIsChecked} 
-          />
-            <ListItemText  primary={'宗地'}  disableTypography={true} className={classes.listItemText} />
+          <MenuItem className={classes.menuitem}>
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={pointIsChecked}
+              onChange={handlePointIsChecked}
+              className={classes.checkbox}
+            />
+            <ListItemText
+              primary={"界址点层"}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
           </MenuItem>
 
-          <MenuItem className={classes.menuitem} disableGutters={true}>
-            <CheckBox 
-              classes={{checked:classes.checked}}
-              checked={labelIsChecked} 
-              onChange={handleLabelIsChecked} 
-          />
-            <ListItemText  primary={'注记'}  disableTypography={true} className={classes.listItemText} />
+          <MenuItem className={classes.menuitem}>
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={lineIsChecked}
+              onChange={handleLineIsChecked}
+              className={classes.checkbox}
+            />
+            <ListItemText
+              primary={"四至图层"}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+
+          <MenuItem className={classes.menuitem}>
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={polygonIsChecked}
+              onChange={handlePolygonIsChecked}
+              className={classes.checkbox}
+            />
+            <ListItemText
+              primary={"宗地图层"}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+
+          <MenuItem className={classes.menuitem}>
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={labelIsChecked}
+              onChange={handleLabelIsChecked}
+              className={classes.checkbox}
+            />
+            <ListItemText
+              primary={"注记图层"}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
           </MenuItem>
         </Popover>
       </div>
-    )
+    );
   }
 }
 /**
  * 限定组件的一些属性
  */
-LayerControl.PropTypes={
-      classes: PropTypes.object.isRequired,
-      topographicMapIsChecked:PropTypes.bool.isRequired,
-			tianDiTuIsChecked:PropTypes.bool.isRequired,
-			pointIsChecked:PropTypes.bool.isRequired,
-			lineIsChecked:PropTypes.bool.isRequired,
-      polygonIsChecked:PropTypes.bool.isRequired,
-      labelIsChecked:PropTypes.bool.isRequired,
-      handleTopographicMapIsChecked:PropTypes.func.isRequired,
-			handleTianDiTuIsIsChecked:PropTypes.func.isRequired,
-			handlePointIsChecked:PropTypes.func.isRequired,
-			handleLineIsChecked:PropTypes.func.isRequired,
-      handlePolygonIsChecked:PropTypes.func.isRequired,
-      handleLabelIsChecked:PropTypes.func.isRequired,
-}
-		
+LayerControl.PropTypes = {
+  classes: PropTypes.object.isRequired,
+  topographicMapIsChecked: PropTypes.bool.isRequired,
+  tianDiTuIsChecked: PropTypes.bool.isRequired,
+  pointIsChecked: PropTypes.bool.isRequired,
+  lineIsChecked: PropTypes.bool.isRequired,
+  polygonIsChecked: PropTypes.bool.isRequired,
+  labelIsChecked: PropTypes.bool.isRequired,
+  handleTopographicMapIsChecked: PropTypes.func.isRequired,
+  handleTianDiTuIsIsChecked: PropTypes.func.isRequired,
+  handlePointIsChecked: PropTypes.func.isRequired,
+  handleLineIsChecked: PropTypes.func.isRequired,
+  handlePolygonIsChecked: PropTypes.func.isRequired,
+  handleLabelIsChecked: PropTypes.func.isRequired
+};
+
 /**
  * 
  * @param {*} state 
  * @param {*} ownProps 
  */
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
+  const layerControlState = state.layerControlReduce;
 
-  const layerControlState=state.layerControlReduce;
+  return {
+    handleTopographicMapIsChecked:
+      layerControlState.handleTopographicMapIsChecked,
+    tianDiTuIsChecked: layerControlState.tianDiTuIsChecked,
+    pointIsChecked: layerControlState.pointIsChecked,
+    lineIsChecked: layerControlState.lineIsChecked,
+    polygonIsChecked: layerControlState.polygonIsChecked,
+    labelIsChecked: layerControlState.labelIsChecked
+  };
+};
 
-    return {
-      handleTopographicMapIsChecked: layerControlState.handleTopographicMapIsChecked,
-			tianDiTuIsChecked: layerControlState.tianDiTuIsChecked,
-			pointIsChecked: layerControlState.pointIsChecked,
-			lineIsChecked: layerControlState.lineIsChecked,
-      polygonIsChecked: layerControlState.polygonIsChecked,
-      labelIsChecked:layerControlState.labelIsChecked
+const mapDispatchToProps = dispatch => {
+  return {
+    handleTopographicMapIsChecked: () => {
+      dispatch({
+        type: "handleTopographicMapIsChecked"
+      });
+    },
+    handleTianDiTuIsIsChecked: () => {
+      dispatch({
+        type: "handleTianDiTuIsIsChecked"
+      });
+    },
+    handlePointIsChecked: () => {
+      dispatch({
+        type: "handlePointIsChecked"
+      });
+    },
+    handleLineIsChecked: () => {
+      dispatch({
+        type: "handleLineIsChecked"
+      });
+    },
+    handlePolygonIsChecked: () => {
+      dispatch({
+        type: "handlePolygonIsChecked"
+      });
+    },
+    handleLabelIsChecked: () => {
+      dispatch({
+        type: "handleLabelIsChecked"
+      });
     }
+  };
+};
 
-}
+export default withStyles(styles)(
+  connect(mapStateToProps, mapDispatchToProps)(LayerControl)
+);
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-      handleTopographicMapIsChecked:()=>{
-        dispatch({
-          type:'handleTopographicMapIsChecked'
-				})
-			},
-			handleTianDiTuIsIsChecked:()=>{
-        dispatch({
-          type:'handleTianDiTuIsIsChecked'
-				})
-			},
-      handlePointIsChecked:()=>{
-        dispatch({
-          type:'handlePointIsChecked'
-				})
-			},
-			handleLineIsChecked:()=>{
-        dispatch({
-          type:'handleLineIsChecked'
-				})
-			},
-			handlePolygonIsChecked:()=>{
-        dispatch({
-          type:'handlePolygonIsChecked'
-				})
-      },
-      handleLabelIsChecked:()=>{
-        dispatch({
-          type:'handleLabelIsChecked'
-				})
-			}
-		} 
-}  		
+// <MenuItem className={classes.menuitem} disableGutters={true}>
+//   <CheckBox
+//     classes={{ checked: classes.checked }}
+//     checked={true}
+//     disabled={true}
+//   />
+//   <ListItemText
+//     primary={"影像图"}
+//     disableTypography={true}
+//     className={classes.listItemText}
+//   />
+// </MenuItem>
 
+// <MenuItem className={classes.menuitem} disableGutters={true}>
+//   <CheckBox
+//     classes={{ checked: classes.checked }}
+//     checked={topographicMapIsChecked}
+//     onChange={handleTopographicMapIsChecked}
+//   />
+//   <ListItemText
+//     primary={"地形图"}
+//     disableTypography={true}
+//     className={classes.listItemText}
+//   />
+// </MenuItem>
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(LayerControl))
+// <MenuItem className={classes.menuitem} disableGutters={true}>
+//   <CheckBox
+//     classes={{ checked: classes.checked }}
+//     checked={tianDiTuIsChecked}
+//     onChange={handleTianDiTuIsIsChecked}
+//   />
+//   <ListItemText
+//     primary={"天地图"}
+//     disableTypography={true}
+//     className={classes.listItemText}
+//   />
+// </MenuItem>
+
+// <MenuItem className={classes.menuitem} disableGutters={true}>
+//   <CheckBox
+//     classes={{ checked: classes.checked }}
+//     checked={pointIsChecked}
+//     onChange={handlePointIsChecked}
+//   />
+//   <ListItemText
+//     primary={"界址点"}
+//     disableTypography={true}
+//     className={classes.listItemText}
+//   />
+// </MenuItem>
+
+// <MenuItem className={classes.menuitem} disableGutters={true}>
+//   <CheckBox
+//     classes={{ checked: classes.checked }}
+//     checked={lineIsChecked}
+//     onChange={handleLineIsChecked}
+//   />
+//   <ListItemText
+//     primary={"四至"}
+//     disableTypography={true}
+//     className={classes.listItemText}
+//   />
+// </MenuItem>
+
+// <MenuItem className={classes.menuitem} disableGutters={true}>
+//   <CheckBox
+//     classes={{ checked: classes.checked }}
+//     checked={polygonIsChecked}
+//     onChange={handlePolygonIsChecked}
+//   />
+//   <ListItemText
+//     primary={"宗地"}
+//     disableTypography={true}
+//     className={classes.listItemText}
+//   />
+// </MenuItem>
+
+// <MenuItem className={classes.menuitem} disableGutters={true}>
+//   <CheckBox
+//     classes={{ checked: classes.checked }}
+//     checked={labelIsChecked}
+//     onChange={handleLabelIsChecked}
+//   />
+//   <ListItemText
+//     primary={"注记"}
+//     disableTypography={true}
+//     className={classes.listItemText}
+//   />
+// </MenuItem>
+
+// <FormGroup>
+//   <FormControlLabel
+//     control={
+//       <Checkbox
+//         classes={{ checked: classes.checked }}
+//         checked={true}
+//         value="RemoteSensingImage"
+//       />
+//     }
+//     disabled={true}
+//     label="影像图"
+//     disableTypography={true}
+//     className={classes.formControlLabel}
+//   />
+//   <FormControlLabel
+//     control={
+//       <Checkbox
+//         classes={{ checked: classes.checked }}
+//         checked={topographicMapIsChecked}
+//         onChange={handleTopographicMapIsChecked}
+//       />
+//     }
+//     label="地形图"
+//   />
+//   <FormControlLabel
+//     control={
+//       <Checkbox
+//         classes={{ checked: classes.checked }}
+//         checked={tianDiTuIsChecked}
+//         onChange={handleTianDiTuIsIsChecked}
+//         value="TianDiTu"
+//       />
+//     }
+//     label="天地图"
+//   />
+//   <FormControlLabel
+//     control={
+//       <Checkbox
+//         classes={{ checked: classes.checked }}
+//         checked={pointIsChecked}
+//         onChange={handlePointIsChecked}
+//         value="BoundaryMark"
+//       />
+//     }
+//     label="界址点"
+//   />
+//   <FormControlLabel
+//     control={
+//       <Checkbox
+//         classes={{ checked: classes.checked }}
+//         checked={lineIsChecked}
+//         onChange={handleLineIsChecked}
+//         value="SiZhi"
+//       />
+//     }
+//     label="四至"
+//   />
+//   <FormControlLabel
+//     control={
+//       <Checkbox
+//         classes={{ checked: classes.checked }}
+//         checked={polygonIsChecked}
+//         onChange={handlePolygonIsChecked}
+//         value="LandParcel"
+//       />
+//     }
+//     label="宗地"
+//   />
+//   <FormControlLabel
+//     control={
+//       <Checkbox
+//         classes={{ checked: classes.checked }}
+//         checked={labelIsChecked}
+//         onChange={handleLabelIsChecked}
+//         value="Notation"
+//       />
+//     }
+//     label="注记"
+//   />
+// </FormGroup>
