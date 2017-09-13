@@ -33,14 +33,14 @@ import RootReducer from "./../../redux/RootReducer";
 import { NavLink } from "react-router-dom";
 import uuidv4 from "uuid/v4";
 //import icon
-import FontAwesome from "react-fontawesome";
+// import FontAwesome from "react-fontawesome";
+import AccountCircleIcon from "material-ui-icons/AccountCircle";
 import Bluetooth from "material-ui-icons/Bluetooth";
 import Devices from "material-ui-icons/Devices";
 import Photo from "material-ui-icons/Photo";
 //import color
 import blue from "material-ui/colors/blue";
 //import page
-
 import LoginView from "../../views/LoginView";
 
 // inset css
@@ -64,11 +64,17 @@ const styles = {
     flexDirection: "column",
     justify: "space-between",
     paddingLeft: "0px",
-    paddingRight: "60px"
+    paddingRight: "40%"
   },
-
+  listItemIcon: {
+    width: "60%",
+    height: "60%",
+    margin: 0,
+    color: "#C1C6C9"
+  },
   listItemText: {
-    fontSize: "20px",
+    padding: "0px",
+    fontSize: "0.8em",
     color: "#ffffff",
     fontFamily: "微软雅黑",
     fontWeight: "bold",
@@ -199,20 +205,12 @@ class UserModule extends Component {
       <div>
         <ListItem
           button
+          disableGutters={true}
           className={classes.listItem}
           onClick={this.handleClick}
         >
           <ListItemIcon>
-            <FontAwesome
-              name="user"
-              size="3x"
-              style={{
-                width: "34.28px",
-                height: "48px",
-                margin: "0px",
-                color: "#C1C6C9"
-              }}
-            />
+            <AccountCircleIcon className={classes.listItemIcon} />
           </ListItemIcon>
           <ListItemText
             primary="用户名"

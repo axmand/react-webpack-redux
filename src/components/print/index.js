@@ -18,21 +18,23 @@ import PrintIcon from 'material-ui-icons/Print';
 
 const styles = {
   listitem: {
-    display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center ',
+    paddingTop: "15%",
+    paddingBottom: "15%",
   },
   listItemIcon: {
-		width: 85,
-		height: 85,
+		width: "50%",
+    height: "50%",
 		margin: 0,
 		color: '#C1C6C9',
 	},
   listItemText: {
-    fontSize: '24px',
+    fontSize: '1em',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
+    padding: '0px',
   },
 }
 
