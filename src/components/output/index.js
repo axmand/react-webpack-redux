@@ -8,8 +8,9 @@ import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
-import Table, {  TableBody, TableCell, TableHead, TableRow, TableSortLabel} from 'material-ui/Table';
+import Table, {  TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
+import Paper from 'material-ui/Paper';
 //图标
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
@@ -56,8 +57,24 @@ const styles = {
     },
     position: 'relative'
   },
+  paper: {
+    width: '100%',
+    marginTop: 20,
+    overflowX: 'auto',
+  },
 }
 
+let id = 0;
+function createData(name, byte) {
+  id += 1;
+  return { id, name, byte };
+}
+
+const data = [
+  createData('项目一', '159'),
+  createData('项目二', '237'),
+
+];
 
 class OutputModule extends Component {
 
@@ -100,7 +117,8 @@ class OutputModule extends Component {
         </AppBar>
        
         <DialogContent style={{ overflowY: 'auto' }}>
-        <paper>
+        <Paper className={classes.paper}>
+          <Table>
           <TableHead>
             <TableRow>
               <TableCell checkbox>
@@ -111,8 +129,20 @@ class OutputModule extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
+            {data.map(n => {
+            return (
+              <TableRow key={n.id}>
+                <TableCell checkbox>
+                    <Checkbox/>
+                  </TableCell>
+                <TableCell>{n.name}</TableCell>
+                <TableCell>{n.byte}</TableCell>
+              </TableRow>
+            );
+          })}
           </TableBody>
-        </paper>
+        </Table>
+        </Paper>
         </DialogContent>
       </Dialog>
     </div>
@@ -156,8 +186,6 @@ const OutputReduce = (
   state = {
     OutputShow: false,
   }, action) => {
-
-  let newState = JSON.parse(JSON.stringify(state))
 
   if (action.type === "handleOutputShow") {
     const OutputShow = { OutputShow: !state.OutputShow }
