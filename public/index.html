@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!-- 编码语言 -->
   <meta charset="UTF-8">
@@ -10,31 +11,46 @@
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <title>南宁地籍调查移动端</title>
 </head>
+
 <body style="margin:0px">
   <style>
-    table.mytable {
-      border: 2px solid #444;  
-      text-align:center;
-      width:100%;
-      vertical-align: middle;      
+    body {
+      font-size: 12px
     }
+
+    @media screen and (min-width: 1200px) {
+      body {
+        font-size: 24px
+      }
+    }
+
+    table.mytable {
+      border: 2px solid #444;
+      text-align: center;
+      width: 100%;
+      vertical-align: middle;
+    }
+
     td {
       border: 1px solid #444;
-    } 
+    }
+
     p {
-      text-align:center;
-      font-family:"Times New Roman";
-      font-size:15px;
-    } 
+      text-align: center;
+      font-family: "Times New Roman";
+      font-size: 15px;
+    }
+
     h1 {
-      text-align:center;
-      font-family:"Times New Roman";
-      font-size:25px;
-    } 
+      text-align: center;
+      font-family: "Times New Roman";
+      font-size: 25px;
+    }
   </style>
   <noscript>
     需要允许浏览器运行javascript
   </noscript>
   <div id="root"></div>
 </body>
+
 </html>

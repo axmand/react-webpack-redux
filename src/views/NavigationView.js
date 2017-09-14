@@ -29,24 +29,16 @@ class NavigationPanel extends Component {
   
     return (
       <div className={classes.root}>
-        <List>
+        <List >
           <UserModule />
           <Divider light />
-          <ListItem />
           <ProjectModule />
-          <ListItem />
           <InvestigationModule />
-          <ListItem />
           <BoundaryModule />
-          <ListItem />
           <SketchModule />
-          <ListItem />
           <ObligeeModule />
-          <ListItem />
           <PrintModule />
-          <ListItem />
           <OutputModule />
-          <ListItem />
         </List>
       </div>
     )

@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles'
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import FontAwesome from 'react-fontawesome'
+import ContactsIcon from 'material-ui-icons/Contacts';
+// import FontAwesome from 'react-fontawesome'
 // import DevicesIcon from 'material-ui-icons/Devices'
 
 import Menu, { MenuItem } from 'material-ui/Menu'
@@ -11,13 +12,21 @@ const styles = {
   listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
+    paddingTop: "15%",
+    paddingBottom: "15%",
+  },
+  listItemIcon: {
+    width: "50%",
+    height: "50%",
+    margin: 0,
+    color: "#C1C6C9"
   },
   listItemText: {
-    fontSize: '24px',
-    lineHeight: '40px',
+    fontSize: '1em',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
+    padding: '0px',
   },
 }
 
@@ -43,16 +52,7 @@ class InvestigationModule extends Component {
       <div>
         <ListItem button className={classes.listitem} disableGutters={true} onClick={this.handleClick}>
           <ListItemIcon>
-            <FontAwesome
-              name='database'
-              size='4x'
-              style={{
-                width: '54.85px',
-                height: '64px',
-                margin: '0px',
-                color: '#C1C6C9',
-              }}
-            />
+            <ContactsIcon className={classes.listItemIcon}/>
           </ListItemIcon>            
           <ListItemText
             primary="调查取证"
