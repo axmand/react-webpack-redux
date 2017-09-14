@@ -14,7 +14,7 @@ const styles ={
     padding: "0px",
     border: 0,
     background: "rgba(0, 0, 0, .6)",
-    borderRadius: '12.5%',
+    borderRadius: '6%',
   },
   text:{
     fontSize:'0.75em',

@@ -15,63 +15,75 @@ import ThematicToolBar from './ThematicToolBar'
 const styles={
 	root:{
 		width: '100%', 
-		height: '1232px',
+		height: `${window.innerHeight-48}px`,
 		background: 'white',
 		display: 'flex',
 		justifyContent: 'center',
 	},
 	thematicMap: {
 		position:'absolute',
-		top:'50px',
-		width: '840px',
-		height:'1188px',
+		top:'7.8125%',
+		width: '46%',
+		height:'87.5%',
 	},
 	title:{
-		padding:'34.33px 0 15px 0',
-		fontSize:'32px',
+		padding:'2% 0 0 0',
+		fontSize:'1.5em',
 		fontFamily:'宋体',
-		fontWeight:'800'
+		fontWeight:'800',
+		height:'43.75%'
+	},
+	table:{
+		width:'100%',
+		position:'absolute',
+		top:'7%'
+	},
+	tabletext12:{
+		width:'100%'
 	},
 	tabletext1:{
 		border:'solid 0.5px #000',
-		fontSize:'20px',
+		fontSize:'0.5em',
 		fontFamily:'宋体',
 		textAlign:'center',
-		lineHeight:'48px',
-		height:'48px',
 	},
 	tabletext2:{
 		border:'solid 0.5px #000',
-		fontSize:'20px',
+		fontSize:'1em',
 		fontFamily:'宋体',
 		textAlign:'center',
-		lineHeight:'48px',		
-		height:'48px',
 	},	
 	mapdiv:{
 		border:'solid 0.5px #000',
+		width:'100%'
 	},
 	bottom1:{
-		fontSize:'20px',
-		fontFamily:'宋体',
-		padding:'20px 0 10px 0',
-		width:'100px'
+		width:'100%',
+		height: `${window.innerHeight*0.05}px`,
+		position:'absolute',
+		top:'90%'
 	},
 	bottom2:{
-		fontSize:'20px',
-		fontFamily:'宋体',
-		padding:'20px 0 10px 30px',
-		width:'100px'
+		width:'100%',
+		height: `${window.innerHeight*0.05}px`,
+		position:'absolute',
+		top:'94%'
 	},
+	bottom11:{
+		fontSize:'1em',
+		fontFamily:'宋体',
+		padding:0,
+	},
+
 	right:{
 		position:'absolute',
-		fontSize:'20px',
+		fontSize:'1em',
 		fontFamily:'宋体',
-		width:'10px',
-		height:'280px',
-		top:'800px',
-		padding:'0 10px 0 10px',
-
+		letterSpacing:'20px',
+		width:'2%',
+		height:'40%',
+		top:'61%',
+		padding:'0 1% 0 1%'
 	}
 
 }
@@ -101,11 +113,11 @@ class ThematicMap extends Component {
 	}
 
 	render(){
+
 		const classes = this.props.classes;
-		const { onStyleTypeClick } = this.props;
 
 		return(
-			<div className={classes.root}>
+			<div className={classes.root} >
 				<Paper className={classes.thematicMap}>
 					<Grid container direction='column' spacing={0}>
 						<Grid item xs>
@@ -113,7 +125,7 @@ class ThematicMap extends Component {
 								不动产单元草图
 							</Typography>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} className={classes.table}>
 							<Grid container spacing={0}>
 								<Grid item xs>
 								</Grid>
@@ -123,17 +135,17 @@ class ThematicMap extends Component {
 										direction='column' 
 										spacing={0}
 										style={{
-											border:'solid 1px #606060',
+											border:'solid 0.5px #606060',
 										}}
 									>
-										<Grid item>
+										<Grid item className={classes.tabletext12}>
 											<Grid container spacing={0}>
-												<Grid item xs={2}>
+												<Grid item xs={3}>
 													<Typography type='subheading' className={classes.tabletext1}>
 														土地权利人
 													</Typography>
 												</Grid>
-												<Grid item xs={4}>
+												<Grid item xs={3}>
 													<Typography type='subheading' className={classes.tabletext2}>
 														张XX、王xx
 													</Typography>
@@ -145,41 +157,55 @@ class ThematicMap extends Component {
 												</Grid>
 												<Grid item xs={5}>
 													<Typography type='subheading' className={classes.tabletext2}>
-														南宁市blablabal
+														南宁市blablabla
 													</Typography>
 												</Grid>
 											</Grid>
 										</Grid>
 										<Grid item className={classes.mapdiv}>
-											<div ref='ThematicMap' style={{ color: "#000", width: '100%', height: '934.34px' }} />
+											<div ref='ThematicMap' style={{ color: "#000", width: '100%', height:`${window.innerHeight*0.69}`}} />
 										</Grid>
 									</Grid>
 								</Grid>
 								<Grid item xs>
-									<Typography className={classes.right}>
+									<div className={classes.right}>
 									X  X不动产权籍调查机构绘制
+									</div>
+								</Grid>
+							</Grid>
+						</Grid>
+						<Grid item item xs={12} className={classes.bottom1}>
+							<Grid container spacing={0}>
+								<Grid item xs={5}>
+								</Grid>
+								<Grid item xs={2}>
+									<Typography type='headline' className={classes.bottom11}>
+										调查者：					
+									</Typography>
+								</Grid>
+								<Grid item xs={5}>
+									<Typography type='headline' className={classes.bottom11}>
+										调查日期：
 									</Typography>
 								</Grid>
 							</Grid>
 						</Grid>
-						
-						<Grid item xs={12}>
-						<Grid container spacing={0}>
-							<Grid item xs={5}>
+						<Grid item item xs={12} className={classes.bottom2}>
+							<Grid container spacing={0}>
+								<Grid item xs={5}>
+								</Grid>
+								<Grid item xs={2}>
+									<Typography type='headline' className={classes.bottom11}>
+										审核者：					
+									</Typography>
+								</Grid>
+								<Grid item xs={5}>
+									<Typography type='headline' className={classes.bottom11}>
+										调查日期：
+									</Typography>
+								</Grid>
 							</Grid>
-							<Grid item xs={2}>							
-								<Typography type='headline' className={classes.bottom1}>
-									调查者：<br/>审核者：					
-								</Typography>
-							</Grid>
-							<Grid item xs={5}>
-								<Typography type='headline' className={classes.bottom2}>
-									调查日期：<br/>调查日期：
-								</Typography>
-							</Grid>
-							</Grid>
-						</Grid>
-
+						</Grid>						
 					</Grid>
 				</Paper>
 			</div>

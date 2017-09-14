@@ -63,6 +63,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justify: "space-between",
+    padding:0,
     paddingLeft: "0px",
     paddingRight: "40%"
   },
