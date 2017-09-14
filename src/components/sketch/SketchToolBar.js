@@ -25,31 +25,31 @@ import DragHandle from 'material-ui-icons/DragHandle';//拖动
 
 const styles={
     root:{
-         height:'80px',
-         width:'1040px',
+         height:'100%',
+         width:'75%',
          position:'absolute',
-         top:'80px',
-         left:'100px',
+         top:`${window.innerHeight*0.1}px`,
+         left:'10%',
          display: 'flex',
          alignItem: 'center',
          background: 'rgba(0, 0, 0, .6)',
-         borderRadius: 16,
+         borderRadius: 8,
          boxShadow: '2px 2px 2px 2px rgba(0, 0, 0, 0.2)'
     },   
     button:{
         display:'inline-block',
-        minheight:'80px',
-        minWidth:'80px',
+        minheight:'6.25%',
+        minWidth:'4.17%',
         padding:0,
         border:0
     },
     icon:{
-        height:'40px',
-        width:'40px',
+        height:'45%',
+        width:'45%',
         color:'#b3b3b3',
     },
     text:{
-        fontSize:'18px',
+        fontSize:'1em',
         color:'#b3b3b3'
     }
 
@@ -111,11 +111,11 @@ class SkechToolBar extends Component{
                         <CreateIcon className={classes.icon}/>
                         <Typograghy className={classes.text}>签章</Typograghy>
                     </Button>
-										<Button  className={classes.button}>
-											<span className="cursor">
-													<DragHandle className={classes.icon}/>
-											</span> 
-										</Button>
+					<Button  className={classes.button}>
+						<span className="cursor">
+						    <DragHandle className={classes.icon}/>
+						</span> 
+					</Button>
                     <Dialog
                         open={ showDelDialog }
                         onRequestClose={ handleCloseDelDialog }>
