@@ -52,7 +52,7 @@ const styles = {
   },
   dialog: {
     width: '1650px',
-    height: '1250px',
+    height: '1150px',
     marginTop: 20,
     marginLeft: 200
   }
@@ -124,13 +124,15 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
-      fetch('http://172.16.103.250:1338/project/list')
+      fetch('http://172.16.103.250:1338//project/list')
+    //  fetch('http://172.16.103.250:1338//project/create/{name}')
       .then(response => response.json())
       .then( json => {
         dispatch({
           type: 'handleContentShow',
           payload: json,
         })
+        console.log(json)
       })
       .catch(e => console.log("Oops, error", e))
 
@@ -149,7 +151,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, {
 const ProjectReduce = (
   state = {
     inputItems: [],
-    IdNumber: '',
     ContentShow: false,
   }, action) => {
 
@@ -216,7 +217,24 @@ const ProjectReduce = (
   if (action.type === "handleContentShow") {
     let list = [];
     list = JSON.parse(action.payload.data);
+    // for(let i = 0;i<list.length;i++)
+    //   {
+    //     const uuidv4 = require('uuid/v4');
+    //     let Id = uuidv4();
+    //     newState.inputItems.push({text:list[i],key:Id})
+    //   }
     newState.inputItems = list.slice(0);
+    // for(let i = 0;i<list.length;i++)
+    //   {
+    //     const uuidv4 = require('uuid/v4');
+    //     let Id = uuidv4();
+    //     itemId.push(Id)
+    //   }
+    // for(let i = 0;i<list.length;i++)
+    //   {
+    //     info[itemId[i]] = list[i]
+    //   }
+    // newState.inputItems = info.slice(0);
     newState.ContentShow = !state.ContentShow;
     return { ...state, ...newState }; 
   }

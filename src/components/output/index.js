@@ -8,6 +8,9 @@ import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
+import Table, {  TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
+import Checkbox from 'material-ui/Checkbox';
+import Paper from 'material-ui/Paper';
 //图标
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
@@ -43,7 +46,7 @@ const styles = {
   },
   dialog: {
     width: '1650px',
-    height: '1250px',
+    height: '1150px',
     marginTop: 20,
     marginLeft: 200
   },
@@ -54,7 +57,24 @@ const styles = {
     },
     position: 'relative'
   },
+  paper: {
+    width: '100%',
+    marginTop: 20,
+    overflowX: 'auto',
+  },
 }
+
+let id = 0;
+function createData(name, byte) {
+  id += 1;
+  return { id, name, byte };
+}
+
+const data = [
+  createData('项目一', '159'),
+  createData('项目二', '237'),
+
+];
 
 class OutputModule extends Component {
 
@@ -95,8 +115,34 @@ class OutputModule extends Component {
             </IconButton>
           </Toolbar>
         </AppBar>
+       
         <DialogContent style={{ overflowY: 'auto' }}>
-          111
+        <Paper className={classes.paper}>
+          <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell checkbox>
+                <Checkbox/>
+              </TableCell>
+              <TableCell>文件夹名称</TableCell>
+              <TableCell >文件大小</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map(n => {
+            return (
+              <TableRow key={n.id}>
+                <TableCell checkbox>
+                    <Checkbox/>
+                  </TableCell>
+                <TableCell>{n.name}</TableCell>
+                <TableCell>{n.byte}</TableCell>
+              </TableRow>
+            );
+          })}
+          </TableBody>
+        </Table>
+        </Paper>
         </DialogContent>
       </Dialog>
     </div>
@@ -107,7 +153,7 @@ class OutputModule extends Component {
 OutputModule.propTypes = {
   handleOutputClose: PropTypes.func.isRequired,
   handleOutputShow: PropTypes.func.isRequired,
-  OutputShow: PropTypes.bool.isRequired
+  OutputShow: PropTypes.bool.isRequired,
 };
 
 //声明State与Action
@@ -140,8 +186,6 @@ const OutputReduce = (
   state = {
     OutputShow: false,
   }, action) => {
-
-  let newState = JSON.parse(JSON.stringify(state))
 
   if (action.type === "handleOutputShow") {
     const OutputShow = { OutputShow: !state.OutputShow }
