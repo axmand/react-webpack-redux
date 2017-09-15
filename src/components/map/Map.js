@@ -236,7 +236,11 @@ const sketchReduce = (state = {
     redoIsChecked:false,
     saveIsChecked:false,
     showDelDialog:false,
-    mapJSONData:JSON
+    jzdJSONData:JSON,
+    szJSONData:JSON,
+    zdJSONData:JSON,
+    zjJSONData:JSON,
+    mapCenter:[],
 }, action) => {
 
 //用于获取点线面对象
@@ -335,11 +339,11 @@ const sketchReduce = (state = {
                 'box': false,
                 'type':'Label',
                 'symbol': {
-                    'textWeight' : 'bold',
+                    'textWeight' : '100',
                     'textRotation': rotation,
                     'textFaceName' : '宋体',
                     'textFill' : '#34495e',
-                    'textSize' : 16.8,
+                    'textSize' : 12,
                     'textDx': dx,
                     'textDy': dy,
                     'textHorizontalAlignment': 'middle',
@@ -372,9 +376,9 @@ const sketchReduce = (state = {
                         'box': false,
                         'type':'Label',
                         'symbol': {
-                            'textWeight' : 'bold',
+                            'textWeight' : '100',
                             'textFaceName' : '宋体',                      
-                            'textSize': 18,
+                            'textSize': 12,
                             'textFill': '#000000',
                             'textDy': -14,
                             'textAlign': 'auto',
@@ -429,7 +433,7 @@ const sketchReduce = (state = {
         drawLine = drawLine || function(){ 
             recoverObj();
             drawTool.setMode('LineString').enable();
-            drawTool.setSymbol({ 'lineColor': '#000000','lineWidth': 2});   
+            drawTool.setSymbol({ 'lineColor': '#000000','lineWidth': 1});   
             drawTool.on('drawend', drawLineEnd);    
         }
 
@@ -466,9 +470,9 @@ const sketchReduce = (state = {
             drawTool.setMode('Polygon').enable();
             drawTool.setSymbol({
                 'lineColor' : '#000000',
-                'lineWidth' : 3,
+                'lineWidth' : 1.5,
                 'polygonFill' : '#FFFFFF',
-                'polygonOpacity' : 0.6
+                'polygonOpacity' : 0.4
             });                 
             drawTool.on('drawend', drawPolygonEnd);   
         }
@@ -501,10 +505,10 @@ const sketchReduce = (state = {
                 'box': false,
                 'type':'Label',
                 'symbol': {
-                    'textWeight' : 'bold',
+                    'textWeight' : '100',
                     'textFaceName' : '宋体',
                     'textFill' : '#34495e',
-                    'textSize' : 16.8,
+                    'textSize' : 12,
                     'textHorizontalAlignment': 'middle',
                     'textVerticalAlignment': 'middle',
                     'textAlign': 'center',
@@ -778,10 +782,16 @@ const sketchReduce = (state = {
 
             case 'saveClick':
                 console.log('保存');
+                let mapCenter=map.getCenter();
                 const saveData= {
                     saveIsChecked:true,
-                    mapJSONData:map.toJSON()
+                    mapCenter:mapCenter,
+                    jzdJSONData:map.getLayer('point').toJSON(),
+                    szJSONData:map.getLayer('line').toJSON(),
+                    zdJSONData:map.getLayer('polygon').toJSON(),
+                    zjJSONData: map.getLayer('label').toJSON(),
                 }
+                console.log(saveData);
                 return Object.assign({},state,{... saveData});
 
             default:

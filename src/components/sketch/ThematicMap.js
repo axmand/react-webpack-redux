@@ -24,7 +24,7 @@ const styles={
 		position:'absolute',
 		top:'7.8125%',
 		width: '46%',
-		height:'87.5%',
+		height: `${window.innerHeight*0.875}px`,
 	},
 	title:{
 		padding:'2% 0 0 0',
@@ -101,15 +101,21 @@ let thematicMap;
 class ThematicMap extends Component {
 
 	componentDidMount() {
+		const {mapCenter,jzdJSONData,szJSONData,zdJSONData,zjJSONData }=this.props;
 		const ThematicMapDiv = this.refs.ThematicMap;
 		thematicMap = new maptalks.Map(ThematicMapDiv, {
-				center: [-0.113049, 51.498568],
+				center: mapCenter,
 				zoom: 20,
 				baseLayer: new maptalks.TileLayer('base', {
 						urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
 						subdomains: ['a', 'b', 'c', 'd', 'e']
 				}),
 		});
+
+		maptalks.Layer.fromJSON(jzdJSONData).addTo(thematicMap);
+		maptalks.Layer.fromJSON(szJSONData).addTo(thematicMap);
+		maptalks.Layer.fromJSON(zdJSONData).addTo(thematicMap);
+		maptalks.Layer.fromJSON(zjJSONData).addTo(thematicMap);
 	}
 
 	render(){
@@ -215,55 +221,23 @@ class ThematicMap extends Component {
 
 ThematicMap.PropTypes={
     classes: PropTypes.func.isRequired,
-    onStyleTypeClick: PropTypes.func.isRequired,
 }
 
-const thematicMapReduce = (state = {
-    pointStyle:undefined,
-    lineStyle:undefined,
-    polygonStyle:undefined,
-    labelStyle:undefined,
-    pointStyleIsClicked:false,
-    lineStyleIsClicked:false,
-    polygonStyleIsClicked:false,
-    labelStyleIsClicked:false,
-},action)=>{
-    
-    if(action.type ==="handleStyle"){
-        const closeAllStyleDialog1={
-            pointStyleIsClicked:false,
-            lineStyleIsClicked:false,
-            polygonStyleIsClicked:false,
-            labelStyleIsClicked:false,
-        }
-        return Object.assign({},state,{... closeAllStyleDialog1});   
-    }
-        return {...state};
-}
 
-RootReducer.merge(thematicMapReduce);
-
-const mapStateToProps = (state, ownProps) => {
-    const props = ownProps;
+const mapStateToProps = (state) => {
+    const sketchState=state.sketchReduce;
 
     return {
-        text: ownProps.ownProps,
+		mapCenter:sketchState.mapCenter,
+		jzdJSONData:sketchState.jzdJSONData,
+		szJSONData:sketchState.szJSONData,
+		zdJSONData:sketchState.zdJSONData,
+		zjJSONData:sketchState.zjJSONData
     }
   }
   
   const mapDispatchToProps = (dispatch, ownProps) => {
-      return {
-           onStyleTypeClick: (text) => {
-            dispatch({
-                type: 'styleTypeClick',
-                payload: {
-                    command: text
-                }
-            });
-        },
-
-
-      }
+      return null
   }
   
   export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{name:'ThematicMap'})(ThematicMap));
