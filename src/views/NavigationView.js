@@ -41,6 +41,8 @@ class NavigationPanel extends Component {
           <ListItem />
           <PrintModule />
           <ListItem />
+          <PrintModule />
+          <PrintModule />
         </List>
       </div>
     )
