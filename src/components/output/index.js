@@ -11,6 +11,7 @@ import Typography from 'material-ui/Typography';
 import Table, {  TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
+import Button from 'material-ui/Button';
 //图标
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
@@ -59,8 +60,12 @@ const styles = {
   },
   paper: {
     width: '100%',
-    marginTop: 20,
     overflowX: 'auto',
+  },
+  tableText: {
+    fontSize: '20px',
+    padding: '0px',
+    border: '0px' 
   },
 }
 
@@ -99,51 +104,53 @@ class OutputModule extends Component {
       </ListItem>
 
       <Dialog
-        fullScreen
-        className={classes.dialog}
         open={OutputShow}
         onRequestClose={handleOutputClose}
-        transition={<Slide direction="up" />}
-      >
-        <AppBar position="static">
-          <Toolbar>
-             <Typography type="title" color="inherit" className={classes.flex}>
-              数据导出
-                </Typography>
-            <IconButton color="contrast" onClick={handleOutputClose} aria-label="Delete">
-              <ClearIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-       
-        <DialogContent style={{ overflowY: 'auto' }}>
+        transition={<Slide direction="up" />}>
         <Paper className={classes.paper}>
-          <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell checkbox>
-                <Checkbox/>
-              </TableCell>
-              <TableCell>文件夹名称</TableCell>
-              <TableCell >文件大小</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map(n => {
-            return (
-              <TableRow key={n.id}>
-                <TableCell checkbox>
-                    <Checkbox/>
-                  </TableCell>
-                <TableCell>{n.name}</TableCell>
-                <TableCell>{n.byte}</TableCell>
-              </TableRow>
-            );
-          })}
-          </TableBody>
+        <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell ><Checkbox/></TableCell>
+            <TableCell><p>表格名称</p></TableCell>
+            <TableCell><p>文件大小</p></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow >
+            <TableCell ><Checkbox/></TableCell>
+            <TableCell >界址标示表</TableCell>
+            <TableCell >权籍调查表</TableCell>
+          </TableRow>
+          <TableRow >
+            <TableCell ><Checkbox/></TableCell>
+            <TableCell >界址标示表</TableCell>                         
+            <TableCell >界址标示表</TableCell>        
+          </TableRow>
+          <TableRow >
+            <TableCell ><Checkbox/></TableCell>
+            <TableCell >共有宗地面积分摊表</TableCell>
+            <TableCell >界址签章表</TableCell>
+          </TableRow>
+          <TableRow >
+            <TableCell ><Checkbox/></TableCell>
+            <TableCell >共有宗地面积分摊表</TableCell>
+            <TableCell >界址说明表</TableCell>
+          </TableRow>
+          <TableRow >
+            <TableCell ><Checkbox/></TableCell>
+            <TableCell >共有宗地面积分摊表</TableCell>
+            <TableCell >调查审核表</TableCell>
+          </TableRow>
+          <TableRow >
+            <TableCell ><Checkbox/></TableCell>
+            <TableCell >共有宗地面积分摊表</TableCell>
+            <TableCell>55kb</TableCell>  
+          </TableRow>
+        </TableBody>
         </Table>
         </Paper>
-        </DialogContent>
+        <Button  height="150px"  width="100%">数据导出</Button>
       </Dialog>
     </div>
     )
@@ -202,3 +209,30 @@ const OutputReduce = (
 }
 
 RootReducer.merge(OutputReduce);
+
+
+
+        //   <Table >
+        //   <TableHead>
+        //     <TableRow>
+        //       <TableCell checkbox>
+        //         <Checkbox/>
+        //       </TableCell>
+        //       <TableCell>文件夹名称</TableCell>
+        //       <TableCell >文件大小</TableCell>
+        //     </TableRow>
+        //   </TableHead>
+        //   <TableBody>
+        //     {data.map(n => {
+        //     return (
+        //       <TableRow key={n.id}>
+        //         <TableCell checkbox>
+        //             <Checkbox/>
+        //         </TableCell>
+        //         <TableCell className={classes.tableText}>{n.name}</TableCell>
+        //         <TableCell className={classes.tableText}>{n.byte}</TableCell>
+        //       </TableRow>
+        //     );
+        //   })}
+        //   </TableBody>
+        // </Table>
