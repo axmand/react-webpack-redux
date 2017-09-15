@@ -124,7 +124,12 @@ class SecondDialog extends Component {
           <TabContainer>
             
               <h1 ><br></br>界址说明表</h1>
-             <BoundarySpecification />
+
+              <Provider store={store}>  
+  
+              <BoundarySpecification />  
+    </Provider>  
+            
           </TabContainer>}
         </Dialog>
       </div>
@@ -187,25 +192,26 @@ export default connect(mapStateToProps, mapDispatchToProps)(SD1);
 
 
 // Reducer
-function reducer(state = { Owner:"peter",User:"jack" }, action) {
+function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"}}, action) {
   
    
-  switch (action.type) {
+  let value = state.value;
   
-    case 'changeOwner':
-   
-    return Object.assign({}, state, {
-        	Owner: action.payload.inputValue
-      });
-
-    case 'changeUser':
-    return Object.assign({}, state, {
-        	User: action.payload.inputValue
-      });
-   
-    default:
-      return state
-  }
+    switch (action.type) {
+  
+      case 'change':
+       var inputName=action.payload.inputName;
+        value[inputName]=action.payload.inputValue;
+        return Object.assign({}, state, {
+          
+          value:value
+        });
+  
+     
+  
+      default:
+        return state
+    }
 }
 
 // Store

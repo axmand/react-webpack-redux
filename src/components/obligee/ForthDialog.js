@@ -89,7 +89,12 @@ class ForthDialog extends Component {
           <TabContainer >
 
             <h1><br></br>共有/共用宗地面积分摊表</h1>
-<CommonAreaTable/>
+
+            <Provider store={ObligeeTableStore}>
+
+            <CommonAreaTable/>
+            
+                </Provider>
   
           </TabContainer>
         
@@ -129,3 +134,31 @@ function mapDispatchToProps(dispatch) {
 var FD1=withStyles(styleSheet)(ForthDialog);
 
 export default connect(mapStateToProps, mapDispatchToProps)(FD1);
+
+
+// // Reducer
+function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"} }, action) {
+  
+    let value = state.value;
+  
+    switch (action.type) {
+  
+      case 'change':
+       var inputName=action.payload.inputName;
+        value[inputName]=action.payload.inputValue;
+        return Object.assign({}, state, {
+          
+          value:value
+        });
+  
+     
+  
+      default:
+        return state
+    }
+  }
+  
+  // Store
+  const ObligeeTableStore = createStore(reducer);
+  
+  RootReducer.merge(reducer);
