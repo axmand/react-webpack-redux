@@ -6,7 +6,6 @@
  */
 
 import React, { Component } from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import NavigationView from './NavigationView'
@@ -19,6 +18,7 @@ import Paper from 'material-ui/Paper';
 const styles = {
   root: {
     flexGrow: 1,
+    width: '100%',
     height: '100%',
   },
 }
@@ -31,23 +31,15 @@ class MainView extends Component {
 
     return (
       <div className={classes.root}>
-        <Router>
-          <Grid container={true} spacing={0}>
+          <Grid container spacing={0}>
             <Grid item xs={1}>
               <NavigationView />
             </Grid>
             <Grid item xs={11} >
-              <Grid container direction='column' spacing={0}>
-                <Grid item xl={12}>
-                  <Paper>
-                    <MapView />
-                  </Paper>
-                  <div style={{ position: 'fixed', bottom: '15px', marginLeft: '15px',fontSize:'16px',textShadow:'5px 2px 6px #aaa'}}>打印机已丢失连接.....</div>
-                </Grid>
-              </Grid>
+              <MapView />
+              <div style={{ position: 'fixed', zIndex: '999999', bottom: '15px', marginLeft: '15px',fontSize:'16px',textShadow:'5px 2px 6px #aaa'}}>打印机已丢失连接.....</div>
             </Grid>
-          </Grid>
-        </Router>
+          </Grid>    
       </div>
     )
   }

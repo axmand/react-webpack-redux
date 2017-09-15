@@ -5,17 +5,30 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles'
 import {ListItem} from 'material-ui/List';
 import Switch from 'material-ui/Switch';
+import Typograghy from 'material-ui/Typography'
 
 const styles ={
   listItem: {
-    flexDirection: 'column',
-    padding: '0px',
-    width: '40px',
-    height: '90px',
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "0px",
     border: 0,
-    background: 'rgba(255, 255, 255, .75)',
-    borderRadius: 5,
+    background: "rgba(0, 0, 0, .6)",
+    borderRadius: '6%',
   },
+  text:{
+    fontSize:'0.75em',
+    color:'#b3b3b3',
+    paddingBottom: '15%',
+},
+bar:{},
+checked:{
+  color:'	#B3D9D9',
+  '& + $bar': {
+    background: '	#B3D9D9',
+  },
+}
+
 }
 
 class RealtimeMapping extends Component {
@@ -26,20 +39,22 @@ class RealtimeMapping extends Component {
     return (
       <ListItem className={classes.listItem}>
         <Switch
+          classes={{
+            checked:classes.checked,
+            bar:classes.bar
+          }}
           checked={realtimeMappingIsChecked}
           onChange={handleRealtimeMapping}          
           aria-label="RealtimeMappingCheckBox"
-          styles={{
-            width: '30px',
-          }}
         />
-        <span>实时<br/>成图</span>
+        <Typograghy className={classes.text}>实时<br/>成图</Typograghy>
       </ListItem>
     );
   }
 }
 
 RealtimeMapping.propTypes = {
+  classes: PropTypes.object.isRequired,
   realtimeMappingIsChecked: PropTypes.bool.isRequired,
   handleRealtimeMapping: PropTypes.func.isRequired
 };

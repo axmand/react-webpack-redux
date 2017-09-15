@@ -3,18 +3,7 @@ import { withStyles } from 'material-ui/styles';
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 // import FontAwesome from 'react-fontawesome'
-// <FontAwesome
-//   name='print'
-//   size='5x'
-//   style={{
-//     width: '29.71px',
-//     height: '32px',
-//     margin: '0px',
-//     padding: '2px',
-//     color: '#C1C6C9',
-//   }}
-// />
-import PrintIcon from 'material-ui-icons/Print';
+import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 
 const styles = {
   listitem: {
@@ -22,13 +11,13 @@ const styles = {
     justifyContent: 'center ',
     paddingTop: "15%",
     paddingBottom: "15%",
-  },
-  listItemIcon: {
-		width: "50%",
-    height: "50%",
-		margin: 0,
-		color: '#C1C6C9',
 	},
+	listItemIcon: {
+    width: "50%",
+    height: "50%",
+    margin: 0,
+    color: "#C1C6C9"
+  },
   listItemText: {
     fontSize: '1em',
     color: '#ffffff',
@@ -38,7 +27,7 @@ const styles = {
   },
 }
 
-class PrintModule extends Component {
+class BoundaryModule extends Component {
 
   render() {
     const classes = this.props.classes;
@@ -46,16 +35,16 @@ class PrintModule extends Component {
     return (
       <ListItem button className={classes.listitem} disableGutters={true}>
         <ListItemIcon>
-          <PrintIcon className={classes.listItemIcon}/>  
+          <PhotoCameraIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
         <ListItemText
           disableTypography={true}
           className={classes.listItemText}
-          primary="打印签章"
+          primary="现场指界"
         />
       </ListItem>
     )
   }
 }
 
-export default withStyles(styles)(PrintModule);
+export default withStyles(styles,{name:'BoundaryModule'})(BoundaryModule);

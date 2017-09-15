@@ -3,21 +3,29 @@ import { connect } from 'react-redux';
 
 import { withStyles } from 'material-ui/styles';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import FontAwesome from 'react-fontawesome'
+import MapIcon from 'material-ui-icons/Map';
+// import FontAwesome from 'react-fontawesome'
 // import MapIcon from 'material-ui-icons/Map';
 
 const styleSheet = {
   listitem: {
-    display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center ',
+    paddingTop: "15%",
+    paddingBottom: "15%",
+  },
+  listItemIcon: {
+    width: "50%",
+    height: "50%",
+    margin: 0,
+    color: "#C1C6C9"
   },
   listItemText: {
-    lineHeight: '32px',
-    padding: '2px',
+    fontSize: '1em',
     color: '#ffffff',
     fontFamily: "微软雅黑",
     fontWeight: 'bold',
+    padding: '0px',
   },
 }
 
@@ -32,20 +40,10 @@ class SketchModule extends Component {
     return (
       <ListItem button className={classes.listitem} disableGutters={true} onClick={onClick}>
         <ListItemIcon>
-          <FontAwesome
-            name='edit'
-            size='2x'
-            style={{
-              width: '32px',
-              height: '32px',
-              margin: '0px',
-              padding: '2px',
-              color: '#C1C6C9',
-            }}
-          />
+          <MapIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
         <ListItemText
-          primary="草图"
+          primary="绘制草图"
           disableTypography={true}
           className={classes.listItemText}
         />

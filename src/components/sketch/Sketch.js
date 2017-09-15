@@ -20,14 +20,14 @@ const styles ={
   },
   tab: {    
     padding: '0px',
-    height:'30px'    
+    height:'7.5%'    
   },
   label: {
     fontSize: '20px',
   },
   button: {
     position: 'absolute',
-    zIndex: '999999',
+    zIndex: '999990',
     right: '0px',
   },
 };
@@ -35,7 +35,7 @@ const styles ={
 class Sketch extends Component {
 
   state = {
-    index: 0,
+    index: 1,
   }
 
   handleChange = (event, index) => {
@@ -70,11 +70,12 @@ class Sketch extends Component {
             <ClearIcon />
           </IconButton>
         </AppBar>
-         {this.state.index === 0 &&
-            <SketchToolBar />}
+        {this.state.index === 0 &&
+          <SketchToolBar />
+        }
         {this.state.index === 1 &&
           <ThematicMap />
-          }
+        }
       </div>            
     )
   }
