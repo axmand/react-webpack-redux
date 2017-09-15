@@ -13,12 +13,12 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 960, height: 680 });
+  mainWindow = new BrowserWindow({ fullscreen: true });
 
   // and load the index.html of the app.
   mainWindow.loadURL(
     url.format({
-      pathname: path.join(__dirname, "./build/index.html"),
+      pathname: path.join(__dirname, "./index.html"),
       protocol: "file:",
       slashes: true
     })
