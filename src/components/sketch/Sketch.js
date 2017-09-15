@@ -35,7 +35,7 @@ const styles ={
 class Sketch extends Component {
 
   state = {
-    index: 1,
+    index: 0,
   }
 
   handleChange = (event, index) => {
