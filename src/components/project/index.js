@@ -125,7 +125,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
       fetch('http://172.16.103.250:1338//project/list')
-    //  fetch('http://172.16.103.250:1338//project/create/{name}')
       .then(response => response.json())
       .then( json => {
         dispatch({
@@ -135,7 +134,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         console.log(json)
       })
       .catch(e => console.log("Oops, error", e))
-
     },
 
     handleContentClose: () => {

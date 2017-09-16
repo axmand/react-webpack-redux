@@ -40,7 +40,7 @@ class ObligeeModule extends Component {
           <FirstDialog   />
           <SecondDialog   />
           <ThirdDialog  />
-  <ForthDialog />
+          <ForthDialog />
    
       </div>
        </Provider>  

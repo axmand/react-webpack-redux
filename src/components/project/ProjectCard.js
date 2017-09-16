@@ -42,7 +42,6 @@ class ProjectCard extends Component {
           <ShowCard
           {...todo} 
           entries = { todo }
-         // Id = {}
           handleContentClose2={ () => handleContentClose2() } 
           />
         )}
