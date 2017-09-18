@@ -1,22 +1,10 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
-
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Dialog, { DialogContent } from 'material-ui/Dialog'
-import Slide from 'material-ui/transitions/Slide';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Table, {  TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
-import Checkbox from 'material-ui/Checkbox';
-import Paper from 'material-ui/Paper';
+import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog'
 import Button from 'material-ui/Button';
 //图标
-import IconButton from 'material-ui/IconButton';
-import ClearIcon from 'material-ui-icons/Clear';
-import FontAwesome from 'react-fontawesome'
-// import FontAwesome from 'react-fontawesome'
 import FileUploadIcon from 'material-ui-icons/FileUpload';
 //redux
 import { connect } from 'react-redux'
@@ -69,18 +57,6 @@ const styles = {
   },
 }
 
-let id = 0;
-function createData(name, byte) {
-  id += 1;
-  return { id, name, byte };
-}
-
-const data = [
-  createData('项目一', '159'),
-  createData('项目二', '237'),
-
-];
-
 class OutputModule extends Component {
 
   render() {
@@ -106,51 +82,21 @@ class OutputModule extends Component {
       <Dialog
         open={OutputShow}
         onRequestClose={handleOutputClose}
-        transition={<Slide direction="up" />}>
-        <Paper className={classes.paper}>
-        <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell ><Checkbox/></TableCell>
-            <TableCell><p>表格名称</p></TableCell>
-            <TableCell><p>文件大小</p></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow >
-            <TableCell ><Checkbox/></TableCell>
-            <TableCell >界址标示表</TableCell>
-            <TableCell >权籍调查表</TableCell>
-          </TableRow>
-          <TableRow >
-            <TableCell ><Checkbox/></TableCell>
-            <TableCell >界址标示表</TableCell>                         
-            <TableCell >界址标示表</TableCell>        
-          </TableRow>
-          <TableRow >
-            <TableCell ><Checkbox/></TableCell>
-            <TableCell >共有宗地面积分摊表</TableCell>
-            <TableCell >界址签章表</TableCell>
-          </TableRow>
-          <TableRow >
-            <TableCell ><Checkbox/></TableCell>
-            <TableCell >共有宗地面积分摊表</TableCell>
-            <TableCell >界址说明表</TableCell>
-          </TableRow>
-          <TableRow >
-            <TableCell ><Checkbox/></TableCell>
-            <TableCell >共有宗地面积分摊表</TableCell>
-            <TableCell >调查审核表</TableCell>
-          </TableRow>
-          <TableRow >
-            <TableCell ><Checkbox/></TableCell>
-            <TableCell >共有宗地面积分摊表</TableCell>
-            <TableCell>55kb</TableCell>  
-          </TableRow>
-        </TableBody>
-        </Table>
-        </Paper>
-        <Button  height="150px"  width="100%">数据导出</Button>
+      >
+      <DialogTitle>{"数据导出"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            此操作将保存修改的数据，是否确认导出数据？
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleOutputClose} color="primary">
+            确认
+          </Button>
+          <Button onClick={handleOutputClose} color="primary">
+            取消
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
     )
@@ -209,30 +155,3 @@ const OutputReduce = (
 }
 
 RootReducer.merge(OutputReduce);
-
-
-
-        //   <Table >
-        //   <TableHead>
-        //     <TableRow>
-        //       <TableCell checkbox>
-        //         <Checkbox/>
-        //       </TableCell>
-        //       <TableCell>文件夹名称</TableCell>
-        //       <TableCell >文件大小</TableCell>
-        //     </TableRow>
-        //   </TableHead>
-        //   <TableBody>
-        //     {data.map(n => {
-        //     return (
-        //       <TableRow key={n.id}>
-        //         <TableCell checkbox>
-        //             <Checkbox/>
-        //         </TableCell>
-        //         <TableCell className={classes.tableText}>{n.name}</TableCell>
-        //         <TableCell className={classes.tableText}>{n.byte}</TableCell>
-        //       </TableRow>
-        //     );
-        //   })}
-        //   </TableBody>
-        // </Table>

@@ -44,7 +44,6 @@ class ProjectCard extends Component {
           <ShowCard
           {...todo} 
           entries = { todo }
-          ProjectUrl = {'http://172.16.102.90:1338//project/Open/' + todo }
           handleContentClose2 = { () => handleContentClose2() } 
           handleChooseItem = { () => handleChooseItem('http://172.16.102.90:1338//project/Open/' + todo) }
           />

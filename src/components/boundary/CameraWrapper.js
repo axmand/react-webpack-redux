@@ -32,8 +32,9 @@ class CameraWrapper extends Component {
       <div>
   		<ReactCamera 
 				ref={ node => camera = node }
-				width={1650} 
-				height={1000} />
+				width={990} 
+				height={550} />
+        <br/>
   		<Button onClick={capture}>拍摄</Button>
   	</div>
     )

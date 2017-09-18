@@ -27,7 +27,7 @@ class ShowCard extends Component {
 
     return(
       <div style={{padding:'20px'}}>
-      <Card key={ item } style={{width:300,height:300,}}>
+      <Card key={ item } style={{width:150,height:220,}}>
         <img src={ reptileImage } alt="Contemplative Reptile" onClick={ handleChooseItem } style={{justifyContent:'center'}}/>
          <CardContent>
           <Typography type="headline" component="h2">

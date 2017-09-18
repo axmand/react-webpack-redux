@@ -92,8 +92,8 @@ Camera.propTypes = {
 }
 
 Camera.defaultProps = {
-  width: 640,
-  height: 320
+  width: 800,
+  height: 600
 }
 
 export default Camera
