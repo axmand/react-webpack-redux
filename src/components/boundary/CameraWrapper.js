@@ -19,17 +19,6 @@ class CameraWrapper extends Component {
   constructor(props) {
     super(props);
     camera =null
-    this.capture = this.capture.bind(this)
-  }
-
-  capture() {
-    camera.snapshot()
-      .then(data => {
-        /* data: string (base-64-jqeg)
-        Process your data here*/
-        console.log(data)
-      })
-      .catch(console.error)
   }
 
   render() {
@@ -43,8 +32,9 @@ class CameraWrapper extends Component {
       <div>
   		<ReactCamera 
 				ref={ node => camera = node }
-				width={1650} 
-				height={1000} />
+				width={990} 
+				height={550} />
+        <br/>
   		<Button onClick={capture}>拍摄</Button>
   	</div>
     )
