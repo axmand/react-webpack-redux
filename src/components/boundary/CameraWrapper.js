@@ -19,17 +19,6 @@ class CameraWrapper extends Component {
   constructor(props) {
     super(props);
     camera =null
-    this.capture = this.capture.bind(this)
-  }
-
-  capture() {
-    camera.snapshot()
-      .then(data => {
-        /* data: string (base-64-jqeg)
-        Process your data here*/
-        console.log(data)
-      })
-      .catch(console.error)
   }
 
   render() {

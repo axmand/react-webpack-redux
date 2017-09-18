@@ -64,6 +64,7 @@ class ProjectModule extends Component {
     const { handleContentClose,
       handleContentShow,
       ContentShow,
+      ProjectItem,
       classes
     } = this.props
 
@@ -110,7 +111,8 @@ class ProjectModule extends Component {
 ProjectModule.propTypes = {
   handleContentClose: PropTypes.func.isRequired,
   handleContentShow: PropTypes.func.isRequired,
-  ContentShow: PropTypes.bool.isRequired
+  ContentShow: PropTypes.bool.isRequired,
+  ProjectItem:PropTypes.array.isRequired,
 };
 
 //声明State与Action
@@ -124,7 +126,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
-      fetch('http://172.16.103.250:1338//project/list')
+      fetch('http://172.16.102.90:1338//project/list')
+      //fetch('http://172.16.103.250:1338//project/list')
       .then(response => response.json())
       .then( json => {
         dispatch({
@@ -150,6 +153,7 @@ const ProjectReduce = (
   state = {
     inputItems: [],
     ContentShow: false,
+    ProjectItem: [],
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
@@ -222,17 +226,6 @@ const ProjectReduce = (
     //     newState.inputItems.push({text:list[i],key:Id})
     //   }
     newState.inputItems = list.slice(0);
-    // for(let i = 0;i<list.length;i++)
-    //   {
-    //     const uuidv4 = require('uuid/v4');
-    //     let Id = uuidv4();
-    //     itemId.push(Id)
-    //   }
-    // for(let i = 0;i<list.length;i++)
-    //   {
-    //     info[itemId[i]] = list[i]
-    //   }
-    // newState.inputItems = info.slice(0);
     newState.ContentShow = !state.ContentShow;
     return { ...state, ...newState }; 
   }
@@ -246,6 +239,15 @@ const ProjectReduce = (
     const ContentShow = { ContentShow: !state.ContentShow }
     return Object.assign({}, state, { ...ContentShow })
   }
+  
+  if (action.type === "handleChooseItem") {
+    let list = [];
+    list = JSON.parse(action.payload.data);
+    newState.ProjectItem = list.slice(0);
+    newState.ContentShow = !state.ContentShow;
+    return { ...state, ...newState }; 
+  }
+
   else
     return state
 }
