@@ -118,7 +118,9 @@ class SecondDialog extends Component {
           <TabContainer>
            
               <h1 ><br></br>界址签章表</h1>
+              <Provider store={store}>
    <BoundarySignature/>
+   </Provider>
           </TabContainer>}
         {tabIndex === 2 &&
           <TabContainer>
@@ -192,7 +194,62 @@ export default connect(mapStateToProps, mapDispatchToProps)(SD1);
 
 
 // Reducer
-function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"}}, action) {
+function reducer(state = {
+  value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"},
+  
+    "StartPointCodeList": [
+        "011DBA2",
+        "011DBB",
+        "011DBC",
+        "011DBD"
+    ],
+    "InnerPointCodeList": [
+        "011LLL",
+        "011OOO",
+        "011VVV",
+        "011UUU"
+    ],
+    "EndPointCodeList": [
+        "011DBB",
+        "011DBC",
+        "011DBD",
+        "011DBE"
+    ],
+    
+    "LandPointCodeList": [
+      "Google",
+      "Runoob",
+      "Taobao",
+      "sasasas"
+  ],
+  "LandPointTypeList": [
+      0,
+      2,
+      3,
+      2
+  ],
+  "LandPointDistance": [
+      212.212,
+      545.212,
+      22.31
+  ],
+  "LandBoundaryType": [
+      2,
+      1,
+      7
+  ],
+  "LandBoundaryLocation": [
+      1,
+      0,
+      2
+  ],
+  "LandBoundaryExplain": [
+      "啦啦啦啦",
+      "啊啊啊",
+      "鲁鲁萨撒"
+  ]
+
+}, action) {
   
    
   let value = state.value;
