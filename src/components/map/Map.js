@@ -33,8 +33,12 @@ class Map extends Component {
             center: [-0.113049, 51.498568],
             zoom: 14,
             baseLayer: new maptalks.TileLayer('base', {
-                urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
-                subdomains: ['a', 'b', 'c', 'd', 'e']
+                // 'urlTemplate' : 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',            
+                // 'subdomains'  : ['01','02','03','04'],
+                // 'attribution' : '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
+                'urlTemplate' : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
+                'subdomains'  : ['1','2','3','4','5'],
+                'attribution' : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
             }),
             layers: [
                 new maptalks.VectorLayer('point'),
@@ -43,7 +47,7 @@ class Map extends Component {
                 new maptalks.VectorLayer('label')
             ]
         });
-        map.setZoom(20);
+        map.setZoom(18);
         //将画图工具添加至地图
         drawTool = new maptalks.DrawTool({
             mode: 'Polygon',
@@ -90,10 +94,10 @@ const mapReduce = (state = 0, action) => {
         //获取定位,由于无GPS返回固定坐标
         const center = new maptalks.Coordinate(114.360734, 30.541093);
         map.setCenter(center);
-        const circle = new maptalks.Circle(center, 5, {
+        const circle = new maptalks.Circle(center, 2, {
             symbol: {
-                lineColor: '#34495e',
-                lineWidth: 2,
+                lineColor: '#000000',
+                lineWidth:1.5,
                 polygonFill: '#1bbc9b',
                 polygonOpacity: 0.4
             }
@@ -103,9 +107,9 @@ const mapReduce = (state = 0, action) => {
                 symbol: {
                     'textFaceName': 'sans-serif',
                     'textName': 'your location',
-                    'textFill': '#34495e',
+                    'textFill': '#000000',
                     'textHorizontalAlignment': 'right',
-                    'textSize': 25
+                    'textSize': 12
                 }
             }
         );
@@ -217,14 +221,16 @@ RootReducer.merge(realtimeMappingReduce);
 let target,labels=[],length,clickedObj=[],
     addObjLabel,addObjLabelEnd,deleteObj,clickObj,recoverObj,
     computeAngle;
-let drawPoint,drawToolOn,
+let plot,drawPoint,drawToolOn,
      drawLineEnd,drawLine,
      drawPolygonEnd,drawPolygon,
      drawBalconyEnd,drawBalcony,
-     addLabel,labelEditEnd;
+     addLabel,labelEditEnd,
+     drawUndo,drawRedo;
 
 const sketchReduce = (state = { 
     pointNum: 0, 
+    plotIsChecked:false,
     drawPointIsChecked: false,
     drawLineIsChecked: false,
     drawPolygonIsChecked:false,
@@ -241,7 +247,7 @@ const sketchReduce = (state = {
     zdJSONData:JSON,
     zjJSONData:JSON,
     mapCenter:[],
-}, action) => {
+}, action) =>{
 
 //用于获取点线面对象
     clickObj = clickObj ||function(e){
@@ -280,9 +286,6 @@ const sketchReduce = (state = {
                     map.off('click',addLabel);
                     map.on('dblclick',labelEditEnd);   
             }
-            // if(target._content !== null){
-                 
-            // }
         }
 //用于清除对象被选中的高亮效果
     recoverObj = recoverObj ||function(){
@@ -326,8 +329,8 @@ const sketchReduce = (state = {
         let coord = new maptalks.Coordinate({ x : (startPoi.x+endPoi.x)/2, y :  (startPoi.y+endPoi.y)/2});
             
             const rotation_rad = rotation / 180 * Math.PI
-            const dx = 16 * Math.sin(rotation_rad)
-            const dy = -16 * Math.cos(rotation_rad)
+            const dx = 10 * Math.sin(rotation_rad)
+            const dy = -10 * Math.cos(rotation_rad)
 
             if ((rotation > 90 && rotation < 180) || (rotation > -180 && rotation < -90))
             {
@@ -339,10 +342,10 @@ const sketchReduce = (state = {
                 'box': false,
                 'type':'Label',
                 'symbol': {
-                    'textWeight' : '100',
+                    'textWeight' : '200',
                     'textRotation': rotation,
                     'textFaceName' : '宋体',
-                    'textFill' : '#34495e',
+                    'textFill' : '#000000',
                     'textSize' : 12,
                     'textDx': dx,
                     'textDy': dy,
@@ -365,6 +368,50 @@ const sketchReduce = (state = {
         drawTool.enable();
         console.log('on');
     }
+//用于展点
+    plot =plot ||function(poi){
+        recoverObj();
+        state.pointNum++;
+         let content = state.pointNum;
+         //为界址点添加点号注记
+        let label = new maptalks.Label(content,poi,{
+            'draggable' : true,
+            'box': false,
+            'type':'Label',
+            'symbol': {
+                'color':'white',
+                'textWeight' : '200',
+                'textFaceName' : '宋体',                      
+                'textSize': 12,
+                'textFill': '#000000',
+                'textDy': -10,
+                'textAlign': 'auto',
+            }
+        })
+            label.on('click',function(e){
+                target = e.target;
+                drawTool.disable();
+                label.startEditText();
+        });
+        let point =new maptalks.Circle(poi, 0.5,
+            {
+                'id': state.pointNum, 
+                'labels':label,
+                'picture':'',
+                'isClicked':false,         
+                'symbol': {
+                    'lineColor':'#000000',
+                    'lineWidth': 1.5,
+                    'polygonFill': '#FFFFFF'
+                }
+            }
+        );
+        map.getLayer('label').addGeometry(label);
+        map.getLayer('point').addGeometry(point);
+        map.setCenter(poi);
+        point.on('click',clickObj)
+        console.log(point)
+    }
 //用于画点
         drawPoint = drawPoint ||function(e){
 					recoverObj();
@@ -376,11 +423,11 @@ const sketchReduce = (state = {
                         'box': false,
                         'type':'Label',
                         'symbol': {
-                            'textWeight' : '100',
+                            'textWeight' : '200',
                             'textFaceName' : '宋体',                      
                             'textSize': 12,
                             'textFill': '#000000',
-                            'textDy': -14,
+                            'textDy': -10,
                             'textAlign': 'auto',
                         }
                     })
@@ -397,7 +444,7 @@ const sketchReduce = (state = {
 							'isClicked':false,         
 							'symbol': {
 								'lineColor': '#000000',
-								'lineWidth': 1,
+								'lineWidth': 1.5,
 								'polygonFill': '#FFFFFF'
 							}
 						}
@@ -433,7 +480,7 @@ const sketchReduce = (state = {
         drawLine = drawLine || function(){ 
             recoverObj();
             drawTool.setMode('LineString').enable();
-            drawTool.setSymbol({ 'lineColor': '#000000','lineWidth': 1});   
+            drawTool.setSymbol({ 'lineColor': '#000000','lineWidth': 1.5});   
             drawTool.on('drawend', drawLineEnd);    
         }
 
@@ -470,7 +517,7 @@ const sketchReduce = (state = {
             drawTool.setMode('Polygon').enable();
             drawTool.setSymbol({
                 'lineColor' : '#000000',
-                'lineWidth' : 1.5,
+                'lineWidth' : 2,
                 'polygonFill' : '#FFFFFF',
                 'polygonOpacity' : 0.4
             });                 
@@ -489,7 +536,7 @@ const sketchReduce = (state = {
             drawTool.setMode('Polygon').enable();
             drawTool.setSymbol({
                 'lineColor' : '#000000',
-                'lineWidth' : 3,
+                'lineWidth' : 2,
                 'lineDasharray' : [10, 5, 10, 5],
                 'polygonFill' : '#FFFFFF',
                 'polygonOpacity' : 0.6
@@ -505,9 +552,9 @@ const sketchReduce = (state = {
                 'box': false,
                 'type':'Label',
                 'symbol': {
-                    'textWeight' : '100',
+                    'textWeight' : '200',
                     'textFaceName' : '宋体',
-                    'textFill' : '#34495e',
+                    'textFill' : '#000000',
                     'textSize' : 12,
                     'textHorizontalAlignment': 'middle',
                     'textVerticalAlignment': 'middle',
@@ -551,13 +598,41 @@ const sketchReduce = (state = {
             target=null;          
         }
 //撤销
-       
+        drawUndo = drawUndo ||function (){
+            drawTool.undo();
+        }
 //重做
+        drawRedo =drawRedo ||function (){
+            drawTool.redo();
+        }
 
 
 
 ///////
         switch (action.type) {
+            //展点
+            case 'plotClick':
+                console.log("展点");
+                let plotData=[];
+                    plotData = JSON.parse(action.payload.data);
+                let poi= new maptalks.Coordinate([plotData[1],plotData[0]])
+                    console.log(plotData)
+                    plot(poi);
+                const newState={
+                    pointNum:state.pointNum,
+                    plotIsChecked:!state.plotIsChecked,
+                    drawPointIsChecked:false,
+                    drawLineIsChecked:false,
+                    drawPolygonIsChecked:false,
+                    balconyIsChecked:false,
+                    addLabelIsChecked:false,
+                    chooseObjIsChecked:false,
+                    deleteIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false
+                }
+                return {...state,...newState};
             //画点           
             case 'drawPointClick':
                 drawTool.disable();
@@ -575,6 +650,7 @@ const sketchReduce = (state = {
                 }
                 const newState1={
                     pointNum:state.pointNum,
+                    plotIsChecked:false,
                     drawPointIsChecked:!state.drawPointIsChecked,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:false,
@@ -586,6 +662,7 @@ const sketchReduce = (state = {
                     redoIsChecked:false,
                     saveIsChecked:false
                 }
+                console.log(state)
                 return {...state,...newState1};
 
             //画线
@@ -607,6 +684,7 @@ const sketchReduce = (state = {
                 }
                 const newState2={
                     pointNum:state.pointNum,
+                    plotIsChecked:false,
                     drawPointIsChecked:false,
                     drawLineIsChecked:!state.drawLineIsChecked,
                     drawPolygonIsChecked:false,
@@ -639,6 +717,7 @@ const sketchReduce = (state = {
                 }
                 const newState3={
                     pointNum:state.pointNum,
+                    plotIsChecked:false,
                     drawPointIsChecked:false,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:!state.drawPolygonIsChecked,
@@ -670,6 +749,7 @@ const sketchReduce = (state = {
                     }
                 const newState4={
                     pointNum:state.pointNum,
+                    plotIsChecked:false,
                     drawPointIsChecked:false,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:false,
@@ -702,6 +782,7 @@ const sketchReduce = (state = {
 
                 const newState5={
                     pointNum:state.pointNum,
+                    plotIsChecked:false,
                     drawPointIsChecked:false,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:false,
@@ -749,7 +830,7 @@ const sketchReduce = (state = {
                 const  showDelDialog2 ={showDelDialog: !state.showDelDialog}
                 return Object.assign({},state,{... showDelDialog2});
             case 'chooseObjClick':
-            console.log('choose')
+                console.log('choose')
                 drawTool.disable();
                 map.off('click',drawToolOn);
                 map.off('click',drawPoint);
@@ -758,6 +839,7 @@ const sketchReduce = (state = {
                 map.off('dblclick',drawToolOn);
                 const newState7={
                     pointNum:state.pointNum,
+                    plotIsChecked:false,
                     drawPointIsChecked:false,
                     drawLineIsChecked:false,
                     drawPolygonIsChecked:false,
@@ -772,18 +854,35 @@ const sketchReduce = (state = {
                 return Object.assign({},state,{... newState7});   
             //撤销
             case 'undoClick':
-
+                drawUndo();
                 return { ...state }
             //重做
             case 'redoClick':
                 console.log('重做');
-
+                drawRedo();
                 return { ...state }
 
             case 'saveClick':
                 console.log('保存');
                 let mapCenter=map.getCenter();
+                drawTool.disable();
+                map.off('click',drawToolOn);
+                map.off('click',drawPoint);
+                map.off('click',addLabel);
+                map.off('dblclick',labelEditEnd);
+                map.off('dblclick',drawToolOn);
                 const saveData= {
+                    pointNum:state.pointNum,
+                    plotIsChecked:false,
+                    drawPointIsChecked:false,
+                    drawLineIsChecked:false,
+                    drawPolygonIsChecked:false,
+                    balconyIsChecked:false,
+                    addLabelIsChecked:false,
+                    chooseObjIsChecked:false,
+                    deleteIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
                     saveIsChecked:true,
                     mapCenter:mapCenter,
                     jzdJSONData:map.getLayer('point').toJSON(),
@@ -792,6 +891,7 @@ const sketchReduce = (state = {
                     zjJSONData: map.getLayer('label').toJSON(),
                 }
                 console.log(saveData);
+
                 return Object.assign({},state,{... saveData});
 
             default:
