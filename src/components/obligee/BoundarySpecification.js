@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import InputCell from './InputCell'
+import { Provider, connect } from 'react-redux'
+
+
+
+
 class BoundarySpecification extends Component {  
   render() {
     

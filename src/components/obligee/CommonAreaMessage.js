@@ -2,11 +2,52 @@ import React, { Component } from 'react';
 import InputCell from './InputCell'
 import PropTypes from 'prop-types'
 
+
+
+import { Provider, connect } from 'react-redux'
+
+// Map Redux state to component props
+function mapStateToProps(state) {
+
+
+  
+  return {
+
+    FixedCount:state.FixedCount,
+    FixedCode:state.FixedCode,
+    LandOwnUseArea:state.LandOwnUseArea,
+    LandUniqueArea:state.LandUniqueArea,
+    CommonArea:state.CommonArea
+//     startPoint:state.StartPointCodeList,
+//     innerPoint:state.InnerPointCodeList,
+// endPoint:state.EndPointCodeList
+    
+    
+  };
+}
+
+// Map Redux actions to component props
+function mapDispatchToProps(dispatch) {
+  return {
+//修改命令 修改的字段名 修改字段的值
+    onCompleteInput: (inputData,name) => {
+
+      dispatch({
+        type: "change", 
+        payload: {
+          inputValue: inputData,
+          inputName: name
+
+        }
+      });
+    }
+  }
+}
 class CommonAreaMessage extends Component {  
 
    
   render() {
-    const { rowCount } = this.props;
+    const { FixedCount,FixedCode,LandOwnUseArea,LandUniqueArea,CommonArea } = this.props;
 
     var tableContent=[];
 
@@ -21,14 +62,14 @@ class CommonAreaMessage extends Component {
   tableContent.push(tableHead);
   
   
-  for(var index=0;index<5;index++)
+  for(var index=0;index<FixedCode.length;index++)
     {
         var obj=(
         <tr>
-            <td width="143"><p >&nbsp;</p></td>
-            <td width="150"><p >&nbsp;</p></td>
-            <td width="157"><p >&nbsp;</p></td>
-            <td width="154"><p >&nbsp;</p></td>
+      <td width="143"><p >{FixedCode[index]}</p></td>
+            <td width="150"><p >{LandOwnUseArea[index]}</p></td>
+            <td width="157"><p >{LandUniqueArea[index]}</p></td>
+            <td width="154"><p >{CommonArea[index]}</p></td>
         </tr>
         );
         tableContent.push(obj);
@@ -49,4 +90,10 @@ CommonAreaMessage.propTypes = {
  
     rowCount: PropTypes.number.isRequired,
   }
-export default CommonAreaMessage;
+
+
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(CommonAreaMessage)
+// export default CommonAreaMessage;

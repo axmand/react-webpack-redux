@@ -137,7 +137,37 @@ export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 
 // // Reducer
-function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"} }, action) {
+function reducer(state = {
+  value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test", "FixedCount": "12块"},
+ 
+  "FixedCode": [
+      "011DBA",
+      "011DBB",
+      "011DBC",
+      "011DBD"
+  ],
+  "LandOwnUseArea": [
+      0.12212,
+      0.11,
+      11.2112,
+      1112.31
+  ],
+  "LandUniqueArea": [
+      22.2222,
+      333.3333,
+      55555.555,
+      233.4444
+  ],
+  "CommonArea": [
+      22.2222,
+      333.3333,
+      55555.555,
+      233.4444
+  ]
+
+
+
+}, action) {
   
     let value = state.value;
   
