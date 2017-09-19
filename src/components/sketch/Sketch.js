@@ -45,7 +45,7 @@ class Sketch extends Component {
   }
 
   render() {  
-    const {classes,onClick} = this.props
+    const {classes,onClick,onResetSketchState} = this.props
     return (
       <div className={classes.root}>
         <AppBar position="static" color='default'>
@@ -58,6 +58,7 @@ class Sketch extends Component {
             <Tab 
               classes={{label: this.props.classes.label }}                      
               label="草图编辑" 
+              onClick={onResetSketchState}
             />
             <Tab 
               classes={{label: this.props.classes.label}}           
@@ -81,6 +82,7 @@ class Sketch extends Component {
 
 Sketch.propTypes = {
   onClick: PropTypes.func.isRequired,
+  onResetSketchState:PropTypes.func.isRequired,
   classes: PropTypes.func.isRequired,
 };
 
@@ -102,6 +104,11 @@ const mapDispatchToProps = (dispatch) => {
           dispatch({
               type: 'MAP_SKETCH_VIEW_SWITCH',
           })
+      },
+      onResetSketchState:()=>{
+        dispatch({
+          type:'resetSketchState'
+        })
       },
     }
 }

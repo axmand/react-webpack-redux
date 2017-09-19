@@ -241,7 +241,9 @@ const sketchReduce = (state = {
     undoIsChecked:false,
     redoIsChecked:false,
     saveIsChecked:false,
+    alertSave:true,
     showDelDialog:false,
+    haveObjToDel:false,
     jzdJSONData:JSON,
     szJSONData:JSON,
     zdJSONData:JSON,
@@ -630,7 +632,8 @@ const sketchReduce = (state = {
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
-                    saveIsChecked:false
+                    saveIsChecked:false,
+                    alertSave:true,
                 }
                 return {...state,...newState};
             //画点           
@@ -660,7 +663,8 @@ const sketchReduce = (state = {
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
-                    saveIsChecked:false
+                    saveIsChecked:false,
+                    alertSave:true,
                 }
                 console.log(state)
                 return {...state,...newState1};
@@ -694,7 +698,8 @@ const sketchReduce = (state = {
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
-                    saveIsChecked:false
+                    saveIsChecked:false,
+                    alertSave:true,
                 } 
                 return {...state,...newState2};
 
@@ -727,7 +732,8 @@ const sketchReduce = (state = {
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
-                    saveIsChecked:false
+                    saveIsChecked:false,
+                    alertSave:true,
                 }
                 return {...state,...newState3};   
             //阳台
@@ -759,7 +765,8 @@ const sketchReduce = (state = {
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
-                    saveIsChecked:false
+                    saveIsChecked:false,
+                    alertSave:true,
                 }
                 return {...state,...newState4};   
             //添加自定义注记
@@ -792,7 +799,8 @@ const sketchReduce = (state = {
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
-                    saveIsChecked:false
+                    saveIsChecked:false,
+                    alertSave:true,
                 }
                 return {...state,...newState5};   
 
@@ -809,26 +817,39 @@ const sketchReduce = (state = {
                 if(target){
                     const newState6={
                         deleteIsChecked:!state.deleteIsChecked, 
-                        showDelDialog:!state.showDelDialog,                   
+                        showDelDialog:true,
+                        haveObjToDel:false,                   
                         undoIsChecked:false,
                         redoIsChecked:false,
-                        saveIsChecked:false
+                        saveIsChecked:false,
+                        alertSave:true,
                     }
                     return Object.assign({},state,{... newState6});                       
                 }else{
-                    alert('未选中对象，无法删除！')
-                    return{...state}
+                    const stateDelFail={
+                        deleteIsChecked:!state.deleteIsChecked, 
+                        showDelDialog:false,
+                        haveObjToDel:true,                   
+                        undoIsChecked:false,
+                        redoIsChecked:false,
+                        saveIsChecked:false,
+                        alertSave:true,
+                    }
+                    return Object.assign({},state,{... stateDelFail});         
                 }
             
 
             case 'handleCloseDelDialog':
-                const showDelDialog1 ={showDelDialog: !state.showDelDialog} 
+                const showDelDialog1 ={showDelDialog:false} 
                 return Object.assign({},state,{... showDelDialog1});
 
             case 'handleDelete':
                  deleteObj();
-                const  showDelDialog2 ={showDelDialog: !state.showDelDialog}
+                const  showDelDialog2 ={showDelDialog:false}
                 return Object.assign({},state,{... showDelDialog2});
+            case 'alerClose':
+                const closeAlert={haveObjToDel:false}
+                return Object.assign({},state,{... closeAlert});
             case 'chooseObjClick':
                 console.log('choose')
                 drawTool.disable();
@@ -849,7 +870,8 @@ const sketchReduce = (state = {
                     deleteIsChecked:false,
                     undoIsChecked:false,
                     redoIsChecked:false,
-                    saveIsChecked:false
+                    saveIsChecked:false,
+                    alertSave:true,
                 }
                 return Object.assign({},state,{... newState7});   
             //撤销
@@ -884,6 +906,7 @@ const sketchReduce = (state = {
                     undoIsChecked:false,
                     redoIsChecked:false,
                     saveIsChecked:true,
+                    alertSave:false,
                     mapCenter:mapCenter,
                     jzdJSONData:map.getLayer('point').toJSON(),
                     szJSONData:map.getLayer('line').toJSON(),
@@ -893,7 +916,28 @@ const sketchReduce = (state = {
                 console.log(saveData);
 
                 return Object.assign({},state,{... saveData});
-
+            case 'saveAlertClose':
+                const saveAlertClose ={alertSave:false} 
+                return Object.assign({},state,{... saveAlertClose});
+            case 'resetSketchState':
+                console.log('reset')
+                const resetSketchState={
+                    plotIsChecked:false,
+                    drawPointIsChecked: false,
+                    drawLineIsChecked: false,
+                    drawPolygonIsChecked:false,
+                    balconyIsChecked:false,
+                    addLabelIsChecked:false,
+                    deleteIsChecked:false,
+                    chooseObjIsChecked:false,
+                    undoIsChecked:false,
+                    redoIsChecked:false,
+                    saveIsChecked:false,
+                    alertSave:true,
+                    showDelDialog:false,
+                    haveObjToDel:false,
+                }
+                return Object.assign({},state,{... resetSketchState});   
             default:
                 return { ...state }
             

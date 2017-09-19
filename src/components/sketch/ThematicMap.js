@@ -96,7 +96,6 @@ const styles=theme=>({
 	},
 	message:{
 		fontSize:'1.5em',
-		fontFamily:'宋体',
 		color:'#fff',
 		textAlign:'center',
 		lineHeight:'150%',
@@ -148,18 +147,20 @@ class ThematicMap extends Component {
 	render(){
 
 		const classes = this.props.classes;
-		const {open,saveIsChecked}=this.props;
+		const {alertSave,saveIsChecked,onSaveAlertClose}=this.props;
 
 		return(
 			<div className={classes.root} >
 	
 				<Paper className={classes.thematicMap}>
+					
 				<Snackbar
 					className={classes.alert}
-					open={open} 
-					SnackbarContentProps={{'aria-describedby': 'message-id'}}>
+					open={alertSave} 
+					onRequestClose={onSaveAlertClose}
+				>
 					<Typography className={classes.message}>
-						您尚未保存草图绘制结果！<br/>请返回草图编辑界面点击保存！
+						无法获取草图绘制成果图！<br/>请返回草图编辑界面绘制并点击保存！
 					</Typography>
 					</Snackbar> 
 					<Grid container direction='column' spacing={0}>
@@ -257,14 +258,15 @@ class ThematicMap extends Component {
 }
 
 ThematicMap.PropTypes={
-    classes: PropTypes.func.isRequired,
+	classes: PropTypes.func.isRequired,
+	open:PropTypes.bool.isRequired,
 }
 
 
 const mapStateToProps = (state) => {
 	const sketchState=state.sketchReduce;
     return {
-		open:!sketchState.saveIsChecked,
+		alertSave:sketchState.alertSave,
 		saveIsChecked:sketchState.saveIsChecked,
 		mapCenter:sketchState.mapCenter,
 		jzdJSONData:sketchState.jzdJSONData,
@@ -274,8 +276,14 @@ const mapStateToProps = (state) => {
     }
   }
   
-  const mapDispatchToProps = (dispatch, ownProps) => {
-      return {}
+  const mapDispatchToProps = (dispatch) => {
+      return {
+		onSaveAlertClose:()=>{
+            dispatch({
+                type: 'saveAlertClose',
+            })
+        }
+	  }
   }
   
   export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{name:'ThematicMap'})(ThematicMap));

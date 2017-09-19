@@ -22,6 +22,8 @@ import Redo from  'material-ui-icons/Redo';//重做
 import Save from 'material-ui-icons/Save';//保存
 import CreateIcon from 'material-ui-icons/Create';//签章
 import DragHandle from 'material-ui-icons/DragHandle';//拖动
+import CloseIcon from 'material-ui-icons/Close';
+import Snackbar from 'material-ui/Snackbar';
 
 const styles=theme=>({
     root:{
@@ -52,18 +54,34 @@ const styles=theme=>({
         fontSize:'1em',
         color:'#b3b3b3'
     },
-    close: {
-        width: theme.spacing.unit * 4,
-        height: theme.spacing.unit * 4,
+   
+      alert:{
+          position:'absolute',
+          top:`${window.innerHeight*0.4}px`
       },
+    close: {
+        background: "rgba(0, 0, 0, .6)",
+        color:'black',
+        borderRadius: '3%',
+        width:'50%',
+        height:`${window.innerHeight*0.08}px`,        
+        borderRadius: '3%',
+        padding:0
+      },
+      message:{
+		fontSize:'1.5em',
+		color:'#fff',
+		textAlign:'center',
+        padding:0
+	}
 
 });
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onPlotClick,onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onBalconyClick,onaddLabelClick,onChooseObjClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
+        const { onPlotClick,onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onBalconyClick,onaddLabelClick,onChooseObjClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick,onAlertClose} = this.props;
         const { handleDelete,handleShowDelDialog,showDelDialog,handleCloseDelDialog } = this.props
-        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,balconyIsChecked,addLabelIsChecked,chooseObjIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, } = this.props;
+        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,balconyIsChecked,addLabelIsChecked,chooseObjIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, haveObjToDel} = this.props;
         return( 
             <Draggable handle="span">
                 <div className={classes.root} >
@@ -138,6 +156,18 @@ class SkechToolBar extends Component{
                             </Button>
                         </DialogActions>
                     </Dialog>
+                    <Snackbar
+                    open={haveObjToDel}
+                    onRequestClose={onAlertClose}
+                    className={classes.alert}
+                    >                    
+                    <Button
+                        className={classes.close}
+                        onClick={onAlertClose}>
+                    <Typograghy className={classes.message}>未选中需要删除的对象！</Typograghy>          
+                    <CloseIcon style={{color:'rgba(255, 255, 255, .8)'}}/>
+                    </Button>  
+                    </Snackbar>
                 </div>
             </Draggable>
         )
@@ -150,6 +180,7 @@ SkechToolBar.PropTypes={
     handleCloseDelDialog:PropTypes.func.isRequired,
     handleShowDelDialog:PropTypes.func.isRequired,
     showDelDialog:PropTypes.bool.isRequired,
+    haveObjToDel:PropTypes.bool.isRequired,
     drawPointIsChecked:PropTypes.bool.isRequired,
     drawLineIsChecked:PropTypes.bool.isRequired,
     drawPolygonIsChecked:PropTypes.bool.isRequired,
@@ -163,6 +194,7 @@ const mapStateToProps = (state) => {
 
  return {
         showDelDialog: sketchState.showDelDialog,
+        haveObjToDel:sketchState.haveObjToDel,
         drawPointIsChecked:sketchState.drawPointIsChecked,
         drawLineIsChecked:sketchState.drawLineIsChecked,
         drawPolygonIsChecked:sketchState.drawPolygonIsChecked,
@@ -240,6 +272,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 payload:dispatch,
             });
         },
+        
         //撤销
         onUndoClick: () => {
             dispatch({
@@ -273,6 +306,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 type: 'handleCloseDelDialog',
             })
         },
+        onAlertClose:()=>{
+            dispatch({
+                type: 'alerClose',
+            })
+        }
     }
 }
 
