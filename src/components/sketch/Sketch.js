@@ -1,12 +1,14 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import RootReducer from './../../redux/RootReducer';
 
 import { withStyles} from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs'
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
+import Snackbar from 'material-ui/Snackbar';
 //import component
 // import Map from '../map/Map';
 import SketchToolBar from './SketchToolBar';
@@ -31,7 +33,7 @@ const styles ={
     right: '0px',
   },
 };
-
+let isOpen;
 class Sketch extends Component {
 
   state = {
@@ -43,11 +45,7 @@ class Sketch extends Component {
   }
 
   render() {  
-    const {
-      classes,
-      onClick,
-    } = this.props
-
+    const {classes,onClick,onResetSketchState} = this.props
     return (
       <div className={classes.root}>
         <AppBar position="static" color='default'>
@@ -60,11 +58,12 @@ class Sketch extends Component {
             <Tab 
               classes={{label: this.props.classes.label }}                      
               label="草图编辑" 
+              onClick={onResetSketchState}
             />
             <Tab 
               classes={{label: this.props.classes.label}}           
               label="专题图编辑"
-            />       
+            />    
           </Tabs>
           <IconButton className={classes.button} aria-label="Delete" onClick={onClick}>
             <ClearIcon />
@@ -83,15 +82,21 @@ class Sketch extends Component {
 
 Sketch.propTypes = {
   onClick: PropTypes.func.isRequired,
+  onResetSketchState:PropTypes.func.isRequired,
+  classes: PropTypes.func.isRequired,
 };
+
 /**
  * 
  * @param {*} state 
  *
  */
-const mapStateToProps = ( state ) => ({
-  ...state
-})
+const mapStateToProps = ( state ) => {
+  const sketchState=state.sketchReduce;
+  return {
+    saveIsChecked:sketchState.saveIsChecked,
+    }
+}
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -99,6 +104,11 @@ const mapDispatchToProps = (dispatch) => {
           dispatch({
               type: 'MAP_SKETCH_VIEW_SWITCH',
           })
+      },
+      onResetSketchState:()=>{
+        dispatch({
+          type:'resetSketchState'
+        })
       },
     }
 }

@@ -22,8 +22,10 @@ import Redo from  'material-ui-icons/Redo';//重做
 import Save from 'material-ui-icons/Save';//保存
 import CreateIcon from 'material-ui-icons/Create';//签章
 import DragHandle from 'material-ui-icons/DragHandle';//拖动
+import CloseIcon from 'material-ui-icons/Close';
+import Snackbar from 'material-ui/Snackbar';
 
-const styles={
+const styles=theme=>({
     root:{
          height:'100%',
          width:'75%',
@@ -51,19 +53,39 @@ const styles={
     text:{
         fontSize:'1em',
         color:'#b3b3b3'
-    }
+    },
+   
+      alert:{
+          position:'absolute',
+          top:`${window.innerHeight*0.4}px`
+      },
+    close: {
+        background: "rgba(0, 0, 0, .6)",
+        color:'black',
+        borderRadius: '3%',
+        width:'50%',
+        height:`${window.innerHeight*0.08}px`,        
+        borderRadius: '3%',
+        padding:0
+      },
+      message:{
+		fontSize:'1.5em',
+		color:'#fff',
+		textAlign:'center',
+        padding:0
+	}
 
-};
+});
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onBalconyClick,onaddLabelClick,onChooseObjClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick} = this.props;
+        const { onPlotClick,onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onBalconyClick,onaddLabelClick,onChooseObjClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick,onAlertClose} = this.props;
         const { handleDelete,handleShowDelDialog,showDelDialog,handleCloseDelDialog } = this.props
-        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,balconyIsChecked,addLabelIsChecked,chooseObjIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, } = this.props;
+        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,balconyIsChecked,addLabelIsChecked,chooseObjIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, haveObjToDel} = this.props;
         return( 
             <Draggable handle="span">
                 <div className={classes.root} >
-                    <Button className={classes.button}>
+                    <Button className={classes.button} onClick={onPlotClick}>
                         <LocationSearching className={classes.icon} />  
                         <Typograghy className={classes.text}>展点</Typograghy>
                     </Button>
@@ -107,6 +129,7 @@ class SkechToolBar extends Component{
                         <Save className={classes.icon}/>
                         <Typograghy className={classes.text}>保存</Typograghy>
                     </Button>
+
                     <Button  className={classes.button}  onClick={onSaveClick}>
                         <CreateIcon className={classes.icon}/>
                         <Typograghy className={classes.text}>签章</Typograghy>
@@ -133,6 +156,18 @@ class SkechToolBar extends Component{
                             </Button>
                         </DialogActions>
                     </Dialog>
+                    <Snackbar
+                    open={haveObjToDel}
+                    onRequestClose={onAlertClose}
+                    className={classes.alert}
+                    >                    
+                    <Button
+                        className={classes.close}
+                        onClick={onAlertClose}>
+                    <Typograghy className={classes.message}>未选中需要删除的对象！</Typograghy>          
+                    <CloseIcon style={{color:'rgba(255, 255, 255, .8)'}}/>
+                    </Button>  
+                    </Snackbar>
                 </div>
             </Draggable>
         )
@@ -145,6 +180,7 @@ SkechToolBar.PropTypes={
     handleCloseDelDialog:PropTypes.func.isRequired,
     handleShowDelDialog:PropTypes.func.isRequired,
     showDelDialog:PropTypes.bool.isRequired,
+    haveObjToDel:PropTypes.bool.isRequired,
     drawPointIsChecked:PropTypes.bool.isRequired,
     drawLineIsChecked:PropTypes.bool.isRequired,
     drawPolygonIsChecked:PropTypes.bool.isRequired,
@@ -158,6 +194,7 @@ const mapStateToProps = (state) => {
 
  return {
         showDelDialog: sketchState.showDelDialog,
+        haveObjToDel:sketchState.haveObjToDel,
         drawPointIsChecked:sketchState.drawPointIsChecked,
         drawLineIsChecked:sketchState.drawLineIsChecked,
         drawPolygonIsChecked:sketchState.drawPolygonIsChecked,
@@ -172,6 +209,20 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        //展点
+        onPlotClick:()=>{
+            fetch('http://172.16.102.90:1338/bluetooth/connect/RTK/printnmea')
+              .then(response => response.json())
+              .then( json => {
+                dispatch({
+                  type: 'plotClick',
+                  payload: json,
+                })
+                console.log(json)
+              })
+              .catch(e => console.log("Oops, error", e))
+        
+        },
         //画点
          onDrawPointClick: () => {
             dispatch({
@@ -221,6 +272,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 payload:dispatch,
             });
         },
+        
         //撤销
         onUndoClick: () => {
             dispatch({
@@ -252,8 +304,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         handleCloseDelDialog:()=>{
             dispatch({
                 type: 'handleCloseDelDialog',
-                    })
+            })
         },
+        onAlertClose:()=>{
+            dispatch({
+                type: 'alerClose',
+            })
+        }
     }
 }
 
