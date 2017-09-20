@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux'
-
+import PointNameCell from './PointNameCell'
 // Map Redux state to component props
 function mapStateToProps(state) {
 
@@ -69,13 +69,21 @@ var tableHead2=(<tr>
         var obj=(
         <tr>
             
-                  <td width="73"><p >{startPoint[i]}</p></td>
+                  <td width="73"><p ><PointNameCell name={startPoint[i]} row={i} type="StartPointCodeList"/></p></td>
+                  <td width="70"><p ><PointNameCell name={startPoint[i]} row={i} type="InnerPointCodeList"/></p></td>
+                  <td width="74"><p ><PointNameCell name={startPoint[i]} row={i} type="EndPointCodeList"/></p></td>
+                  <td width="113"><p ></p></td>
+                  <td width="100"><p ></p></td>
+                  <td width="99"><p ></p></td>
+                  <td width="86"><p ></p></td>
+
+                  {/* <td width="73"><p >{startPoint[i]}</p></td>
                   <td width="70"><p >{innerPoint[i]}</p></td>
                   <td width="74"><p >{endPoint[i]}</p></td>
                   <td width="113"><p ></p></td>
                   <td width="100"><p ></p></td>
                   <td width="99"><p ></p></td>
-                  <td width="86"><p ></p></td>
+                  <td width="86"><p ></p></td> */}
                 
         </tr>
         );

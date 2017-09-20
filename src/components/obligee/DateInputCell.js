@@ -20,7 +20,8 @@ function mapStateToProps(state,ownProps) {
   const key =ownProps.name;
   let obj = {};
   obj['key2'] = key;
-  obj[key] = state.value[key];
+  // obj[key] = state.value[key];
+  obj[key] = state[key];
   return obj;
 }
 

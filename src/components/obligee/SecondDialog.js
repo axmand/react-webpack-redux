@@ -263,8 +263,22 @@ function reducer(state = {
           
           value:value
         });
-  
-     
+
+
+  case 'changetest':
+   console.log("clicked "+action.payload.row+" "+action.payload.col);
+
+    var newValue=state[action.payload.type];
+    var type=action.payload.type;
+    newValue[action.payload.row]=action.payload.col;
+    return  Object.assign({}, state, {
+    
+      type:newValue
+  });;
+  case 'ZoomToPoint':
+  console.log("clicked "+action.payload.pointName);
+
+   return state;
   
       default:
         return state
