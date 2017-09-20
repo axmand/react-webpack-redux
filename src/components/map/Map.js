@@ -224,8 +224,10 @@ const sketchReduce = (state = {
     alertSave:true,
     alertPlot1:false,
     alertPlot2:false,
+    alertSignature:false,
     showDelDialog:false,
     haveObjToDel:false,
+    signatureIsChecked:false,
     jzdJSONData:JSON,
     szJSONData:JSON,
     zdJSONData:JSON,
@@ -594,7 +596,7 @@ const sketchReduce = (state = {
 
 ///////
         switch (action.type) {
-            //展点
+            //实时定位
             case 'handleRealtimeMapping':
                 const isRealtimeOn={isRealtimeOn:!state.isRealtimeOn}
                 if (isRealtimeOn.isRealtimeOn) {
@@ -603,9 +605,8 @@ const sketchReduce = (state = {
                     console.log('没打开');
                 }
                 return Object.assign({},state,{... isRealtimeOn}); 
-                
+            //展点  
             case 'plotClick':
-                
                 if(state.isRealtimeOn){
                     console.log(state)
                     console.log("展点");
@@ -631,6 +632,8 @@ const sketchReduce = (state = {
                         alertSave:true,
                         alertPlot1:false,
                         alertPlot2:true,
+                        alertSignature:false,
+                        signatureIsChecked:false
                       }
                       return {...state,...plotFail2};  
                 }
@@ -674,6 +677,7 @@ const sketchReduce = (state = {
                     redoIsChecked:false,
                     saveIsChecked:false,
                     alertSave:true,
+                    signatureIsChecked:false
                 }
                 console.log(state)
                 return {...state,...newState1};
@@ -709,6 +713,7 @@ const sketchReduce = (state = {
                     redoIsChecked:false,
                     saveIsChecked:false,
                     alertSave:true,
+                    signatureIsChecked:false
                 } 
                 return {...state,...newState2};
 
@@ -743,6 +748,7 @@ const sketchReduce = (state = {
                     redoIsChecked:false,
                     saveIsChecked:false,
                     alertSave:true,
+                    signatureIsChecked:false
                 }
                 return {...state,...newState3};   
             //阳台
@@ -776,6 +782,7 @@ const sketchReduce = (state = {
                     redoIsChecked:false,
                     saveIsChecked:false,
                     alertSave:true,
+                    signatureIsChecked:false
                 }
                 return {...state,...newState4};   
             //添加自定义注记
@@ -810,6 +817,7 @@ const sketchReduce = (state = {
                     redoIsChecked:false,
                     saveIsChecked:false,
                     alertSave:true,
+                    signatureIsChecked:false
                 }
                 return {...state,...newState5};   
 
@@ -831,6 +839,7 @@ const sketchReduce = (state = {
                         undoIsChecked:false,
                         redoIsChecked:false,
                         saveIsChecked:false,
+                        signatureIsChecked:false,
                         alertSave:true,
                     }
                     return Object.assign({},state,{... newState6});                       
@@ -842,6 +851,7 @@ const sketchReduce = (state = {
                         undoIsChecked:false,
                         redoIsChecked:false,
                         saveIsChecked:false,
+                        signatureIsChecked:false,
                         alertSave:true,
                     }
                     return Object.assign({},state,{... stateDelFail});         
@@ -859,6 +869,7 @@ const sketchReduce = (state = {
             case 'delAlerClose':
                 const closeAlert={haveObjToDel:false}
                 return Object.assign({},state,{... closeAlert});
+            //选中
             case 'chooseObjClick':
                 console.log('choose')
                 drawTool.disable();
@@ -880,6 +891,7 @@ const sketchReduce = (state = {
                     undoIsChecked:false,
                     redoIsChecked:false,
                     saveIsChecked:false,
+                    signatureIsChecked:false,
                     alertSave:true,
                 }
                 return Object.assign({},state,{... newState7});   
@@ -892,7 +904,7 @@ const sketchReduce = (state = {
                 console.log('重做');
                 drawRedo();
                 return { ...state }
-
+            //保存
             case 'saveClick':
                 console.log('保存');
                 let mapCenter=map.getCenter();
@@ -915,6 +927,7 @@ const sketchReduce = (state = {
                     undoIsChecked:false,
                     redoIsChecked:false,
                     saveIsChecked:true,
+                    signatureIsChecked:false,
                     alertSave:false,
                     mapCenter:mapCenter,
                     jzdJSONData:map.getLayer('point').toJSON(),
@@ -928,6 +941,17 @@ const sketchReduce = (state = {
             case 'saveAlertClose':
                 const saveAlertClose ={alertSave:false} 
                 return Object.assign({},state,{... saveAlertClose});
+            //签章
+            case 'signatureClick':
+                if(state.saveIsChecked){
+                    const signatureState={signatureIsChecked:true}
+                    return Object.assign({},state,{... signatureState});
+                }else{
+                    console.log('未保存！')
+
+                }
+
+            //草图专题图切换时初始化数据
             case 'resetSketchState':
                 console.log('reset')
                 const resetSketchState={

@@ -329,11 +329,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 payload:dispatch,
             });
         },
+        //签章
+        onSignatureClick:()=>{
+            dispatch({
+                type:'signatureClick'
+            })
+        },
         
         handleDelete:()=>{
             dispatch({
                 type: 'handleDelete',
-                    })
+            })
         },
 
         handleCloseDelDialog:()=>{
