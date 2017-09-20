@@ -34,7 +34,7 @@ checked:{
 class RealtimeMapping extends Component {
 
   render() {
-    const { classes, realtimeMappingIsChecked, handleRealtimeMapping}=this.props;
+    const { classes, isRealtimeOn, handleRealtimeMapping}=this.props;
 
     return (
       <ListItem className={classes.listItem}>
@@ -43,7 +43,7 @@ class RealtimeMapping extends Component {
             checked:classes.checked,
             bar:classes.bar
           }}
-          checked={realtimeMappingIsChecked}
+          checked={isRealtimeOn}
           onChange={handleRealtimeMapping}          
           aria-label="RealtimeMappingCheckBox"
         />
@@ -55,14 +55,14 @@ class RealtimeMapping extends Component {
 
 RealtimeMapping.propTypes = {
   classes: PropTypes.object.isRequired,
-  realtimeMappingIsChecked: PropTypes.bool.isRequired,
+  isRealtimeOn: PropTypes.bool.isRequired,
   handleRealtimeMapping: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
-  const realtimeMappingState = state.realtimeMappingReduce
+  const sketchState = state.sketchReduce
     return {
-        realtimeMappingIsChecked: realtimeMappingState.realtimeMappingIsChecked
+      isRealtimeOn: sketchState.isRealtimeOn
     }
 }
 

@@ -165,7 +165,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 
 // // Reducer
-function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"} }, action) {
+function reducer(state = {
+
+  "OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test",
+  
+
+}, action) {
  
   let value = state.value;
 
@@ -173,11 +178,13 @@ function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","
 
     case 'change':
      var inputName=action.payload.inputName;
-      value[inputName]=action.payload.inputValue;
-      return Object.assign({}, state, {
-        
-        value:value
-      });
+      // value[inputName]=action.payload.inputValue;
+
+      var statenew=state;
+      statenew[inputName]=action.payload.inputValue;
+     
+      
+      return Object.assign({}, state, statenew);
 
    
 

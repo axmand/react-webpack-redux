@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
 import CameraWrapper from './CameraWrapper.js'
 
-import Dialog, { DialogContent } from 'material-ui/Dialog'
+import Dialog from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
