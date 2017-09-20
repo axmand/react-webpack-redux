@@ -23,19 +23,12 @@ const styles = {
 
 class ProjectCard extends Component {
  
-  constructor(props) {
-    super(props);
-  }
- 
   render(){
     const { inputItems,
             handleChooseItem,
             handleContentClose2,
             classes
 		} = this.props
-    
-    const uuidv4 = require('uuid/v4');
-    let Id = uuidv4();
     
     return (
     <div>
