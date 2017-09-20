@@ -174,12 +174,14 @@ function reducer(state = {
     switch (action.type) {
   
       case 'change':
-       var inputName=action.payload.inputName;
-        value[inputName]=action.payload.inputValue;
-        return Object.assign({}, state, {
-          
-          value:value
-        });
+      var inputName=action.payload.inputName;
+      
+ 
+       var statenew=state;
+       statenew[inputName]=action.payload.inputValue;
+      
+       
+       return Object.assign({}, state, statenew);
   
      
   

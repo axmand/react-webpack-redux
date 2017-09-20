@@ -249,6 +249,8 @@ const ProjectReduce = (
     newState.ContentShow = !state.ContentShow;
     console.log(state)
     return { ...state, ...newState }; 
+
+    
   }
 
   else

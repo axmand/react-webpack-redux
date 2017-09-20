@@ -63,12 +63,12 @@ class InputCellUI extends React.PureComponent {
     this.props.onCompleteInput(inputData,this.props.name);
   }
 
-  shouldComponentUpdate(nextProps,nextStates){
-    const {name,key2}=this.props;
-    if(!key2)
-      return true;
-    return name === key2;
-  }
+  // shouldComponentUpdate(nextProps,nextStates){
+  //   const {name,key2}=this.props;
+  //   if(!key2)
+  //     return true;
+  //   return name === key2;
+  // }
 
   render() {
     const { onCompleteInput, dialogShow, key2, name,title,tips } = this.props;

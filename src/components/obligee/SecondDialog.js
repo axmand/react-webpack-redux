@@ -195,7 +195,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(SD1);
 
 // Reducer
 function reducer(state = {
-  value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"},
+  "PowerInvestigateRecord": "阿瑟将军啊当时就觉得啊抗静电架空啊手机导航系啊是的吉萨还多久啊是和撒谎觉得好看和",
+  "PowerInvestigator": "罗志祥",
+  "PowerInvestigateDate": "2009-22-21",
+  "SurveyRecord": "实打实大苏打实打实大苏打撒大苏打",
+  "SurveyRecorder": "李天乐",
+  "SurveyRecordDate": "2120-22-11",
+  "AuditOpinion": "是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶",
+  "Auditor": "科技大厦",
+  "AuditOpinionDate": "2008-22-21",
+
   
     "StartPointCodeList": [
         "011DBA2",
@@ -247,7 +256,10 @@ function reducer(state = {
       "啦啦啦啦",
       "啊啊啊",
       "鲁鲁萨撒"
-  ]
+  ],
+  "BoundaryPointExplain": "南宁市国土测绘地理信息中啊阿斯顿撒旦啊是打工皇帝沙发国际化啊规划鬼斧神工就空格键公司的感觉是感觉啊高房价撒个心",
+  "MainBoundaryDirectionExplain": "所有权方名称是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶打到阿萨 大师大师哒的啊哒大师哒"
+
 
 }, action) {
   
@@ -257,12 +269,14 @@ function reducer(state = {
     switch (action.type) {
   
       case 'change':
-       var inputName=action.payload.inputName;
-        value[inputName]=action.payload.inputValue;
-        return Object.assign({}, state, {
-          
-          value:value
-        });
+      var inputName=action.payload.inputName;
+      
+ 
+       var statenew=state;
+       statenew[inputName]=action.payload.inputValue;
+      
+       
+       return Object.assign({}, state, statenew);
 
 
   case 'changetest':
