@@ -126,7 +126,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
       fetch('http://172.16.102.90:1338//project/list')
-      //fetch('http://172.16.103.250:1338//project/list')
       .then(response => response.json())
       .then( json => {
         dispatch({
@@ -153,7 +152,6 @@ const ProjectReduce = (
     inputItems: [],
     ContentShow: false,
     ProjectItem: [],
-    ProjectName: [],
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
@@ -244,8 +242,11 @@ const ProjectReduce = (
     let list = [];
     let Prolist = [];
     list = JSON.parse(action.payload.data);
-    projectData.ProjectItem=list.slice(0);
-    //newState.ProjectItem = 
+    Prolist = action.itemName;
+   
+    projectData.ProjectName = Prolist;
+    projectData.ProjectItem = list.slice(0);
+
     newState.ContentShow = !state.ContentShow;
     console.log(state)
     return { ...state, ...newState }; 

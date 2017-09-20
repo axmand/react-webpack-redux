@@ -1,7 +1,6 @@
-const project = {
-    inputItems: [],
-    ContentShow: false,
+let projectData = {
     ProjectItem: [],
+    ProjectName:[],
 };
 
-export default project;
+export default projectData;
