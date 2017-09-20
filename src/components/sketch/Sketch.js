@@ -81,9 +81,9 @@ class Sketch extends Component {
 }
 
 Sketch.propTypes = {
+  classes: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
   onResetSketchState:PropTypes.func.isRequired,
-  classes: PropTypes.func.isRequired,
 };
 
 /**

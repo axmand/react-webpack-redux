@@ -79,9 +79,9 @@ const styles=theme=>({
 class SkechToolBar extends Component{
     render(){
         const classes=this.props.classes;
-        const { onPlotClick,onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onBalconyClick,onaddLabelClick,onChooseObjClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick,onAlertClose} = this.props;
-        const { handleDelete,handleShowDelDialog,showDelDialog,handleCloseDelDialog } = this.props
-        const { drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,balconyIsChecked,addLabelIsChecked,chooseObjIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, haveObjToDel} = this.props;
+        const { onPlotClick,onDrawPointClick, onDrawLineClick,onDrawPolygonClick,onBalconyClick,onaddLabelClick,onChooseObjClick,onDeleteClick,onUndoClick,onRedoClick,onSaveClick,onDelAlerClose} = this.props;
+        const { onPlotAlerClose,handleDelete,handleShowDelDialog,showDelDialog,handleCloseDelDialog } = this.props
+        const { alertPlot2,alertPlot1,drawPointIsChecked,drawLineIsChecked,drawPolygonIsChecked,balconyIsChecked,addLabelIsChecked,chooseObjIsChecked,undoIsChecked,redoIsChecked,saveIsChecked, haveObjToDel} = this.props;
         return( 
             <Draggable handle="span">
                 <div className={classes.root} >
@@ -158,16 +158,45 @@ class SkechToolBar extends Component{
                     </Dialog>
                     <Snackbar
                     open={haveObjToDel}
-                    onRequestClose={onAlertClose}
+                    onRequestClose={onDelAlerClose}
                     className={classes.alert}
                     >                    
                     <Button
                         className={classes.close}
-                        onClick={onAlertClose}>
+                        onClick={onDelAlerClose}>
                     <Typograghy className={classes.message}>未选中需要删除的对象！</Typograghy>          
                     <CloseIcon style={{color:'rgba(255, 255, 255, .8)'}}/>
                     </Button>  
                     </Snackbar>
+
+
+                    <Snackbar
+                    open={alertPlot1}
+                    onRequestClose={onPlotAlerClose}
+                    className={classes.alert}
+                    >                    
+                    <Button
+                        className={classes.close}
+                        onClick={onPlotAlerClose}>
+                    <Typograghy className={classes.message}>请求RTK数据失败！</Typograghy>          
+                    <CloseIcon style={{color:'rgba(255, 255, 255, .8)'}}/>
+                    </Button>  
+                    </Snackbar>
+
+
+                    <Snackbar
+                    open={alertPlot2}
+                    onRequestClose={onPlotAlerClose}
+                    className={classes.alert}
+                    >                    
+                    <Button
+                        className={classes.close}
+                        onClick={onPlotAlerClose}>
+                    <Typograghy className={classes.message}>未开启实时定位！</Typograghy>          
+                    <CloseIcon style={{color:'rgba(255, 255, 255, .8)'}}/>
+                    </Button>  
+                    </Snackbar>
+                    
                 </div>
             </Draggable>
         )
@@ -187,6 +216,8 @@ SkechToolBar.PropTypes={
     balconyIsChecked:PropTypes.bool.isRequired,
     addLabelIsChecked:PropTypes.bool.isRequired,
     chooseObjIsChecked:PropTypes.bool.isRequired,
+    alertPlot1:PropTypes.bool.isRequired,
+    alertPlot2:PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => {
@@ -203,7 +234,10 @@ const mapStateToProps = (state) => {
         chooseObjIsChecked:sketchState.chooseObjIsChecked,
         undoIsChecked:sketchState.undoIsChecked,
         redoIsChecked:sketchState.redoIsChecked,
-        saveIsChecked:sketchState.saveIsChecked
+        saveIsChecked:sketchState.saveIsChecked,
+        alertPlot1:sketchState.alertPlot1,
+        alertPlot2:sketchState.alertPlot2,
+        isRealtimeOn:sketchState.isRealtimeOn,
     }
 }
 
@@ -211,7 +245,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         //展点
         onPlotClick:()=>{
-            fetch('http://172.16.102.90:1338/bluetooth/connect/RTK/printnmea')
+            if(ownProps.isRealtimeOn){
+                fetch('http://172.16.102.90:1338/bluetooth/connect/RTK/printnmea')
               .then(response => response.json())
               .then( json => {
                 dispatch({
@@ -221,8 +256,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 console.log(json)
               })
               .catch(e => console.log("Oops, error", e))
-        
-        },
+        }
+    },
         //画点
          onDrawPointClick: () => {
             dispatch({
@@ -306,9 +341,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 type: 'handleCloseDelDialog',
             })
         },
-        onAlertClose:()=>{
+        onDelAlerClose:()=>{
             dispatch({
-                type: 'alerClose',
+                type: 'delAlerClose',
+            })
+        },
+        onPlotAlerClose:()=>{
+            dispatch({
+                type: 'plotAlerClose',
             })
         }
     }

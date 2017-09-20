@@ -195,27 +195,6 @@ const layerControlReduce = (
 
 RootReducer.merge(layerControlReduce);
 
-//加入reducer(realtimeMapping)
-const realtimeMappingReduce = (
-    state = { realtimeMappingIsChecked: false }, action) => {
-
-    if (action.type === "handleRealtimeMapping") {
-        const realtimeMappingIsChecked = {
-            realtimeMappingIsChecked: !state.realtimeMappingIsChecked
-        }
-        if (realtimeMappingIsChecked.realtimeMappingIsChecked) {
-            console.log('打开了');
-        } else {
-            console.log('没打开');
-        }
-        console.log(realtimeMappingIsChecked);
-        return { ...realtimeMappingIsChecked }
-    }
-    return { ...state };
-}
-
-RootReducer.merge(realtimeMappingReduce);
-
 //加入Reducer(sketchReduce)
 //初始化相关量
 let target,labels=[],length,clickedObj=[],
@@ -230,6 +209,7 @@ let plot,drawPoint,drawToolOn,
 
 const sketchReduce = (state = { 
     pointNum: 0, 
+    isRealtimeOn:false,
     plotIsChecked:false,
     drawPointIsChecked: false,
     drawLineIsChecked: false,
@@ -242,6 +222,8 @@ const sketchReduce = (state = {
     redoIsChecked:false,
     saveIsChecked:false,
     alertSave:true,
+    alertPlot1:false,
+    alertPlot2:false,
     showDelDialog:false,
     haveObjToDel:false,
     jzdJSONData:JSON,
@@ -613,30 +595,57 @@ const sketchReduce = (state = {
 ///////
         switch (action.type) {
             //展点
-            case 'plotClick':
-                console.log("展点");
-                let plotData=[];
-                    plotData = JSON.parse(action.payload.data);
-                let poi= new maptalks.Coordinate([plotData[1],plotData[0]])
-                    console.log(plotData)
-                    plot(poi);
-                const newState={
-                    pointNum:state.pointNum,
-                    plotIsChecked:!state.plotIsChecked,
-                    drawPointIsChecked:false,
-                    drawLineIsChecked:false,
-                    drawPolygonIsChecked:false,
-                    balconyIsChecked:false,
-                    addLabelIsChecked:false,
-                    chooseObjIsChecked:false,
-                    deleteIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false,
-                    alertSave:true,
+            case 'handleRealtimeMapping':
+                const isRealtimeOn={isRealtimeOn:!state.isRealtimeOn}
+                if (isRealtimeOn.isRealtimeOn) {
+                    console.log('打开了');
+                } else {
+                    console.log('没打开');
                 }
-                return {...state,...newState};
-            //画点           
+                return Object.assign({},state,{... isRealtimeOn}); 
+                
+            case 'plotClick':
+                
+                if(state.isRealtimeOn){
+                    console.log(state)
+                    console.log("展点");
+                    let plotData=[];
+                    plotData = JSON.parse(action.payload.data);
+                    console.log(plotData);
+                     let poi= new maptalks.Coordinate([plotData[1],plotData[0]]);
+                    plot(poi);  
+                }else{
+                    const plotFail2={
+                        pointNum:state.pointNum,
+                        plotIsChecked:!state.plotIsChecked,
+                        drawPointIsChecked:false,
+                        drawLineIsChecked:false,
+                        drawPolygonIsChecked:false,
+                        balconyIsChecked:false,
+                        addLabelIsChecked:false,
+                        chooseObjIsChecked:false,
+                        deleteIsChecked:false,
+                        undoIsChecked:false,
+                        redoIsChecked:false,
+                        saveIsChecked:false,
+                        alertSave:true,
+                        alertPlot1:false,
+                        alertPlot2:true,
+                      }
+                      return {...state,...plotFail2};  
+                }
+
+            //关闭错误提示
+            case 'plotAlerClose':
+                if(state.isRealtimeOn){
+                    const closePlotAlert1={alertPlot1:false}
+                    return Object.assign({},state,{... closePlotAlert1}); 
+                }else{
+                    const closePlotAlert2={alertPlot2:false}
+                    return Object.assign({},state,{... closePlotAlert2}); 
+                }
+            
+            //画点
             case 'drawPointClick':
                 drawTool.disable();
                 snap.disable();
@@ -847,7 +856,7 @@ const sketchReduce = (state = {
                  deleteObj();
                 const  showDelDialog2 ={showDelDialog:false}
                 return Object.assign({},state,{... showDelDialog2});
-            case 'alerClose':
+            case 'delAlerClose':
                 const closeAlert={haveObjToDel:false}
                 return Object.assign({},state,{... closeAlert});
             case 'chooseObjClick':
