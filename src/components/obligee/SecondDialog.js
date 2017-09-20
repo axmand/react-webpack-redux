@@ -118,13 +118,20 @@ class SecondDialog extends Component {
           <TabContainer>
            
               <h1 ><br></br>界址签章表</h1>
+              <Provider store={store}>
    <BoundarySignature/>
+   </Provider>
           </TabContainer>}
         {tabIndex === 2 &&
           <TabContainer>
             
               <h1 ><br></br>界址说明表</h1>
-             <BoundarySpecification />
+
+              <Provider store={store}>  
+  
+              <BoundarySpecification />  
+    </Provider>  
+            
           </TabContainer>}
         </Dialog>
       </div>
@@ -187,25 +194,81 @@ export default connect(mapStateToProps, mapDispatchToProps)(SD1);
 
 
 // Reducer
-function reducer(state = { Owner:"peter",User:"jack" }, action) {
+function reducer(state = {
+  value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"},
   
-   
-  switch (action.type) {
-  
-    case 'changeOwner':
-   
-    return Object.assign({}, state, {
-        	Owner: action.payload.inputValue
-      });
+    "StartPointCodeList": [
+        "011DBA2",
+        "011DBB",
+        "011DBC",
+        "011DBD"
+    ],
+    "InnerPointCodeList": [
+        "011LLL",
+        "011OOO",
+        "011VVV",
+        "011UUU"
+    ],
+    "EndPointCodeList": [
+        "011DBB",
+        "011DBC",
+        "011DBD",
+        "011DBE"
+    ],
+    
+    "LandPointCodeList": [
+      "Google",
+      "Runoob",
+      "Taobao",
+      "sasasas"
+  ],
+  "LandPointTypeList": [
+      0,
+      2,
+      3,
+      2
+  ],
+  "LandPointDistance": [
+      212.212,
+      545.212,
+      22.31
+  ],
+  "LandBoundaryType": [
+      2,
+      1,
+      7
+  ],
+  "LandBoundaryLocation": [
+      1,
+      0,
+      2
+  ],
+  "LandBoundaryExplain": [
+      "啦啦啦啦",
+      "啊啊啊",
+      "鲁鲁萨撒"
+  ]
 
-    case 'changeUser':
-    return Object.assign({}, state, {
-        	User: action.payload.inputValue
-      });
+}, action) {
+  
    
-    default:
-      return state
-  }
+  let value = state.value;
+  
+    switch (action.type) {
+  
+      case 'change':
+       var inputName=action.payload.inputName;
+        value[inputName]=action.payload.inputValue;
+        return Object.assign({}, state, {
+          
+          value:value
+        });
+  
+     
+  
+      default:
+        return state
+    }
 }
 
 // Store
