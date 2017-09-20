@@ -19,6 +19,8 @@ import ProjectCard from './ProjectCard'
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 
+import projectData from './../../redux/RootData';
+
 
 const styles = {
   listitem: {
@@ -243,7 +245,8 @@ const ProjectReduce = (
   if (action.type === "handleChooseItem") {
     let list = [];
     list = JSON.parse(action.payload.data);
-    newState.ProjectItem = list.slice(0);
+    projectData.ProjectItem=list.slice(0);
+    //newState.ProjectItem = 
     newState.ContentShow = !state.ContentShow;
     return { ...state, ...newState }; 
   }
@@ -253,4 +256,5 @@ const ProjectReduce = (
 }
 
 RootReducer.merge(ProjectReduce);
+
 
