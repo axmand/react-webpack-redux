@@ -12,7 +12,6 @@ import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import FolderOpenIcon from 'material-ui-icons/FolderOpen';
-// import FontAwesome from 'react-fontawesome'
 //自定义组件
 import ProjectCard from './ProjectCard'
 //redux
@@ -64,7 +63,6 @@ class ProjectModule extends Component {
     const { handleContentClose,
       handleContentShow,
       ContentShow,
-      ProjectItem,
       classes
     } = this.props
 
@@ -112,7 +110,6 @@ ProjectModule.propTypes = {
   handleContentClose: PropTypes.func.isRequired,
   handleContentShow: PropTypes.func.isRequired,
   ContentShow: PropTypes.bool.isRequired,
-  ProjectItem:PropTypes.array.isRequired,
 };
 
 //声明State与Action
@@ -154,6 +151,7 @@ const ProjectReduce = (
     inputItems: [],
     ContentShow: false,
     ProjectItem: [],
+    ProjectName: [],
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
@@ -242,9 +240,13 @@ const ProjectReduce = (
   
   if (action.type === "handleChooseItem") {
     let list = [];
+    let Prolist = [];
     list = JSON.parse(action.payload.data);
+    Prolist = action.itemName;
     newState.ProjectItem = list.slice(0);
+    newState.ProjectName = Prolist;
     newState.ContentShow = !state.ContentShow;
+    console.log(state)
     return { ...state, ...newState }; 
   }
 

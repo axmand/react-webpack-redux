@@ -10,6 +10,7 @@ import Table, {  TableBody, TableCell, TableHead, TableRow,} from 'material-ui/T
 
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
+
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
@@ -35,30 +36,9 @@ const styles = {
     fontWeight: 'bold',
     padding: '0px',
   },
-  flex: {
-    flex: 1,
-  },
-  dialog: {
-    width: '1650px',
-    height: '1150px',
-    marginTop: 20,
-    marginLeft: 200
-  },
-  AppBar: {
-    root: {
-      marginTop: 30,
-      width: '100%',
-    },
-    position: 'relative'
-  },
   paper: {
     width: '100%',
     overflowX: 'auto',
-  },
-  tableText: {
-    fontSize: '20px',
-    padding: '0px',
-    border: '0px' 
   },
 }
 
@@ -67,6 +47,9 @@ class PrintModule extends Component {
   render() {
     const { handlePrintClose,
       handlePrintShow,
+      handlePrint,
+      handlePrintOk,
+      PrintOkShow,
       PrintShow,
       classes
     } = this.props
@@ -99,7 +82,7 @@ class PrintModule extends Component {
         <TableBody>
           <TableRow >
             <TableCell >权籍调查表</TableCell>
-            <TableCell><Button>打印</Button></TableCell>
+            <TableCell><Button onClick = { handlePrint }>打印</Button></TableCell>
           </TableRow>
           <TableRow >
             <TableCell >界址标示表</TableCell>                         
@@ -132,16 +115,27 @@ class PrintModule extends Component {
         </TableBody>
         </Table>
         </Paper>
+      </Dialog>      
+      
+      <Dialog
+        open={ PrintOkShow }
+        onRequestClose={ handlePrintOk } 
+      >
+      打印成功
       </Dialog>
       </div>
     )
   }
 }
 
+
+
 PrintModule.propTypes = {
   handlePrintClose: PropTypes.func.isRequired,
   handlePrintShow: PropTypes.func.isRequired,
+  handlePrint: PropTypes.func.isRequired,
   PrintShow: PropTypes.bool.isRequired,
+  PrintOkShow: PropTypes.bool.isRequired
 };
 
 //声明State与Action
@@ -149,6 +143,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     PrintShow: state.PrintReduce.PrintShow,
+    PrintOkShow: state.PrintReduce.PrintOkShow
   }
 }
 
@@ -165,14 +160,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'handlePrintClose',
       })
     },
+
+    handlePrint: () => {
+      dispatch({
+        type: 'handlePrint',
+      })
+    },
+
+    handlePrintOk: () => {
+      dispatch({
+        type: 'handlePrintOk',
+      })
+    },
   }
 }
+// let PrintUrl = RootReducer
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { name: 'PrintModule' })(PrintModule));
 //Reducer 
 const PrintReduce = (
   state = {
     PrintShow: false,
+    PrintOkShow: false,
   }, action) => {
 
   if (action.type === "handlePrintShow") {
@@ -184,7 +193,18 @@ const PrintReduce = (
     const PrintShow = { PrintShow: !state.PrintShow }
     return Object.assign({}, state, { ...PrintShow })
   }
+  
+  if (action.type === "handlePrint") {
+    fetch('http://172.16.102.90:1338/project/print/阿啊/2')
+      .then(response => response.json())
+      .then( json => console.log(json))
+      .catch(e => console.log("Oops, error", e))
 
+    const PrintShow = { PrintShow: !state.PrintShow }
+    const PrintOkShow = { PrintShow: !state.PrintOkShow }
+    return Object.assign({}, state, { ...PrintShow,...PrintOkShow })
+  }
+ 
   else
     return state
 }

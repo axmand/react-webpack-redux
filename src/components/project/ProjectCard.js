@@ -64,8 +64,6 @@ ProjectCard.propTypes = {
 const mapStateToProps = (state,ownProps) => {
   return {
       inputItems: state.ProjectReduce.inputItems,
-      IdNumber: state.ProjectReduce.IdNumber,
-      showDialog: state.ProjectReduce.showDialog,
   }
 }
 
@@ -78,6 +76,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch({
           type: 'handleChooseItem',
           payload: json,
+          itemName: ProjectUrl.slice(40),
           ProjectUrl
         })
         console.log(json)
