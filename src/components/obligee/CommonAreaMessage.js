@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import InputCell from './InputCell'
 import PropTypes from 'prop-types'
-
+import ListInputCell from './ListInputCell'
 
 
 import { Provider, connect } from 'react-redux'
@@ -67,9 +67,13 @@ class CommonAreaMessage extends Component {
         var obj=(
         <tr>
       <td width="143"><p >{FixedCode[index]}</p></td>
-            <td width="150"><p >{LandOwnUseArea[index]}</p></td>
+            {/* <td width="150"><p >{LandOwnUseArea[index]}</p></td>
             <td width="157"><p >{LandUniqueArea[index]}</p></td>
-            <td width="154"><p >{CommonArea[index]}</p></td>
+            <td width="154"><p >{CommonArea[index]}</p></td> */}
+
+            <td width="150"><ListInputCell name="LandOwnUseArea" row={index} tips="..." title="..."/></td>
+            <td width="157"><ListInputCell name="LandUniqueArea" row={index} tips="..." title="..."/></td>
+            <td width="154"><ListInputCell name="CommonArea" row={index} tips="..." title="..."/></td>
         </tr>
         );
         tableContent.push(obj);

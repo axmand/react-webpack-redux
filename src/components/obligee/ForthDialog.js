@@ -138,7 +138,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 // // Reducer
 function reducer(state = {
-  value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test", "FixedCount": "12块"},
+  //value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test", "FixedCount": "12块"},
  
   "FixedCode": [
       "011DBA",
@@ -183,8 +183,17 @@ function reducer(state = {
        
        return Object.assign({}, state, statenew);
   
-     
-  
+       case 'changelist':
+
+       
+       var type=action.payload.type;
+
+       var statenew=state;
+       statenew[type][action.payload.row]=action.payload.value;
+      
+       
+       return Object.assign({}, state, statenew);
+
       default:
         return state
     }
