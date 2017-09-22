@@ -32,8 +32,7 @@ class ObligeeModule extends Component {
     const classes = this.props.classes
   
     return (
-              <Provider store={store}>  
-
+<Provider store={store}>
       <div>
         
           <ChooseDialog projectName="项目二"/>
@@ -43,7 +42,7 @@ class ObligeeModule extends Component {
           <ForthDialog />
    
       </div>
-       </Provider>  
+      </Provider>
     )
   }
 

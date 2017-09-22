@@ -215,6 +215,7 @@ const ProjectReduce = (
   // }
 
   if (action.type === "handleContentShow") {
+    console.log('Project Module ...')
     let list = [];
     list = JSON.parse(action.payload.data);
     // for(let i = 0;i<list.length;i++)

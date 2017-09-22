@@ -101,11 +101,9 @@ class FirstDialog extends Component {
 
                 <h1><br></br>宗地基本信息表</h1>
 
-                <Provider store={ObligeeTableStore}>
-
+<Provider store={ObligeeTableStore}>
                   <ObligeeTable1 />
-
-                </Provider>
+</Provider>
 
               </TabContainer>}
             {this.state.index === 1 &&
@@ -165,19 +163,34 @@ export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 
 // // Reducer
-function reducer(state = {}, action) {
+const Obreducer = (state={
+  TableID: 201702240441, 
+  ParcelCode: "450108001206GB00137", InvestigateOrganization: "南宁市国土测绘地理信息中心",
+  OwnPowerSide: "所有权方名称"
+}, action) => {
  
-  
+  // let newState = JSON.parse(JSON.stringify(state))
 
   switch (action.type) {
 
-    case "handleContentShow":
+    case "handleChooseItem":
 
-    console.log("handleContentShow");
-    return state;
-     
+   
+   let list = [];
+   
+   list = JSON.parse(action.payload.data);
+  
+  
+   var newValue = list.slice(0);
 
+   console.log(newValue[0].f1);
+   var newsss=newValue[0].f1;
 
+   state=newsss;
+   return state;
+   
+
+  
     case 'change':
      var inputName=action.payload.inputName;
      
@@ -196,6 +209,6 @@ function reducer(state = {}, action) {
 }
 
 // Store
-const ObligeeTableStore = createStore(reducer);
+const ObligeeTableStore = createStore(Obreducer);
 
-RootReducer.merge(reducer);
+RootReducer.merge(Obreducer);
