@@ -12,12 +12,13 @@ import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import FolderOpenIcon from 'material-ui-icons/FolderOpen';
-// import FontAwesome from 'react-fontawesome'
 //自定义组件
 import ProjectCard from './ProjectCard'
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
+
+import projectData from './../../redux/RootData';
 
 
 const styles = {
@@ -64,7 +65,6 @@ class ProjectModule extends Component {
     const { handleContentClose,
       handleContentShow,
       ContentShow,
-      ProjectItem,
       classes
     } = this.props
 
@@ -112,7 +112,6 @@ ProjectModule.propTypes = {
   handleContentClose: PropTypes.func.isRequired,
   handleContentShow: PropTypes.func.isRequired,
   ContentShow: PropTypes.bool.isRequired,
-  ProjectItem:PropTypes.array.isRequired,
 };
 
 //声明State与Action
@@ -127,7 +126,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
       fetch('http://172.16.102.90:1338//project/list')
-      //fetch('http://172.16.103.250:1338//project/list')
       .then(response => response.json())
       .then( json => {
         dispatch({
@@ -242,10 +240,18 @@ const ProjectReduce = (
   
   if (action.type === "handleChooseItem") {
     let list = [];
+    let Prolist = [];
     list = JSON.parse(action.payload.data);
-    newState.ProjectItem = list.slice(0);
+    Prolist = action.itemName;
+   
+    projectData.ProjectName = Prolist;
+    projectData.ProjectItem = list.slice(0);
+
     newState.ContentShow = !state.ContentShow;
+    console.log(state)
     return { ...state, ...newState }; 
+
+    
   }
 
   else
@@ -253,4 +259,5 @@ const ProjectReduce = (
 }
 
 RootReducer.merge(ProjectReduce);
+
 

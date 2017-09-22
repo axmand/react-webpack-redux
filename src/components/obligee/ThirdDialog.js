@@ -24,6 +24,7 @@ import { Provider, connect } from 'react-redux'
 import ObligeeTable1 from './ObligeeTable1'
 import ObligeeTable2 from './ObligeeTable2'
 import ObligeeTable3 from './ObligeeTable3'
+import InputCell from './InputCell'
 const TabContainer = props =>
   <div style={{ padding: 20,overflow:"auto" }}>
     {props.children}
@@ -89,10 +90,34 @@ class ThirdDialog extends Component {
           <div>
        
           <TabContainer >
-
             <h1><br></br>调查审核表</h1>
+            <Provider store={store}>
 
-  
+            <table className="mytable">
+ 
+  <tr>
+    <td width="108" rowSpan="2"><p >权属调查记事 </p></td>
+    <td width="496" valign="top"><InputCell  name="PowerInvestigateRecord" title="权属调查记事" tips="填写权属调查记事"/></td>
+  </tr>
+  <tr>
+    <td width="496" valign="bottom"><p>调查员：<InputCell  name="PowerInvestigator" title="调查员" tips="填写调查员"/>日期<InputCell  name="PowerInvestigateDate" title="调查日期" tips="填写调查日期"/></p></td>
+  </tr>
+  <tr>
+    <td width="108" rowSpan="2"><p >地籍测量记事 </p></td>
+    <td width="496" valign="top"><InputCell  name="SurveyRecord" title="地籍测量记事" tips="填写地籍测量记事"/></td>
+  </tr>
+  <tr>
+    <td width="496" valign="bottom"><p>测量人:<InputCell  name="SurveyRecorder" title="测量人" tips="填写测量人"/>日期<InputCell  name="SurveyRecordDate" title="测量日期" tips="填写测量日期"/></p></td>
+  </tr>
+  <tr>
+    <td width="108" rowSpan="2"><p >地籍调查结果审核意见 </p></td>
+    <td width="496" valign="top"><InputCell  name="AuditOpinion" title="地籍调查结果审核意见" tips="填写地籍调查结果审核意见"/></td>
+  </tr>
+  <tr>
+    <td width="496" valign="bottom"><p >审核人：<InputCell  name="Auditor" title="审核人" tips="填写审核人"/>日期：<InputCell  name="AuditOpinionDate" title="审核日期" tips="填写审核日期"/></p></td>
+  </tr>
+</table>
+</Provider>
           </TabContainer>
         
         
@@ -130,3 +155,58 @@ function mapDispatchToProps(dispatch) {
 }
 var TD1=withStyles(styleSheet)(ThirdDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(TD1);
+
+// Reducer
+function reducer(state = {
+  "PowerInvestigateRecord": "阿瑟将军啊当时就觉得啊抗静电架空啊手机导航系啊是的吉萨还多久啊是和撒谎觉得好看和",
+  "PowerInvestigator": "罗志祥",
+  "PowerInvestigateDate": "2009-22-21",
+  "SurveyRecord": "实打实大苏打实打实大苏打撒大苏打",
+  "SurveyRecorder": "李天乐",
+  "SurveyRecordDate": "2120-22-11",
+  "AuditOpinion": "是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶",
+  "Auditor": "科技大厦",
+  "AuditOpinionDate": "2008-22-21",
+
+}, action) {
+  
+   
+  let value = state.value;
+  
+    switch (action.type) {
+  
+      case 'change':
+      var inputName=action.payload.inputName;
+      
+ 
+       var statenew=state;
+       statenew[inputName]=action.payload.inputValue;
+      
+       
+       return Object.assign({}, state, statenew);
+
+
+  case 'changetest':
+   console.log("clicked "+action.payload.row+" "+action.payload.col);
+
+    var newValue=state[action.payload.type];
+    var type=action.payload.type;
+    newValue[action.payload.row]=action.payload.col;
+    return  Object.assign({}, state, {
+    
+      type:newValue
+  });;
+  case 'ZoomToPoint':
+  console.log("clicked "+action.payload.pointName);
+
+   return state;
+  
+      default:
+        return state
+    }
+}
+
+// Store
+const store = createStore(reducer);
+
+RootReducer.merge(reducer);

@@ -23,19 +23,12 @@ const styles = {
 
 class ProjectCard extends Component {
  
-  constructor(props) {
-    super(props);
-  }
- 
   render(){
     const { inputItems,
             handleChooseItem,
             handleContentClose2,
             classes
 		} = this.props
-    
-    const uuidv4 = require('uuid/v4');
-    let Id = uuidv4();
     
     return (
     <div>
@@ -64,8 +57,6 @@ ProjectCard.propTypes = {
 const mapStateToProps = (state,ownProps) => {
   return {
       inputItems: state.ProjectReduce.inputItems,
-      IdNumber: state.ProjectReduce.IdNumber,
-      showDialog: state.ProjectReduce.showDialog,
   }
 }
 
@@ -78,6 +69,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch({
           type: 'handleChooseItem',
           payload: json,
+          itemName: ProjectUrl.slice(40),
           ProjectUrl
         })
         console.log(json)

@@ -17,7 +17,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import RootReducer from './../../redux/RootReducer';
-
+import projectData from './../../redux/RootData'
 
 import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
@@ -165,19 +165,28 @@ export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 
 // // Reducer
-function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"} }, action) {
+function reducer(state = {}, action) {
  
-  let value = state.value;
+  
 
   switch (action.type) {
 
+    case "handleContentShow":
+
+    console.log("handleContentShow");
+    return state;
+     
+
+
     case 'change':
      var inputName=action.payload.inputName;
-      value[inputName]=action.payload.inputValue;
-      return Object.assign({}, state, {
-        
-        value:value
-      });
+     
+
+      var statenew=state;
+      statenew[inputName]=action.payload.inputValue;
+     
+      
+      return Object.assign({}, state, statenew);
 
    
 

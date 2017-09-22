@@ -19,7 +19,6 @@ class ShowCard extends Component {
 
   render(){
 	const { 
-      handleContentClose2,
       handleChooseItem
     } = this.props  
    
@@ -43,7 +42,6 @@ class ShowCard extends Component {
 ShowCard.propTypes = {
   entries: PropTypes.string.isRequired,
   handleChooseItem:PropTypes.func.isRequired,
-  handleContentClose2:PropTypes.func.isRequired
 };
 
 export default withStyles(styles,{name:'ShowCard'})(ShowCard);

@@ -30,31 +30,6 @@ const styles = {
     fontWeight: 'bold',
     padding: '0px',
   },
-  flex: {
-    flex: 1,
-  },
-  dialog: {
-    width: '1650px',
-    height: '1150px',
-    marginTop: 20,
-    marginLeft: 200
-  },
-  AppBar: {
-    root: {
-      marginTop: 30,
-      width: '100%',
-    },
-    position: 'relative'
-  },
-  paper: {
-    width: '100%',
-    overflowX: 'auto',
-  },
-  tableText: {
-    fontSize: '20px',
-    padding: '0px',
-    border: '0px' 
-  },
 }
 
 class OutputModule extends Component {
