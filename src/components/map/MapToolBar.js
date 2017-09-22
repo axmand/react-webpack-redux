@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 //ui
 import { withStyles } from "material-ui/styles";
-import List, { ListItem, ListItemIcon } from "material-ui/List";
+import List, { ListItem } from "material-ui/List";
 //图标
 import LocationOn from "material-ui-icons/LocationOn";
 import Add from "material-ui-icons/Add";
