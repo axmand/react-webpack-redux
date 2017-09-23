@@ -21,12 +21,15 @@ class MapView extends Component {
 		const { 
       sketchDisplayState,
       classes,
+      isRealtimeOn
     } = this.props
 		// console.log(sketchDisplayState)	
     return (
       <div className={classes.root}>
         {sketchDisplayState && <Sketch /> }
-        <Map />
+        <Map 
+         isRealtimeOn={isRealtimeOn} 
+        />
       </div>
     )
   }
@@ -61,10 +64,12 @@ RootReducer.merge(mapViewReduce);
  */
 const mapStateToProps = ( state ) => {
 
-  const mapViewState = state.mapViewReduce
+  const mapViewState = state.mapViewReduce;
+  const sketchState = state.sketchReduce;
 
   return {
-    sketchDisplayState: mapViewState.sketchDisplayState
+    sketchDisplayState: mapViewState.sketchDisplayState,
+    isRealtimeOn: sketchState.isRealtimeOn
   }
 }
 

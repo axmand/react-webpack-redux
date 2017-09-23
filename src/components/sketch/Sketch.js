@@ -1,16 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import RootReducer from "./../../redux/RootReducer";
 
 import { withStyles } from "material-ui/styles";
 import AppBar from "material-ui/AppBar";
 import Tabs, { Tab } from "material-ui/Tabs";
 import IconButton from "material-ui/IconButton";
 import ClearIcon from "material-ui-icons/Clear";
-import Snackbar from "material-ui/Snackbar";
 //import component
-// import Map from '../map/Map';
 import SketchToolBar from "./SketchToolBar";
 import ThematicMap from "./ThematicMap";
 
@@ -33,7 +30,6 @@ const styles = {
     right: "0px"
   }
 };
-let isOpen;
 class Sketch extends Component {
   state = {
     index: 0
