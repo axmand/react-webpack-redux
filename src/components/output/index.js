@@ -9,6 +9,7 @@ import FileUploadIcon from 'material-ui-icons/FileUpload';
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
+import projectData from './../../redux/RootData';
 
 const styles = {
   listitem: {
@@ -37,6 +38,7 @@ class OutputModule extends Component {
   render() {
     const { handleOutputClose,
       handleOutputShow,
+      handleOutput,
       OutputShow,
       classes
     } = this.props
@@ -65,7 +67,7 @@ class OutputModule extends Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleOutputClose} color="primary">
+          <Button onClick={handleOutput} color="primary">
             确认
           </Button>
           <Button onClick={handleOutputClose} color="primary">
@@ -81,6 +83,7 @@ class OutputModule extends Component {
 OutputModule.propTypes = {
   handleOutputClose: PropTypes.func.isRequired,
   handleOutputShow: PropTypes.func.isRequired,
+  handleOutput: PropTypes.func.isRequired,
   OutputShow: PropTypes.bool.isRequired,
 };
 
@@ -105,6 +108,46 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'handleOutputClose',
       })
     },
+
+    handleOutput: () => {
+      let JsonData = JSON.stringify(projectData.ProjectItem);
+      // let JsonData = projectData.ProjectItem.toString()
+      // function params(obj){
+      //   var str = "";
+      //   for (var key in obj) {
+      //   if (str !== "") {
+      //       str += "&";
+      //   }
+      //   str += key + "=" + encodeURIComponent(obj[key]);
+      //   }
+      // return str;
+      // }
+      
+      fetch('http://172.16.102.90:1338/project/forms/Project1/post', 
+      { 
+      method: 'POST', 
+      headers: {
+        //  "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
+        // 'Accept': 'application/json',
+        // 'Content-Type': 'application/json',
+        //  'Content-Type': 'text/plain', 
+      }, 
+      //body: params(JsonData)
+      // body: JsonData,  
+      body: 'f1=123213&f2=8984598'
+      })
+    .then(response => response.json())
+    .then( json => {
+      dispatch({
+        type: 'handleOutput',
+        payload: json,
+      })
+      console.log(json)})
+      .catch(err => {
+        console.log(err)
+      })
+    },
   }
 }
 
@@ -115,6 +158,8 @@ const OutputReduce = (
     OutputShow: false,
   }, action) => {
 
+  let newState = JSON.parse(JSON.stringify(state))
+
   if (action.type === "handleOutputShow") {
     const OutputShow = { OutputShow: !state.OutputShow }
     return Object.assign({}, state, { ...OutputShow })
@@ -123,6 +168,11 @@ const OutputReduce = (
   if (action.type === "handleOutputClose") {
     const OutputShow = { OutputShow: !state.OutputShow }
     return Object.assign({}, state, { ...OutputShow })
+  }
+
+  if (action.type === "handleOutput") {
+    newState.OutputShow = !state.OutputShow;
+    return { ...state, ...newState }; 
   }
 
   else
