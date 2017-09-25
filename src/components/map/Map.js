@@ -70,7 +70,7 @@ class Map extends Component {
   }
 
   render() {
-    const { onMenuItemClick,isRealtimeOn } = this.props;
+    const { onMenuItemClick } = this.props;
 
     return (
       <div>
@@ -85,7 +85,7 @@ class Map extends Component {
         <MapToolBar 
           onClick={onMenuItemClick} 
           text="zoom_in"
-          isRealtimeOn={isRealtimeOn} 
+          
           />
       </div>
     );
@@ -111,55 +111,86 @@ const mapReduce = (state = 0, action) => {
       }else{
         alert("浏览器不支持定位！");
       }
-  function locationError(error){
-    switch(error.code) { 
-      case error.PERMISSION_DENIED: 
-          alert("定位失败,用户拒绝请求地理定位"); 
-          break; 
-      case error.POSITION_UNAVAILABLE: 
-          alert("定位失败,位置信息是不可用"); 
-          break; 
-      case error.TIMEOUT: 
-          alert("定位失败,请求获取用户位置超时"); 
-          break; 
-      case error.UNKNOWN_ERROR: 
-          alert("定位失败,定位系统失效"); 
-          break;       
-      default:break;
-  }
-
-
-  }
-  function locationSuccess(position){
-    let coords = position.coords;    
-    console.log(coords)
-    const center = new maptalks.Coordinate(coords.longitude,coords.latitude);
-    map.setCenter(center);
-    const circle = new maptalks.Circle(center, 1, {
-      symbol: {
-        lineColor: "#000000",
-        lineWidth: 1.5,
-        polygonFill: "#1bbc9b",
-        polygonOpacity: 0.4
+    function locationError(error){
+      switch(error.code) { 
+        case error.PERMISSION_DENIED: 
+            alert("定位失败,用户拒绝请求地理定位"); 
+            break; 
+        case error.POSITION_UNAVAILABLE: 
+            alert("定位失败,位置信息是不可用"); 
+            break; 
+        case error.TIMEOUT: 
+            alert("定位失败,请求获取用户位置超时"); 
+            break; 
+        case error.UNKNOWN_ERROR: 
+            alert("定位失败,定位系统失效"); 
+            break;       
+        default:break;
       }
-    });
-    const label = new maptalks.Label("当前定位", center, {
-      box: false,
-      type: "Label",
-      symbol: {
-        textWeight: "200",
-        textFaceName: "宋体",
-        textSize: 12,
-        textFill: "#000000",
-        textDy: -10,
-        textAlign: "auto"
-      }
-    });
-    //将对象添加至图层
-    map.getLayer("location").addGeometry(circle);
-    map.getLayer("location").addGeometry(label);
-  }
+    }
+    function locationSuccess(position){
+      let coords = position.coords;    
+      console.log(coords)
+      const center = new maptalks.Coordinate(coords.longitude,coords.latitude);
+      map.setCenter(center);
+      const circle = new maptalks.Circle(center, 1, {
+        symbol: {
+          lineColor: "#000000",
+          lineWidth: 1.5,
+          polygonFill: "#1bbc9b",
+          polygonOpacity: 0.4
+        }
+      });
+      const label = new maptalks.Label("当前定位", center, {
+        box: false,
+        type: "Label",
+        symbol: {
+          textWeight: "200",
+          textFaceName: "宋体",
+          textSize: 12,
+          textFill: "#000000",
+          textDy: -10,
+          textAlign: "auto"
+        }
+      });
+      //将对象添加至图层
+      map.getLayer("location").addGeometry(circle);
+      map.getLayer("location").addGeometry(label);
+    }
 }
+  //通过rtk获取当前定位
+  if(action.type === "menuClick" &&action.payload.command === "get_location_rtk"){
+    console.log("fetching...")
+      let coords=JSON.parse(action.payload.data);
+      console.log(coords);
+      const center= new maptalks.Coordinate([coords[1],coords[0]]);
+      map.setCenter(center);
+      const circle = new maptalks.Circle(center, 1, {
+        symbol: {
+          lineColor: "#000000",
+          lineWidth: 1.5,
+          polygonFill: "#1bbc9b",
+          polygonOpacity: 0.4
+        }
+      });
+      const label = new maptalks.Label("当前定位", center, {
+        box: false,
+        type: "Label",
+        symbol: {
+          textWeight: "200",
+          textFaceName: "宋体",
+          textSize: 12,
+          textFill: "#000000",
+          textDy: -10,
+          textAlign: "auto"
+        }
+      });
+      //将对象添加至图层
+      map.getLayer("location").addGeometry(circle);
+      map.getLayer("location").addGeometry(label);
+  
+  }
+
   //地图放大
   if (action.type === "menuClick" && action.payload.command === "zoom_in") {
     map.zoomIn();
@@ -174,69 +205,69 @@ const mapReduce = (state = 0, action) => {
 RootReducer.merge(mapReduce);
 
 //加入reducer(layerControlReduce)
-const layerControlReduce = (
-  state = {
-    pointIsChecked: true,
-    lineIsChecked: true,
-    polygonIsChecked: true,
-    labelIsChecked: true
-  },
-  action
-) => {
-  //点选point图层控制其显示
-  if (action.type === "handlePointIsChecked") {
-    const pointIsChecked = {
-      pointIsChecked: !state.pointIsChecked
-    };
-    if (pointIsChecked.pointIsChecked) {
-      map.getLayer("point").show();
-    } else {
-      map.getLayer("point").hide();
+  const layerControlReduce = (
+    state = {
+      pointIsChecked: true,
+      lineIsChecked: true,
+      polygonIsChecked: true,
+      labelIsChecked: true
+    },
+    action
+  ) => {
+    //点选point图层控制其显示
+    if (action.type === "handlePointIsChecked") {
+      const pointIsChecked = {
+        pointIsChecked: !state.pointIsChecked
+      };
+      if (pointIsChecked.pointIsChecked) {
+        map.getLayer("point").show();
+      } else {
+        map.getLayer("point").hide();
+      }
+      console.log(pointIsChecked);
+      return Object.assign({}, state, { ...pointIsChecked });
     }
-    console.log(pointIsChecked);
-    return Object.assign({}, state, { ...pointIsChecked });
-  }
-  //点选line图层控制其显示
-  if (action.type === "handleLineIsChecked") {
-    const lineIsChecked = {
-      lineIsChecked: !state.lineIsChecked
-    };
-    if (lineIsChecked.lineIsChecked) {
-      map.getLayer("line").show();
-    } else {
-      map.getLayer("line").hide();
+    //点选line图层控制其显示
+    if (action.type === "handleLineIsChecked") {
+      const lineIsChecked = {
+        lineIsChecked: !state.lineIsChecked
+      };
+      if (lineIsChecked.lineIsChecked) {
+        map.getLayer("line").show();
+      } else {
+        map.getLayer("line").hide();
+      }
+      console.log(lineIsChecked);
+      return Object.assign({}, state, { ...lineIsChecked });
     }
-    console.log(lineIsChecked);
-    return Object.assign({}, state, { ...lineIsChecked });
-  }
-  //点选polygon图层控制其显示
-  if (action.type === "handlePolygonIsChecked") {
-    const polygonIsChecked = {
-      polygonIsChecked: !state.polygonIsChecked
-    };
-    if (polygonIsChecked.polygonIsChecked) {
-      map.getLayer("polygon").show();
-    } else {
-      map.getLayer("polygon").hide();
+    //点选polygon图层控制其显示
+    if (action.type === "handlePolygonIsChecked") {
+      const polygonIsChecked = {
+        polygonIsChecked: !state.polygonIsChecked
+      };
+      if (polygonIsChecked.polygonIsChecked) {
+        map.getLayer("polygon").show();
+      } else {
+        map.getLayer("polygon").hide();
+      }
+      console.log(polygonIsChecked);
+      return Object.assign({}, state, { ...polygonIsChecked });
     }
-    console.log(polygonIsChecked);
-    return Object.assign({}, state, { ...polygonIsChecked });
-  }
-  //点选注记图层控制其显示
-  if (action.type === "handleLabelIsChecked") {
-    const labelIsChecked = {
-      labelIsChecked: !state.labelIsChecked
-    };
-    if (labelIsChecked.labelIsChecked) {
-      map.getLayer("label").show();
-    } else {
-      map.getLayer("label").hide();
+    //点选注记图层控制其显示
+    if (action.type === "handleLabelIsChecked") {
+      const labelIsChecked = {
+        labelIsChecked: !state.labelIsChecked
+      };
+      if (labelIsChecked.labelIsChecked) {
+        map.getLayer("label").show();
+      } else {
+        map.getLayer("label").hide();
+      }
+      console.log(labelIsChecked);
+      return Object.assign({}, state, { ...labelIsChecked });
     }
-    console.log(labelIsChecked);
-    return Object.assign({}, state, { ...labelIsChecked });
-  }
-  return { ...state };
-};
+    return { ...state };
+  };
 
 RootReducer.merge(layerControlReduce);
 
@@ -1141,11 +1172,9 @@ RootReducer.merge(sketchReduce);
 */
 const mapStateToProps = (state, ownProps) => {
   const props = ownProps;
-  const sketchState = state.sketchReduce;
 
   return {
     text: ownProps.ownProps,
-    isRealtimeOn: sketchState.isRealtimeOn
   };
 };
 /**
@@ -1157,13 +1186,21 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onMenuItemClick: text => {
       if(text==="get_location"){
+        console.log(ownProps)
         if(ownProps.isRealtimeOn){
-          dispatch({
-            type: "menuClick",
-            payload: {
-              command: "get_location_rtk"
-            }
-          });
+          fetch("http://172.16.102.90:1338/bluetooth/connect/RTK/printnmea")
+          .then(response => response.json())
+          .then(json => {
+            dispatch({
+              type: "menuClick",
+              payload: {
+                command: "get_location_rtk",
+                data:json
+              }
+            });
+          }).catch(e => {
+            console.log(e)
+          });  
         }else{
           dispatch({
             type: "menuClick",
