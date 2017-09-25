@@ -113,29 +113,30 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       let JsonData = JSON.stringify(projectData.ProjectItem);
       // let JsonData = projectData.ProjectItem.toString()
       // function params(obj){
-      //   var str = "";
+      //   var str = "{ "
       //   for (var key in obj) {
-      //   if (str !== "") {
-      //       str += "&";
+      //     str += "'"+key+"':'"+obj[key]+"',";
+      //   // if (str !== "") {
+      //   //     str += "&";
+      //   // }
+      //   // str += key + "=" + encodeURIComponent(obj[key]);
       //   }
-      //   str += key + "=" + encodeURIComponent(obj[key]);
-      //   }
-      // return str;
+      //  str += " }";
+      //  return str;
       // }
-      
-      fetch('http://172.16.102.90:1338/project/forms/Project1/post', 
+      console.log(JsonData)
+      fetch('http://172.16.102.90:1338//project/forms/post', 
       { 
       method: 'POST', 
       headers: {
         //  "Access-Control-Allow-Origin": "*",
-        'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
+        // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
         // 'Accept': 'application/json',
-        // 'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
         //  'Content-Type': 'text/plain', 
       }, 
-      //body: params(JsonData)
-      // body: JsonData,  
-      body: 'f1=123213&f2=8984598'
+      // body: params(JsonData) 
+      body: JsonData
       })
     .then(response => response.json())
     .then( json => {
