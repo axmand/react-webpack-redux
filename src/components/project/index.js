@@ -240,13 +240,13 @@ const ProjectReduce = (
   }
   
   if (action.type === "handleChooseItem") {
-    let list = [];
+    let list0 = [];
     let Prolist = [];
-    list = JSON.parse(action.payload.data);
+    list0 = JSON.parse(action.payload.data);
     Prolist = action.itemName;
    
     projectData.ProjectName = Prolist;
-    projectData.ProjectItem = list.slice(0);
+    projectData.ProjectItem = list0.slice(0);
 
     newState.ContentShow = !state.ContentShow;
     console.log(state)
