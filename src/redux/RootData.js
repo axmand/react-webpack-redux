@@ -1,7 +1,7 @@
 let projectData = {
     ProjectItem: [],
     ProjectName:[],
-    PhotoItems:[]
+    Loaded:false
 };
 
 export default projectData;

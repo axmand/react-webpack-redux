@@ -90,11 +90,11 @@ class ForthDialog extends Component {
 
             <h1><br></br>共有/共用宗地面积分摊表</h1>
 
-            <Provider store={ObligeeTableStore}>
+            {/* <Provider store={ObligeeTableStore}> */}
 
-            <CommonAreaTable/>
+            <CommonAreaTable tableIndex="f7"/>
             
-                </Provider>
+                {/* </Provider> */}
   
           </TabContainer>
         
@@ -114,14 +114,14 @@ ForthDialog.propTypes = {
 
 
 // Map Redux state to component props
-function mapStateToProps(state) {
+const mapStateToProps=(state)=> {
   return {
-   open:state.forthDialogOpen
+   open:state.obligeeReducer.forthDialogOpen
   }
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps=(dispatch)=> {
   return {
    close: () => dispatch({
                 type: 'close',
@@ -136,61 +136,3 @@ var FD1=withStyles(styleSheet)(ForthDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
 
-// // Reducer
-function reducer(state = {
-  value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test", "FixedCount": "12块"},
- 
-  "FixedCode": [
-      "011DBA",
-      "011DBB",
-      "011DBC",
-      "011DBD"
-  ],
-  "LandOwnUseArea": [
-      0.12212,
-      0.11,
-      11.2112,
-      1112.31
-  ],
-  "LandUniqueArea": [
-      22.2222,
-      333.3333,
-      55555.555,
-      233.4444
-  ],
-  "CommonArea": [
-      22.2222,
-      333.3333,
-      55555.555,
-      233.4444
-  ]
-
-
-
-}, action) {
-  
-    let value = state.value;
-  
-    switch (action.type) {
-  
-      case 'change':
-      var inputName=action.payload.inputName;
-      
- 
-       var statenew=state;
-       statenew[inputName]=action.payload.inputValue;
-      
-       
-       return Object.assign({}, state, statenew);
-  
-     
-  
-      default:
-        return state
-    }
-  }
-  
-  // Store
-  const ObligeeTableStore = createStore(reducer);
-  
-  RootReducer.merge(reducer);

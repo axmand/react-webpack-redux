@@ -107,30 +107,30 @@ class SecondDialog extends Component {
 
             <h1 ><br></br>界址标示表</h1>
 
- <Provider store={store}>  
+ {/* <Provider store={store}>   */}
   
- <BoundaryList />
+ <BoundaryList tableIndex="f2"/>
   
-    </Provider>  
+    {/* </Provider>   */}
 
           </TabContainer>}
         {tabIndex === 1 &&
           <TabContainer>
            
               <h1 ><br></br>界址签章表</h1>
-              <Provider store={store}>
-   <BoundarySignature/>
-   </Provider>
+              {/* <Provider store={store}> */}
+   <BoundarySignature tableIndex="f3"/>
+   {/* </Provider> */}
           </TabContainer>}
         {tabIndex === 2 &&
           <TabContainer>
             
               <h1 ><br></br>界址说明表</h1>
 
-              <Provider store={store}>  
+              {/* <Provider store={store}>   */}
   
-              <BoundarySpecification />  
-    </Provider>  
+              <BoundarySpecification tableIndex="f5"/>  
+    {/* </Provider>   */}
             
           </TabContainer>}
         </Dialog>
@@ -148,15 +148,15 @@ SecondDialog.propTypes = {
 
 
 // Map Redux state to component props
-function mapStateToProps(state) {
+const mapStateToProps=(state)=> {
   return {
-   open:state.secondDialogOpen,
-   tabIndex:state.secondTabIndex
+   open:state.obligeeReducer.secondDialogOpen,
+   tabIndex:state.obligeeReducer.secondTabIndex
   }
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps=(dispatch)=> {
   return {
    close: () => dispatch({
                 type: 'close',
@@ -193,113 +193,50 @@ var SD1=withStyles(styleSheet)(SecondDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(SD1);
 
 
-// Reducer
-function reducer(state = {
-  "PowerInvestigateRecord": "阿瑟将军啊当时就觉得啊抗静电架空啊手机导航系啊是的吉萨还多久啊是和撒谎觉得好看和",
-  "PowerInvestigator": "罗志祥",
-  "PowerInvestigateDate": "2009-22-21",
-  "SurveyRecord": "实打实大苏打实打实大苏打撒大苏打",
-  "SurveyRecorder": "李天乐",
-  "SurveyRecordDate": "2120-22-11",
-  "AuditOpinion": "是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶",
-  "Auditor": "科技大厦",
-  "AuditOpinionDate": "2008-22-21",
-
+// // Reducer
+// function reducer(state = {
   
-    "StartPointCodeList": [
-        "011DBA2",
-        "011DBB",
-        "011DBC",
-        "011DBD"
-    ],
-    "InnerPointCodeList": [
-        "011LLL",
-        "011OOO",
-        "011VVV",
-        "011UUU"
-    ],
-    "EndPointCodeList": [
-        "011DBB",
-        "011DBC",
-        "011DBD",
-        "011DBE"
-    ],
-    
-    "LandPointCodeList": [
-      "Google",
-      "Runoob",
-      "Taobao",
-      "sasasas"
-  ],
-  "LandPointTypeList": [
-      0,
-      2,
-      3,
-      2
-  ],
-  "LandPointDistance": [
-      212.212,
-      545.212,
-      22.31
-  ],
-  "LandBoundaryType": [
-      2,
-      1,
-      7
-  ],
-  "LandBoundaryLocation": [
-      1,
-      0,
-      2
-  ],
-  "LandBoundaryExplain": [
-      "啦啦啦啦",
-      "啊啊啊",
-      "鲁鲁萨撒"
-  ],
-  "BoundaryPointExplain": "南宁市国土测绘地理信息中啊阿斯顿撒旦啊是打工皇帝沙发国际化啊规划鬼斧神工就空格键公司的感觉是感觉啊高房价撒个心",
-  "MainBoundaryDirectionExplain": "所有权方名称是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶打到阿萨 大师大师哒的啊哒大师哒"
 
 
-}, action) {
+// }, action) {
   
    
-  let value = state.value;
+//   let value = state.value;
   
-    switch (action.type) {
+//     switch (action.type) {
   
-      case 'change':
-      var inputName=action.payload.inputName;
+//       case 'change':
+//       var inputName=action.payload.inputName;
       
  
-       var statenew=state;
-       statenew[inputName]=action.payload.inputValue;
+//        var statenew=state;
+//        statenew[inputName]=action.payload.inputValue;
       
        
-       return Object.assign({}, state, statenew);
+//        return Object.assign({}, state, statenew);
 
 
-  case 'changetest':
-   console.log("clicked "+action.payload.row+" "+action.payload.col);
+//   case 'changetest':
+//    console.log("clicked "+action.payload.row+" "+action.payload.col);
 
-    var newValue=state[action.payload.type];
-    var type=action.payload.type;
-    newValue[action.payload.row]=action.payload.col;
-    return  Object.assign({}, state, {
+//     var newValue=state[action.payload.type];
+//     var type=action.payload.type;
+//     newValue[action.payload.row]=action.payload.col;
+//     return  Object.assign({}, state, {
     
-      type:newValue
-  });;
-  case 'ZoomToPoint':
-  console.log("clicked "+action.payload.pointName);
+//       type:newValue
+//   });;
+//   case 'ZoomToPoint':
+//   console.log("clicked "+action.payload.pointName);
 
-   return state;
+//    return state;
   
-      default:
-        return state
-    }
-}
+//       default:
+//         return state
+//     }
+// }
 
-// Store
-const store = createStore(reducer);
+// // Store
+// const store = createStore(reducer);
 
-RootReducer.merge(reducer);
+//RootReducer.merge(reducer);

@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux'
 import PointNameCell from './PointNameCell'
 // Map Redux state to component props
-function mapStateToProps(state) {
-
+function mapStateToProps(state ,ownProps) {
+  const tableIndex =ownProps.tableIndex;
 
   
   return {
-    startPoint:state.StartPointCodeList,
-    innerPoint:state.InnerPointCodeList,
-endPoint:state.EndPointCodeList
+    startPoint:state.ObContentReducer[tableIndex].StartPointCodeList,
+    innerPoint:state.ObContentReducer[tableIndex].InnerPointCodeList,
+endPoint:state.ObContentReducer[tableIndex].EndPointCodeList
     
     
   };
@@ -36,7 +36,7 @@ function mapDispatchToProps(dispatch) {
 
 class BoundarySignature extends Component {  
   render() {
-     const { startPoint,innerPoint,endPoint } = this.props;
+     const { startPoint,innerPoint,endPoint,tableIndex } = this.props;
 
 
 var tableContent=[];
@@ -69,9 +69,9 @@ var tableHead2=(<tr>
         var obj=(
         <tr>
             
-                  <td width="73"><p ><PointNameCell name={startPoint[i]} row={i} type="StartPointCodeList"/></p></td>
-                  <td width="70"><p ><PointNameCell name={startPoint[i]} row={i} type="InnerPointCodeList"/></p></td>
-                  <td width="74"><p ><PointNameCell name={startPoint[i]} row={i} type="EndPointCodeList"/></p></td>
+                  <td width="73"><p ><PointNameCell tableIndex="f3" name={startPoint[i]} row={i} type="StartPointCodeList"/></p></td>
+                  <td width="70"><p ><PointNameCell tableIndex="f3" name={startPoint[i]} row={i} type="InnerPointCodeList"/></p></td>
+                  <td width="74"><p ><PointNameCell tableIndex="f3" name={startPoint[i]} row={i} type="EndPointCodeList"/></p></td>
                   <td width="113"><p ></p></td>
                   <td width="100"><p ></p></td>
                   <td width="99"><p ></p></td>

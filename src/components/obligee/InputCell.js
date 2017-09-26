@@ -18,11 +18,12 @@ import TextField from 'material-ui/TextField';
 // Map Redux state to component props
 function mapStateToProps(state,ownProps) {
   const key =ownProps.name;
+  const tableIndex =ownProps.tableIndex;
   let obj = {};
   obj['key2'] = key;
   // obj[key] = state.value[key];
-
-  obj[key] = state[key];
+var ttt=state.ObContentReducer[tableIndex][key];
+  obj[key] =ttt;// state.ObContentReducer[tableIndex][key];
   
   return obj;
 }
@@ -31,14 +32,14 @@ function mapStateToProps(state,ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
 //修改命令 修改的字段名 修改字段的值
-    onCompleteInput: (inputData,name) => {
+    onCompleteInput: (inputData,name,tableID) => {
 
       dispatch({
         type: "change", 
         payload: {
           inputValue: inputData,
-          inputName: name
-
+          inputName: name,
+tableID:tableID
         }
       });
     }
@@ -60,7 +61,7 @@ class InputCellUI extends React.PureComponent {
   }
   onChanged = (e) => {
     var inputData = e.target.value;
-    this.props.onCompleteInput(inputData,this.props.name);
+    this.props.onCompleteInput(inputData,this.props.name,this.props.tableIndex);
   }
 
   // shouldComponentUpdate(nextProps,nextStates){
@@ -71,7 +72,7 @@ class InputCellUI extends React.PureComponent {
   // }
 
   render() {
-    const { onCompleteInput, dialogShow, key2, name,title,tips } = this.props;
+    const { onCompleteInput, dialogShow, key2, name,title,tips,tableIndex } = this.props;
     let value ="";
     if(name ===key2){
       value =this.props[key2]||"";
