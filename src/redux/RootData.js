@@ -1,6 +1,7 @@
 let projectData = {
     ProjectItem: [],
     ProjectName:[],
+    PhotoItem:[],
     Loaded:false
 };
 
