@@ -17,10 +17,10 @@ import TextField from 'material-ui/TextField';
 
 // Map Redux state to component props
 function mapStateToProps(state,ownProps) {
-    var test=state[ownProps.name][ownProps.row];
+   
     
 return {
-    value:state[ownProps.name][ownProps.row]
+    value:state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.row]
 }
 }
 
@@ -28,14 +28,15 @@ return {
 function mapDispatchToProps(dispatch) {
   return {
 //修改命令 修改的字段名 修改字段的值
-onCompleteInput: (value,name,row) => {
+onCompleteInput: (value,name,row,tableID) => {
 
       dispatch({
         type: "changelist", 
         payload: {
             type:name,
           row:row,
-          value:value
+          value:value,
+          tableID:tableID
 
         }
       });
@@ -58,13 +59,13 @@ class ListInputCellUI extends React.PureComponent {
       }
       onChanged = (e) => {
         var inputData = e.target.value;
-        this.props.onCompleteInput(inputData,this.props.name,this.props.row);
+        this.props.onCompleteInput(inputData,this.props.name,this.props.row,this.props.tableIndex);
       }
     
       
     
       render() {
-        const { row,onclick,onCompleteInput,title,tips,name,key2,value } = this.props;
+        const { row,onclick,onCompleteInput,title,tips,name,key2,value,tableIndex } = this.props;
        // let value ="";
         // if(name ===key2){
         //   value =this.props[key2]||"";

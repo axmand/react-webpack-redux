@@ -16,25 +16,26 @@ import TextField from 'material-ui/TextField';
 
 
 // Map Redux state to component props
-function mapStateToProps(state,ownProps) {
+const mapStateToProps=(state,ownProps)=> {
 
 return {
-    value:state[ownProps.type][ownProps.row]
+    value:state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row]
 }
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps=(dispatch)=> {
   return {
 //修改命令 修改的字段名 修改字段的值
-    onclick: (row,col,type) => {
+    onclick: (row,col,type,tableID) => {
 
       dispatch({
         type: "changetest", 
         payload: {
             type:type,
           row:row,
-          col:col
+          col:col,
+          tableID:tableID
 
         }
       });
@@ -47,7 +48,7 @@ class CheckCellUI extends React.PureComponent {
 
     
   onClicked = () => {
-    this.props.onclick(this.props.row,this.props.col,this.props.type);
+    this.props.onclick(this.props.row,this.props.col,this.props.type,this.props.tableIndex);
 };
 
     valueShow = (value) => {
@@ -59,7 +60,7 @@ class CheckCellUI extends React.PureComponent {
 
  
   render() {
-    const { row,col,onclick,value,type } = this.props;
+    const { row,col,onclick,value,type,tableIndex } = this.props;
     
 
   

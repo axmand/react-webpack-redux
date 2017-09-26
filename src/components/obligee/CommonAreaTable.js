@@ -14,28 +14,28 @@ class CommonAreaTable extends Component {
 
   <tr>
     <td width="143"><p >土地坐落 </p></td>
-    <td width="461" colSpan="3"><InputCell  name="Location" title="坐落" tips="填写土地坐落"/></td>
+    <td width="461" colSpan="3"><InputCell tableIndex="f1" name="Location" title="坐落" tips="填写土地坐落"/></td>
   </tr>
   <tr>
     <td width="143"><p >宗地代码 </p></td>
-    <td width="461" colSpan="3"><InputCell  name="ParcelCode" title="宗地代码" tips="填写宗地代码"/></td>
+    <td width="461" colSpan="3"><InputCell tableIndex="f1" name="ParcelCode" title="宗地代码" tips="填写宗地代码"/></td>
   </tr>
   <tr>
     <td width="143"><p >宗地面积(m2) </p></td>
-    <td width="150"><InputCell  name="ParcelArea" title="宗地面积" tips="填写宗地面积"/></td>
+    <td width="150"><InputCell tableIndex="f1" name="ParcelArea" title="宗地面积" tips="填写宗地面积"/></td>
     <td width="157"><p >定着物单元数 </p></td>
-    <td width="154"><InputCell  name="fixedCount" title="宗地面积" tips="填写宗地面积"/></td>
+    <td width="154"><InputCell tableIndex="f7" name="FixedCount" title="宗地面积" tips="填写宗地面积"/></td>
   </tr>
    </tbody>
 </table>
 
-<CommonAreaMessage  />
+<CommonAreaMessage  tableIndex="f7"/>
 
 <table className="mytable">
 
 <tr>
     <td width="143"><p >备注 </p></td>
-    <td width="461" colSpan="3"><InputCell  name="beizhu" title="备注" tips="填写备注"/></td>
+    <td width="461" colSpan="3"><InputCell tableIndex="f1"  name="Explain" title="备注" tips="填写备注"/></td>
   </tr>
 </table>
 </div>

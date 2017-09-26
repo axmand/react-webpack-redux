@@ -3,24 +3,24 @@ import CheckCell from './CheckCell'
 import { Provider, connect } from 'react-redux'
 import  PointNameCell from './PointNameCell'
 // Map Redux state to component props
-function mapStateToProps(state) {
+const mapStateToProps=(state,ownProps)=> {
   
-  
+  const tableIndex =ownProps.tableIndex;
     
     return {
-      LandPointCodeList:state.LandPointCodeList,
-      LandPointTypeList:state.LandPointTypeList,
-      LandPointDistance:state.LandPointDistance,
-      LandBoundaryType:state.LandBoundaryType,
-      LandBoundaryLocation:state.LandBoundaryLocation,
-      LandBoundaryExplain:state.LandBoundaryExplain
+      LandPointCodeList:state.ObContentReducer[tableIndex].LandPointCodeList,
+      LandPointTypeList:state.ObContentReducer[tableIndex].LandPointTypeList,
+      LandPointDistance:state.ObContentReducer[tableIndex].LandPointDistance,
+      LandBoundaryType:state.ObContentReducer[tableIndex].LandBoundaryType,
+      LandBoundaryLocation:state.ObContentReducer[tableIndex].LandBoundaryLocation,
+      LandBoundaryExplain:state.ObContentReducer[tableIndex].LandBoundaryExplain
       
       
     };
   }
   
   // Map Redux actions to component props
-  function mapDispatchToProps(dispatch) {
+  const mapDispatchToProps =(dispatch) =>{
     return {
   //修改命令 修改的字段名 修改字段的值
       onCompleteInput: (inputData,name) => {
@@ -45,7 +45,7 @@ class BoundaryList extends Component {
   render() {
     
    
-    const { LandPointCodeList,LandPointTypeList,LandPointDistance,LandBoundaryType,LandBoundaryLocation,LandBoundaryExplain } = this.props;
+    const { LandPointCodeList,LandPointTypeList,LandPointDistance,LandBoundaryType,LandBoundaryLocation,LandBoundaryExplain,tableIndex } = this.props;
     
     
 
@@ -89,25 +89,25 @@ class BoundaryList extends Component {
 
 var firstLine=(
   <tr>
-           <td width="67"><p ><PointNameCell name={LandPointCodeList[0]} row={0} type="LandPointCodeList"/></p></td>
+           <td width="67"><p ><PointNameCell tableIndex="f2" name={LandPointCodeList[0]} row={0} type="LandPointCodeList"/></p></td>
            
-    <td width="29"><p ><CheckCell value={""} row={0} col={0} type="LandPointTypeList"/></p></td>
-    <td width="29"><p ><CheckCell value={""} row={0} col={1} type="LandPointTypeList"/></p></td>
-    <td width="29"><p ><CheckCell value={""} row={0} col={2} type="LandPointTypeList"/></p></td>
-    <td width="29"><p ><CheckCell value={""} row={0} col={3} type="LandPointTypeList"/></p></td>
-    <td width="29"><p ><CheckCell value={""} row={0} col={4} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={0} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={1} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={2} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={3} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={4} type="LandPointTypeList"/></p></td>
     <td width="60" rowSpan="2"><p >{LandPointDistance[0]}</p></td>
-    <td width="25" rowSpan="2"><p ><CheckCell value={""} row={0} col={0} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={1} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={2} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={3} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={4} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={5} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={6} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={7} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={0} type="LandBoundaryLocation"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={1} type="LandBoundaryLocation"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={0} col={2} type="LandBoundaryLocation"/></p></td>
+    <td width="25" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={0} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={1} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={2} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={3} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={4} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={5} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell  tableIndex="f2" value={""} row={0} col={6} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell  tableIndex="f2" value={""} row={0} col={7} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={0} type="LandBoundaryLocation"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={1} type="LandBoundaryLocation"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={2} type="LandBoundaryLocation"/></p></td>
     <td width="64" rowSpan="2"><p >{LandBoundaryExplain[0]}</p></td>
     </tr>);
 
@@ -117,26 +117,26 @@ var firstLine=(
 
 var tr1=(
             <tr>
-    <td width="67" rowSpan="2"><p ><PointNameCell name={LandPointCodeList[i]} row={i} type="LandPointCodeList"/></p></td>
-    <td width="29" rowSpan="2"><p ><CheckCell value={""} row={i} col={0} type="LandPointTypeList"/></p></td>
-    <td width="29" rowSpan="2"><p ><CheckCell value={""} row={i} col={1} type="LandPointTypeList"/></p></td>
-    <td width="29" rowSpan="2"><p ><CheckCell value={""} row={i} col={2} type="LandPointTypeList"/></p></td>
-    <td width="29" rowSpan="2"><p ><CheckCell value={""} row={i} col={3} type="LandPointTypeList"/></p></td>
-    <td width="29" rowSpan="2"><p ><CheckCell value={""} row={i} col={4} type="LandPointTypeList"/></p></td>
+    <td width="67" rowSpan="2"><p ><PointNameCell tableIndex="f2" name={LandPointCodeList[i]} row={i} type="LandPointCodeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={0} type="LandPointTypeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={1} type="LandPointTypeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={2} type="LandPointTypeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={3} type="LandPointTypeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={4} type="LandPointTypeList"/></p></td>
   </tr>);
  var tr2=( <tr>
     <td width="60" rowSpan="2"><p >{LandPointDistance[i]}</p></td>
-    <td width="25" rowSpan="2"><p ><CheckCell value={""} row={i} col={0} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={1} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={2} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={3} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={4} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={5} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={6} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={7} type="LandBoundaryType"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={0} type="LandBoundaryLocation"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={1} type="LandBoundaryLocation"/></p></td>
-    <td width="28" rowSpan="2"><p ><CheckCell value={""} row={i} col={2} type="LandBoundaryLocation"/></p></td>
+    <td width="25" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={0} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={1} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={2} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={3} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={4} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={5} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={6} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell  tableIndex="f2" value={""} row={i} col={7} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={0} type="LandBoundaryLocation"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={1} type="LandBoundaryLocation"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={2} type="LandBoundaryLocation"/></p></td>
     <td width="64" rowSpan="2"><p >{LandBoundaryExplain[i]}</p></td>
   </tr>);
   tableContent.push(tr1);
@@ -145,12 +145,12 @@ var tr1=(
 
        var trlist=(
         <tr>
-<td width="67" rowSpan="2"><p ><PointNameCell name={LandPointCodeList[LandPointCodeList.length-1]} row={LandPointCodeList.length-1} type="LandPointCodeList"/></p></td>
-<td width="29" rowSpan="2"><p ><CheckCell value={""} row={LandPointCodeList.length-1} col={0} type="LandPointTypeList"/></p></td>
-<td width="29" rowSpan="2"><p ><CheckCell value={""} row={LandPointCodeList.length-1} col={1} type="LandPointTypeList"/></p></td>
-<td width="29" rowSpan="2"><p ><CheckCell value={""} row={LandPointCodeList.length-1} col={2} type="LandPointTypeList"/></p></td>
-<td width="29" rowSpan="2"><p ><CheckCell value={""} row={LandPointCodeList.length-1} col={3} type="LandPointTypeList"/></p></td>
-<td width="29" rowSpan="2"><p ><CheckCell value={""} row={LandPointCodeList.length-1} col={4} type="LandPointTypeList"/></p></td>
+<td width="67" rowSpan="2"><p ><PointNameCell tableIndex="f2" name={LandPointCodeList[LandPointCodeList.length-1]} row={LandPointCodeList.length-1} type="LandPointCodeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell  tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={0} type="LandPointTypeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={1} type="LandPointTypeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={2} type="LandPointTypeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={3} type="LandPointTypeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={4} type="LandPointTypeList"/></p></td>
 </tr>);
 tableContent.push(trlist);
        var table=(  

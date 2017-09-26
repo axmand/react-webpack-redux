@@ -16,15 +16,17 @@ import TextField from 'material-ui/TextField';
 
 
 // Map Redux state to component props
-function mapStateToProps(state,ownProps) {
+const mapStateToProps=(state,ownProps)=> {
 
+  var ttt=state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row];
 return {
-    value:state[ownProps.type][ownProps.row]
+  
+    value:state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row]
 }
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps=(dispatch) =>{
   return {
 //修改命令 修改的字段名 修改字段的值
     onclick: (name) => {
@@ -54,7 +56,7 @@ class PointNameCellUI extends React.PureComponent {
 
  
   render() {
-    const { name,type,row } = this.props;
+    const { name,type,row,tableIndex } = this.props;
     
 
   

@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles'
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+import projectData from './../../redux/RootData';
+
 
 import ChooseDialog from './ChooseDialog'
 import Menu, { MenuItem } from 'material-ui/Menu'
@@ -32,7 +34,7 @@ class ObligeeModule extends Component {
     const classes = this.props.classes
   
     return (
-<Provider store={store}>
+
       <div>
         
           <ChooseDialog projectName="项目二"/>
@@ -42,7 +44,7 @@ class ObligeeModule extends Component {
           <ForthDialog />
    
       </div>
-      </Provider>
+
     )
   }
 
@@ -51,7 +53,7 @@ class ObligeeModule extends Component {
 export default withStyles(styles,{name:'ObligeeModule'})(ObligeeModule);
 
 // Reducer
-function obligeeReducer(state = DialogState, action) {
+const obligeeReducer=(state = DialogState, action)=> {
   
    
   switch (action.type) {
@@ -60,9 +62,17 @@ function obligeeReducer(state = DialogState, action) {
     return state;
     
     case 'clickIcon':
-    return Object.assign({}, state, {
+    
+    if(projectData.Loaded===true)
+
+    {return Object.assign({}, state, {
         	open:true
-      });
+      });}
+      else
+      {
+      alert("请选择项目！");
+      return state
+      }
   case 'closeChoose':
   return Object.assign({}, state, {
         	open:false
@@ -138,6 +148,6 @@ function obligeeReducer(state = DialogState, action) {
 }
 
 // Store
-const store = createStore(obligeeReducer);
+//const store = createStore(obligeeReducer);
 
 RootReducer.merge(obligeeReducer);
