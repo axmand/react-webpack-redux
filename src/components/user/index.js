@@ -216,6 +216,9 @@ class UserModule extends Component {
     this.handleClickImage = this.handleClickImage.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
     this.handleRequestCloseImage = this.handleRequestCloseImage.bind(this);
+
+    this.handleClickBluetooth = this.handleClickBluetooth.bind(this);
+    this.handleRequestCloseBluetooth = this.handleRequestCloseBluetooth.bind(this);
   }
 
   handleClick = event => {
@@ -231,6 +234,16 @@ class UserModule extends Component {
   handleRequestCloseImage = () => {
     this.setState({ openImage: false });
   };
+
+  handleClickBluetooth = event => {
+    this.setState({ openBluetooth: true });
+  };
+
+  handleRequestCloseBluetooth = () => {
+    this.setState({ openBluetooth: false });
+  };
+
+
 
   render() {
     const {
@@ -372,7 +385,7 @@ class UserModule extends Component {
               <Divider />
 
               <ListItem className={classes.listItemUser} style={{lineHeight:'5em'}} >
-                <Button className={classes.buttonAttach}>
+                <Button className={classes.buttonAttach} onClick={this.handleClickBluetooth} >
                   <Bluetooth className={classes.icon} />
                   <Typography className={classes.typography} bold>
                     蓝牙连接
@@ -453,6 +466,10 @@ class UserModule extends Component {
           </Table>
           </DialogContent>
         </Dialog>
+        <BluetoothConnect 
+          open={this.state.openBluetooth}
+          onRequestClose={this.handleRequestCloseBluetooth}
+        />
       </div>
     );
   }
