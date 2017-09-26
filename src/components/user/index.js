@@ -26,6 +26,7 @@ import List, {
   ListItemSecondaryAction
 } from "material-ui/List";
 import Dialog, { DialogContent } from "material-ui/Dialog";
+import Table, { TableBody, TableCell, TableHead,TableRow } from 'material-ui/Table';
 import Divider from "material-ui/Divider";
 import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
@@ -43,20 +44,22 @@ import blue from "material-ui/colors/blue";
 //import page
 import LoginView from "../../views/LoginView";
 
+import BluetoothConnect from "./BluetoothConnect";
+
 // inset css
 const styles = {
   dialog: {
     width: "35%",
     height: "80%",
     marginTop: "30px",
-    marginLeft: "100px"
+    marginLeft: "180px"
   },
 
   dialogImage: {
     width: "80%",
     height: "80%",
     marginTop: "30px",
-    marginLeft: "100px"
+    marginLeft: "180px"
   },
 
   listItem: {
@@ -92,14 +95,22 @@ const styles = {
     paddingLeft: "0px"
   },
 
+  avatar:{
+    lineHeight:'2em',
+    // width:'40px',
+    // height:'40px',
+    size:'80px',
+  },
+
   button: {
-    width: 80,
+    width:'200px',
     height: 30,
     fontFamily: "微软雅黑",
     fontWeight: "bold",
+    fontSize:'32px',
     color: "white",
     background: blue[300],
-    borderRadius: 3,
+    borderRadius: '5px',
     border: 0,
     padding: 0
   },
@@ -107,7 +118,10 @@ const styles = {
   buttonAttach: {
     display: "inline-block",
     padding: 0,
-    marginRight: "18px",
+    lineHeight:'2em',
+    marginTop:'30px',
+    marginLeft:'8%',
+    // marginRight: "36px",
     justify: "center",
     justifyContent: "center"
   },
@@ -131,19 +145,23 @@ const styles = {
   },
 
   icon: {
-    width: "48px",
-    height: "48px"
+    width: "80px",
+    height: "80px",
+    justify:'center',
   },
 
   typography: {
     fontFamily: "微软雅黑",
-    fontWeight: "bold",
-    fontSize: "16px"
+    fontSize: "28px",
+    width:'140px',
+    // fontWeight:'bold',
   },
   //specially for those descriptional(or definitional) typography
   labelUser: {
     width: "110px",
-    padding: 0
+    padding: 0,
+    fontSize:'32px',
+    lineHeight:'2em',
   },
   //specically for those state text
   userStateText: {
@@ -152,11 +170,38 @@ const styles = {
     justify: "center",
     justifyContent: "center",
     width: "120px",
-    textAlign: "center"
+    fontSize:'28px',
+    textAlign: "center",
+    padding:'5px 0px',
   },
   navLink: {
     textDecoration: "none"
-  }
+  },
+
+  tableHead:{
+    padding:0,
+  },
+ 
+  tableCellHead:{
+    backgroundColor:blue[100],
+    backgroundClip:'text',
+    borderRadius:'5px',
+    justify:'center',
+    justifyContent:'center',
+    width:'200px',
+    textAlign:'center',
+    padding:'5px 0',
+    fontSize:'32px',
+
+  },
+  tableCellBody:{
+    width:'50px',
+    padding:0,
+    textAlign:'center',
+    padding:'15px 0',
+    fontSize:'28px',
+
+  },
 };
 
 class UserModule extends Component {
@@ -164,7 +209,8 @@ class UserModule extends Component {
     super(props);
     this.state = {
       open: false,
-      openImage: false
+      openImage: false,
+      openBluetooth: false,
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleClickImage = this.handleClickImage.bind(this);
@@ -188,6 +234,7 @@ class UserModule extends Component {
 
   render() {
     const {
+      classes,
       userAvatar,
       userName,
       userID,
@@ -197,8 +244,16 @@ class UserModule extends Component {
       lastLoginAddress
     } = this.props;
     const imageLists = [
-      { imageName: "1", imageSize: "1" },
-      { imageName: "2", imageSize: "2" }
+      { imageName: "*****区域影像图1", imageSize: "105MB" },
+      { imageName: "*****区域影像图2", imageSize: "1.25GB" },
+      { imageName: "*****区域影像图3", imageSize: "345MB" },
+      { imageName: "*****区域影像图4", imageSize: "289MB" },
+      { imageName: "*****区域影像图5", imageSize: "4.21GB" },
+      { imageName: "*****区域影像图6", imageSize: "335MB" },
+      { imageName: "*****区域影像图7", imageSize: "156MB" },
+      { imageName: "*****区域影像图8", imageSize: "2.24GB" },
+      { imageName: "*****区域影像图9", imageSize: "3.56GB" },
+
     ];
 
     return (
@@ -230,9 +285,9 @@ class UserModule extends Component {
         >
           <DialogContent>
             <List>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar alt="avatar" src={userAvatar} />
+              <ListItem style={{lineHeight:'3em'}}>
+                <ListItemAvatar style={{lineHeight:'3em'}}>
+                  <Avatar sizes='80px' className={classes.avatar} alt="avatar" src={userAvatar} />
                 </ListItemAvatar>
               </ListItem>
 
@@ -316,7 +371,7 @@ class UserModule extends Component {
 
               <Divider />
 
-              <ListItem className={classes.listItemUser}>
+              <ListItem className={classes.listItemUser} style={{lineHeight:'5em'}} >
                 <Button className={classes.buttonAttach}>
                   <Bluetooth className={classes.icon} />
                   <Typography className={classes.typography} bold>
@@ -342,6 +397,9 @@ class UserModule extends Component {
                 </Button>
               </ListItem>
 
+              <listItem style={{lineHeight:'2em'}}> </listItem>
+              <listItem> </listItem>
+
               <ListItem
                 style={{
                   justifyContent: "flex-end",
@@ -356,9 +414,10 @@ class UserModule extends Component {
                     style={{
                       background: blue[100],
                       border: 0,
-                      padding: 0,
-                      borderRadius: "3px",
-                      fontWeight: "bold"
+                      padding: '15px 25px',
+                      borderRadius: "8px",
+                      fontWeight: "bold",
+                      fontSize:'32px',
                     }}
                   >
                     退 出 登 录
@@ -375,71 +434,23 @@ class UserModule extends Component {
           onRequestClose={this.handleRequestCloseImage}
         >
           <DialogContent>
-            <List>
-              <ListItem>
-                <ListItemText
-                  disableTypography
-                  className={classes.labelUser}
-                  primary="影像名称"
-                />
-                <ListItemText
-                  disableTypography
-                  className={classes.labelUser}
-                  primary="影像大小"
-                />
-              </ListItem>
-              <Divider />
-              {imageLists.map(imageList => (
-                <ListItem>
-                  <ListItemText
-                    key={uuidv4()}
-                    disableTypography
-                    className={classes.labelUser}
-                    primary={imageList.imageName}
-                  />
-                  <ListItemText
-                    key={uuidv4()}
-                    disableTypography
-                    className={classes.labelUser}
-                    primary={imageList.imageSize}
-                  />
-                  <ListItemSecondaryAction>
-                    <Button
-                      flat
-                      style={{ background: blue[100] }}
-                      className={classes.buttonSecondaryAction}
-                    >
-                      确认
-                    </Button>
-                  </ListItemSecondaryAction>
-                  <Divider />
-                </ListItem>
-              ))}
-              <ListItem>
-                <ListItemText
-                  key={uuidv4()}
-                  disableTypography
-                  className={classes.labelUser}
-                  primary="123"
-                />
-                <ListItemText
-                  key={uuidv4()}
-                  disableTypography
-                  className={classes.labelUser}
-                  primary="1233"
-                />
-                <ListItemSecondaryAction>
-                  <Button
-                    flat
-                    style={{ background: blue[100] }}
-                    className={classes.buttonSecondaryAction}
-                  >
-                    确认
-                  </Button>
-                </ListItemSecondaryAction>
-                <Divider />
-              </ListItem>
-            </List>
+
+            <Table>
+            <TableHead className={classes.tableHead} >
+              <TableRow className={classes.tableHead} >
+                <TableCell  width='250px' className={classes.tableCellHead} >影像名称</TableCell>
+                <TableCell  width='150px' className={classes.tableCellHead} >影像大小</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody className={classes.tableBody}>
+              {imageLists.map(imageList =>
+              <TableRow key={uuidv4()}>
+                <TableCell className={classes.tableCellBody} >{imageList.imageName}</TableCell>
+                <TableCell numeric className={classes.tableCellBody} >{imageList.imageSize}</TableCell>
+              </TableRow>
+                 )}
+            </TableBody>
+          </Table>
           </DialogContent>
         </Dialog>
       </div>

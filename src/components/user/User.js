@@ -203,6 +203,7 @@ class User extends Component {
     render() {
         const classes = this.props.classes;
         const open = this.props.open;
+        const requestClose=
         const {
           userAvatar,
           userName,
