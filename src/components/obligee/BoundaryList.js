@@ -1,13 +1,60 @@
 import React, { Component } from 'react';
+import CheckCell from './CheckCell'
+import { Provider, connect } from 'react-redux'
+import  PointNameCell from './PointNameCell'
+// Map Redux state to component props
+const mapStateToProps=(state,ownProps)=> {
+  
+  const tableIndex =ownProps.tableIndex;
+    
+    return {
+      LandPointCodeList:state.ObContentReducer[tableIndex].LandPointCodeList,
+      LandPointTypeList:state.ObContentReducer[tableIndex].LandPointTypeList,
+      LandPointDistance:state.ObContentReducer[tableIndex].LandPointDistance,
+      LandBoundaryType:state.ObContentReducer[tableIndex].LandBoundaryType,
+      LandBoundaryLocation:state.ObContentReducer[tableIndex].LandBoundaryLocation,
+      LandBoundaryExplain:state.ObContentReducer[tableIndex].LandBoundaryExplain
+      
+      
+    };
+  }
+  
+  // Map Redux actions to component props
+  const mapDispatchToProps =(dispatch) =>{
+    return {
+  //修改命令 修改的字段名 修改字段的值
+      onCompleteInput: (inputData,name) => {
+  
+        dispatch({
+          type: "change", 
+          payload: {
+            inputValue: inputData,
+            inputName: name
+  
+          }
+        });
+      }
+    }
+  }
 
-class BoundaryList extends Component {  
+
+class BoundaryList extends Component {
+  
+
+ 
   render() {
     
-    var table=(  
-<table className="mytable">
-     
-    <tbody >
-  <tr>
+   
+    const { LandPointCodeList,LandPointTypeList,LandPointDistance,LandBoundaryType,LandBoundaryLocation,LandBoundaryExplain,tableIndex } = this.props;
+    
+    
+
+    var tableContent=[];
+    
+    
+    
+    var tableHead1=(
+      <tr>
     <td width="67" rowSpan="2"><p >界址点号 </p></td>
     <td width="145" colSpan="5"><p >界标种类 </p></td>
     <td width="60" rowSpan="2"><p >界址 <br />
@@ -15,8 +62,8 @@ class BoundaryList extends Component {
     <td width="223" colSpan="8"><p >界址线类别 </p></td>
     <td width="85" colSpan="3"><p >界址线位置 </p></td>
     <td width="64"><p >说明 </p></td>
-  </tr>
-  <tr>
+  </tr>);
+    var tableHead2=(<tr>
     <td width="30"><p >钢钉 </p></td>
     <td width="30"><p >水泥桩 </p></td>
     <td width="30"><p >喷涂 </p></td>
@@ -33,265 +80,94 @@ class BoundaryList extends Component {
     <td width="28"><p >内 </p></td>
     <td width="28"><p >中 </p></td>
     <td width="28"><p >外 </p></td>
-    <td width="64"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67"><p >011DBP</p></td>
-    <td width="30"><p >&nbsp;</p></td>
-    <td width="30"><p >&nbsp;</p></td>
-    <td width="30"><p >&nbsp;</p></td>
-    <td width="27"><p >√ </p></td>
-    <td width="28"><p >&nbsp;</p></td>
-    <td width="60" rowSpan="2"><p >6.05</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBN</p></td>
-    <td width="30" rowSpan="2"><p ></p></td>
-    <td width="30" rowSpan="2"><p ></p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >70.62</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBM</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >38.06</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBL</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >34.36</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBK</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >1.66</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBJ</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >59.41</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBH</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >59.41</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBG</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >80.07</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBQ</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >100.75</p></td>
-    <td width="25" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >011DBP</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >√ </p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="25" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="67" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="30" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="27" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="60" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="25" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="28" rowSpan="2"><p >&nbsp;</p></td>
-    <td width="64" rowSpan="2"><p >&nbsp;</p></td>
-  </tr>
+    <td width="64"><p ></p></td>
+  </tr>);
+    
+    
+       tableContent.push(tableHead1);
+       tableContent.push(tableHead2);
 
-   </tbody>
-</table>
- )
+var firstLine=(
+  <tr>
+           <td width="67"><p ><PointNameCell tableIndex="f2" name={LandPointCodeList[0]} row={0} type="LandPointCodeList"/></p></td>
+           
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={0} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={1} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={2} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={3} type="LandPointTypeList"/></p></td>
+    <td width="29"><p ><CheckCell tableIndex="f2" value={""} row={0} col={4} type="LandPointTypeList"/></p></td>
+    <td width="60" rowSpan="2"><p >{LandPointDistance[0]}</p></td>
+    <td width="25" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={0} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={1} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={2} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={3} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={4} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={5} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell  tableIndex="f2" value={""} row={0} col={6} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell  tableIndex="f2" value={""} row={0} col={7} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={0} type="LandBoundaryLocation"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={1} type="LandBoundaryLocation"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={0} col={2} type="LandBoundaryLocation"/></p></td>
+    <td width="64" rowSpan="2"><p >{LandBoundaryExplain[0]}</p></td>
+    </tr>);
+
+    tableContent.push(firstLine);
+       for(var i=1;i<LandPointCodeList.length-1;i++)
+       {
+
+var tr1=(
+            <tr>
+    <td width="67" rowSpan="2"><p ><PointNameCell tableIndex="f2" name={LandPointCodeList[i]} row={i} type="LandPointCodeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={0} type="LandPointTypeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={1} type="LandPointTypeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={2} type="LandPointTypeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={3} type="LandPointTypeList"/></p></td>
+    <td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={4} type="LandPointTypeList"/></p></td>
+  </tr>);
+ var tr2=( <tr>
+    <td width="60" rowSpan="2"><p >{LandPointDistance[i]}</p></td>
+    <td width="25" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={0} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={1} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={2} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={3} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={4} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={5} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={6} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell  tableIndex="f2" value={""} row={i} col={7} type="LandBoundaryType"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={0} type="LandBoundaryLocation"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={1} type="LandBoundaryLocation"/></p></td>
+    <td width="28" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={i} col={2} type="LandBoundaryLocation"/></p></td>
+    <td width="64" rowSpan="2"><p >{LandBoundaryExplain[i]}</p></td>
+  </tr>);
+  tableContent.push(tr1);
+  tableContent.push(tr2);
+       }
+
+       var trlist=(
+        <tr>
+<td width="67" rowSpan="2"><p ><PointNameCell tableIndex="f2" name={LandPointCodeList[LandPointCodeList.length-1]} row={LandPointCodeList.length-1} type="LandPointCodeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell  tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={0} type="LandPointTypeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={1} type="LandPointTypeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={2} type="LandPointTypeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={3} type="LandPointTypeList"/></p></td>
+<td width="29" rowSpan="2"><p ><CheckCell tableIndex="f2" value={""} row={LandPointCodeList.length-1} col={4} type="LandPointTypeList"/></p></td>
+</tr>);
+tableContent.push(trlist);
+       var table=(  
+        
+             <table className="mytable">
+            <tbody >
+        {tableContent}
+           </tbody>
+           </table>);
+
         return table;
   }
 }
 
-export default BoundaryList;
+// export default BoundaryList;
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BoundaryList)

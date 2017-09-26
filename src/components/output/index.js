@@ -1,25 +1,15 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
-
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Dialog, { DialogContent } from 'material-ui/Dialog'
-import Slide from 'material-ui/transitions/Slide';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Table, {  TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
-import Checkbox from 'material-ui/Checkbox';
-import Paper from 'material-ui/Paper';
+import Dialog,{ DialogActions, DialogContent, DialogContentText, DialogTitle,} from 'material-ui/Dialog'
+import Button from 'material-ui/Button';
 //图标
-import IconButton from 'material-ui/IconButton';
-import ClearIcon from 'material-ui-icons/Clear';
-import FontAwesome from 'react-fontawesome'
-// import FontAwesome from 'react-fontawesome'
 import FileUploadIcon from 'material-ui-icons/FileUpload';
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
+import projectData from './../../redux/RootData';
 
 const styles = {
   listitem: {
@@ -41,46 +31,14 @@ const styles = {
     fontWeight: 'bold',
     padding: '0px',
   },
-  flex: {
-    flex: 1,
-  },
-  dialog: {
-    width: '1650px',
-    height: '1150px',
-    marginTop: 20,
-    marginLeft: 200
-  },
-  AppBar: {
-    root: {
-      marginTop: 30,
-      width: '100%',
-    },
-    position: 'relative'
-  },
-  paper: {
-    width: '100%',
-    marginTop: 20,
-    overflowX: 'auto',
-  },
 }
-
-let id = 0;
-function createData(name, byte) {
-  id += 1;
-  return { id, name, byte };
-}
-
-const data = [
-  createData('项目一', '159'),
-  createData('项目二', '237'),
-
-];
 
 class OutputModule extends Component {
 
   render() {
     const { handleOutputClose,
       handleOutputShow,
+      handleOutput,
       OutputShow,
       classes
     } = this.props
@@ -99,51 +57,23 @@ class OutputModule extends Component {
       </ListItem>
 
       <Dialog
-        fullScreen
-        className={classes.dialog}
         open={OutputShow}
         onRequestClose={handleOutputClose}
-        transition={<Slide direction="up" />}
       >
-        <AppBar position="static">
-          <Toolbar>
-             <Typography type="title" color="inherit" className={classes.flex}>
-              数据导出
-                </Typography>
-            <IconButton color="contrast" onClick={handleOutputClose} aria-label="Delete">
-              <ClearIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-       
-        <DialogContent style={{ overflowY: 'auto' }}>
-        <Paper className={classes.paper}>
-          <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell checkbox>
-                <Checkbox/>
-              </TableCell>
-              <TableCell>文件夹名称</TableCell>
-              <TableCell >文件大小</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map(n => {
-            return (
-              <TableRow key={n.id}>
-                <TableCell checkbox>
-                    <Checkbox/>
-                  </TableCell>
-                <TableCell>{n.name}</TableCell>
-                <TableCell>{n.byte}</TableCell>
-              </TableRow>
-            );
-          })}
-          </TableBody>
-        </Table>
-        </Paper>
+      <DialogTitle>{"数据导出"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            此操作将保存修改的数据，是否确认导出数据？
+          </DialogContentText>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={handleOutput} color="primary">
+            确认
+          </Button>
+          <Button onClick={handleOutputClose} color="primary">
+            取消
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
     )
@@ -153,6 +83,7 @@ class OutputModule extends Component {
 OutputModule.propTypes = {
   handleOutputClose: PropTypes.func.isRequired,
   handleOutputShow: PropTypes.func.isRequired,
+  handleOutput: PropTypes.func.isRequired,
   OutputShow: PropTypes.bool.isRequired,
 };
 
@@ -177,6 +108,47 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'handleOutputClose',
       })
     },
+
+    handleOutput: () => {
+      let JsonData = JSON.stringify(projectData.ProjectItem);
+      // let JsonData = projectData.ProjectItem.toString()
+      // function params(obj){
+      //   var str = "{ "
+      //   for (var key in obj) {
+      //     str += "'"+key+"':'"+obj[key]+"',";
+      //   // if (str !== "") {
+      //   //     str += "&";
+      //   // }
+      //   // str += key + "=" + encodeURIComponent(obj[key]);
+      //   }
+      //  str += " }";
+      //  return str;
+      // }
+      console.log(JsonData)
+      fetch('http://172.16.102.90:1338//project/forms/post', 
+      { 
+      method: 'POST', 
+      // headers: {
+      //   //  "Access-Control-Allow-Origin": "*",
+      //   // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
+      //   // 'Accept': 'application/json',
+      //   'Content-Type': 'application/json',
+      //   //  'Content-Type': 'text/plain', 
+      // }, 
+      // body: params(JsonData) 
+      body: JsonData
+      })
+    .then(response => response.json())
+    .then( json => {
+      dispatch({
+        type: 'handleOutput',
+        payload: json,
+      })
+      console.log(json)})
+      .catch(err => {
+        console.log(err)
+      })
+    },
   }
 }
 
@@ -187,6 +159,8 @@ const OutputReduce = (
     OutputShow: false,
   }, action) => {
 
+  let newState = JSON.parse(JSON.stringify(state))
+
   if (action.type === "handleOutputShow") {
     const OutputShow = { OutputShow: !state.OutputShow }
     return Object.assign({}, state, { ...OutputShow })
@@ -195,6 +169,11 @@ const OutputReduce = (
   if (action.type === "handleOutputClose") {
     const OutputShow = { OutputShow: !state.OutputShow }
     return Object.assign({}, state, { ...OutputShow })
+  }
+
+  if (action.type === "handleOutput") {
+    newState.OutputShow = !state.OutputShow;
+    return { ...state, ...newState }; 
   }
 
   else

@@ -5,14 +5,11 @@ import PropTypes from "prop-types";
 //import UI
 import { withStyles } from "material-ui/styles";
 import Popover from "material-ui/Popover";
-import { FormGroup, FormControlLabel } from "material-ui/Form";
-import Menu, { MenuItem } from "material-ui/Menu";
+import { MenuItem } from "material-ui/Menu";
 import { ListItem, ListItemText } from "material-ui/List";
 import Checkbox from "material-ui/Checkbox";
-import ContentCopy from "material-ui-icons/ContentCopy";
 
 import LayersIcon from "material-ui-icons/Layers";
-// import FontAwesome from 'react-fontawesome'
 
 const styles = {
   listitem: {

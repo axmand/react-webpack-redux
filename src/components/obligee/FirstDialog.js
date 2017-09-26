@@ -17,7 +17,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import RootReducer from './../../redux/RootReducer';
-
+import projectData from './../../redux/RootData'
 
 import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
@@ -101,30 +101,28 @@ class FirstDialog extends Component {
 
                 <h1><br></br>宗地基本信息表</h1>
 
-                <Provider store={ObligeeTableStore}>
-
+{/* <Provider store={ObligeeTableStore}> */}
                   <ObligeeTable1 />
-
-                </Provider>
+{/* </Provider> */}
 
               </TabContainer>}
             {this.state.index === 1 &&
               <TabContainer>
                 <h1 ><br></br>宗地基本信息表</h1>
-                <Provider store={ObligeeTableStore}>
+                {/* <Provider store={ObligeeTableStore}> */}
 
                   <ObligeeTable2 />
 
-                </Provider>
+                {/* </Provider> */}
               </TabContainer>}
             {this.state.index === 2 &&
               <TabContainer>
                 <h1 ><br></br>宗地基本信息表</h1>
-                <Provider store={ObligeeTableStore}>
+                {/* <Provider store={ObligeeTableStore}> */}
 
                   <ObligeeTable3 />
 
-                </Provider>
+                {/* </Provider> */}
 
               </TabContainer>}
           </div>
@@ -144,7 +142,7 @@ FirstDialog.propTypes = {
 // Map Redux state to component props
 function mapStateToProps(state) {
   return {
-    open: state.firstDialogOpen
+    open: state.obligeeReducer.firstDialogOpen
   }
 }
 
@@ -162,29 +160,5 @@ function mapDispatchToProps(dispatch) {
 var FD1 = withStyles(styleSheet)(FirstDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(FD1);
 
-// // Reducer
-function reducer(state = {value: {"OwnPowerSide":"peter","UsePowerSide":"jack","ProcuratorName":"test"} }, action) {
 
-  let value = state.value;
 
-  switch (action.type) {
-
-    case 'change':
-     var inputName=action.payload.inputName;
-      value[inputName]=action.payload.inputValue;
-      return Object.assign({}, state, {
-        
-        value:value
-      });
-
-   
-
-    default:
-      return state
-  }
-}
-
-// Store
-const ObligeeTableStore = createStore(reducer);
-
-RootReducer.merge(reducer);

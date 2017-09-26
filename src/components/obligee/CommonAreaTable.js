@@ -1,92 +1,44 @@
 import React, { Component } from 'react';
+import InputCell from './InputCell';
+import CommonAreaMessage from './CommonAreaMessage'
+import { Provider, connect } from 'react-redux'
 
 class CommonAreaTable extends Component {  
   render() {
     
     var table=(  
+      <div>
 <table className="mytable">
      
     <tbody >
 
   <tr>
     <td width="143"><p >土地坐落 </p></td>
-    <td width="461" colSpan="3"><p >南宁市五象新区云村路南侧、英岭路东侧 </p></td>
+    <td width="461" colSpan="3"><InputCell tableIndex="f1" name="Location" title="坐落" tips="填写土地坐落"/></td>
   </tr>
   <tr>
     <td width="143"><p >宗地代码 </p></td>
-    <td width="461" colSpan="3"><p >450108001206GB00137</p></td>
+    <td width="461" colSpan="3"><InputCell tableIndex="f1" name="ParcelCode" title="宗地代码" tips="填写宗地代码"/></td>
   </tr>
   <tr>
     <td width="143"><p >宗地面积(m2) </p></td>
-    <td width="150"><p >13110.17</p></td>
+    <td width="150"><InputCell tableIndex="f1" name="ParcelArea" title="宗地面积" tips="填写宗地面积"/></td>
     <td width="157"><p >定着物单元数 </p></td>
-    <td width="154"><p >&nbsp;</p></td>
+    <td width="154"><InputCell tableIndex="f7" name="FixedCount" title="宗地面积" tips="填写宗地面积"/></td>
   </tr>
-  <tr>
-    <td width="143"><p >定着物代码 </p></td>
-    <td width="150"><p >土地所有权／使用权面积（m2） </p></td>
-    <td width="157"><p >独有／独用土地面积（m2） </p></td>
-    <td width="154"><p >分摊土地面积 <br />
-      （m2） </p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >&nbsp;</p></td>
-    <td width="150"><p >&nbsp;</p></td>
-    <td width="157"><p >&nbsp;</p></td>
-    <td width="154"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >&nbsp;</p></td>
-    <td width="150"><p >&nbsp;</p></td>
-    <td width="157"><p >&nbsp;</p></td>
-    <td width="154"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >&nbsp;</p></td>
-    <td width="150"><p >&nbsp;</p></td>
-    <td width="157"><p >&nbsp;</p></td>
-    <td width="154"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >&nbsp;</p></td>
-    <td width="150"><p >&nbsp;</p></td>
-    <td width="157"><p >&nbsp;</p></td>
-    <td width="154"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >&nbsp;</p></td>
-    <td width="150"><p >&nbsp;</p></td>
-    <td width="157"><p >&nbsp;</p></td>
-    <td width="154"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >&nbsp;</p></td>
-    <td width="150"><p >&nbsp;</p></td>
-    <td width="157"><p >&nbsp;</p></td>
-    <td width="154"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >&nbsp;</p></td>
-    <td width="150"><p >&nbsp;</p></td>
-    <td width="157"><p >&nbsp;</p></td>
-    <td width="154"><p >&nbsp;</p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >合计 </p></td>
-    <td width="150"><p >0.00</p></td>
-    <td width="157"><p >0.00</p></td>
-    <td width="154"><p >0.00</p></td>
-  </tr>
-  <tr>
-    <td width="143"><p >备注 </p></td>
-    <td width="461" colSpan="3"><p >&nbsp;</p></td>
-  </tr>
-
-
-
-
    </tbody>
 </table>
+
+<CommonAreaMessage  tableIndex="f7"/>
+
+<table className="mytable">
+
+<tr>
+    <td width="143"><p >备注 </p></td>
+    <td width="461" colSpan="3"><InputCell tableIndex="f1"  name="Explain" title="备注" tips="填写备注"/></td>
+  </tr>
+</table>
+</div>
  )
         return table;
   }

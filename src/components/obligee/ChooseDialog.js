@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Avatar from 'material-ui/Avatar';
+import RootReducer from './../../redux/RootReducer';
 
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 // import FontAwesome from 'react-fontawesome'
@@ -15,6 +16,8 @@ import { Provider, connect } from 'react-redux'
 import Paper from 'material-ui/Paper';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import PeopleIcon from 'material-ui-icons/People'
+import projectData from './../../redux/RootData';
+
 const styles = {
   avatar: {
     background: blue[100],
@@ -128,9 +131,7 @@ class ChooseTableDialog extends Component {
 }
 
 ChooseTableDialog.propTypes = {
-  // classes: PropTypes.object.isRequired,
-  // onRequestClose: PropTypes.func,
-  // selectedValue: PropTypes.string,
+  
 };
 
 
@@ -141,11 +142,11 @@ const mapStateToProps = (state) => {
     
 
     return {
-        open:state.open
+        open:state.obligeeReducer.open
     }
 }
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps= (dispatch)=> {
   return {
     search:()=>dispatch(
       {
@@ -204,3 +205,90 @@ clickIcon:()=>dispatch({
 }
 const ChooseDialog = withStyles(styles,{name:'ChooseTableDialog'})(ChooseTableDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseDialog);
+
+// // Reducer
+const ObContentReducer = (state={
+loaded:false
+}, action) => {
+ 
+  
+  switch (action.type) {
+
+    case "handleChooseItem":
+
+   
+   let list = [];
+   
+   list = JSON.parse(action.payload.data);
+  
+  
+   var newValue = list.slice(0);
+
+   console.log(newValue[0].f1);
+   var newsss=newValue[0];
+   state=newsss;
+  
+   projectData.Loaded=true;
+   return state;
+   
+
+  
+    case 'change':
+     var inputName=action.payload.inputName;
+     var tableID=action.payload.tableID;
+     
+
+      var statenew=state;
+      statenew[tableID][inputName]=action.payload.inputValue;
+     
+      var returnState=Object.assign({}, state, statenew);
+
+
+
+      projectData.ProjectItem=returnState;
+
+      console.log(projectData.ProjectItem)
+      return returnState;
+
+
+  case 'changetest':
+  
+
+    
+
+
+    var newState=state;
+    newState[action.payload.tableID][action.payload.type][action.payload.row]=action.payload.col;
+
+
+    var returnState=Object.assign({}, state, newState);
+    projectData.ProjectItem=returnState;
+    return returnState;
+   
+
+  case 'changelist':
+  
+         
+         var type=action.payload.type;
+         var tableID=action.payload.tableID;
+         var statenew=state;
+         statenew[tableID][type][action.payload.row]=action.payload.value;
+         var returnState=Object.assign({}, state, statenew);
+         projectData.ProjectItem=returnState;
+         return returnState;
+
+
+
+
+  case 'ZoomToPoint':
+  console.log("clicked "+action.payload.pointName);
+
+   return state;
+    default:
+      return state
+  }
+}
+
+
+
+RootReducer.merge(ObContentReducer);

@@ -12,12 +12,13 @@ import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import FolderOpenIcon from 'material-ui-icons/FolderOpen';
-// import FontAwesome from 'react-fontawesome'
 //自定义组件
 import ProjectCard from './ProjectCard'
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
+
+import projectData from './../../redux/RootData';
 
 
 const styles = {
@@ -51,10 +52,10 @@ const styles = {
     flex: 1,
   },
   dialog: {
-    width: '1650px',
-    height: '1150px',
+    width: '900px',
+    height: '600px',
     marginTop: 20,
-    marginLeft: 200
+    marginLeft: 50
   }
 };
 
@@ -110,7 +111,7 @@ class ProjectModule extends Component {
 ProjectModule.propTypes = {
   handleContentClose: PropTypes.func.isRequired,
   handleContentShow: PropTypes.func.isRequired,
-  ContentShow: PropTypes.bool.isRequired
+  ContentShow: PropTypes.bool.isRequired,
 };
 
 //声明State与Action
@@ -124,8 +125,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
-      fetch('http://172.16.103.250:1338//project/list')
-    //  fetch('http://172.16.103.250:1338//project/create/{name}')
+      fetch('http://172.16.102.90:1338//project/list')
       .then(response => response.json())
       .then( json => {
         dispatch({
@@ -135,7 +135,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         console.log(json)
       })
       .catch(e => console.log("Oops, error", e))
-
     },
 
     handleContentClose: () => {
@@ -152,6 +151,7 @@ const ProjectReduce = (
   state = {
     inputItems: [],
     ContentShow: false,
+    ProjectItem: [],
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
@@ -215,6 +215,7 @@ const ProjectReduce = (
   // }
 
   if (action.type === "handleContentShow") {
+    console.log('Project Module ...')
     let list = [];
     list = JSON.parse(action.payload.data);
     // for(let i = 0;i<list.length;i++)
@@ -224,17 +225,6 @@ const ProjectReduce = (
     //     newState.inputItems.push({text:list[i],key:Id})
     //   }
     newState.inputItems = list.slice(0);
-    // for(let i = 0;i<list.length;i++)
-    //   {
-    //     const uuidv4 = require('uuid/v4');
-    //     let Id = uuidv4();
-    //     itemId.push(Id)
-    //   }
-    // for(let i = 0;i<list.length;i++)
-    //   {
-    //     info[itemId[i]] = list[i]
-    //   }
-    // newState.inputItems = info.slice(0);
     newState.ContentShow = !state.ContentShow;
     return { ...state, ...newState }; 
   }
@@ -248,9 +238,27 @@ const ProjectReduce = (
     const ContentShow = { ContentShow: !state.ContentShow }
     return Object.assign({}, state, { ...ContentShow })
   }
+  
+  if (action.type === "handleChooseItem") {
+    let list0 = [];
+    let Prolist = [];
+    list0 = JSON.parse(action.payload.data);
+    Prolist = action.itemName;
+   
+    projectData.ProjectName = Prolist;
+    projectData.ProjectItem = list0.slice(0);
+
+    newState.ContentShow = !state.ContentShow;
+    console.log(state)
+    return { ...state, ...newState }; 
+
+    
+  }
+
   else
     return state
 }
 
 RootReducer.merge(ProjectReduce);
+
 

@@ -9,7 +9,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "electron": "electron .",
-    "packager": "electron-packager ./build ElectronTest --platform=win32 --arch=x64 --overwrite --out=./dist --electronVersion=1.7.6"
+    "packager": "electron-packager ./build ElectronTest --platform=win32 --arch=x64 --overwrite --out=./dist --electronVersion=1.7.6",
+    "packager1": "electron-packager ./build ElectronTest --all --overwrite --out=./dist --electronVersion=1.7.6"
   },
   "repository": {
     "type": "git",

@@ -89,7 +89,12 @@ class ForthDialog extends Component {
           <TabContainer >
 
             <h1><br></br>共有/共用宗地面积分摊表</h1>
-<CommonAreaTable/>
+
+            {/* <Provider store={ObligeeTableStore}> */}
+
+            <CommonAreaTable tableIndex="f7"/>
+            
+                {/* </Provider> */}
   
           </TabContainer>
         
@@ -109,14 +114,14 @@ ForthDialog.propTypes = {
 
 
 // Map Redux state to component props
-function mapStateToProps(state) {
+const mapStateToProps=(state)=> {
   return {
-   open:state.forthDialogOpen
+   open:state.obligeeReducer.forthDialogOpen
   }
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps=(dispatch)=> {
   return {
    close: () => dispatch({
                 type: 'close',
@@ -129,3 +134,5 @@ function mapDispatchToProps(dispatch) {
 var FD1=withStyles(styleSheet)(ForthDialog);
 
 export default connect(mapStateToProps, mapDispatchToProps)(FD1);
+
+

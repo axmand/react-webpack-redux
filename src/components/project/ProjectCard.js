@@ -19,21 +19,16 @@ const styles = {
   }
 };
 
+
+
 class ProjectCard extends Component {
+ 
   render(){
     const { inputItems,
-          //  IdNumber,
-          //  showDialog,
-          //  handleAddItem,
-          //  handleShowDialog,
-          //  handleRequestClose,
-          // handleChooseList,
+            handleChooseItem,
             handleContentClose2,
             classes
 		} = this.props
-    
-    const uuidv4 = require('uuid/v4');
-    let Id = uuidv4();
     
     return (
     <div>
@@ -42,8 +37,8 @@ class ProjectCard extends Component {
           <ShowCard
           {...todo} 
           entries = { todo }
-         // Id = {}
-          handleContentClose2={ () => handleContentClose2() } 
+          handleContentClose2 = { () => handleContentClose2() } 
+          handleChooseItem = { () => handleChooseItem('http://172.16.102.90:1338//project/Open/' + todo) }
           />
         )}
       </div>
@@ -54,53 +49,33 @@ class ProjectCard extends Component {
 
 ProjectCard.propTypes = {
   inputItems: PropTypes.array.isRequired,
- // IdNumber: PropTypes.string.isRequired,
-//  showDialog: PropTypes.bool.isRequired,
- // handleAddItem:PropTypes.func.isRequired,
- // handleShowDialog:PropTypes.func.isRequired,
- // handleRequestClose:PropTypes.func.isRequired,
- // handleChooseList:PropTypes.func.isRequired,
+  handleChooseItem:PropTypes.func.isRequired,
   handleContentClose2:PropTypes.func.isRequired
 };
 
 //声明state和方法
-
-
 const mapStateToProps = (state,ownProps) => {
   return {
       inputItems: state.ProjectReduce.inputItems,
-      IdNumber: state.ProjectReduce.IdNumber,
-      showDialog: state.ProjectReduce.showDialog,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    // handleAddItem:()=>{
-    //   dispatch({
-    //      type: 'handleAddItem',
-    //      payload: { inputValue:inputName },
-		// 	})
-    // },
-
-    // handleChooseList:(id)=>{
-    //     dispatch({
-    //       type: 'handleChooseList',
-    //       id
-		// 		})
-    //   },
-
-    // handleShowDialog:()=>{
-    //   dispatch({
-    //      type: 'handleShowDialog',
-		// 	})
-    // },
-    
-    // handleRequestClose:()=>{
-    //   dispatch({
-    //      type: 'handleRequestClose',
-		// 	})
-    // },
+    handleChooseItem:( ProjectUrl )=>{
+      fetch(ProjectUrl)
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'handleChooseItem',
+          payload: json,
+          itemName: ProjectUrl.slice(40),
+          ProjectUrl
+        })
+        console.log(json)
+      })
+      .catch(e => console.log("Oops, error", e))
+    },
     
     handleContentClose2:()=>{
       dispatch({

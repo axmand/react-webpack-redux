@@ -107,24 +107,31 @@ class SecondDialog extends Component {
 
             <h1 ><br></br>界址标示表</h1>
 
- <Provider store={store}>  
+ {/* <Provider store={store}>   */}
   
- <BoundaryList />
+ <BoundaryList tableIndex="f2"/>
   
-    </Provider>  
+    {/* </Provider>   */}
 
           </TabContainer>}
         {tabIndex === 1 &&
           <TabContainer>
            
               <h1 ><br></br>界址签章表</h1>
-   <BoundarySignature/>
+              {/* <Provider store={store}> */}
+   <BoundarySignature tableIndex="f3"/>
+   {/* </Provider> */}
           </TabContainer>}
         {tabIndex === 2 &&
           <TabContainer>
             
               <h1 ><br></br>界址说明表</h1>
-             <BoundarySpecification />
+
+              {/* <Provider store={store}>   */}
+  
+              <BoundarySpecification tableIndex="f5"/>  
+    {/* </Provider>   */}
+            
           </TabContainer>}
         </Dialog>
       </div>
@@ -141,15 +148,15 @@ SecondDialog.propTypes = {
 
 
 // Map Redux state to component props
-function mapStateToProps(state) {
+const mapStateToProps=(state)=> {
   return {
-   open:state.secondDialogOpen,
-   tabIndex:state.secondTabIndex
+   open:state.obligeeReducer.secondDialogOpen,
+   tabIndex:state.obligeeReducer.secondTabIndex
   }
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps=(dispatch)=> {
   return {
    close: () => dispatch({
                 type: 'close',
@@ -186,29 +193,50 @@ var SD1=withStyles(styleSheet)(SecondDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(SD1);
 
 
-// Reducer
-function reducer(state = { Owner:"peter",User:"jack" }, action) {
+// // Reducer
+// function reducer(state = {
+  
+
+
+// }, action) {
   
    
-  switch (action.type) {
+//   let value = state.value;
   
-    case 'changeOwner':
-   
-    return Object.assign({}, state, {
-        	Owner: action.payload.inputValue
-      });
+//     switch (action.type) {
+  
+//       case 'change':
+//       var inputName=action.payload.inputName;
+      
+ 
+//        var statenew=state;
+//        statenew[inputName]=action.payload.inputValue;
+      
+       
+//        return Object.assign({}, state, statenew);
 
-    case 'changeUser':
-    return Object.assign({}, state, {
-        	User: action.payload.inputValue
-      });
-   
-    default:
-      return state
-  }
-}
 
-// Store
-const store = createStore(reducer);
+//   case 'changetest':
+//    console.log("clicked "+action.payload.row+" "+action.payload.col);
 
-RootReducer.merge(reducer);
+//     var newValue=state[action.payload.type];
+//     var type=action.payload.type;
+//     newValue[action.payload.row]=action.payload.col;
+//     return  Object.assign({}, state, {
+    
+//       type:newValue
+//   });;
+//   case 'ZoomToPoint':
+//   console.log("clicked "+action.payload.pointName);
+
+//    return state;
+  
+//       default:
+//         return state
+//     }
+// }
+
+// // Store
+// const store = createStore(reducer);
+
+//RootReducer.merge(reducer);

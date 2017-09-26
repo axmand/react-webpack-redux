@@ -19,7 +19,8 @@ function mapStateToProps(state,ownProps) {
   const key =ownProps.name;
   let obj = {};
   obj['key2'] = key;
-  obj[key] = state.value[key];
+  // obj[key] = state.value[key];
+  obj[key] = state.ObContentReducer[ownProps.tableIndex][key];
   return obj;
 }
 
@@ -27,14 +28,14 @@ function mapStateToProps(state,ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
 //修改命令 修改的字段名 修改字段的值
-    onCompleteInput: (inputData,name) => {
+    onCompleteInput: (inputData,name,tableID) => {
 
       dispatch({
         type: "change", 
         payload: {
           inputValue: inputData,
-          inputName: name
-
+          inputName: name,
+          tableID:tableID
         }
       });
     }
@@ -71,7 +72,7 @@ class SelectCellUI extends React.PureComponent {
         this.setState({ selectedIndex: index, open: false });
 
         var inputData =options[index];
-        this.props.onCompleteInput(inputData, this.props.name);
+        this.props.onCompleteInput(inputData, this.props.name,this.props.tableIndex);
       };
     
       handleRequestClose = () => {
