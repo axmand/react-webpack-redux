@@ -15,6 +15,7 @@ import ClearIcon from 'material-ui-icons/Clear';
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
+import projectData from './../../redux/RootData';
 
 const styles = {
   listitem: {
@@ -128,11 +129,8 @@ export default connect(mapStateToProps, mapDispatchToProps)( withStyles(styles,{
 const BoundaryReduce = (
   state = {
     CameraShow: false,
-    photoItems:[]
   }, action) => {
   
-  let newState = JSON.parse(JSON.stringify(state))  
-
   if (action.type === "handleCameraShow") {
     const CameraShow = { CameraShow: !state.CameraShow }
     return Object.assign({}, state, { ...CameraShow })
@@ -144,8 +142,27 @@ const BoundaryReduce = (
   }
   
   if (action.type === "capture") {
-    newState.photoItems.push(action.payload);
-    return { ...state, ...newState }; 
+    
+    const uuidv4 = require('uuid/v4');
+    let PhotoId = uuidv4();
+    let Stringitem = action.payload;
+    let PhotoString = Stringitem.slice(23);
+    let PhotoData = JSON.stringify({
+        PhotoId: PhotoId,
+        PhotoString: PhotoString,
+    });
+
+    fetch('http://172.16.102.90:1338//project/photo', 
+    { 
+      method: 'POST', 
+      body: PhotoData
+    })
+    .then(response => response.json())
+    .then( json => {console.log(json)})
+    .catch(err => {console.log(err)})
+
+    projectData.PhotoItems.push(PhotoString);
+    return state; 
   }
   
   else

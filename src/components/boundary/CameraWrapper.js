@@ -24,7 +24,6 @@ class CameraWrapper extends Component {
   render() {
     const {
       capture,
-      photoItems,
       classes
     } = this.props
     
@@ -42,7 +41,6 @@ class CameraWrapper extends Component {
 }
 
 CameraWrapper.propTypes = {
-  photoItems: PropTypes.array.isRequired,
   capture:PropTypes.func.isRequired
 };
 
@@ -51,7 +49,6 @@ CameraWrapper.propTypes = {
 //声明state和方法
 const mapStateToProps = (state,ownProps) => {
   return {
-    photoItems: state.BoundaryReduce.photoItems,
   }
 }
 

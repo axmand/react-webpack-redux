@@ -128,13 +128,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       fetch('http://172.16.102.90:1338//project/forms/post', 
       { 
       method: 'POST', 
-      headers: {
-        //  "Access-Control-Allow-Origin": "*",
-        // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
-        // 'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        //  'Content-Type': 'text/plain', 
-      }, 
+      // headers: {
+      //   //  "Access-Control-Allow-Origin": "*",
+      //   // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
+      //   // 'Accept': 'application/json',
+      //   'Content-Type': 'application/json',
+      //   //  'Content-Type': 'text/plain', 
+      // }, 
       // body: params(JsonData) 
       body: JsonData
       })

@@ -182,7 +182,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handlePrint1: () => {
-      fetch('http://172.16.102.90:1338/project/print/' + projectData.ProjectName+'/1')
+      fetch('http://172.16.102.90:1338/project/print/1')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -195,7 +195,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePrint2: () => {
-      fetch('http://172.16.102.90:1338/project/print/' + projectData.ProjectName+'/2')
+      fetch('http://172.16.102.90:1338/project/print/2')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -208,7 +208,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePrint3: () => {
-      fetch('http://172.16.102.90:1338/project/print/' + projectData.ProjectName+'/3')
+      fetch('http://172.16.102.90:1338/project/print/3')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -221,7 +221,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePrint4: () => {
-      fetch('http://172.16.102.90:1338/project/print/' + projectData.ProjectName+'/4')
+      fetch('http://172.16.102.90:1338/project/print/4')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -234,7 +234,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePrint5: () => {
-      fetch('http://172.16.102.90:1338/project/print/' + projectData.ProjectName+'/5')
+      fetch('http://172.16.102.90:1338/project/print/5')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -247,7 +247,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePrint6: () => {
-      fetch('http://172.16.102.90:1338/project/print/' + projectData.ProjectName+'/6')
+      fetch('http://172.16.102.90:1338/project/print/6')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -260,7 +260,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePrint7: () => {
-      fetch('http://172.16.102.90:1338/project/print/' + projectData.ProjectName+'/7')
+      fetch('http://172.16.102.90:1338/project/print/7')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -273,7 +273,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePrint8: () => {
-      fetch('http://172.16.102.90:1338/project/print/' + projectData.ProjectName+'/8')
+      fetch('http://172.16.102.90:1338/project/print/8')
         .then(response => response.json())
         .then( json => {
           dispatch({
