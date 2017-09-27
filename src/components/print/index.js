@@ -322,9 +322,14 @@ const PrintReduce = (
     return Object.assign({}, state, { ...PrintShow })
   }
   
-  if (action.type === "handlePrintOk") {
-    const PrintOkShow = { PrintOkShow: !state.PrintOkShow }
-    return Object.assign({}, state, { ...PrintOkShow })
+  if (action.type === "handlePrintTrue") {
+    const PrintTrue = { PrintTrue: !state.PrintTrue }
+    return Object.assign({}, state, { ...PrintTrue })
+  }
+    
+  if (action.type === "handlePrintFalse") {
+    const PrintFalse = { PrintFalse: !state.PrintFalse }
+    return Object.assign({}, state, { ...PrintFalse })
   }
   
   if (action.type === "handlePrint1") {

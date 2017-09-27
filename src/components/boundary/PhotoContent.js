@@ -5,15 +5,20 @@ import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Dialog,{ DialogActions, DialogContent,DialogTitle } from 'material-ui/Dialog';
 import Input from 'material-ui/Input';
+import Slide from 'material-ui/transitions/Slide';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
 //图标
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui-icons/Add';
-//img
+import ClearIcon from 'material-ui-icons/Clear';
 //自定义
-import AddPhoto from './AddCard';
+import AddPhoto from './AddPhoto';
 import CameraWrapper from './CameraWrapper.js'
 //Redux
 import {connect} from 'react-redux'
+import projectData from './../../redux/RootData';
 
 const styles = {
   box:{
@@ -22,44 +27,33 @@ const styles = {
     alignContent: 'spaceAround',
     flexBasis: 'auto',
     padding: '10px',   
-  }
+  },
+  flex: {
+    flex: 1,
+  },
 };
 
 class PhotoContent extends Component {
   
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false
-    }
-  }
-
-  handleClick = event => {
-    this.setState({ open: true })
-  }
- 
-  handleRequestClose = event => {
-    this.setState({ open: false })
-  }
-  
   render(){
     const {
-            classes
+      handleCardClose,
+      handleCardShow,
+      CardShow,
+      classes
 		} = this.props
 
     return (
     <div>
       <div className = {classes.box}>
-        {inputItems.map( todo => 
+        {projectData.PhotoItem0.map( todo => 
           <AddPhoto
           {...todo} 
           entries = { todo }
-          handleChooseList={ () => handleChooseList(todo.key) }
-          handleContentClose2={ () => handleContentClose2() } 
           />
         )}
        
-        <IconButton onClick = { this.handleClick } 
+        <IconButton onClick = { handleCardShow } 
           style = {{  width: '150px',
                       height: '200px',
                       padding: '14px 16px 15px',
@@ -70,8 +64,8 @@ class PhotoContent extends Component {
       
       <Dialog
           fullScreen
-          open={this.state.open}
-          onRequestClose={this.handleRequestClose}
+          open={CardShow}
+          onRequestClose={handleCardClose}
           transition={<Slide direction="up" />}
         >
           <AppBar position="static">
@@ -94,49 +88,32 @@ class PhotoContent extends Component {
 }
 
 PhotoContent.propTypes = {
-
+  handleCardClose:PropTypes.func.isRequired,
+  handleCardShow:PropTypes.func.isRequired,
+  CardShow:PropTypes.bool.isRequired
 };
 
 //声明state和方法
 
 const mapStateToProps = (state,ownProps) => {
   return {
-      PhotoCard: state.BoundaryReduce.PhotoCard,
+   CardShow: state.BoundaryReduce.CardShow,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    // handleAddItem:()=>{
-    //   dispatch({
-    //      type: 'handleAddItem',
-		// 	})
-    // },
+    handleCardClose:()=>{
+      dispatch({
+         type: 'handleCardClose',
+			})
+    },
 
-    // handleChooseList:(id)=>{
-    //     dispatch({
-    //       type: 'handleChooseList',
-    //       id
-		// 		})
-    //   },
-
-    // handleShowDialog:()=>{
-    //   dispatch({
-    //      type: 'handleShowDialog',
-		// 	})
-    // },
-    
-    // handleRequestClose:()=>{
-    //   dispatch({
-    //      type: 'handleRequestClose',
-		// 	})
-    // },
-    
-    // handleContentClose2:()=>{
-    //   dispatch({
-    //     type:'handleContentClose2',
-    //   })
-    // },
+    handleCardShow:()=>{
+      dispatch({
+         type: 'handleCardShow',
+			})
+    },
 	} 
 }  		
 

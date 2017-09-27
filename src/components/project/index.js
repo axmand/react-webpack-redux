@@ -62,9 +62,14 @@ const styles = {
 class ProjectModule extends Component {
 
   render() {
-    const { handleContentClose,
+    const { 
+      handleProjectTrue,
+      handleProjectFalse,
+      handleContentClose,
       handleContentShow,
       ContentShow,
+      ProjectTrue,
+      ProjectFalse,
       classes
     } = this.props
 
@@ -103,6 +108,19 @@ class ProjectModule extends Component {
             <ProjectCard />
           </DialogContent>
         </Dialog>
+       
+        <Dialog
+        open={ ProjectTrue }
+        onRequestClose={ handleProjectTrue } 
+        >
+        数据导入成功!
+        </Dialog>
+        <Dialog
+          open={ ProjectFalse }
+          onRequestClose={ handleProjectFalse } 
+        >
+        数据导入失败！
+        </Dialog>
       </div>
     )
   }
@@ -112,6 +130,10 @@ ProjectModule.propTypes = {
   handleContentClose: PropTypes.func.isRequired,
   handleContentShow: PropTypes.func.isRequired,
   ContentShow: PropTypes.bool.isRequired,
+  ProjectTrue: PropTypes.bool.isRequired,
+  ProjectFalse: PropTypes.bool.isRequired,
+  handleProjectTrue:PropTypes.func.isRequired,
+  handleProjectFalse:PropTypes.func.isRequired,
 };
 
 //声明State与Action
@@ -142,6 +164,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'handleContentClose',
       })
     },
+    
+    handleProjectFalse: () => {
+      dispatch({
+        type: 'handleProjectFalse',
+      })
+    },
+    
+    handleProjectTrue: () => {
+      dispatch({
+        type: 'handleProjectTrue',
+      })
+    },
   }
 }
 
@@ -151,6 +185,8 @@ const ProjectReduce = (
   state = {
     inputItems: [],
     ContentShow: false,
+    ProjectFalse:false,
+    ProjectTrue:false,
     ProjectItem: [],
   }, action) => {
 
@@ -233,23 +269,32 @@ const ProjectReduce = (
     const ContentShow = { ContentShow: !state.ContentShow }
     return Object.assign({}, state, { ...ContentShow })
   }
-
-  if (action.type === "handleContentClose2") {
-    const ContentShow = { ContentShow: !state.ContentShow }
-    return Object.assign({}, state, { ...ContentShow })
-  }
   
+  if (action.type === "handleProjectTrue") {
+    const ProjectTrue = { ProjectTrue: !state.ProjectTrue }
+    return Object.assign({}, state, { ...ProjectTrue })
+  }
+    
+  if (action.type === "handleProjectFalse") {
+    const ProjectFalse = { ProjectFalse: !state.ProjectFalse }
+    return Object.assign({}, state, { ...ProjectFalse })
+  }
   if (action.type === "handleChooseItem") {
     let list0 = [];
+    let sta = JSON.parse(action.payload.status)
     let Prolist = [];
     list0 = JSON.parse(action.payload.data);
     Prolist = action.itemName;
    
     projectData.ProjectName = Prolist;
     projectData.ProjectItem = list0.slice(0);
+   
+    if(sta === 200)
+      {newState.ProjectTrue = !state.ProjectTrue}
+    else
+      {newState.ProjectFalse = !state.ProjectFalse}
 
     newState.ContentShow = !state.ContentShow;
-    console.log(state)
     return { ...state, ...newState }; 
 
     

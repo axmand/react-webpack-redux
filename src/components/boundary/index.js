@@ -133,6 +133,7 @@ export default connect(mapStateToProps, mapDispatchToProps)( withStyles(styles,{
 const BoundaryReduce = (
   state = {
     CameraShow: false,
+    CardShow:false
   }, action) => {
   
   if (action.type === "handleCameraShow") {
@@ -144,12 +145,23 @@ const BoundaryReduce = (
     const CameraShow = {CameraShow: !state.CameraShow }
     return Object.assign({}, state, { ...CameraShow })
   }
+
+  if (action.type === "handleCardShow") {
+    const CardShow = { CardShow: !state.CardShow }
+    return Object.assign({}, state, { ...CardShow })
+  }
+
+  if (action.type === "handleCardClose") {
+    const CardShow = {CardShow: !state.CardShow }
+    return Object.assign({}, state, { ...CardShow })
+  }
   
   if (action.type === "capture") {
     
     const uuidv4 = require('uuid/v4');
     let PhotoId = uuidv4();
     let Stringitem = action.payload;
+    projectData.PhotoItem0.push(Stringitem);
     let PhotoString = Stringitem.slice(23);
     let PhotoData = JSON.stringify({
         PhotoId: PhotoId,
@@ -166,7 +178,8 @@ const BoundaryReduce = (
     .catch(err => {console.log(err)})
 
     projectData.PhotoItem.push(PhotoString);
-    return state; 
+    const CardShow = {CardShow: !state.CardShow }
+    return Object.assign({}, state, { ...CardShow })
   }
   
   else
