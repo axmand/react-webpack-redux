@@ -26,10 +26,10 @@ class AddPhoto extends Component {
     return(
       <div style={{padding:'20px'}}>
       <Card  style={{maxWidth:150,maxHeight:220,}}>
-        <img src={item} alt="Contemplative Reptile"  style={{justifyContent:'center'}} width="150px" height="60%"/>
+        <img src={item} alt="Contemplative Reptile"  style={{justifyContent:'center'}} width="100%" height="150"/>
         <CardContent >
           <Typography type="headline" component="h2">
-            { 123546 }
+            现场指界
           </Typography>
         </CardContent>
       </Card>
