@@ -111,19 +111,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
     handleOutput: () => {
       let JsonData = JSON.stringify([projectData.ProjectItem]);
-      // let JsonData = projectData.ProjectItem.toString()
-      // function params(obj){
-      //   var str = "{ "
-      //   for (var key in obj) {
-      //     str += "'"+key+"':'"+obj[key]+"',";
-      //   // if (str !== "") {
-      //   //     str += "&";
-      //   // }
-      //   // str += key + "=" + encodeURIComponent(obj[key]);
-      //   }
-      //  str += " }";
-      //  return str;
-      // }
+
       console.log(JsonData)
       fetch('http://172.16.102.90:1338//project/forms/post', 
       { 

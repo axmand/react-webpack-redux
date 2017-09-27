@@ -56,6 +56,12 @@ const styles = {
     height: '600px',
     marginTop: 20,
     marginLeft: 50
+  },
+  prompt:{
+    width: '300px',
+    height: '400px',
+    marginTop: 20,
+    marginLeft: 50
   }
 };
 
@@ -110,12 +116,16 @@ class ProjectModule extends Component {
         </Dialog>
        
         <Dialog
-        open={ ProjectTrue }
-        onRequestClose={ handleProjectTrue } 
+          fullScreen
+          className={classes.prompt}
+          open={ ProjectTrue }
+          onRequestClose={ handleProjectTrue } 
         >
         数据导入成功!
         </Dialog>
         <Dialog
+          fullScreen
+          className={classes.prompt}
           open={ ProjectFalse }
           onRequestClose={ handleProjectFalse } 
         >
@@ -289,7 +299,7 @@ const ProjectReduce = (
     projectData.ProjectName = Prolist;
     projectData.ProjectItem = list0.slice(0);
    
-    if(sta === 200)
+    if( sta === 200 && action.payload.data != null)
       {newState.ProjectTrue = !state.ProjectTrue}
     else
       {newState.ProjectFalse = !state.ProjectFalse}
