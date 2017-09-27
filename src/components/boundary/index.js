@@ -136,9 +136,14 @@ const BoundaryReduce = (
     CardShow:false
   }, action) => {
   
+  let newState = JSON.parse(JSON.stringify(state))
+  
   if (action.type === "handleCameraShow") {
-    const CameraShow = { CameraShow: !state.CameraShow }
-    return Object.assign({}, state, { ...CameraShow })
+    if(projectData.Loaded === false)
+      alert("请选择项目！");
+    else
+      { newState.CameraShow =  !state.CameraShow }
+    return { ...state, ...newState }; 
   }
 
   if (action.type === "handleCameraClose") {

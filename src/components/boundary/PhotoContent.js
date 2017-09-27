@@ -72,7 +72,7 @@ class PhotoContent extends Component {
               <Typography type="title" color="inherit" className={classes.flex}>
                 现场指界
               </Typography>
-              <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Delete">
+              <IconButton color="contrast" onClick={handleCardClose} aria-label="Delete">
                 <ClearIcon />
               </IconButton>
             </Toolbar>

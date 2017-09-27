@@ -301,9 +301,11 @@ const ProjectReduce = (
    
     projectData.ProjectName = Prolist;
     projectData.ProjectItem = list0.slice(0);
+    projectData.Loaded = ! projectData.Loaded;
+   
     newState.ContentShow = !state.ContentShow;
     
-    if( sta === 200 && action.payload.data != null)
+    if(sta === 200)
       newState.ProjectTrue = !state.ProjectTrue
     else
       newState.ProjectFalse = !state.ProjectFalse

@@ -313,8 +313,11 @@ const PrintReduce = (
   let newState = JSON.parse(JSON.stringify(state))
   
   if (action.type === "handlePrintShow") {
-    const PrintShow = { PrintShow: !state.PrintShow }
-    return Object.assign({}, state, { ...PrintShow })
+    if(projectData.Loaded === false)
+      alert("请选择项目！");
+    else
+      { newState.PrintShow =  !state.PrintShow }
+    return { ...state, ...newState }; 
   }
 
   if (action.type === "handlePrintClose") {
