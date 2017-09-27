@@ -92,7 +92,7 @@ class ForthDialog extends Component {
 
             {/* <Provider store={ObligeeTableStore}> */}
 
-            <CommonAreaTable tableIndex="f7"/>
+            <CommonAreaTable tableIndex="F7"/>
             
                 {/* </Provider> */}
   

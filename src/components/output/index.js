@@ -110,7 +110,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleOutput: () => {
-      let JsonData = JSON.stringify(projectData.ProjectItem);
+      let JsonData = JSON.stringify([projectData.ProjectItem]);
       // let JsonData = projectData.ProjectItem.toString()
       // function params(obj){
       //   var str = "{ "
