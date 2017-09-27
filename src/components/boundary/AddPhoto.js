@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 //UI
-import Card, { CardContent,CardMedia } from 'material-ui/Card';
+import Card, { CardContent} from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 //图标
 //img
@@ -17,7 +17,8 @@ const styles = {
 class AddPhoto extends Component {
 
   render(){
-    const { 
+    const {  
+      classes
     } = this.props
     
     let item = this.props.entries;
@@ -25,7 +26,7 @@ class AddPhoto extends Component {
     return(
       <div style={{padding:'20px'}}>
       <Card  style={{maxWidth:150,maxHeight:220,}}>
-        <img src={item} alt="Contemplative Reptile"  style={{justifyContent:'center'}} width="60%" height="130px"/>
+        <img src={item} alt="Contemplative Reptile"  style={{justifyContent:'center'}} width="150px" height="60%"/>
         <CardContent >
           <Typography type="headline" component="h2">
             { 123546 }

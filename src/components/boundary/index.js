@@ -160,8 +160,8 @@ const BoundaryReduce = (
     
     const uuidv4 = require('uuid/v4');
     let PhotoId = uuidv4();
+    
     let Stringitem = action.payload;
-    projectData.PhotoItem0.push(Stringitem);
     let PhotoString = Stringitem.slice(23);
     let PhotoData = JSON.stringify({
         PhotoId: PhotoId,

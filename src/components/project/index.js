@@ -3,7 +3,7 @@ import { withStyles } from 'material-ui/styles'
 import PropTypes from 'prop-types';
 //UI
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import Dialog, { DialogContent } from 'material-ui/Dialog'
+import Dialog, { DialogContent,DialogContentText } from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -116,16 +116,17 @@ class ProjectModule extends Component {
         </Dialog>
        
         <Dialog
-          fullScreen
-          className={classes.prompt}
           open={ ProjectTrue }
           onRequestClose={ handleProjectTrue } 
         >
-        数据导入成功!
+          <DialogContent>
+            <DialogContentText>
+              数据导入成功！
+            </DialogContentText>
+          </DialogContent>
         </Dialog>
+        
         <Dialog
-          fullScreen
-          className={classes.prompt}
           open={ ProjectFalse }
           onRequestClose={ handleProjectFalse } 
         >
@@ -151,6 +152,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ContentShow: state.ProjectReduce.ContentShow,
+    ProjectTrue: state.ProjectReduce.ProjectTrue,
+    ProjectFalse: state.ProjectReduce.ProjectFalse,
   }
 }
 
@@ -197,7 +200,6 @@ const ProjectReduce = (
     ContentShow: false,
     ProjectFalse:false,
     ProjectTrue:false,
-    ProjectItem: [],
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
@@ -289,6 +291,7 @@ const ProjectReduce = (
     const ProjectFalse = { ProjectFalse: !state.ProjectFalse }
     return Object.assign({}, state, { ...ProjectFalse })
   }
+  
   if (action.type === "handleChooseItem") {
     let list0 = [];
     let sta = JSON.parse(action.payload.status)
@@ -298,16 +301,14 @@ const ProjectReduce = (
    
     projectData.ProjectName = Prolist;
     projectData.ProjectItem = list0.slice(0);
-   
-    if( sta === 200 && action.payload.data != null)
-      {newState.ProjectTrue = !state.ProjectTrue}
-    else
-      {newState.ProjectFalse = !state.ProjectFalse}
-
     newState.ContentShow = !state.ContentShow;
-    return { ...state, ...newState }; 
-
     
+    if( sta === 200 && action.payload.data != null)
+      newState.ProjectTrue = !state.ProjectTrue
+    else
+      newState.ProjectFalse = !state.ProjectFalse
+    
+     return { ...state, ...newState }; 
   }
 
   else

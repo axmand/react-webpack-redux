@@ -4,7 +4,6 @@ import { withStyles } from 'material-ui/styles';
 //UI
 import Button from 'material-ui/Button';
 import Dialog,{ DialogActions, DialogContent,DialogTitle } from 'material-ui/Dialog';
-import Input from 'material-ui/Input';
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -46,10 +45,10 @@ class PhotoContent extends Component {
     return (
     <div>
       <div className = {classes.box}>
-        {projectData.PhotoItem0.map( todo => 
+        {projectData.PhotoItem.map( todo => 
           <AddPhoto
           {...todo} 
-          entries = { todo }
+          entries = { 'data:image/jpeg;base64,'+todo }
           />
         )}
        

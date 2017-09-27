@@ -24,7 +24,6 @@ class CameraWrapper extends Component {
   render() {
     const {
       capture,
-      classes
     } = this.props
     
     return (
