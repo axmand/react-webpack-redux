@@ -10,6 +10,7 @@ import RootReducer from "./../../redux/RootReducer";
 import PropTypes from "prop-types";
 import * as maptalks from "maptalks";
 import { SnapTool } from "maptalks.snapto";
+import projectData from './../../redux/RootData';
 
 //引入地图组件
 import MapToolBar from "./MapToolBar";
@@ -1055,6 +1056,7 @@ clickObj =clickObj ||function(e) {
             //保存
             case 'saveClick':
                 console.log('保存');
+                console.log(projectData);
                 let mapCenter=map.getCenter();
                 drawTool.disable();
                 map.off('click',drawToolOn);
