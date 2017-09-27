@@ -150,8 +150,11 @@ const OutputReduce = (
   let newState = JSON.parse(JSON.stringify(state))
 
   if (action.type === "handleOutputShow") {
-    const OutputShow = { OutputShow: !state.OutputShow }
-    return Object.assign({}, state, { ...OutputShow })
+    if(projectData.Loaded === false)
+      alert("请选择项目！");
+    else
+      { newState.OutputShow =  !state.OutputShow }
+    return { ...state, ...newState }; 
   }
 
   if (action.type === "handleOutputClose") {

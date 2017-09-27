@@ -130,7 +130,11 @@ class ProjectModule extends Component {
           open={ ProjectFalse }
           onRequestClose={ handleProjectFalse } 
         >
-        数据导入失败！
+          <DialogContent>
+            <DialogContentText>
+              数据导入失败！
+            </DialogContentText>
+          </DialogContent>
         </Dialog>
       </div>
     )
