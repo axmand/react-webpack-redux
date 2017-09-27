@@ -26,7 +26,12 @@ import List, {
   ListItemSecondaryAction
 } from "material-ui/List";
 import Dialog, { DialogContent } from "material-ui/Dialog";
-import Table, { TableBody, TableCell, TableHead,TableRow } from 'material-ui/Table';
+import Table, {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
+} from "material-ui/Table";
 import Divider from "material-ui/Divider";
 import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
@@ -66,7 +71,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justify: "space-between",
-    padding:0,
+    padding: 0,
     paddingLeft: "0px",
     paddingRight: "40%"
   },
@@ -95,22 +100,22 @@ const styles = {
     paddingLeft: "0px"
   },
 
-  avatar:{
-    lineHeight:'2em',
+  avatar: {
+    lineHeight: "2em",
     // width:'40px',
     // height:'40px',
-    size:'80px',
+    size: "80px"
   },
 
   button: {
-    width:'200px',
+    width: "200px",
     height: 30,
     fontFamily: "微软雅黑",
     fontWeight: "bold",
-    fontSize:'32px',
+    fontSize: "32px",
     color: "white",
     background: blue[300],
-    borderRadius: '5px',
+    borderRadius: "5px",
     border: 0,
     padding: 0
   },
@@ -118,9 +123,9 @@ const styles = {
   buttonAttach: {
     display: "inline-block",
     padding: 0,
-    lineHeight:'2em',
-    marginTop:'30px',
-    marginLeft:'8%',
+    lineHeight: "2em",
+    marginTop: "30px",
+    marginLeft: "8%",
     // marginRight: "36px",
     justify: "center",
     justifyContent: "center"
@@ -147,21 +152,21 @@ const styles = {
   icon: {
     width: "80px",
     height: "80px",
-    justify:'center',
+    justify: "center"
   },
 
   typography: {
     fontFamily: "微软雅黑",
     fontSize: "28px",
-    width:'140px',
+    width: "140px"
     // fontWeight:'bold',
   },
   //specially for those descriptional(or definitional) typography
   labelUser: {
     width: "110px",
     padding: 0,
-    fontSize:'32px',
-    lineHeight:'2em',
+    fontSize: "32px",
+    lineHeight: "2em"
   },
   //specically for those state text
   userStateText: {
@@ -170,38 +175,36 @@ const styles = {
     justify: "center",
     justifyContent: "center",
     width: "120px",
-    fontSize:'28px',
+    fontSize: "28px",
     textAlign: "center",
-    padding:'5px 0px',
+    padding: "5px 0px"
   },
   navLink: {
     textDecoration: "none"
   },
 
-  tableHead:{
-    padding:0,
+  tableHead: {
+    padding: 0
   },
- 
-  tableCellHead:{
-    backgroundColor:blue[100],
-    backgroundClip:'text',
-    borderRadius:'5px',
-    justify:'center',
-    justifyContent:'center',
-    width:'200px',
-    textAlign:'center',
-    padding:'5px 0',
-    fontSize:'32px',
 
+  tableCellHead: {
+    backgroundColor: blue[100],
+    backgroundClip: "text",
+    borderRadius: "5px",
+    justify: "center",
+    justifyContent: "center",
+    width: "200px",
+    textAlign: "center",
+    padding: "5px 0",
+    fontSize: "32px"
   },
-  tableCellBody:{
-    width:'50px',
-    padding:0,
-    textAlign:'center',
-    padding:'15px 0',
-    fontSize:'28px',
-
-  },
+  tableCellBody: {
+    width: "50px",
+    padding: 0,
+    textAlign: "center",
+    padding: "15px 0",
+    fontSize: "28px"
+  }
 };
 
 class UserModule extends Component {
@@ -210,15 +213,12 @@ class UserModule extends Component {
     this.state = {
       open: false,
       openImage: false,
-      openBluetooth: false,
+      openBluetooth: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleClickImage = this.handleClickImage.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
     this.handleRequestCloseImage = this.handleRequestCloseImage.bind(this);
-
-    this.handleClickBluetooth = this.handleClickBluetooth.bind(this);
-    this.handleRequestCloseBluetooth = this.handleRequestCloseBluetooth.bind(this);
   }
 
   handleClick = event => {
@@ -235,16 +235,6 @@ class UserModule extends Component {
     this.setState({ openImage: false });
   };
 
-  handleClickBluetooth = event => {
-    this.setState({ openBluetooth: true });
-  };
-
-  handleRequestCloseBluetooth = () => {
-    this.setState({ openBluetooth: false });
-  };
-
-
-
   render() {
     const {
       classes,
@@ -254,7 +244,8 @@ class UserModule extends Component {
       userCompany,
       userJob,
       lastLoginTime,
-      lastLoginAddress
+      lastLoginAddress,
+      handleClickBluetooth,
     } = this.props;
     const imageLists = [
       { imageName: "*****区域影像图1", imageSize: "105MB" },
@@ -265,8 +256,7 @@ class UserModule extends Component {
       { imageName: "*****区域影像图6", imageSize: "335MB" },
       { imageName: "*****区域影像图7", imageSize: "156MB" },
       { imageName: "*****区域影像图8", imageSize: "2.24GB" },
-      { imageName: "*****区域影像图9", imageSize: "3.56GB" },
-
+      { imageName: "*****区域影像图9", imageSize: "3.56GB" }
     ];
 
     return (
@@ -298,9 +288,14 @@ class UserModule extends Component {
         >
           <DialogContent>
             <List>
-              <ListItem style={{lineHeight:'3em'}}>
-                <ListItemAvatar style={{lineHeight:'3em'}}>
-                  <Avatar sizes='80px' className={classes.avatar} alt="avatar" src={userAvatar} />
+              <ListItem style={{ lineHeight: "3em" }}>
+                <ListItemAvatar style={{ lineHeight: "3em" }}>
+                  <Avatar
+                    sizes="80px"
+                    className={classes.avatar}
+                    alt="avatar"
+                    src={userAvatar}
+                  />
                 </ListItemAvatar>
               </ListItem>
 
@@ -384,8 +379,14 @@ class UserModule extends Component {
 
               <Divider />
 
-              <ListItem className={classes.listItemUser} style={{lineHeight:'5em'}} >
-                <Button className={classes.buttonAttach} onClick={this.handleClickBluetooth} >
+              <ListItem
+                className={classes.listItemUser}
+                style={{ lineHeight: "5em" }}
+              >
+                <Button
+                  className={classes.buttonAttach}
+                  onClick={handleClickBluetooth}
+                >
                   <Bluetooth className={classes.icon} />
                   <Typography className={classes.typography} bold>
                     蓝牙连接
@@ -410,7 +411,7 @@ class UserModule extends Component {
                 </Button>
               </ListItem>
 
-              <listItem style={{lineHeight:'2em'}}> </listItem>
+              <listItem style={{ lineHeight: "2em" }}> </listItem>
               <listItem> </listItem>
 
               <ListItem
@@ -427,10 +428,10 @@ class UserModule extends Component {
                     style={{
                       background: blue[100],
                       border: 0,
-                      padding: '15px 25px',
+                      padding: "15px 25px",
                       borderRadius: "8px",
                       fontWeight: "bold",
-                      fontSize:'32px',
+                      fontSize: "32px"
                     }}
                   >
                     退 出 登 录
@@ -447,29 +448,33 @@ class UserModule extends Component {
           onRequestClose={this.handleRequestCloseImage}
         >
           <DialogContent>
-
             <Table>
-            <TableHead className={classes.tableHead} >
-              <TableRow className={classes.tableHead} >
-                <TableCell  width='250px' className={classes.tableCellHead} >影像名称</TableCell>
-                <TableCell  width='150px' className={classes.tableCellHead} >影像大小</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody className={classes.tableBody}>
-              {imageLists.map(imageList =>
-              <TableRow key={uuidv4()}>
-                <TableCell className={classes.tableCellBody} >{imageList.imageName}</TableCell>
-                <TableCell numeric className={classes.tableCellBody} >{imageList.imageSize}</TableCell>
-              </TableRow>
-                 )}
-            </TableBody>
-          </Table>
+              <TableHead className={classes.tableHead}>
+                <TableRow className={classes.tableHead}>
+                  <TableCell width="250px" className={classes.tableCellHead}>
+                    影像名称
+                  </TableCell>
+                  <TableCell width="150px" className={classes.tableCellHead}>
+                    影像大小
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody className={classes.tableBody}>
+                {imageLists.map(imageList => (
+                  <TableRow key={uuidv4()}>
+                    <TableCell className={classes.tableCellBody}>
+                      {imageList.imageName}
+                    </TableCell>
+                    <TableCell numeric className={classes.tableCellBody}>
+                      {imageList.imageSize}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </DialogContent>
         </Dialog>
-        <BluetoothConnect 
-          open={this.state.openBluetooth}
-          onRequestClose={this.handleRequestCloseBluetooth}
-        />
+        <BluetoothConnect />
       </div>
     );
   }
@@ -488,7 +493,9 @@ const userReduce = (
   },
   action
 ) => {
+
   return { ...state };
+
 };
 RootReducer.merge(userReduce);
 
@@ -507,4 +514,26 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(UserModule));
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    handleClickBluetooth: () => {
+
+      fetch("http://172.16.102.90:1338/bluetooth/connect/splist")
+        .then(response => response.json())
+        .then(json => {
+          dispatch({
+            type: "COM_BLUETOOTH_VIEW_SWITCH",
+          });
+          dispatch({
+            type: "COM_BLUETOOTH_MODULE_GET",
+            payload: json
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UserModule));
