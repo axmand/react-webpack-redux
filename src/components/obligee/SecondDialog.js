@@ -109,7 +109,7 @@ class SecondDialog extends Component {
 
  {/* <Provider store={store}>   */}
   
- <BoundaryList tableIndex="f2"/>
+ <BoundaryList tableIndex="F2"/>
   
     {/* </Provider>   */}
 
@@ -119,7 +119,7 @@ class SecondDialog extends Component {
            
               <h1 ><br></br>界址签章表</h1>
               {/* <Provider store={store}> */}
-   <BoundarySignature tableIndex="f3"/>
+   <BoundarySignature tableIndex="F3"/>
    {/* </Provider> */}
           </TabContainer>}
         {tabIndex === 2 &&
@@ -129,7 +129,7 @@ class SecondDialog extends Component {
 
               {/* <Provider store={store}>   */}
   
-              <BoundarySpecification tableIndex="f5"/>  
+              <BoundarySpecification tableIndex="F5"/>  
     {/* </Provider>   */}
             
           </TabContainer>}

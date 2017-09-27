@@ -13,11 +13,11 @@ const mapStateToProps=(state,ownProps)=> {
   
   return {
 
-    FixedCount:state.ObContentReducer["f1"].FixedCount,
-    FixedCode:state.ObContentReducer["f7"].FixedCode,
-    LandOwnUseArea:state.ObContentReducer["f7"].LandOwnUseArea,
-    LandUniqueArea:state.ObContentReducer["f7"].LandUniqueArea,
-    CommonArea:state.ObContentReducer["f7"].CommonArea
+    FixedCount:state.ObContentReducer["F1"].FixedCount,
+    FixedCode:state.ObContentReducer["F7"].FixedCode,
+    LandOwnUseArea:state.ObContentReducer["F7"].LandOwnUseArea,
+    LandUniqueArea:state.ObContentReducer["F7"].LandUniqueArea,
+    CommonArea:state.ObContentReducer["F7"].CommonArea
 //     startPoint:state.StartPointCodeList,
 //     innerPoint:state.InnerPointCodeList,
 // endPoint:state.EndPointCodeList
