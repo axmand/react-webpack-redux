@@ -156,7 +156,7 @@ const BoundaryReduce = (
         PhotoString: PhotoString,
     });
 
-    fetch('http://172.16.102.90:1338//project/forms/photo', 
+    fetch('http://172.16.102.90:1338//project/photo', 
     { 
       method: 'POST', 
       body: PhotoData
@@ -165,7 +165,7 @@ const BoundaryReduce = (
     .then( json => {console.log(json)})
     .catch(err => {console.log(err)})
 
-    projectData.PhotoItems.push(PhotoString);
+    projectData.PhotoItem.push(PhotoString);
     return state; 
   }
   
