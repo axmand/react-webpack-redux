@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 //UI
-import Button from 'material-ui/Button';
-import Dialog,{ DialogActions, DialogContent,DialogTitle } from 'material-ui/Dialog';
+
+import Dialog from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
