@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
 
 
-import Dialog from 'material-ui/Dialog'
+import Dialog,{DialogContent} from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -97,7 +97,9 @@ class BoundaryModule extends Component {
             </Toolbar>
           </AppBar>
         
+         <DialogContent style={{ overflowY: 'auto' }}>
           <PhotoContent/>
+          </DialogContent>
        
         </Dialog>
       </div>
@@ -145,16 +147,20 @@ const BoundaryReduce = (
   let newState = JSON.parse(JSON.stringify(state))
   
   if (action.type === "handleCameraShow") {
-    if(projectData.Loaded === false)
+    let sta = JSON.parse(action.payload.status)
+    if(projectData.Loaded === false||sta !== 200)
       alert("请选择项目！");
     else
       { 
         let list = [];
+        projectData.PhotoItem = list.slice(0);
         list = JSON.parse(action.payload.data);
-       
+
         for(let i = 0;i<list.length;i++)
           {
-            projectData.PhotoItem.push(list[i].PhotoString)
+            const uuidv4 = require('uuid/v4');
+            let Id = uuidv4();
+            projectData.PhotoItem.push({text:list[i].PhotoString,key:Id})
           }
         newState.CameraShow =  !state.CameraShow
       }

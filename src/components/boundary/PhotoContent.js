@@ -48,7 +48,7 @@ class PhotoContent extends Component {
         {projectData.PhotoItem.map( todo => 
           <AddPhoto
           {...todo} 
-          entries = { 'data:image/jpeg;base64,'+todo }
+          entries = { 'data:image/jpeg;base64,'+todo.text }
           />
         )}
        

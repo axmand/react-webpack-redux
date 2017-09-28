@@ -269,15 +269,24 @@ const ProjectReduce = (
   if (action.type === "handleContentShow") {
     console.log('Project Module ...')
     let list = [];
-    list = JSON.parse(action.payload.data);
-    // for(let i = 0;i<list.length;i++)
-    //   {
-    //     const uuidv4 = require('uuid/v4');
-    //     let Id = uuidv4();
-    //     newState.inputItems.push({text:list[i],key:Id})
-    //   }
     newState.inputItems = list.slice(0);
-    newState.ContentShow = !state.ContentShow;
+    
+    list = JSON.parse(action.payload.data);
+    let sta0 = JSON.parse(action.payload.status);
+   
+    if(sta0 !== 200)
+      {newState.ProjectFalse = !state.ProjectFalse}
+    else
+      {
+        // newState.inputItems = list.slice(0);
+        for(let i = 0;i<list.length;i++)
+          {
+            const uuidv4 = require('uuid/v4');
+            let Id = uuidv4();
+            newState.inputItems.push({text:list[i],key:Id})
+          }
+        newState.ContentShow = !state.ContentShow;
+      }
     return { ...state, ...newState }; 
   }
 

@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography';
 //图标
 //img
 //Redux
-import projectData from './../../redux/RootData';
+// import projectData from './../../redux/RootData';
 
 const styles = {
   input: {
@@ -30,7 +30,7 @@ class AddPhoto extends Component {
         <img src={item} alt="Contemplative Reptile"  style={{justifyContent:'center'}} width="100%" height="150"/>
         <CardContent >
           <Typography type="headline" component="h2">
-            {projectData.ProjectName + '指界点'}
+             指界点
           </Typography>
         </CardContent>
       </Card>
