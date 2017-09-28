@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
 import ReactCamera from './ReactCamera.jsx'
-import Button from 'material-ui/Button';
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 import IconButton from 'material-ui/IconButton';
 //redux

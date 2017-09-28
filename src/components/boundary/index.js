@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
 
-import PropTypes from 'prop-types';
-import Dialog,{ DialogContent } from 'material-ui/Dialog'
+
+import Dialog from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -115,9 +115,15 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleCameraShow: () => {
-       dispatch({
-        type: 'handleCameraShow',
-      })
+      fetch('http://172.16.102.90:1338//project/photolist' )
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'handleCameraShow',
+          payload:json,
+        })
+        console.log(json)})
+      .catch(err => {console.log(err)})
     },
 
     handleCameraClose: () => {
@@ -142,7 +148,12 @@ const BoundaryReduce = (
     if(projectData.Loaded === false)
       alert("请选择项目！");
     else
-      { newState.CameraShow =  !state.CameraShow }
+      { 
+        let list = [];
+        list = JSON.parse(action.payload.data);
+        projectData.PhotoItem = list.slice(0)
+        newState.CameraShow =  !state.CameraShow
+      }
     return { ...state, ...newState }; 
   }
 
@@ -192,3 +203,5 @@ const BoundaryReduce = (
 }
 
 RootReducer.merge(BoundaryReduce);
+
+
