@@ -51,6 +51,7 @@ import LoginView from "../../views/LoginView";
 
 import BluetoothConnect from "./BluetoothConnect";
 
+
 // inset css
 const styles = {
   dialog: {
@@ -475,6 +476,7 @@ class UserModule extends Component {
           </DialogContent>
         </Dialog>
         <BluetoothConnect />
+
       </div>
     );
   }
@@ -517,6 +519,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleClickBluetooth: () => {
+      // dispatch({
+      //   type: "COM_BLUETOOTH_VIEW_SWITCH",
+      // });
+      // dispatch({
+      //   type: "COM_BLUETOOTH_MODULE_GET",
+      // });
 
       fetch("http://172.16.102.90:1338/bluetooth/connect/splist")
         .then(response => response.json())
