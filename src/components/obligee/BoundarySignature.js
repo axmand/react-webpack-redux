@@ -69,9 +69,9 @@ var tableHead2=(<tr>
         var obj=(
         <tr>
             
-                  <td width="73"><p ><PointNameCell tableIndex="f3" name={startPoint[i]} row={i} type="StartPointCodeList"/></p></td>
-                  <td width="70"><p ><PointNameCell tableIndex="f3" name={startPoint[i]} row={i} type="InnerPointCodeList"/></p></td>
-                  <td width="74"><p ><PointNameCell tableIndex="f3" name={startPoint[i]} row={i} type="EndPointCodeList"/></p></td>
+                  <td width="73"><p ><PointNameCell tableIndex="F3" name={startPoint[i]} row={i} type="StartPointCodeList"/></p></td>
+                  <td width="70"><p ><PointNameCell tableIndex="F3" name={startPoint[i]} row={i} type="InnerPointCodeList"/></p></td>
+                  <td width="74"><p ><PointNameCell tableIndex="F3" name={startPoint[i]} row={i} type="EndPointCodeList"/></p></td>
                   <td width="113"><p ></p></td>
                   <td width="100"><p ></p></td>
                   <td width="99"><p ></p></td>

@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
-import CameraWrapper from './CameraWrapper.js'
 
-import Dialog from 'material-ui/Dialog'
+
+import Dialog,{DialogContent} from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -12,6 +12,7 @@ import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
+import PhotoContent from './PhotoContent'
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
@@ -48,10 +49,10 @@ const styles = {
     flex: 1,
   },
   dialog: {
-    width: '1650px',
-    height: '1150px',
+    width: '900px',
+    height: '600px',
     marginTop: 20,
-    marginLeft: 200
+    marginLeft: 50
   }
 }
 
@@ -80,6 +81,7 @@ class BoundaryModule extends Component {
       
       <Dialog
           fullScreen
+          className={classes.dialog}
           open={CameraShow}
           onRequestClose={handleCameraClose}
           transition={<Slide direction="up" />}
@@ -94,7 +96,11 @@ class BoundaryModule extends Component {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <CameraWrapper/>
+        
+         <DialogContent style={{ overflowY: 'auto' }}>
+          <PhotoContent/>
+          </DialogContent>
+       
         </Dialog>
       </div>
     )
@@ -110,10 +116,16 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleCameraShow: () => {
-       dispatch({
-        type: 'handleCameraShow',
-      })
+    handleCameraShow: () => {    
+      fetch('http://172.16.102.90:1338//project/photolist' )
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'handleCameraShow',
+          payload:json,
+        })
+        console.log(json)})
+      .catch(err => {console.log(err)})
     },
 
     handleCameraClose: () => {
@@ -129,22 +141,53 @@ export default connect(mapStateToProps, mapDispatchToProps)( withStyles(styles,{
 const BoundaryReduce = (
   state = {
     CameraShow: false,
+    CardShow:false
   }, action) => {
   
+  let newState = JSON.parse(JSON.stringify(state))
+  
   if (action.type === "handleCameraShow") {
-    const CameraShow = { CameraShow: !state.CameraShow }
-    return Object.assign({}, state, { ...CameraShow })
+    let sta = JSON.parse(action.payload.status)
+    if(projectData.Loaded === false||sta !== 200)
+      alert("请选择项目！");
+    else
+      { 
+        let list = [];
+        projectData.PhotoItem = list.slice(0);
+        list = JSON.parse(action.payload.data);
+
+        for(let i = 0;i<list.length;i++)
+          {
+            const uuidv4 = require('uuid/v4');
+            let Id = uuidv4();
+            projectData.PhotoItem.push({text:list[i].PhotoString,key:Id})
+          }
+        newState.CameraShow =  !state.CameraShow
+      }
+   
+      return { ...state, ...newState }; 
   }
 
   if (action.type === "handleCameraClose") {
     const CameraShow = {CameraShow: !state.CameraShow }
     return Object.assign({}, state, { ...CameraShow })
   }
+
+  if (action.type === "handleCardShow") {
+    const CardShow = { CardShow: !state.CardShow }
+    return Object.assign({}, state, { ...CardShow })
+  }
+
+  if (action.type === "handleCardClose") {
+    const CardShow = {CardShow: !state.CardShow }
+    return Object.assign({}, state, { ...CardShow })
+  }
   
   if (action.type === "capture") {
     
     const uuidv4 = require('uuid/v4');
     let PhotoId = uuidv4();
+    
     let Stringitem = action.payload;
     let PhotoString = Stringitem.slice(23);
     let PhotoData = JSON.stringify({
@@ -162,7 +205,8 @@ const BoundaryReduce = (
     .catch(err => {console.log(err)})
 
     projectData.PhotoItem.push(PhotoString);
-    return state; 
+    const CardShow = {CardShow: !state.CardShow }
+    return Object.assign({}, state, { ...CardShow })
   }
   
   else
@@ -170,3 +214,5 @@ const BoundaryReduce = (
 }
 
 RootReducer.merge(BoundaryReduce);
+
+

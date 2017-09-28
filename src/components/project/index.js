@@ -3,7 +3,7 @@ import { withStyles } from 'material-ui/styles'
 import PropTypes from 'prop-types';
 //UI
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import Dialog, { DialogContent } from 'material-ui/Dialog'
+import Dialog, { DialogContent,DialogContentText } from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -56,15 +56,26 @@ const styles = {
     height: '600px',
     marginTop: 20,
     marginLeft: 50
+  },
+  prompt:{
+    width: '300px',
+    height: '400px',
+    marginTop: 20,
+    marginLeft: 50
   }
 };
 
 class ProjectModule extends Component {
 
   render() {
-    const { handleContentClose,
+    const { 
+      handleProjectTrue,
+      handleProjectFalse,
+      handleContentClose,
       handleContentShow,
       ContentShow,
+      ProjectTrue,
+      ProjectFalse,
       classes
     } = this.props
 
@@ -103,6 +114,28 @@ class ProjectModule extends Component {
             <ProjectCard />
           </DialogContent>
         </Dialog>
+       
+        <Dialog
+          open={ ProjectTrue }
+          onRequestClose={ handleProjectTrue } 
+        >
+          <DialogContent>
+            <DialogContentText>
+              数据导入成功！
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
+        
+        <Dialog
+          open={ ProjectFalse }
+          onRequestClose={ handleProjectFalse } 
+        >
+          <DialogContent>
+            <DialogContentText>
+              数据导入失败！
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </div>
     )
   }
@@ -112,6 +145,10 @@ ProjectModule.propTypes = {
   handleContentClose: PropTypes.func.isRequired,
   handleContentShow: PropTypes.func.isRequired,
   ContentShow: PropTypes.bool.isRequired,
+  ProjectTrue: PropTypes.bool.isRequired,
+  ProjectFalse: PropTypes.bool.isRequired,
+  handleProjectTrue:PropTypes.func.isRequired,
+  handleProjectFalse:PropTypes.func.isRequired,
 };
 
 //声明State与Action
@@ -119,6 +156,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ContentShow: state.ProjectReduce.ContentShow,
+    ProjectTrue: state.ProjectReduce.ProjectTrue,
+    ProjectFalse: state.ProjectReduce.ProjectFalse,
   }
 }
 
@@ -142,6 +181,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'handleContentClose',
       })
     },
+    
+    handleProjectFalse: () => {
+      dispatch({
+        type: 'handleProjectFalse',
+      })
+    },
+    
+    handleProjectTrue: () => {
+      dispatch({
+        type: 'handleProjectTrue',
+      })
+    },
   }
 }
 
@@ -151,7 +202,8 @@ const ProjectReduce = (
   state = {
     inputItems: [],
     ContentShow: false,
-    ProjectItem: [],
+    ProjectFalse:false,
+    ProjectTrue:false,
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
@@ -217,15 +269,24 @@ const ProjectReduce = (
   if (action.type === "handleContentShow") {
     console.log('Project Module ...')
     let list = [];
-    list = JSON.parse(action.payload.data);
-    // for(let i = 0;i<list.length;i++)
-    //   {
-    //     const uuidv4 = require('uuid/v4');
-    //     let Id = uuidv4();
-    //     newState.inputItems.push({text:list[i],key:Id})
-    //   }
     newState.inputItems = list.slice(0);
-    newState.ContentShow = !state.ContentShow;
+    
+    list = JSON.parse(action.payload.data);
+    let sta0 = JSON.parse(action.payload.status);
+   
+    if(sta0 !== 200)
+      {newState.ProjectFalse = !state.ProjectFalse}
+    else
+      {
+        // newState.inputItems = list.slice(0);
+        for(let i = 0;i<list.length;i++)
+          {
+            const uuidv4 = require('uuid/v4');
+            let Id = uuidv4();
+            newState.inputItems.push({text:list[i],key:Id})
+          }
+        newState.ContentShow = !state.ContentShow;
+      }
     return { ...state, ...newState }; 
   }
 
@@ -233,26 +294,36 @@ const ProjectReduce = (
     const ContentShow = { ContentShow: !state.ContentShow }
     return Object.assign({}, state, { ...ContentShow })
   }
-
-  if (action.type === "handleContentClose2") {
-    const ContentShow = { ContentShow: !state.ContentShow }
-    return Object.assign({}, state, { ...ContentShow })
+  
+  if (action.type === "handleProjectTrue") {
+    const ProjectTrue = { ProjectTrue: !state.ProjectTrue }
+    return Object.assign({}, state, { ...ProjectTrue })
+  }
+    
+  if (action.type === "handleProjectFalse") {
+    const ProjectFalse = { ProjectFalse: !state.ProjectFalse }
+    return Object.assign({}, state, { ...ProjectFalse })
   }
   
   if (action.type === "handleChooseItem") {
     let list0 = [];
+    let sta = JSON.parse(action.payload.status)
     let Prolist = [];
     list0 = JSON.parse(action.payload.data);
     Prolist = action.itemName;
    
     projectData.ProjectName = Prolist;
     projectData.ProjectItem = list0.slice(0);
-
+    projectData.Loaded = ! projectData.Loaded;
+   
     newState.ContentShow = !state.ContentShow;
-    console.log(state)
-    return { ...state, ...newState }; 
-
     
+    if(sta === 200)
+      newState.ProjectTrue = !state.ProjectTrue
+    else
+      newState.ProjectFalse = !state.ProjectFalse
+    
+     return { ...state, ...newState }; 
   }
 
   else

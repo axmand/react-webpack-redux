@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
 import ReactCamera from './ReactCamera.jsx'
-import Button from 'material-ui/Button';
+import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
+import IconButton from 'material-ui/IconButton';
 //redux
 import {connect} from 'react-redux'
 
@@ -24,7 +25,6 @@ class CameraWrapper extends Component {
   render() {
     const {
       capture,
-      classes
     } = this.props
     
     return (
@@ -34,7 +34,9 @@ class CameraWrapper extends Component {
 				width={990} 
 				height={550} />
         <br/>
-  		<Button onClick={capture}>拍摄</Button>
+  		<IconButton onClick={capture} style={{marginLeft:'450px',paddingBottom:'80px',width: '100px',}}> 
+        <PhotoCameraIcon/>
+      </IconButton>
   	</div>
     )
   }

@@ -110,20 +110,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleOutput: () => {
-      let JsonData = JSON.stringify(projectData.ProjectItem);
-      // let JsonData = projectData.ProjectItem.toString()
-      // function params(obj){
-      //   var str = "{ "
-      //   for (var key in obj) {
-      //     str += "'"+key+"':'"+obj[key]+"',";
-      //   // if (str !== "") {
-      //   //     str += "&";
-      //   // }
-      //   // str += key + "=" + encodeURIComponent(obj[key]);
-      //   }
-      //  str += " }";
-      //  return str;
-      // }
+      let JsonData = JSON.stringify([projectData.ProjectItem]);
+
       console.log(JsonData)
       fetch('http://172.16.102.90:1338//project/forms/post', 
       { 
@@ -162,8 +150,11 @@ const OutputReduce = (
   let newState = JSON.parse(JSON.stringify(state))
 
   if (action.type === "handleOutputShow") {
-    const OutputShow = { OutputShow: !state.OutputShow }
-    return Object.assign({}, state, { ...OutputShow })
+    if(projectData.Loaded === false)
+      alert("请选择项目！");
+    else
+      { newState.OutputShow =  !state.OutputShow }
+    return { ...state, ...newState }; 
   }
 
   if (action.type === "handleOutputClose") {

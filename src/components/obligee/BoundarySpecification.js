@@ -15,7 +15,7 @@ class BoundarySpecification extends Component {
  <tr>
     <td width="108"><p>界址点位说明 </p></td>
     <td width="496" >
-      <InputCell tableIndex="f5" name="BoundaryPointExplain" title="界址点位说明" tips="此处填写界址点位说明,如：2号点位于两沟渠中心线的交点上，5号界址点位于xx山顶最高处"/>
+      <InputCell tableIndex="F5" name="BoundaryPointExplain" title="界址点位说明" tips="此处填写界址点位说明,如：2号点位于两沟渠中心线的交点上，5号界址点位于xx山顶最高处"/>
       
       </td>
   </tr>
@@ -23,7 +23,7 @@ class BoundarySpecification extends Component {
     <td width="108"><p>主要权属界线 <br />
       走向说明 </p></td>
 
-      <InputCell tableIndex="f5" name="MainBoundaryDirectionExplain" title="主要权属界线走向说明" tips="此处填写主要权属界线走向说明,如：1-2，由1沿xx公路中央走向至2；4-5，由4沿着山脊线至5"/>
+      <InputCell tableIndex="F5" name="MainBoundaryDirectionExplain" title="主要权属界线走向说明" tips="此处填写主要权属界线走向说明,如：1-2，由1沿xx公路中央走向至2；4-5，由4沿着山脊线至5"/>
   
 </tr>
    </tbody>
