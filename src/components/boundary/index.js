@@ -114,7 +114,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleCameraShow: () => {
+    handleCameraShow: () => {    
       fetch('http://172.16.102.90:1338//project/photolist' )
       .then(response => response.json())
       .then( json => {
@@ -151,10 +151,15 @@ const BoundaryReduce = (
       { 
         let list = [];
         list = JSON.parse(action.payload.data);
-        projectData.PhotoItem = list.slice(0)
+       
+        for(let i = 0;i<list.length;i++)
+          {
+            projectData.PhotoItem.push(list[i].PhotoString)
+          }
         newState.CameraShow =  !state.CameraShow
       }
-    return { ...state, ...newState }; 
+   
+      return { ...state, ...newState }; 
   }
 
   if (action.type === "handleCameraClose") {
