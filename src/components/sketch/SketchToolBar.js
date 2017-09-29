@@ -46,10 +46,10 @@ const styles = theme => ({
   },
   button: {
     display: "inline-block",
-    minheight: "6.25%",
+    minHeight: "6.25%",
     minWidth: "4.17%",
     padding: 0,
-    border: 0
+    border: 0,
   },
   icon: {
     height: "45%",

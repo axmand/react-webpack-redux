@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
 
-import PropTypes from 'prop-types';
-import Dialog,{ DialogContent } from 'material-ui/Dialog'
+
+import Dialog,{DialogContent} from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -97,7 +97,9 @@ class BoundaryModule extends Component {
             </Toolbar>
           </AppBar>
         
+         <DialogContent style={{ overflowY: 'auto' }}>
           <PhotoContent/>
+          </DialogContent>
        
         </Dialog>
       </div>
@@ -114,10 +116,16 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleCameraShow: () => {
-       dispatch({
-        type: 'handleCameraShow',
-      })
+    handleCameraShow: () => {    
+      fetch('http://172.16.102.90:1338//project/photolist' )
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'handleCameraShow',
+          payload:json,
+        })
+        console.log(json)})
+      .catch(err => {console.log(err)})
     },
 
     handleCameraClose: () => {
@@ -136,9 +144,28 @@ const BoundaryReduce = (
     CardShow:false
   }, action) => {
   
+  let newState = JSON.parse(JSON.stringify(state))
+  
   if (action.type === "handleCameraShow") {
-    const CameraShow = { CameraShow: !state.CameraShow }
-    return Object.assign({}, state, { ...CameraShow })
+    let sta = JSON.parse(action.payload.status)
+    if(projectData.Loaded === false||sta !== 200)
+      alert("请选择项目！");
+    else
+      { 
+        let list = [];
+        projectData.PhotoItem = list.slice(0);
+        list = JSON.parse(action.payload.data);
+
+        for(let i = 0;i<list.length;i++)
+          {
+            const uuidv4 = require('uuid/v4');
+            let Id = uuidv4();
+            projectData.PhotoItem.push({text:list[i].PhotoString,key:Id})
+          }
+        newState.CameraShow =  !state.CameraShow
+      }
+   
+      return { ...state, ...newState }; 
   }
 
   if (action.type === "handleCameraClose") {
@@ -187,3 +214,5 @@ const BoundaryReduce = (
 }
 
 RootReducer.merge(BoundaryReduce);
+
+

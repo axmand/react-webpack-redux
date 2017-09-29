@@ -26,11 +26,11 @@ class ShowCard extends Component {
 
     return(
       <div style={{padding:'20px'}}>
-      <Card key={ item } style={{width:150,height:220,}}>
+      <Card key={ item.key } style={{width:150,height:220,}}>
         <img src={ reptileImage } alt="Contemplative Reptile" onClick={ handleChooseItem } style={{justifyContent:'center'}}/>
          <CardContent>
           <Typography type="headline" component="h2">
-            {item}
+            {item.text}
           </Typography>
         </CardContent>
       </Card>
@@ -40,7 +40,7 @@ class ShowCard extends Component {
 }
 
 ShowCard.propTypes = {
-  entries: PropTypes.string.isRequired,
+  entries: PropTypes.object.isRequired,
   handleChooseItem:PropTypes.func.isRequired,
 };
 

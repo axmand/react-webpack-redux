@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 //UI
-import Button from 'material-ui/Button';
-import Dialog,{ DialogActions, DialogContent,DialogTitle } from 'material-ui/Dialog';
+
+import Dialog from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -48,7 +48,7 @@ class PhotoContent extends Component {
         {projectData.PhotoItem.map( todo => 
           <AddPhoto
           {...todo} 
-          entries = { 'data:image/jpeg;base64,'+todo }
+          entries = { 'data:image/jpeg;base64,'+todo.text }
           />
         )}
        
@@ -72,7 +72,7 @@ class PhotoContent extends Component {
               <Typography type="title" color="inherit" className={classes.flex}>
                 现场指界
               </Typography>
-              <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Delete">
+              <IconButton color="contrast" onClick={handleCardClose} aria-label="Delete">
                 <ClearIcon />
               </IconButton>
             </Toolbar>

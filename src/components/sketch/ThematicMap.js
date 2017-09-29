@@ -7,9 +7,10 @@ import * as maptalks from "maptalks";
 import { withStyles } from "material-ui/styles";
 import Grid from "material-ui/Grid";
 import Paper from "material-ui/Paper";
-import Typography from "material-ui/Typography";
 import Button from "material-ui/Button";
 import Snackbar from "material-ui/Snackbar";
+import Save from "material-ui-icons/Save"; //保存
+import Typography from "material-ui/Typography";
 
 import ThematicToolBar from "./ThematicToolBar";
 
@@ -108,7 +109,29 @@ const styles = theme => ({
     borderRadius: "3%",
     width: "90%",
     height: "40%"
-  }
+  },
+  button:{
+    position: "absolute",
+    top:'90%',
+    left:'75%',
+    height: "6%",
+    width: "6%",
+    padding: 0,
+    border: 0,
+    background:'#3f51b5',
+    borderRadius: "8%",
+    boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.2)"
+  },
+  icon:{
+    height: "35%",
+    width: "35%",
+    color: "#fff"
+  },
+  bt_text: {
+    fontSize: "1em",
+    color: '#fff'
+  },
+
 });
 
 /**
@@ -135,7 +158,7 @@ class ThematicMap extends Component {
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
         center: mapCenter,
-        zoom: 20,
+        zoom: 16,
         baseLayer: new maptalks.TileLayer("base", {
           // 'urlTemplate' : 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
           // 'subdomains'  : ['01','02','03','04'],
@@ -151,132 +174,137 @@ class ThematicMap extends Component {
       maptalks.Layer.fromJSON(zdJSONData).addTo(thematicMap);
       maptalks.Layer.fromJSON(zjJSONData).addTo(thematicMap);
     }
+
+    
   }
 
-  componentDidUpdate() {}
 
   render() {
     const classes = this.props.classes;
-    const { alertSave, saveIsChecked, onSaveAlertClose } = this.props;
+    const { alertSave, saveIsChecked, onSaveAlertClose,onSaveThematicMapClick} = this.props;
 
     return (
       <div className={classes.root}>
         <Paper
           ref={node => (ThematicMapNode = node)}
-          className={classes.thematicMap}
-        >
-          <Snackbar
-            className={classes.alert}
-            open={alertSave}
-            onRequestClose={onSaveAlertClose}
-          >
-            <Typography className={classes.message}>
-              无法获取草图绘制成果图！<br />请返回草图编辑界面绘制并点击保存！
-            </Typography>
-          </Snackbar>
-          <Grid container direction="column" spacing={0}>
-            <Grid item xs>
-              <Typography type="headline" className={classes.title}>
-                不动产单元草图
+          className={classes.thematicMap}>
+            <Snackbar
+              className={classes.alert}
+              open={alertSave}
+              onRequestClose={onSaveAlertClose}
+            >
+              <Typography className={classes.message}>
+                无法获取草图绘制成果图！<br />请返回草图编辑界面绘制并点击保存！
               </Typography>
-            </Grid>
-            <Grid item xs={12} className={classes.table}>
-              <Grid container spacing={0}>
-                <Grid item xs />
-                <Grid item xs={10}>
-                  <Grid
-                    container
-                    direction="column"
-                    spacing={0}
-                    style={{
-                      border: "solid 0.5px #606060"
-                    }}
-                  >
-                    <Grid item className={classes.tabletext12}>
-                      <Grid container spacing={0}>
-                        <Grid item xs={3}>
-                          <Typography
-                            type="subheading"
-                            className={classes.tabletext1}
-                          >
-                            土地权利人
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <Typography
-                            type="subheading"
-                            className={classes.tabletext2}
-                          >
-                            张XX、王xx
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={1}>
-                          <Typography
-                            type="subheading"
-                            className={classes.tabletext1}
-                          >
-                            坐落
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={5}>
-                          <Typography
-                            type="subheading"
-                            className={classes.tabletext2}
-                          >
-                            南宁市blablabla
-                          </Typography>
+            </Snackbar>
+            <Grid container direction="column" spacing={0}>
+              <Grid item xs>
+                <Typography type="headline" className={classes.title}>
+                  不动产单元草图
+                </Typography>
+              </Grid>
+              <Grid item xs={12} className={classes.table}>
+                <Grid container spacing={0}>
+                  <Grid item xs />
+                  <Grid item xs={10}>
+                    <Grid
+                      container
+                      direction="column"
+                      spacing={0}
+                      style={{
+                        border: "solid 0.5px #606060"
+                      }}
+                    >
+                      <Grid item className={classes.tabletext12}>
+                        <Grid container spacing={0}>
+                          <Grid item xs={3}>
+                            <Typography
+                              type="subheading"
+                              className={classes.tabletext1}
+                            >
+                              土地权利人
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <Typography
+                              type="subheading"
+                              className={classes.tabletext2}
+                            >
+                              张XX、王xx
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={1}>
+                            <Typography
+                              type="subheading"
+                              className={classes.tabletext1}
+                            >
+                              坐落
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={5}>
+                            <Typography
+                              type="subheading"
+                              className={classes.tabletext2}
+                            >
+                              南宁市blablabla
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item className={classes.mapdiv}>
-                      <div
-                        ref="ThematicMap"
-                        style={{
-                          color: "#000",
-                          width: "100%",
-                          height: `${window.innerHeight * 0.69}`
-                        }}
-                      />
+                      <Grid item className={classes.mapdiv}>
+                        <div
+                          ref="ThematicMap"
+                          style={{
+                            color: "#000",
+                            width: "100%",
+                            height: `${window.innerHeight * 0.69}px`
+                          }}
+                        />
+                      </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item xs>
+                    <div className={classes.right}>X X不动产权籍调查机构绘制</div>
+                  </Grid>
                 </Grid>
-                <Grid item xs>
-                  <div className={classes.right}>X X不动产权籍调查机构绘制</div>
+              </Grid>
+              <Grid item item xs={12} className={classes.bottom1}>
+                <Grid container spacing={0}>
+                  <Grid item xs={5} />
+                  <Grid item xs={2}>
+                    <Typography type="headline" className={classes.bottom11}>
+                      调查者：
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={5}>
+                    <Typography type="headline" className={classes.bottom11}>
+                      调查日期：
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item item xs={12} className={classes.bottom2}>
+                <Grid container spacing={0}>
+                  <Grid item xs={5} />
+                  <Grid item xs={2}>
+                    <Typography type="headline" className={classes.bottom11}>
+                      审核者：
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={5}>
+                    <Typography type="headline" className={classes.bottom11}>
+                      调查日期：
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item item xs={12} className={classes.bottom1}>
-              <Grid container spacing={0}>
-                <Grid item xs={5} />
-                <Grid item xs={2}>
-                  <Typography type="headline" className={classes.bottom11}>
-                    调查者：
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography type="headline" className={classes.bottom11}>
-                    调查日期：
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item item xs={12} className={classes.bottom2}>
-              <Grid container spacing={0}>
-                <Grid item xs={5} />
-                <Grid item xs={2}>
-                  <Typography type="headline" className={classes.bottom11}>
-                    审核者：
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography type="headline" className={classes.bottom11}>
-                    调查日期：
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
         </Paper>
+
+        <Button className={classes.button} onClick={onSaveThematicMapClick}>
+                <Save className={classes.icon} />
+                <Typography className={classes.bt_text}>保存</Typography>
+        </Button>
       </div>
     );
   }
@@ -306,10 +334,27 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: "saveAlertClose"
       });
-    }
+    },
+
+    onSaveThematicMapClick: () =>{
+      dispatch({
+        type:"saveThematicMapClick"
+      })
+    },
+
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles, { name: "ThematicMap" })(ThematicMap)
 );
+
+//reducer
+const CanvasReduce =(state=0,action)=>{
+  if(action.type==="saveThematicMapClick"){
+    let map_canvas=thematicMap._renderer.canvas;
+    console.log(map_canvas.toDataURL())
+  }
+  return state
+}
+RootReducer.merge(CanvasReduce);

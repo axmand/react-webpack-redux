@@ -38,7 +38,7 @@ class ProjectCard extends Component {
           {...todo} 
           entries = { todo }
           handleContentClose2 = { () => handleContentClose2() } 
-          handleChooseItem = { () => handleChooseItem('http://172.16.102.90:1338//project/Open/' + todo) }
+          handleChooseItem = { () => handleChooseItem('http://172.16.102.90:1338//project/Open/' + todo.text) }
           />
         )}
       </div>

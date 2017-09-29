@@ -3,7 +3,7 @@ import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Dialog from 'material-ui/Dialog'
+import Dialog, { DialogContent,DialogContentText } from 'material-ui/Dialog'
 
 
 import Table, {  TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
@@ -123,14 +123,22 @@ class PrintModule extends Component {
         open={ PrintTrue }
         onRequestClose={ handlePrintTrue } 
       >
-      打印成功
+        <DialogContent>
+          <DialogContentText>
+             打印成功！
+          </DialogContentText>
+        </DialogContent>
       </Dialog>
 
       <Dialog
         open={ PrintFalse }
         onRequestClose={ handlePrintFalse } 
       >
-      打印失败！
+        <DialogContent>
+          <DialogContentText>
+             打印失败！
+          </DialogContentText>
+        </DialogContent>
       </Dialog>
       </div>
     )
@@ -313,8 +321,11 @@ const PrintReduce = (
   let newState = JSON.parse(JSON.stringify(state))
   
   if (action.type === "handlePrintShow") {
-    const PrintShow = { PrintShow: !state.PrintShow }
-    return Object.assign({}, state, { ...PrintShow })
+    if(projectData.Loaded === false)
+      alert("请选择项目！");
+    else
+      { newState.PrintShow =  !state.PrintShow }
+    return { ...state, ...newState }; 
   }
 
   if (action.type === "handlePrintClose") {
@@ -333,8 +344,8 @@ const PrintReduce = (
   }
   
   if (action.type === "handlePrint1") {
-    let list1 = JSON.parse(action.payload.data); 
-    if(list1 === 'true')
+    let sta1 = JSON.parse(action.payload.status); 
+    if(sta1 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
@@ -343,8 +354,8 @@ const PrintReduce = (
   }
   
   if (action.type === "handlePrint2") {
-    let list2 = JSON.parse(action.payload.data); 
-    if(list2 === 'true')
+    let sta2 = JSON.parse(action.payload.status); 
+    if(sta2 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
@@ -353,8 +364,8 @@ const PrintReduce = (
   }
     
   if (action.type === "handlePrint3") {
-    let list3 = JSON.parse(action.payload.data); 
-    if(list3 === 'true')
+    let sta3 = JSON.parse(action.payload.status); 
+    if(sta3 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
@@ -363,8 +374,8 @@ const PrintReduce = (
   }
     
   if (action.type === "handlePrint4") {
-    let list4 = JSON.parse(action.payload.data); 
-    if(list4 === 'true')
+    let sta4 = JSON.parse(action.payload.status); 
+    if(sta4 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
@@ -373,8 +384,8 @@ const PrintReduce = (
   }
     
   if (action.type === "handlePrint5") {
-    let list5 = JSON.parse(action.payload.data); 
-    if(list5 === 'true')
+    let sta5 = JSON.parse(action.payload.status); 
+    if(sta5 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
@@ -383,8 +394,8 @@ const PrintReduce = (
   }
     
   if (action.type === "handlePrint6") {
-    let list6 = JSON.parse(action.payload.data); 
-    if(list6 === 'true')
+    let sta6 = JSON.parse(action.payload.status); 
+    if(sta6 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
@@ -393,8 +404,8 @@ const PrintReduce = (
   }
 
   if (action.type === "handlePrint7") {
-    let list7 = JSON.parse(action.payload.data); 
-    if(list7 === 'true')
+    let sta7 = JSON.parse(action.payload.status); 
+    if(sta7 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
@@ -403,8 +414,8 @@ const PrintReduce = (
   }
 
   if (action.type === "handlePrint8") {
-    let list8 = JSON.parse(action.payload.data); 
-    if(list8 === 'true')
+    let sta8 = JSON.parse(action.payload.status); 
+    if(sta8 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}

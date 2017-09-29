@@ -130,7 +130,11 @@ class ProjectModule extends Component {
           open={ ProjectFalse }
           onRequestClose={ handleProjectFalse } 
         >
-        数据导入失败！
+          <DialogContent>
+            <DialogContentText>
+              数据导入失败！
+            </DialogContentText>
+          </DialogContent>
         </Dialog>
       </div>
     )
@@ -265,15 +269,24 @@ const ProjectReduce = (
   if (action.type === "handleContentShow") {
     console.log('Project Module ...')
     let list = [];
-    list = JSON.parse(action.payload.data);
-    // for(let i = 0;i<list.length;i++)
-    //   {
-    //     const uuidv4 = require('uuid/v4');
-    //     let Id = uuidv4();
-    //     newState.inputItems.push({text:list[i],key:Id})
-    //   }
     newState.inputItems = list.slice(0);
-    newState.ContentShow = !state.ContentShow;
+    
+    list = JSON.parse(action.payload.data);
+    let sta0 = JSON.parse(action.payload.status);
+   
+    if(sta0 !== 200)
+      {newState.ProjectFalse = !state.ProjectFalse}
+    else
+      {
+        // newState.inputItems = list.slice(0);
+        for(let i = 0;i<list.length;i++)
+          {
+            const uuidv4 = require('uuid/v4');
+            let Id = uuidv4();
+            newState.inputItems.push({text:list[i],key:Id})
+          }
+        newState.ContentShow = !state.ContentShow;
+      }
     return { ...state, ...newState }; 
   }
 
@@ -301,9 +314,11 @@ const ProjectReduce = (
    
     projectData.ProjectName = Prolist;
     projectData.ProjectItem = list0.slice(0);
+    projectData.Loaded = ! projectData.Loaded;
+   
     newState.ContentShow = !state.ContentShow;
     
-    if( sta === 200 && action.payload.data != null)
+    if(sta === 200)
       newState.ProjectTrue = !state.ProjectTrue
     else
       newState.ProjectFalse = !state.ProjectFalse
