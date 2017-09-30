@@ -74,7 +74,7 @@ class MapToolBar extends Component {
             <Remove className={classes.icon} />
           </ListItem>
           <ListItem dense={true} />
-          <ListItem
+          {/* <ListItem
             button
             className={classes.listitem}
             disableGutters={true}
@@ -82,7 +82,7 @@ class MapToolBar extends Component {
           >
             <Search className={classes.icon} />
           </ListItem>
-          <ListItem dense={true} />
+          <ListItem dense={true} /> */}
           <RealtimeMapping />
         </List>
       </div>
