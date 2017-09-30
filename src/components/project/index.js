@@ -25,12 +25,12 @@ const styles = {
   listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
-    paddingTop: "15%",
-    paddingBottom: "15%",
+    // paddingTop: "15%",
+    // paddingBottom: "15%",
   },
   listItemIcon: {
-		width: '50%',
-		height: '50%',
+		width: "40%",
+    height: "40%",
 		margin: 0,
 		color: '#C1C6C9',
 	},

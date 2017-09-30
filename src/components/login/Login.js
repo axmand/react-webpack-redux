@@ -55,6 +55,9 @@ const styles = theme => ({
     padding: '0px',
     margin: theme.spacing.unit,
   },
+  navLink: {
+    textDecoration: "none"
+  },
 })
 
 class Login extends Component {
@@ -82,7 +85,7 @@ class Login extends Component {
                 <Typography>忘记密码?</Typography>
               </Button>
             </div>
-            <NavLink to="/mainview">
+            <NavLink className={classes.navLink} to="/mainview">
               <Button raised color="primary" className={classes.button}>
                 <Typography type='title' style={{color: '#FFF'}} >登&nbsp;&nbsp;录</Typography>
               </Button>

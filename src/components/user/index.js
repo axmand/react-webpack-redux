@@ -55,10 +55,10 @@ import BluetoothConnect from "./BluetoothConnect";
 // inset css
 const styles = {
   dialog: {
-    width: "35%",
-    height: "80%",
-    marginTop: "30px",
-    marginLeft: "180px"
+    // width: "50%",
+    // height: "100%",
+    // marginTop: "30px",
+    // marginLeft: "180px"
   },
 
   dialogImage: {
@@ -105,7 +105,8 @@ const styles = {
     lineHeight: "2em",
     // width:'40px',
     // height:'40px',
-    size: "80px"
+    // size: "80px",
+    size: "100%"
   },
 
   button: {
@@ -151,22 +152,28 @@ const styles = {
   },
 
   icon: {
-    width: "80px",
-    height: "80px",
+    // width: "80px",
+    // height: "80px",
+    width: "30%",
+    height: "30%",
     justify: "center"
   },
 
   typography: {
     fontFamily: "微软雅黑",
-    fontSize: "28px",
-    width: "140px"
+    // fontSize: "28px",
+    fontSize: "1em",
+    // width: "140px",
+    width: "100%",
     // fontWeight:'bold',
   },
   //specially for those descriptional(or definitional) typography
   labelUser: {
-    width: "110px",
+    // width: "110px",
+    width: "100%",
     padding: 0,
-    fontSize: "32px",
+    // fontSize: "32px",
+    fontSize: "1em",
     lineHeight: "2em"
   },
   //specically for those state text
@@ -175,8 +182,10 @@ const styles = {
     borderRadius: "5px",
     justify: "center",
     justifyContent: "center",
-    width: "120px",
-    fontSize: "28px",
+    width: "100%",
+    // width: "120px",
+    // fontSize: "28px",
+    fontSize: "1em",
     textAlign: "center",
     padding: "5px 0px"
   },
@@ -205,7 +214,10 @@ const styles = {
     textAlign: "center",
     padding: "15px 0",
     fontSize: "28px"
-  }
+  },
+  usrInfo: {
+    // width: '500px',
+  },
 };
 
 class UserModule extends Component {
@@ -279,20 +291,16 @@ class UserModule extends Component {
         </ListItem>
 
         <Dialog
-          fullScreen
           className={classes.dialog}
           open={this.state.open}
           onRequestClose={this.handleRequestClose}
-          position="absolute"
-          left="100px"
-          top="20px"
         >
           <DialogContent>
-            <List>
+            <List className={classes.usrInfo}>
               <ListItem style={{ lineHeight: "3em" }}>
                 <ListItemAvatar style={{ lineHeight: "3em" }}>
                   <Avatar
-                    sizes="80px"
+                    sizes="100%"
                     className={classes.avatar}
                     alt="avatar"
                     src={userAvatar}
@@ -300,7 +308,7 @@ class UserModule extends Component {
                 </ListItemAvatar>
               </ListItem>
 
-              <ListItem>
+              <ListItem dense>
                 <ListItemText
                   disableTypography
                   className={classes.labelUser}
@@ -313,7 +321,7 @@ class UserModule extends Component {
                 />
               </ListItem>
 
-              <ListItem>
+              <ListItem dense>
                 <ListItemText
                   disableTypography
                   className={classes.labelUser}
@@ -326,7 +334,7 @@ class UserModule extends Component {
                 />
               </ListItem>
 
-              <ListItem>
+              <ListItem dense>
                 <ListItemText
                   disableTypography
                   className={classes.labelUser}
@@ -339,7 +347,7 @@ class UserModule extends Component {
                 />
               </ListItem>
 
-              <ListItem>
+              <ListItem dense>
                 <ListItemText
                   disableTypography
                   className={classes.labelUser}
@@ -352,7 +360,7 @@ class UserModule extends Component {
                 />
               </ListItem>
 
-              <ListItem>
+              <ListItem dense>
                 <ListItemText
                   disableTypography
                   className={classes.labelUser}
@@ -365,7 +373,7 @@ class UserModule extends Component {
                 />
               </ListItem>
 
-              <ListItem>
+              <ListItem dense>
                 <ListItemText
                   disableTypography
                   className={classes.labelUser}
@@ -418,7 +426,6 @@ class UserModule extends Component {
               <ListItem
                 style={{
                   justifyContent: "flex-end",
-                  paddingTop: "50px",
                   paddingBottom: "0px",
                   marginBottom: "0px"
                 }}
@@ -432,7 +439,7 @@ class UserModule extends Component {
                       padding: "15px 25px",
                       borderRadius: "8px",
                       fontWeight: "bold",
-                      fontSize: "32px"
+                      fontSize: "1em"
                     }}
                   >
                     退 出 登 录

@@ -9,7 +9,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "electron": "electron .",
-    "packager": "electron-packager ./build ElectronTest --platform=win32 --arch=x64 --overwrite --out=./dist --electronVersion=1.7.6",
+    "packager": "electron-packager ./build ElectronTest --platform=win32 --arch=ia32 --overwrite --out=./dist --electronVersion=1.7.6",
     "packager1": "electron-packager ./build ElectronTest --all --overwrite --out=./dist --electronVersion=1.7.6"
   },
   "repository": {
@@ -30,7 +30,7 @@
     "less-loader": "^4.0.5",
     "maptalks": "^0.29.0",
     "maptalks.snapto": "^0.1.2",
-    "material-ui": "^1.0.0-beta.8",
+    "material-ui": "^1.0.0-beta.12",
     "material-ui-icons": "^1.0.0-beta.5",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",

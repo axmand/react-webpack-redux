@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 //import UI
 import { withStyles } from "material-ui/styles";
-import Dialog, { DialogTitle, DialogContent, DialogContentText } from "material-ui/Dialog";
+import Dialog, {
+  DialogTitle,
+  DialogContent,
+  DialogContentText
+} from "material-ui/Dialog";
 import Input, { InputLabel } from "material-ui/Input";
 import List, { ListItem } from "material-ui/List";
 import { FormControl } from "material-ui/Form";
@@ -11,7 +15,7 @@ import Select from "material-ui/Select";
 import Button from "material-ui/Button";
 
 import blue from "material-ui/colors/blue";
-import grey from 'material-ui/colors/grey';
+import grey from "material-ui/colors/grey";
 
 import RootReducer from "./../../redux/RootReducer";
 
@@ -84,8 +88,8 @@ const styles = {
     letterSpacing: "10px"
   },
   root: {
-    width:'1920px',
-    height:'1280px',
+    width: "1920px",
+    height: "1280px"
   }
 };
 
@@ -99,13 +103,12 @@ class BluetoothConnect extends React.Component {
   };
 
   handleClickBluetoothConnectAlert = () => {
-    this.setState({ bluetoothConnectAlertShow:true, })
-}
-
-  handleRequestCloseBluetoothConnectAlert = () => {
-    this.setState({ bluetoothConnectAlertShow:false, }) ;
+    this.setState({ bluetoothConnectAlertShow: true });
   };
 
+  handleRequestCloseBluetoothConnectAlert = () => {
+    this.setState({ bluetoothConnectAlertShow: false });
+  };
 
   render() {
     const {
@@ -117,11 +120,10 @@ class BluetoothConnect extends React.Component {
       handleCOMPortConnect,
       handleCOMPortDisconnect,
       portConnectStateShow,
-      handleRequestCloseBluetoothStateShow,
+      handleRequestCloseBluetoothSwitch,
       bluetoothConnectAlertShow,
       handleClickBluetoothConnectAlert,
-      handleRequestCloseBluetoothConnectAlert,
-
+      handleRequestCloseBluetoothConnectAlert
     } = this.props;
 
     console.log(portConnectStateShow);
@@ -130,7 +132,7 @@ class BluetoothConnect extends React.Component {
       <div>
         <Dialog
           open={bluetoothSwitch}
-          onRequestClose={handleRequestCloseBluetooth}
+          onRequestClose={handleRequestCloseBluetoothSwitch}
           className={classes.dialogBluetooth}
         >
           <DialogTitle disableTypography className={classes.title}>
@@ -198,25 +200,23 @@ class BluetoothConnect extends React.Component {
 
         /> */}
 
-
-
-    <Dialog
-        open={bluetoothConnectAlertShow}
-        onRequestClose={handleRequestCloseBluetoothConnectAlert}
-        style={{
-            background:grey[500],
-            color:'white',
-            textAlign:'center',
-            justifyContent:'center',
-            justify:'center',
-                 }} >
-        <DialogContent>
+        <Dialog
+          open={bluetoothConnectAlertShow}
+          onRequestClose={handleRequestCloseBluetoothConnectAlert}
+          style={{
+            background: grey[500],
+            color: "white",
+            textAlign: "center",
+            justifyContent: "center",
+            justify: "center"
+          }}
+        >
+          <DialogContent>
             <DialogContentText>
-                  bluetooth status has been changed
+              bluetooth status has been changed
             </DialogContentText>
-        </DialogContent>           
-    </Dialog>
-
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }
@@ -231,13 +231,14 @@ const mapStateToProps = state => {
   return {
     portLists: bluetoothState.portLists,
     bluetoothSwitch: bluetoothState.bluetoothSwitch,
-    portConnectStateShow: bluetoothState.portConnectStateShow
+    portConnectStateShow: bluetoothState.portConnectStateShow,
+    bluetoothConnectAlertShow: bluetoothState.bluetoothConnectAlertShow
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleRequestCloseBluetooth: () => {
+    handleRequestCloseBluetoothSwitch: () => {
       dispatch({
         type: "COM_BLUETOOTH_VIEW_SWITCH"
       });
@@ -275,7 +276,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           });
         });
 
-        bluetoothConnectAlertShow:true;
+      bluetoothConnectAlertShow: true;
     },
     handleCOMPortDisconnect: () => {
       console.log("handleCOMPortDisconnect Triggerd ...");
@@ -305,7 +306,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         });
     },
     handleRequestCloseBluetoothConnectAlert: () => {
-
+      dispatch({
+        type: "COM_BLUETOOTH_CONNECT_ALERT_SWITCH"
+      });
     }
   };
 };
@@ -319,7 +322,8 @@ const BluetoothReducer = (
   state = {
     portLists: ["COM1", "COM2", "COM3", "COM4"],
     bluetoothSwitch: false,
-    portConnectStateShow: false
+    portConnectStateShow: false,
+    bluetoothConnectAlertShow: false
   },
   action
 ) => {
@@ -341,12 +345,15 @@ const BluetoothReducer = (
 
     case "COM_BLUETOOTH_MODULE_CONNECT":
       // console.log(action.payload)
-      newState.portConnectStateShow = !newState.portConnectStateShow;
+      newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
       return { ...state, ...newState };
 
     case "COM_BLUETOOTH_MODULE_DISCONNECT":
-      // console.log(action.payload)
-      newState.portConnectStateShow = !newState.portConnectStateShow;
+      newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
+      return { ...state, ...newState };
+
+    case "COM_BLUETOOTH_CONNECT_ALERT_SWITCH":
+      newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
       return { ...state, ...newState };
 
     default:

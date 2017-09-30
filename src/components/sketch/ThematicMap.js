@@ -353,7 +353,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 const CanvasReduce =(state=0,action)=>{
   if(action.type==="saveThematicMapClick"){
     let map_canvas=thematicMap._renderer.canvas;
-    console.log(map_canvas.toDataURL())
+    console.log(thematicMap.toDataURL())
   }
   return state
 }
