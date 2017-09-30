@@ -12,11 +12,6 @@ import Snackbar from "material-ui/Snackbar";
 import Save from "material-ui-icons/Save"; //保存
 import Typography from "material-ui/Typography";
 
-import ThematicToolBar from "./ThematicToolBar";
-
-import html2canvas from "html2canvas";
-
-let ThematicMapNode;
 
 const styles = theme => ({
   root: {
@@ -160,14 +155,11 @@ class ThematicMap extends Component {
         center: mapCenter,
         zoom: 16,
         baseLayer: new maptalks.TileLayer("base", {
-          // 'urlTemplate' : 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
-          // 'subdomains'  : ['01','02','03','04'],
-          // 'attribution' : '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
-          urlTemplate:
-            "http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}",
-          subdomains: ["1", "2", "3", "4", "5"],
-          attribution: '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
-        })
+          crossOrigin:'anonymous',
+          'urlTemplate' : 'http://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+          'subdomains'  : ['01','02','03','04'],
+          'attribution' : '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
+        }),
       });
       maptalks.Layer.fromJSON(jzdJSONData).addTo(thematicMap);
       maptalks.Layer.fromJSON(szJSONData).addTo(thematicMap);
@@ -186,7 +178,6 @@ class ThematicMap extends Component {
     return (
       <div className={classes.root}>
         <Paper
-          ref={node => (ThematicMapNode = node)}
           className={classes.thematicMap}>
             <Snackbar
               className={classes.alert}
@@ -350,11 +341,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 );
 
 //reducer
-const CanvasReduce =(state=0,action)=>{
+const CanvasReduce =(state={thematicMapImg:ImageData},action)=>{
   if(action.type==="saveThematicMapClick"){
-    let map_canvas=thematicMap._renderer.canvas;
-    console.log(thematicMap.toDataURL())
+    const newState={thematicMapImg:thematicMap.toDataURL()}
+    console.log(newState)
+    return {...state,...newState};
   }
-  return state
+  return {...state}
 }
 RootReducer.merge(CanvasReduce);

@@ -30,16 +30,13 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     map = new maptalks.Map(mapDiv, {
-      center: [-0.113049, 51.498568],
-      zoom: 14,
+      center: [114.360734,30.541093],
+      zoom: 16,
       baseLayer: new maptalks.TileLayer("base", {
-        // 'urlTemplate' : 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
-        // 'subdomains'  : ['01','02','03','04'],
-        // 'attribution' : '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
-        urlTemplate:
-          "http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}",
-        subdomains: ["1", "2", "3", "4", "5"],
-        attribution: '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
+        crossOrigin:'anonymous',
+        'urlTemplate' : 'http://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+        'subdomains'  : ['01','02','03','04'],
+        'attribution' : '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
       }),
       layers: [
         new maptalks.VectorLayer("location"),
@@ -1085,7 +1082,13 @@ clickObj =clickObj ||function(e) {
                     zdJSONData:map.getLayer('polygon').toJSON(),
                     zjJSONData: map.getLayer('label').toJSON(),
                 }
-                console.log(saveData);
+                //将图层数据存储至项目变量中
+                console.log(projectData)
+                projectData.ProjectItem[0].L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
+                projectData.ProjectItem[0].L.szJSONData=JSON.stringify(saveData.szJSONData);
+                projectData.ProjectItem[0].L.zdJSONData=JSON.stringify(saveData.zdJSONData);
+                projectData.ProjectItem[0].L.zjJSONData=JSON.stringify(saveData.zjJSONData);
+                console.log( projectData.ProjectItem.L);
 
                 return Object.assign({},state,{... saveData});
             case 'saveAlertClose':
