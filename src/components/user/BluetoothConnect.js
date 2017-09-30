@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 //import UI
 import { withStyles } from "material-ui/styles";
-import Dialog, { DialogTitle, DialogContent } from "material-ui/Dialog";
+import Dialog, { DialogTitle, DialogContent, DialogContentText } from "material-ui/Dialog";
 import Input, { InputLabel } from "material-ui/Input";
 import List, { ListItem } from "material-ui/List";
 import { FormControl } from "material-ui/Form";
@@ -11,6 +11,7 @@ import Select from "material-ui/Select";
 import Button from "material-ui/Button";
 
 import blue from "material-ui/colors/blue";
+import grey from 'material-ui/colors/grey';
 
 import RootReducer from "./../../redux/RootReducer";
 
@@ -81,6 +82,10 @@ const styles = {
     padding: "0 30px",
     paddingRight: "20px",
     letterSpacing: "10px"
+  },
+  root: {
+    width:'1920px',
+    height:'1280px',
   }
 };
 
@@ -93,6 +98,15 @@ class BluetoothConnect extends React.Component {
     // console.log(COMPort);
   };
 
+  handleClickBluetoothConnectAlert = () => {
+    this.setState({ bluetoothConnectAlertShow:true, })
+}
+
+  handleRequestCloseBluetoothConnectAlert = () => {
+    this.setState({ bluetoothConnectAlertShow:false, }) ;
+  };
+
+
   render() {
     const {
       classes,
@@ -103,7 +117,11 @@ class BluetoothConnect extends React.Component {
       handleCOMPortConnect,
       handleCOMPortDisconnect,
       portConnectStateShow,
-      handleRequestCloseBluetoothStateShow
+      handleRequestCloseBluetoothStateShow,
+      bluetoothConnectAlertShow,
+      handleClickBluetoothConnectAlert,
+      handleRequestCloseBluetoothConnectAlert,
+
     } = this.props;
 
     console.log(portConnectStateShow);
@@ -161,12 +179,12 @@ class BluetoothConnect extends React.Component {
             </form>
           </DialogContent>
         </Dialog>
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        {/* <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
           open={portConnectStateShow}
           onRequestClose={handleRequestCloseBluetoothStateShow}
           SnackbarContentProps={{ "aria-describedby": "message-id" }}
-          message={<span id="message-id"> bluetooth COMport connected!</span>}
+          message={<span id="message-id">bluetooth has been connected</span>}
           action={
             <IconButton
               key="close"
@@ -177,10 +195,28 @@ class BluetoothConnect extends React.Component {
               <CloseIcon />
             </IconButton>
           }
-          style={{
-            zIndex: '500'
-          }}
-        />
+
+        /> */}
+
+
+
+    <Dialog
+        open={bluetoothConnectAlertShow}
+        onRequestClose={handleRequestCloseBluetoothConnectAlert}
+        style={{
+            background:grey[500],
+            color:'white',
+            textAlign:'center',
+            justifyContent:'center',
+            justify:'center',
+                 }} >
+        <DialogContent>
+            <DialogContentText>
+                  bluetooth status has been changed
+            </DialogContentText>
+        </DialogContent>           
+    </Dialog>
+
       </div>
     );
   }
@@ -238,6 +274,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: "COM_BLUETOOTH_MODULE_CONNECT"
           });
         });
+
+        bluetoothConnectAlertShow:true;
     },
     handleCOMPortDisconnect: () => {
       console.log("handleCOMPortDisconnect Triggerd ...");
@@ -265,6 +303,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: "COM_BLUETOOTH_MODULE_DISCONNECT"
           });
         });
+    },
+    handleRequestCloseBluetoothConnectAlert: () => {
+
     }
   };
 };

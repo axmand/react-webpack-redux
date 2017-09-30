@@ -64,3 +64,5 @@ build/
 dist/
 # config/
 # scripts/
+
+package-lock.json
