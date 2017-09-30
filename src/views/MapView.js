@@ -7,6 +7,7 @@ import { withStyles } from 'material-ui/styles'
 import RootReducer from '../redux/RootReducer';
 import Map from '../components/map/Map'
 import Sketch from '../components/sketch/Sketch'
+import projectData from './../redux/RootData';
 
 const styles = {
   root: {
@@ -44,12 +45,15 @@ MapView.PropTypes={
 }
 
 const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
+  let newState = JSON.parse(JSON.stringify(state))
+
   switch(action.type) {
     case 'MAP_SKETCH_VIEW_SWITCH':
-      const newState = {
-        sketchDisplayState: !state.sketchDisplayState
-      }
-      return { ...state, ...newState}
+    if(projectData.Loaded === false)
+      alert("请选择项目！");
+    else
+      { newState.sketchDisplayState =  !state.sketchDisplayState }
+    return { ...state, ...newState }; 
     default:
       return state
   }
