@@ -97,11 +97,11 @@ class ProjectModule extends Component {
           open={ContentShow}
           onRequestClose={handleContentClose}
         >
-          <AppBar position="static" >
-            <Toolbar>
+          <AppBar position="static"  >
+            <Toolbar >
               <Typography type="title" color="inherit" className={classes.flex}>
                 数据导入
-                </Typography>
+              </Typography>
               <IconButton color="contrast" onClick={handleContentClose} aria-label="Delete">
                 <ClearIcon />
               </IconButton>
