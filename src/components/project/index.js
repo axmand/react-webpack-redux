@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 //UI
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import Dialog, { DialogContent,DialogContentText } from 'material-ui/Dialog'
-import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -97,9 +96,8 @@ class ProjectModule extends Component {
           className={classes.dialog}
           open={ContentShow}
           onRequestClose={handleContentClose}
-          transition={<Slide direction="up" />}
         >
-          <AppBar position="static">
+          <AppBar position="static" >
             <Toolbar>
               <Typography type="title" color="inherit" className={classes.flex}>
                 数据导入
