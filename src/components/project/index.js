@@ -13,6 +13,7 @@ import ClearIcon from 'material-ui-icons/Clear';
 import FolderOpenIcon from 'material-ui-icons/FolderOpen';
 //自定义组件
 import ProjectCard from './ProjectCard'
+import {blueGrey}  from 'material-ui/colors';
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
@@ -63,6 +64,7 @@ const styles = {
     marginLeft: 50
   }
 };
+const accent = blueGrey[700];
 
 class ProjectModule extends Component {
 
@@ -97,8 +99,8 @@ class ProjectModule extends Component {
           open={ContentShow}
           onRequestClose={handleContentClose}
         >
-          <AppBar position="static"  >
-            <Toolbar >
+          <AppBar position="static"  color = 'accent' >
+            <Toolbar  >
               <Typography type="title" color="inherit" className={classes.flex}>
                 数据导入
               </Typography>
@@ -162,7 +164,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
-      fetch('http://172.16.102.90:1338//project/list')
+      fetch('http://172.16.102.90:1338/project/list')
       .then(response => response.json())
       .then( json => {
         dispatch({
@@ -190,6 +192,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: 'handleProjectTrue',
       })
+      
+
     },
   }
 }
@@ -311,7 +315,8 @@ const ProjectReduce = (
     Prolist = action.itemName;
    
     projectData.ProjectName = Prolist;
-    projectData.ProjectItem = list0.slice(0);
+    projectData.ProjectItem = list0[0];
+    
     projectData.Loaded = ! projectData.Loaded;
    
     newState.ContentShow = !state.ContentShow;
@@ -324,6 +329,11 @@ const ProjectReduce = (
      return { ...state, ...newState }; 
   }
 
+  if(action.type === 'handleProjectTrue2'){
+    newState.ProjectTrue = !state.ProjectTrue
+    return { ...state, ...newState }; 
+  }
+  
   else
     return state
 }

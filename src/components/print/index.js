@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Dialog, { DialogContent,DialogContentText } from 'material-ui/Dialog'
+import { LinearProgress } from 'material-ui/Progress';
 
 
 import Table, {  TableBody, TableCell, TableHead, TableRow,} from 'material-ui/Table';
@@ -41,6 +42,10 @@ const styles = {
     width: '100%',
     overflowX: 'auto',
   },
+  root:{
+    width: '100%',
+    marginTop: 30,
+  }
 }
 
 class PrintModule extends Component {
@@ -53,6 +58,7 @@ class PrintModule extends Component {
       PrintTrue,
       PrintFalse,
       PrintShow,
+      PrintProgress,
       classes
     } = this.props
   
@@ -140,6 +146,15 @@ class PrintModule extends Component {
           </DialogContentText>
         </DialogContent>
       </Dialog>
+      
+      <Dialog
+        open={ PrintProgress }
+      >
+        <DialogContent>
+            <LinearProgress />
+        </DialogContent>
+      </Dialog>
+
       </div>
     )
   }
@@ -163,6 +178,7 @@ PrintModule.propTypes = {
   PrintShow: PropTypes.bool.isRequired,
   PrintTrue: PropTypes.bool.isRequired,
   PrintFalse: PropTypes.bool.isRequired,
+  PrintProgress: PropTypes.bool.isRequired,
 };
 
 //声明State与Action
@@ -172,6 +188,7 @@ const mapStateToProps = (state, ownProps) => {
     PrintShow: state.PrintReduce.PrintShow,
     PrintTrue: state.PrintReduce.PrintTrue,
     PrintFalse:state.PrintReduce.PrintFalse,
+    PrintProgress: state.PrintReduce.PrintProgress,
   }
 }
 
@@ -198,6 +215,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          setTimeout(() => {
+            dispatch({
+                type:'handlePrintTrue2'
+            }
+          )}, 1000);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -211,6 +233,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          setTimeout(() => {
+            dispatch({
+                type:'handlePrintTrue2'
+            }
+          )}, 1000);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -224,6 +251,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          setTimeout(() => {
+            dispatch({
+                type:'handlePrintTrue2'
+            }
+          )}, 1000);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -237,6 +269,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          setTimeout(() => {
+            dispatch({
+                type:'handlePrintTrue2'
+            }
+          )}, 1000);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -250,6 +287,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          setTimeout(() => {
+            dispatch({
+                type:'handlePrintTrue2'
+            }
+          )}, 1000);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -263,6 +305,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          setTimeout(() => {
+            dispatch({
+                type:'handlePrintTrue2'
+            }
+          )}, 1000);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -276,6 +323,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          setTimeout(() => {
+            dispatch({
+                type:'handlePrintTrue2'
+            }
+          )}, 1000);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -289,6 +341,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          setTimeout(() => {
+            dispatch({
+                type:'handlePrintTrue2'
+            }
+          )}, 1000);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -316,6 +373,7 @@ const PrintReduce = (
     PrintShow: false,
     PrintTrue: false,
     PrintFalse: false,
+    PrintProgress: false,
   }, action) => {
   
   let newState = JSON.parse(JSON.stringify(state))
@@ -337,6 +395,11 @@ const PrintReduce = (
     const PrintTrue = { PrintTrue: !state.PrintTrue }
     return Object.assign({}, state, { ...PrintTrue })
   }
+ 
+  if (action.type === "handlePrintTrue2") {
+    const PrintTrue = { PrintTrue: !state.PrintTrue }
+    return Object.assign({}, state, { ...PrintTrue })
+  }
     
   if (action.type === "handlePrintFalse") {
     const PrintFalse = { PrintFalse: !state.PrintFalse }
@@ -346,7 +409,10 @@ const PrintReduce = (
   if (action.type === "handlePrint1") {
     let sta1 = JSON.parse(action.payload.status); 
     if(sta1 === 200)
-      {newState.PrintTrue = !state.PrintTrue}
+      {
+        newState.PrintTrue = !state.PrintTrue
+        // newState.PrintProgress = !state.PrintProgress
+      }
     else
       {newState.PrintFalse = !state.PrintFalse}
     newState.PrintShow = !state.PrintShow;
