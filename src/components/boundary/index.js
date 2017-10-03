@@ -13,6 +13,7 @@ import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import PhotoContent from './PhotoContent'
+import { LinearProgress } from 'material-ui/Progress';
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
@@ -63,6 +64,7 @@ class BoundaryModule extends Component {
       handleCameraClose,
       handleCameraShow,
       CameraShow,
+      PrintProgress,
       classes
     } = this.props;
   
@@ -86,7 +88,7 @@ class BoundaryModule extends Component {
           onRequestClose={handleCameraClose}
           transition={<Slide direction="up" />}
         >
-          <AppBar position="static">
+          <AppBar position="static" style ={{backgroundColor:"#455A64"}}>
             <Toolbar>
               <Typography type="title" color="inherit" className={classes.flex}>
                 现场指界
@@ -100,7 +102,16 @@ class BoundaryModule extends Component {
          <DialogContent style={{ overflowY: 'auto' }}>
           <PhotoContent/>
           </DialogContent>
+        </Dialog>
        
+        <Dialog
+        open={ PrintProgress }
+        >
+        <div style={{ width: 320,marginTop: 30}}>
+          <LinearProgress />
+          <br/>
+          下载照片
+        </div>`
         </Dialog>
       </div>
     )
@@ -116,7 +127,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleCameraShow: () => {    
+    handleCameraShow: () => {   
+      dispatch({
+          type: 'ProgressShow',
+      }) 
+
       fetch('http://172.16.102.90:1338//project/photolist' )
       .then(response => response.json())
       .then( json => {
@@ -124,7 +139,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: 'handleCameraShow',
           payload:json,
         })
-        console.log(json)})
+        console.log(json)
+        dispatch({
+          type: 'ProgressShow',
+        })
+      })
       .catch(err => {console.log(err)})
     },
 
@@ -141,10 +160,16 @@ export default connect(mapStateToProps, mapDispatchToProps)( withStyles(styles,{
 const BoundaryReduce = (
   state = {
     CameraShow: false,
-    CardShow:false
+    CardShow:false,
+    PrintProgress:false
   }, action) => {
   
   let newState = JSON.parse(JSON.stringify(state))
+  
+  if (action.type === "ProgressShow") {
+    const PrintProgress = { PrintProgress: !state.PrintProgress }
+    return Object.assign({}, state, { ...PrintProgress })
+  }
   
   if (action.type === "handleCameraShow") {
     let sta = JSON.parse(action.payload.status)

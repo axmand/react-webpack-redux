@@ -99,7 +99,7 @@ class ProjectModule extends Component {
           open={ContentShow}
           onRequestClose={handleContentClose}
         >
-          <AppBar position="static"  color = 'accent' >
+          <AppBar position="static"  style ={{backgroundColor:"#455A64"}} >
             <Toolbar  >
               <Typography type="title" color="inherit" className={classes.flex}>
                 数据导入

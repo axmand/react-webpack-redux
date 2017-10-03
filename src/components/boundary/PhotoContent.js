@@ -67,7 +67,7 @@ class PhotoContent extends Component {
           onRequestClose={handleCardClose}
           transition={<Slide direction="up" />}
         >
-          <AppBar position="static">
+          <AppBar position="static" style ={{backgroundColor:"#455A64"}}>
             <Toolbar>
               <Typography type="title" color="inherit" className={classes.flex}>
                 现场指界

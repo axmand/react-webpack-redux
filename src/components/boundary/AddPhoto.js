@@ -27,7 +27,9 @@ class AddPhoto extends Component {
     return(
       <div style={{padding:'20px'}}>
       <Card  style={{maxWidth:150,maxHeight:220,}}>
-        <img src={item} alt="Contemplative Reptile"  style={{justifyContent:'center'}} width="100%" height="150"/>
+        <img src={item} alt="Contemplative Reptile"  
+             style={{justifyContent:'center',}} 
+             width="100%" height="150"/>
         <CardContent >
           <Typography type="headline" component="h2">
              指界点

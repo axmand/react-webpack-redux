@@ -53,7 +53,7 @@ class PrintModule extends Component {
   render() {
     const { 
       handlePrintShow,handlePrintClose,
-      handlePrint1,handlePrint2,handlePrint3,handlePrint4,handlePrint5,handlePrint6,handlePrint7,handlePrint8,
+      handlePrint1,handlePrint2,handlePrint3,handlePrint4,handlePrint5,handlePrint6,handlePrint7,
       handlePrintTrue,handlePrintFalse,
       PrintTrue,
       PrintFalse,
@@ -81,10 +81,10 @@ class PrintModule extends Component {
       >
         <Paper className={classes.paper}>
         <Table>
-        <TableHead>
+        <TableHead style ={{backgroundColor:"#455A64"}}>
           <TableRow>
-            <TableCell><p>表格名称</p></TableCell>
-            <TableCell><p>打印</p></TableCell>
+            <TableCell style={{ fontSize: '1em',color: '#ffffff',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}><p>表格名称</p></TableCell>
+            <TableCell style={{ fontSize: '1em',color: '#ffffff',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}><p>打印</p></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -116,10 +116,6 @@ class PrintModule extends Component {
             <TableCell>共有宗地面积分摊表</TableCell>
             <TableCell><Button onClick = { handlePrint7 }>打印</Button></TableCell>  
           </TableRow>
-          <TableRow >
-            <TableCell>专题图</TableCell>
-            <TableCell><Button onClick = { handlePrint8 }>打印</Button></TableCell>  
-          </TableRow>
         </TableBody>
         </Table>
         </Paper>
@@ -150,9 +146,9 @@ class PrintModule extends Component {
       <Dialog
         open={ PrintProgress }
       >
-        <DialogContent>
-            <LinearProgress />
-        </DialogContent>
+        <div style={{ width: 320,marginTop: 30}}>
+          <LinearProgress />
+        </div>`
       </Dialog>
 
       </div>
@@ -174,7 +170,6 @@ PrintModule.propTypes = {
   handlePrint5: PropTypes.func.isRequired,
   handlePrint6: PropTypes.func.isRequired,
   handlePrint7: PropTypes.func.isRequired,
-  handlePrint8: PropTypes.func.isRequired,
   PrintShow: PropTypes.bool.isRequired,
   PrintTrue: PropTypes.bool.isRequired,
   PrintFalse: PropTypes.bool.isRequired,
@@ -207,6 +202,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handlePrint1: () => {
+      dispatch({
+        type: 'ProgressShow',
+      });
+
       fetch('http://172.16.102.90:1338/project/print/1')
         .then(response => response.json())
         .then( json => {
@@ -214,17 +213,27 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: 'handlePrint1',
             payload: json,
           })
+          
           console.log(json)
+          
+          dispatch({
+            type: 'ProgressShow',
+          });
+         
           setTimeout(() => {
             dispatch({
                 type:'handlePrintTrue2'
             }
-          )}, 1000);
+          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
     
     handlePrint2: () => {
+      dispatch({
+        type: 'ProgressShow',
+      });
+      
       fetch('http://172.16.102.90:1338/project/print/2')
         .then(response => response.json())
         .then( json => {
@@ -232,17 +241,26 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: 'handlePrint2',
             payload: json,
           })
+
           console.log(json)
+          dispatch({
+            type: 'ProgressShow',
+          });
+
           setTimeout(() => {
             dispatch({
                 type:'handlePrintTrue2'
             }
-          )}, 1000);
+          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
     
     handlePrint3: () => {
+      dispatch({
+        type: 'ProgressShow',
+      });
+      
       fetch('http://172.16.102.90:1338/project/print/3')
         .then(response => response.json())
         .then( json => {
@@ -250,18 +268,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: 'handlePrint3',
             payload: json,
           })
+          
           console.log(json)
+          
+          dispatch({
+            type: 'ProgressShow',
+          });
+          
           setTimeout(() => {
             dispatch({
                 type:'handlePrintTrue2'
             }
-          )}, 1000);
+          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
     
     handlePrint4: () => {
-      fetch('http://172.16.102.90:1338/project/print/4')
+      dispatch({
+        type: 'ProgressShow',
+      });
+      
+      fetch('http://172.16.102.90:1338/project/printpicture')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -269,16 +297,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          
+          dispatch({
+            type: 'ProgressShow',
+          });
+          
           setTimeout(() => {
             dispatch({
                 type:'handlePrintTrue2'
             }
-          )}, 1000);
+          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
     
     handlePrint5: () => {
+      dispatch({
+        type: 'ProgressShow',
+      });
+      
       fetch('http://172.16.102.90:1338/project/print/5')
         .then(response => response.json())
         .then( json => {
@@ -287,16 +324,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             payload: json,
           })
           console.log(json)
+          
+          dispatch({
+            type: 'ProgressShow',
+          });
+          
           setTimeout(() => {
             dispatch({
                 type:'handlePrintTrue2'
             }
-          )}, 1000);
+          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
     
     handlePrint6: () => {
+      dispatch({
+        type: 'ProgressShow',
+      });
+      
       fetch('http://172.16.102.90:1338/project/print/6')
         .then(response => response.json())
         .then( json => {
@@ -304,7 +350,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: 'handlePrint6',
             payload: json,
           })
+          
           console.log(json)
+          
+          dispatch({
+            type: 'ProgressShow',
+          });
+          
           setTimeout(() => {
             dispatch({
                 type:'handlePrintTrue2'
@@ -315,6 +367,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePrint7: () => {
+      dispatch({
+        type: 'ProgressShow',
+      });
+      
       fetch('http://172.16.102.90:1338/project/print/7')
         .then(response => response.json())
         .then( json => {
@@ -322,33 +378,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: 'handlePrint7',
             payload: json,
           })
+          
           console.log(json)
+          dispatch({
+            type: 'ProgressShow',
+          });
           setTimeout(() => {
             dispatch({
                 type:'handlePrintTrue2'
             }
-          )}, 1000);
+          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
     
-    handlePrint8: () => {
-      fetch('http://172.16.102.90:1338/project/print/8')
-        .then(response => response.json())
-        .then( json => {
-          dispatch({
-            type: 'handlePrint8',
-            payload: json,
-          })
-          console.log(json)
-          setTimeout(() => {
-            dispatch({
-                type:'handlePrintTrue2'
-            }
-          )}, 1000);
-        })
-        .catch(e => console.log("Oops, error", e))
-    },
 
     handlePrintTrue: () => {
       dispatch({
@@ -405,13 +448,17 @@ const PrintReduce = (
     const PrintFalse = { PrintFalse: !state.PrintFalse }
     return Object.assign({}, state, { ...PrintFalse })
   }
+
+  if (action.type === "ProgressShow") {
+    const PrintProgress = { PrintProgress: !state.PrintProgress }
+    return Object.assign({}, state, { ...PrintProgress })
+  }
   
   if (action.type === "handlePrint1") {
     let sta1 = JSON.parse(action.payload.status); 
     if(sta1 === 200)
       {
         newState.PrintTrue = !state.PrintTrue
-        // newState.PrintProgress = !state.PrintProgress
       }
     else
       {newState.PrintFalse = !state.PrintFalse}
@@ -472,16 +519,6 @@ const PrintReduce = (
   if (action.type === "handlePrint7") {
     let sta7 = JSON.parse(action.payload.status); 
     if(sta7 === 200)
-      {newState.PrintTrue = !state.PrintTrue}
-    else
-      {newState.PrintFalse = !state.PrintFalse}
-    newState.PrintShow = !state.PrintShow;
-    return { ...state, ...newState }; 
-  }
-
-  if (action.type === "handlePrint8") {
-    let sta8 = JSON.parse(action.payload.status); 
-    if(sta8 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
