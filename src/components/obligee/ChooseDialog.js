@@ -31,8 +31,9 @@ const styles = {
    listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
-    // paddingTop: "15%",
-    // paddingBottom: "15%",
+    paddingTop: "15%",
+    paddingBottom: "15%",
+   
   },
   listItemIcon: {
     width: "40%",
@@ -75,10 +76,10 @@ class ChooseTableDialog extends Component {
           >
              <Paper className={classes.paper}>
 <Table>
-        <TableHead>
+        <TableHead style ={{backgroundColor:"#455A64"}}>
           <TableRow>
-            <TableCell><p>表格类型</p></TableCell>
-            <TableCell><p>所属项目</p></TableCell>
+            <TableCell style={{ fontSize: '1em',color: '#ffffff',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}><p>表格类型</p></TableCell>
+            <TableCell style={{ fontSize: '1em',color: '#ffffff',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}><p>所属项目</p></TableCell>
             
           </TableRow>
         </TableHead>
@@ -86,36 +87,36 @@ class ChooseTableDialog extends Component {
          
                 <TableRow >
             <TableCell ><Button onClick={choose1} key="权籍调查表">权籍调查表</Button></TableCell>
-            <TableCell><Button onClick={choose1} key="权籍调查表">{projectName}</Button></TableCell>
+            <TableCell><Button onClick={choose1} key="权籍调查表">{projectData.ProjectName}</Button></TableCell>
             
           </TableRow>
 
                <TableRow >
             <TableCell ><Button onClick={choose2} key={"界址标示表"}>界址标示表</Button></TableCell>
-            <TableCell><Button onClick={choose2} key={"界址标示表"}>{projectName}</Button></TableCell>
+            <TableCell><Button onClick={choose2} key={"界址标示表"}>{projectData.ProjectName}</Button></TableCell>
             
           </TableRow>
 
             <TableRow >
             <TableCell ><Button onClick={choose3} >界址签章表</Button></TableCell>
-            <TableCell><Button onClick={choose3} >{projectName}</Button></TableCell>
+            <TableCell><Button onClick={choose3} >{projectData.ProjectName}</Button></TableCell>
             
           </TableRow>
             <TableRow >
             <TableCell ><Button onClick={choose4} >界址说明表</Button></TableCell>
-            <TableCell><Button onClick={choose4} >{projectName}</Button></TableCell>
+            <TableCell><Button onClick={choose4} >{projectData.ProjectName}</Button></TableCell>
             
           </TableRow>
 
             <TableRow >
             <TableCell ><Button onClick={choose5} key={"调查审核表"}>调查审核表</Button></TableCell>
-            <TableCell><Button onClick={choose5} key={"调查审核表"}>{projectName}</Button></TableCell>
+            <TableCell><Button onClick={choose5} key={"调查审核表"}>{projectData.ProjectName}</Button></TableCell>
             
           </TableRow>
 
             <TableRow >
             <TableCell ><Button onClick={choose6} key={"共有宗地面积分摊表"}>共有宗地面积分摊表</Button></TableCell>
-            <TableCell><Button onClick={choose6} key={"共有宗地面积分摊表"}>{projectName}</Button></TableCell>
+            <TableCell><Button onClick={choose6} key={"共有宗地面积分摊表"}>{projectData.ProjectName}</Button></TableCell>
             
           </TableRow>
            
@@ -247,7 +248,7 @@ loaded:false
 
       projectData.ProjectItem=returnState;
 
-      console.log(projectData.ProjectItem)
+      //console.log(projectData.ProjectItem)
       return returnState;
 
 

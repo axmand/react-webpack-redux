@@ -43,6 +43,12 @@ const styleSheet = {
     textAlign: 'center',
    
   },
+  dialog: {
+    width: '840px',
+    height: '600px',
+    marginTop: "30px",
+    marginLeft: "8%",
+  },
 };
 
 TabContainer.propTypes = {
@@ -67,12 +73,14 @@ class ForthDialog extends Component {
     return (
       <div>
         <Dialog
-          fullScreen
+        className={classes.dialog}
+
           open={open}
           onRequestClose={close}
           transition={<Slide direction="up" />}
         >
-          <AppBar >
+        <AppBar style ={{backgroundColor:"#455A64"}}>
+
              
             <Toolbar>
               <Typography type="title" color="inherit"  className={classes.flex}>
@@ -84,8 +92,8 @@ class ForthDialog extends Component {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <div>
-       
+          <div style={{  overflowY: "auto" }}>
+          
           <TabContainer >
 
             <h1><br></br>共有/共用宗地面积分摊表</h1>

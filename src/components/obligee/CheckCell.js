@@ -13,8 +13,19 @@ import Input from 'material-ui/Input';
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Tabs, { Tab } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
+import { withStyles } from 'material-ui/styles';
 
 
+const styleSheet = {
+  
+  
+   
+   button: {
+     width: '20px',
+     height: '20px',
+
+   },
+ };
 // Map Redux state to component props
 const mapStateToProps=(state,ownProps)=> {
 
@@ -61,13 +72,20 @@ class CheckCellUI extends React.PureComponent {
  
   render() {
     const { row,col,onclick,value,type,tableIndex } = this.props;
-    
+    const classes = this.props.classes;
 
   
     return (
-      <button width="100px" height="100px" onClick={this.onClicked}>{this.valueShow(value)}
+      // <button width="100px" height="100px" onClick={this.onClicked}>{this.valueShow(value)}
 
-      </button>
+      // </button>
+
+<Button
+onClick={this.onClicked}
+      className={classes.button}
+    >
+{this.valueShow(value)}
+</Button>
     )
   }
 }
@@ -75,9 +93,10 @@ class CheckCellUI extends React.PureComponent {
 CheckCellUI.propTypes = {
 }
 
+var CheckCellUI1 = withStyles(styleSheet)(CheckCellUI);
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CheckCellUI)
+)(CheckCellUI1)
 

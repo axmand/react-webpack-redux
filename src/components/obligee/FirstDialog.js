@@ -25,14 +25,13 @@ import ObligeeTable1 from './ObligeeTable1'
 import ObligeeTable2 from './ObligeeTable2'
 import ObligeeTable3 from './ObligeeTable3'
 const TabContainer = props =>
-  <div style={{ padding: 20, overflow: "auto" }}>
+  <div style={{ padding: 20 }}>
+  
     {props.children}
   </div>;
 
 const styleSheet = {
-  appBar: {
-    position: 'relative',
-  },
+ 
   flex: {
     flex: 1,
   },
@@ -40,10 +39,12 @@ const styleSheet = {
     flexGrow: 1,
     marginTop: 30,
   },
-  paper: {
-    padding: 16,
-    textAlign: 'center',
-   
+  
+  dialog: {
+    width: '840px',
+    height: '600px',
+    marginTop: "30px",
+    marginLeft: "8%",
   },
 };
 
@@ -72,12 +73,12 @@ class FirstDialog extends Component {
     return (
       <div >
         <Dialog
-
+        className={classes.dialog}
           open={open}
           onRequestClose={close}
           transition={<Slide direction="up" />}
         >
-          <AppBar >
+          <AppBar style ={{backgroundColor:"#455A64"}}>
 
             <Toolbar>
               <Typography type="title" color="inherit" className={classes.flex}>
@@ -95,9 +96,9 @@ class FirstDialog extends Component {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <div>
+          <div style={{  overflowY: "auto" }}>
             {this.state.index === 0 &&
-              <TabContainer >
+              <TabContainer className={classes.container}>
 
                 <h1><br></br>宗地基本信息表</h1>
 

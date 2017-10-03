@@ -44,6 +44,12 @@ const styleSheet = {
     padding: 16,
     textAlign: 'center',
    
+  }, 
+  dialog: {
+    width: '900px',
+    height: '600px',
+    marginTop: "30px",
+  
   },
 };
 
@@ -80,12 +86,13 @@ class SecondDialog extends Component {
     return (
       <div>
         <Dialog
-          fullScreen
+          
           open={open}
           onRequestClose={close}
+          className={classes.dialog}
           transition={<Slide direction="up" />}
         >
-          <AppBar >
+          <AppBar style ={{backgroundColor:"#455A64"}}>
              
             <Toolbar>
                <Typography type="title" color="inherit"  className={classes.flex}>
