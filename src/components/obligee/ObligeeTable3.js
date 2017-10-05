@@ -37,7 +37,9 @@ class ObligeeTable3 extends Component {
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >土地使用期限 </p></td>
-    <td width="72%" colSpan="16"><DateInputCell tableIndex="F1" name="LandUseStartTime" title="使用起始时间" tips="填写使用起始时间"/>至<DateInputCell tableIndex="F1" name="LandUseEndTime" title="使用结束时间" tips="填写使用结束时间"/></td>
+    <td width="32%" colSpan="8"><DateInputCell tableIndex="F1" name="LandUseStartTime" title="使用起始时间" tips="填写使用起始时间"/></td>
+    <td width="8%" colSpan="2"><p >至</p></td>
+    <td width="32%" colSpan="8"><DateInputCell tableIndex="F1" name="LandUseEndTime" title="使用结束时间" tips="填写使用结束时间"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >共有／共用权利人 <br />

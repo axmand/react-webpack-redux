@@ -46,8 +46,8 @@ const styleSheet = {
    
   }, 
   dialog: {
-    width: '900px',
-    height: '600px',
+    width: '1000px',
+    height: '500px',
     marginTop: "30px",
   
   },
@@ -86,10 +86,10 @@ class SecondDialog extends Component {
     return (
       <div>
         <Dialog
-          
+        fullScreen
           open={open}
           onRequestClose={close}
-          className={classes.dialog}
+          //className={classes.dialog}
           transition={<Slide direction="up" />}
         >
           <AppBar style ={{backgroundColor:"#455A64"}}>

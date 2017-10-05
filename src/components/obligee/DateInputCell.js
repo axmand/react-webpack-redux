@@ -78,14 +78,14 @@ class DateInputCellUI extends React.PureComponent {
 
   
     return (
-      <div width="100%" height="100%">
-
+      // <div width="100%" height="100%">
+<div>
         <ListItem button  onClick={this.showInputCell} > 
        
         <Input
           id="placeholder"
         
-         
+         width="50px"
       
           margin="normal"
           value={value}

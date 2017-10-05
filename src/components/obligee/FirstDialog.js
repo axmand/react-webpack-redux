@@ -96,7 +96,8 @@ class FirstDialog extends Component {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <div style={{  overflowY: "auto" }}>
+          <div style={{  overflowY: "auto" ,overflowX:"hidden"}}>
+          {/* <div style={{  overflowY: "auto"}}> */}
             {this.state.index === 0 &&
               <TabContainer className={classes.container}>
 

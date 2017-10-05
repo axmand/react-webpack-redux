@@ -14,18 +14,12 @@ import List, { ListItem, ListItemText } from 'material-ui/List'
 import Tabs, { Tab } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
+import Checkbox from 'material-ui/Checkbox';
 
 
-const styleSheet = {
+const styleSheet =theme=> ({
   
-  
-   
-   button: {
-     width: '20px',
-     height: '20px',
-
-   },
- };
+ });
 // Map Redux state to component props
 const mapStateToProps=(state,ownProps)=> {
 
@@ -63,10 +57,13 @@ class CheckCellUI extends React.PureComponent {
 };
 
     valueShow = (value) => {
-       if(value==this.props.col)
-       return "√";
-       else
-       return " ";
+       return  value==this.props.col;
+       
+
+      //  if(value==this.props.col)
+      //  return "√";
+      //  else
+      //  return " ";
     }
 
  
@@ -76,16 +73,19 @@ class CheckCellUI extends React.PureComponent {
 
   
     return (
-      // <button width="100px" height="100px" onClick={this.onClicked}>{this.valueShow(value)}
+<Checkbox
+                checked={this.valueShow(value)}
+                onChange={this.onClicked}
+                value="jason"
+              />
+//  <Button
+// onClick={this.onClicked}
+//       className={classes.button}
+     
 
-      // </button>
-
-<Button
-onClick={this.onClicked}
-      className={classes.button}
-    >
-{this.valueShow(value)}
-</Button>
+//     >
+// {this.valueShow(value)}
+// </Button> 
     )
   }
 }

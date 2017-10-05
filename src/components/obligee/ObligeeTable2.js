@@ -39,16 +39,20 @@ class ObligeeTable2 extends Component {
   </tr>
   <tr>
     <td width="27%" colSpan="2" rowSpan="4"><p >宗地四至 </p></td>
-    <td width="72%" colSpan="16"><InputCell tableIndex="F1" name="ParcelRangeNorth" title="宗地四至_北" tips="填写宗地四至_北"/></td>
+    <td width="13%" colSpan="3">北</td>
+    <td width="59%" colSpan="16"><InputCell tableIndex="F1" name="ParcelRangeNorth" title="宗地四至_北" tips="填写宗地四至_北"/></td>
   </tr>
   <tr>
-    <td width="72%" colSpan="16"><InputCell tableIndex="F1" name="ParcelRangeEast" title="宗地四至_东" tips="填写宗地四至_东"/></td>
+  <td width="13%" colSpan="3">东</td>
+    <td width="59%" colSpan="16"><InputCell tableIndex="F1" name="ParcelRangeEast" title="宗地四至_东" tips="填写宗地四至_东"/></td>
   </tr>
   <tr>
-    <td width="72%" colSpan="16"><InputCell tableIndex="F1" name="ParcelRangeSouth" title="宗地四至_南" tips="填写宗地四至_南"/></td>
+  <td width="13%" colSpan="3">南</td>
+    <td width="59%" colSpan="16"><InputCell tableIndex="F1" name="ParcelRangeSouth" title="宗地四至_南" tips="填写宗地四至_南"/></td>
   </tr>
   <tr>
-    <td width="72%" colSpan="16"><InputCell tableIndex="F1"  name="ParcelRangeWest" title="宗地四至_西" tips="填写宗地四至_西"/></td>
+  <td width="13%" colSpan="3">西</td>
+    <td width="59%" colSpan="16"><InputCell tableIndex="F1"  name="ParcelRangeWest" title="宗地四至_西" tips="填写宗地四至_西"/></td>
   </tr>
   <tr>
     <td width="27%" colSpan="2"><p >等级 </p></td>
