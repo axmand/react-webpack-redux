@@ -79,7 +79,7 @@ class ListInputCellUI extends React.PureComponent {
            
             <TextField
               id="placeholder"
-            
+              style={{ fontSize: '15px',color: '#000000',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}
               fullWidth
               multiline
               margin="normal"

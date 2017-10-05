@@ -84,11 +84,12 @@ class DateInputCellUI extends React.PureComponent {
        
         <Input
           id="placeholder"
-        
+          autoFocus
          width="50px"
       
           margin="normal"
           value={value}
+          style={{ fontSize: '15px',color: '#000000',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}
         />
          
         </ListItem>
@@ -109,17 +110,6 @@ class DateInputCellUI extends React.PureComponent {
           defaultValue={value} 
           onChange={this.onChanged}
       />
-
-            {/* <TextField
-          id="placeholder"
-        
-          fullWidth
-          multiline
-          margin="normal"
-          value={value}
-          defaultValue={value} 
-          onChange={this.onChanged}
-        /> */}
             <br/>
             提示
             <br />

@@ -12,12 +12,12 @@ class ObligeeTable1 extends Component {
             <tr>
         
           
-            <td width="9%" rowSpan="5">权利人</td> 
+            <td width="9%" rowSpan="5"><p >权利人</p ></td> 
             <td width="18%"><p >所有权</p></td>
             <td width="72%" colSpan="16"><InputCell  name="OwnPowerSide" title="所有权" tips="填写。。。" tableIndex="F1"/></td>
         </tr>
             <tr>
-            <td width="18%" rowSpan="4">使用权</td>
+            <td width="18%" rowSpan="4"><p >使用权</p ></td>
             <td width="21%" colSpan="5" rowSpan="4"><InputCell  name="UsePowerSide" title="使用权" tableIndex="F1" tips="此处填写使用权人信息，如企业名称、个人名称等"/></td>
             <td width="23%" colSpan="7"><p >权利人类型 </p></td>
             <td width="27%" colSpan="4"><SelectCell tableIndex="F1" name="PowerSideType" title="权利人类型" tips="此处选择权利人类型，无法归类的填写其他" items="个人 企业 事业单位 国家机关 其他"/></td>

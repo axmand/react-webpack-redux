@@ -18,7 +18,9 @@ import Checkbox from 'material-ui/Checkbox';
 
 
 const styleSheet =theme=> ({
-  
+  checkbox: {
+    color: '#455A64',
+  },
  });
 // Map Redux state to component props
 const mapStateToProps=(state,ownProps)=> {
@@ -76,16 +78,9 @@ class CheckCellUI extends React.PureComponent {
 <Checkbox
                 checked={this.valueShow(value)}
                 onChange={this.onClicked}
-                value="jason"
+               className={classes.checkbox}
               />
-//  <Button
-// onClick={this.onClicked}
-//       className={classes.button}
-     
 
-//     >
-// {this.valueShow(value)}
-// </Button> 
     )
   }
 }

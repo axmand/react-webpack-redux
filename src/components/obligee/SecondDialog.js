@@ -25,7 +25,7 @@ import BoundaryList from './BoundaryList'
 import BoundarySignature from './BoundarySignature'
 import BoundarySpecification from './BoundarySpecification'
 const TabContainer = props =>
-  <div style={{ padding: 20,overflow:"auto" }}>
+  <div style={{ padding: 20,  overflowY: "auto" ,overflowX:"hidden"}}>
     {props.children}
   </div>;
 
@@ -45,10 +45,14 @@ const styleSheet = {
     textAlign: 'center',
    
   }, 
-  dialog: {
-    width: '1000px',
-    height: '500px',
-    marginTop: "30px",
+ 
+  
+    dialog: {
+      width: '900px',
+      height: '600px',
+      marginTop: 20,
+      //marginLeft: 50
+    
   
   },
 };
@@ -80,16 +84,16 @@ class SecondDialog extends Component {
 
 
   render() {
-    //const classes = this.props.classes;
-        const { open,close,tabIndex,changeTabIndex0, changeTabIndex1,changeTabIndex2,classes} = this.props;
+    const classes = this.props.classes;
+        const { open,close,tabIndex,changeTabIndex0, changeTabIndex1,changeTabIndex2} = this.props;
 
     return (
       <div>
         <Dialog
-        fullScreen
+        //fullScreen
           open={open}
           onRequestClose={close}
-          //className={classes.dialog}
+          className={classes.dialog}
           transition={<Slide direction="up" />}
         >
           <AppBar style ={{backgroundColor:"#455A64"}}>

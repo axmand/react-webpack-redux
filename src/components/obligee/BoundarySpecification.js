@@ -22,9 +22,9 @@ class BoundarySpecification extends Component {
   <tr>
     <td width="108"><p>主要权属界线 <br />
       走向说明 </p></td>
-
+      <td width="496" >
       <InputCell tableIndex="F5" name="MainBoundaryDirectionExplain" title="主要权属界线走向说明" tips="此处填写主要权属界线走向说明,如：1-2，由1沿xx公路中央走向至2；4-5，由4沿着山脊线至5"/>
-  
+      </td>
 </tr>
    </tbody>
 </table>

@@ -26,7 +26,7 @@ import ObligeeTable2 from './ObligeeTable2'
 import ObligeeTable3 from './ObligeeTable3'
 import InputCell from './InputCell'
 const TabContainer = props =>
-  <div style={{ padding: 20,overflow:"auto" }}>
+  <div style={{ padding: 20,  overflowY: "auto" ,overflowX:"hidden"}}>
     {props.children}
   </div>;
 
@@ -100,28 +100,40 @@ class ThirdDialog extends Component {
           
 
             <table className="mytable">
- 
-  <tr>
-    <td width="108" rowSpan="2"><p >权属调查记事 </p></td>
-    <td width="496" valign="top"><InputCell tableIndex="F6" name="PowerInvestigateRecord" title="权属调查记事" tips="填写权属调查记事"/></td>
+            <tr>
+    <td width="200" height="118" rowSpan="2">权属调查记事</td>
+    <td colSpan="4"><InputCell tableIndex="F6" name="PowerInvestigateRecord" title="权属调查记事" tips="填写权属调查记事"/></td>
   </tr>
   <tr>
-    <td width="496" valign="bottom"><p>调查员：<InputCell tableIndex="F6" name="PowerInvestigator" title="调查员" tips="填写调查员"/>日期<InputCell  tableIndex="F6" name="PowerInvestigateDate" title="调查日期" tips="填写调查日期"/></p></td>
+   
+    <td width="250">调查员</td>
+    <td width="250"><InputCell tableIndex="F6" name="PowerInvestigator" title="调查员" tips="填写调查员"/></td>
+    <td width="249">日期</td>
+    <td width="250"><InputCell  tableIndex="F6" name="PowerInvestigateDate" title="调查日期" tips="填写调查日期"/></td>
   </tr>
   <tr>
-    <td width="108" rowSpan="2"><p >地籍测量记事 </p></td>
-    <td width="496" valign="top"><InputCell tableIndex="F6" name="SurveyRecord" title="地籍测量记事" tips="填写地籍测量记事"/></td>
+    <td width="200" height="140" rowSpan="2">地籍测量记事</td>
+    <td colSpan="4"><InputCell tableIndex="F6" name="SurveyRecord" title="地籍测量记事" tips="填写地籍测量记事"/></td>
   </tr>
   <tr>
-    <td width="496" valign="bottom"><p>测量人:<InputCell tableIndex="F6" name="SurveyRecorder" title="测量人" tips="填写测量人"/>日期<InputCell tableIndex="F6" name="SurveyRecordDate" title="测量日期" tips="填写测量日期"/></p></td>
+   
+    <td width="250">测量人</td>
+    <td><InputCell tableIndex="F6" name="SurveyRecorder" title="测量人" tips="填写测量人"/></td>
+    <td>日期</td>
+    <td><InputCell tableIndex="F6" name="SurveyRecordDate" title="测量日期" tips="填写测量日期"/></td>
   </tr>
   <tr>
-    <td width="108" rowSpan="2"><p >地籍调查结果审核意见 </p></td>
-    <td width="496" valign="top"><InputCell tableIndex="F6" name="AuditOpinion" title="地籍调查结果审核意见" tips="填写地籍调查结果审核意见"/></td>
+    <td width="200" height="161" rowSpan="2">地籍调查结果审核意见</td>
+    <td colSpan="4"><InputCell tableIndex="F6" name="AuditOpinion" title="地籍调查结果审核意见" tips="填写地籍调查结果审核意见"/></td>
+
   </tr>
   <tr>
-    <td width="496" valign="bottom"><p >审核人：<InputCell tableIndex="F6" name="Auditor" title="审核人" tips="填写审核人"/>日期：<InputCell tableIndex="F6" name="AuditOpinionDate" title="审核日期" tips="填写审核日期"/></p></td>
+    <td width="250">审核人</td>
+    <td><InputCell tableIndex="F6" name="Auditor" title="审核人" tips="填写审核人"/></td>
+    <td>日期</td>
+    <td><InputCell tableIndex="F6" name="AuditOpinionDate" title="审核日期" tips="填写审核日期"/></td>
   </tr>
+  
 </table>
 {/* </Provider> */}
           </TabContainer>

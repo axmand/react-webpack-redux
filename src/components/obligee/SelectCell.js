@@ -109,9 +109,19 @@ class SelectCellUI extends React.PureComponent {
     return (
         <div width="100%" height="100%">
   
-          <ListItem button>
   
-            <ListItemText primary={value} onClick={this.showInputCell} />
+          <ListItem button>
+          <Input
+          id="placeholder"
+          
+         width="50px"
+         multiline
+          margin="normal"
+          value={value}
+          onClick={this.showInputCell}
+          style={{ fontSize: '15px',color: '#000000',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}
+        />
+          
           </ListItem>
           <Dialog open={this.state.cellShow}>
             <DialogTitle>
@@ -127,7 +137,7 @@ class SelectCellUI extends React.PureComponent {
             onClick={this.handleClickListItem}
           >
             <ListItemText
-              
+          
               primary={options[this.state.selectedIndex]}
             />
           </ListItem>

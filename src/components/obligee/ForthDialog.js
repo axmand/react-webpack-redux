@@ -92,7 +92,7 @@ class ForthDialog extends Component {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <div style={{  overflowY: "auto" }}>
+          <div style={{  overflowY: "auto" ,overflowX:"hidden"}}>
           
           <TabContainer >
 
