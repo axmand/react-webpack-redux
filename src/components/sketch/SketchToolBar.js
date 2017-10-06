@@ -32,53 +32,50 @@ import Snackbar from "material-ui/Snackbar";
 import SignatureList from "./SignatureList"
 
 const styles = theme => ({
+  // rootDiv:{
+  //   height: `${window.innerHeight-48}px`,
+  //   width: `${window.innerWidth*0.916}px`,
+  // },
   root: {
-    height: "100%",
-    width: "75%",
+    height: `${window.innerHeight * 0.09375}px`,
+    width: "86.67%",
     position: "absolute",
     top: `${window.innerHeight * 0.1}px`,
     left: "10%",
     display: "flex",
-   padding:0,
-    background: "rgba(0, 0, 0, .6)",
+    padding:0,
+    background: "rgba(69, 90, 100, .6)",
     borderRadius: 8,
     boxShadow: "2px 2px 2px 2px rgba(0, 0, 0, 0.2)"
   },
   button: {
     display: "inline-block",
-    minHeight: "6.25%",
-    minWidth: "4.17%",
+    minHeight: "100%",
+    minWidth: "7.42%",
     padding: 0,
     border: 0,
   },
   icon: {
     height: "45%",
     width: "45%",
-    color: "#b3b3b3"
+    color: "#fff"
   },
   text: {
     fontSize: "1em",
-    color: "#b3b3b3"
+    fontFamily:'微软雅黑',
+    color: "#fff"
   },
-
   alert: {
-    position: "absolute",
-    top: `${window.innerHeight * 0.4}px`
-  },
-  close: {
-    background: "rgba(0, 0, 0, .6)",
-    color: "black",
-    borderRadius: "3%",
-    width: "50%",
-    height: `${window.innerHeight * 0.08}px`,
-    padding: 0
-  },
-  message: {
-    fontSize: "1.5em",
-    color: "#fff",
+    height:`${window.innerHeight * 0.08}px`,
+    display: "flex",
+    padding:'0 10px 0 10px'
+  }, 
+  message:{
+     fontSize: "1.5em",
+    fontFamily:'微软雅黑',
+    color:"#455A64",
     textAlign: "center",
-    padding: 0
-  }
+  }, 
 });
 class SkechToolBar extends Component {
   render() {
@@ -129,7 +126,7 @@ class SkechToolBar extends Component {
                 className={classes.button}
                 style={{
                 backgroundColor: drawPointIsChecked
-                    ? "rgba(0, 0, 0, .8)"
+                    ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
                 onClick={onDrawPointClick}
@@ -141,7 +138,7 @@ class SkechToolBar extends Component {
                 className={classes.button}
                 style={{
                 backgroundColor: drawLineIsChecked
-                    ? "rgba(0, 0, 0, .8)"
+                    ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
                 onClick={onDrawLineClick}
@@ -153,7 +150,7 @@ class SkechToolBar extends Component {
                 className={classes.button}
                 style={{
                 backgroundColor: drawPolygonIsChecked
-                    ? "rgba(0, 0, 0, .8)"
+                    ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
                 onClick={onDrawPolygonClick}
@@ -165,7 +162,7 @@ class SkechToolBar extends Component {
                 className={classes.button}
                 style={{
                 backgroundColor: balconyIsChecked
-                    ? "rgba(0, 0, 0, .8)"
+                    ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
                 onClick={onBalconyClick}
@@ -177,7 +174,7 @@ class SkechToolBar extends Component {
                 className={classes.button}
                 style={{
                 backgroundColor: addLabelIsChecked
-                    ? "rgba(0, 0, 0, .8)"
+                    ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
                 onClick={onaddLabelClick}
@@ -189,7 +186,7 @@ class SkechToolBar extends Component {
                 className={classes.button}
                 style={{
                 backgroundColor: chooseObjIsChecked
-                    ? "rgba(0, 0, 0, .8)"
+                    ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
                 onClick={onChooseObjClick}
@@ -230,52 +227,49 @@ class SkechToolBar extends Component {
           
           <Dialog open={showDelDialog} onRequestClose={handleCloseDelDialog}>
             <DialogContent>
-              <DialogContentText>确认删除？</DialogContentText>
+              <DialogContentText  style={{color:"#455A64"}}>确认删除？</DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseDelDialog} color="default">
                 取消
               </Button>
-              <Button onClick={handleDelete} color="primary">
+              <Button onClick={handleDelete} style={{color:"#455A64"}}>
                 确认
               </Button>
             </DialogActions>
           </Dialog>
-          <Snackbar
-            open={haveObjToDel}
-            onRequestClose={onDelAlerClose}
-            className={classes.alert}
-          >
-            <Button className={classes.close} onClick={onDelAlerClose}>
-              <Typograghy className={classes.message}>未选中需要删除的对象！</Typograghy>
-              <CloseIcon style={{ color: "rgba(255, 255, 255, .8)" }} />
-            </Button>
-          </Snackbar>
-
-          <Snackbar
-            open={alertPlotFail}
-            onRequestClose={onPlotAlerClose}
-            className={classes.alert}
-          >
-            <Button className={classes.close} onClick={onPlotAlerClose}>
-              <Typograghy className={classes.message}>请求RTK数据失败！</Typograghy>
-              <CloseIcon style={{ color: "rgba(255, 255, 255, .8)" }} />
-            </Button>
-          </Snackbar>
 
 
-          <Snackbar
-            open={alertSignature}
-            onRequestClose={onPlotAlerClose}
-            className={classes.alert}
-          >
-            <Button className={classes.close} onClick={onSignatureAlerClose}>
-              <Typograghy className={classes.message}>您还未点击保存！</Typograghy>
-              <CloseIcon style={{ color: "rgba(255, 255, 255, .8)" }} />
-            </Button>
-          </Snackbar>
-      </div>
-      
+          <Dialog 
+            open={haveObjToDel} 
+            onRequestClose={onDelAlerClose}>
+              <DialogContent className={classes.alert} onClick={onDelAlerClose}>
+              <Typograghy className={classes.message}>
+                未选中需要删除的对象！                
+                </Typograghy>
+              </DialogContent>
+          </Dialog>
+
+          <Dialog 
+            open={alertPlotFail} 
+            onRequestClose={onPlotAlerClose}>
+              <DialogContent className={classes.alert} onClick={onPlotAlerClose}>
+              <Typograghy className={classes.message}>
+              请求RTK数据失败！                
+              </Typograghy>
+              </DialogContent>
+          </Dialog>
+
+          <Dialog 
+            open={alertSignature} 
+            onRequestClose={onSignatureAlerClose}>
+              <DialogContent className={classes.alert} onClick={onSignatureAlerClose}>
+              <Typograghy className={classes.message}>
+              您还未点击保存！                
+              </Typograghy>
+              </DialogContent>
+          </Dialog>
+      </div>     
     );
   }
 }

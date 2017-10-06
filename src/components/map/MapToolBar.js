@@ -18,7 +18,7 @@ import RealtimeMapping from "./RealtimeMapping";
 const styles = {
   list: {
     position: "absolute",
-    top: "15.625%",
+    top: "20%",
     right: "2.0833%",
     width: "3.5%"
   },
@@ -27,11 +27,11 @@ const styles = {
     justifyContent: "center",
     padding: "0px",
     border: 0,
-    background: "rgba(0, 0, 0, .6)",
+    background: "rgba(69, 90, 100, .6)",
     borderRadius: '12.5%',
   },
   icon: {
-    color: "#b3b3b3",
+    color: "#fff",
     width: "100%",
     height: "100%"
   }
