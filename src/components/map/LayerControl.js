@@ -16,18 +16,18 @@ const styles = {
     padding: "0px",
     marggin: "0px",
     border: 0,
-    background: "rgba(0, 0, 0, .6)",
+    background: "rgba(69, 90, 100, .6)",
     borderRadius: "12.5%",
   },
   icon: {
-    color: "#b3b3b3",
+    color: "#fff",
     width: "100%",
     height: "100%"
   },
   menu: {
     // top: '88px !important',
     // left: '824px !important',
-    background: "rgba(0, 0, 0, .6)",
+    background: "rgba(69, 90, 100, .6)",
     width: "8%",
   },
   menuitem: {
@@ -43,7 +43,7 @@ const styles = {
   },
   listItemText: {
     fontSize: "1em",
-    color: "#b3b3b3",
+    color: "#fff",
     paddingLeft: '5%',
     paddingRight: '5%',
   },

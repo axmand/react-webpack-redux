@@ -11,6 +11,7 @@ import Button from "material-ui/Button";
 import Snackbar from "material-ui/Snackbar";
 import Save from "material-ui-icons/Save"; //保存
 import Typography from "material-ui/Typography";
+import Dialog, {DialogContent} from "material-ui/Dialog";
 
 const styles = theme => ({
   root: {
@@ -85,24 +86,17 @@ const styles = theme => ({
     top: "61%",
     padding: "0 1% 0 1%"
   },
-  alert: {
-    position: "absolute",
-    top: "40%",
-    margin: 0,
-    width: "100%",
-    height: "30%"
+  alert: { 
+    display: "flex",
+    padding:0,
+    height:`${window.innerHeight * 0.12}px`,
+    padding:'0 10px 0 10px',
   },
   message: {
     fontSize: "1.5em",
-    color: "#fff",
+    color:"#455A64",
     textAlign: "center",
     lineHeight: "150%",
-    boder: 1,
-    background: "rgba(0, 0, 0, .6)",
-    padding: "5% 0 0 0",
-    borderRadius: "3%",
-    width: "90%",
-    height: "40%"
   },
   button: {
     position: "absolute",
@@ -112,7 +106,7 @@ const styles = theme => ({
     width: "6%",
     padding: 0,
     border: 0,
-    background: "#3f51b5",
+    background: "#455A64",
     borderRadius: "8%",
     boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.2)"
   },
@@ -180,15 +174,17 @@ class ThematicMap extends Component {
     return (
       <div className={classes.root}>
         <Paper className={classes.thematicMap}>
-          <Snackbar
-            className={classes.alert}
-            open={alertSave}
+        <Dialog 
+            open={alertSave} 
             onRequestClose={onSaveAlertClose}
-          >
-            <Typography className={classes.message}>
-              无法获取草图绘制成果图！<br />请返回草图编辑界面绘制并点击保存！
-            </Typography>
-          </Snackbar>
+            style={{ zIndex: "999999"}}>
+              <DialogContent className={classes.alert} onClick={onSaveAlertClose}>
+                <Typography className={classes.message}>
+                  无法获取草图绘制成果图！<br />请返回草图编辑界面绘制并点击保存！                
+                </Typography>
+              </DialogContent>
+          </Dialog>
+          
           <Grid container direction="column" spacing={0}>
             <Grid item xs>
               <Typography type="headline" className={classes.title}>

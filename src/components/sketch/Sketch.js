@@ -17,17 +17,21 @@ const styles = {
     zIndex: "999990",
     width: "91.6%"
   },
-  tab: {
+  tabs: {
     padding: "0px",
-    height: "7.5%"
+    height: "7.5%",
+    background:'#455A64'
   },
   label: {
-    fontSize: "20px"
+    fontSize: "1.5em",
+    fontFamily:'微软雅黑',
+    //fontWeight:'bold',
+    color:'#fff'
   },
   button: {
     position: "absolute",
     zIndex: "999990",
-    right: "0px"
+    right: "0px",
   }
 };
 class Sketch extends Component {
@@ -45,24 +49,28 @@ class Sketch extends Component {
       <div className={classes.root}>
         <AppBar position="static" color="default">
           <Tabs
+            className={classes.tabs}
             value={this.state.index}
             onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
           >
             <Tab
+            className={classes.tab}
               classes={{ label: this.props.classes.label }}
               label="草图编辑"
               onClick={onResetSketchState}
             />
-            <Tab classes={{ label: this.props.classes.label }} label="专题图编辑" />
+            <Tab 
+            classes={{ label: this.props.classes.label }} 
+            label="专题图编辑" />
           </Tabs>
           <IconButton
             className={classes.button}
             aria-label="Delete"
             onClick={onClick}
           >
-            <ClearIcon />
+            <ClearIcon style={{color:'#fff'}}/>
           </IconButton>
         </AppBar>
         {this.state.index === 0 && (
