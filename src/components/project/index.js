@@ -11,9 +11,9 @@ import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import FolderOpenIcon from 'material-ui-icons/FolderOpen';
+import { CircularProgress } from 'material-ui/Progress';
 //自定义组件
 import ProjectCard from './ProjectCard'
-import {blueGrey}  from 'material-ui/colors';
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
@@ -64,7 +64,7 @@ const styles = {
     marginLeft: 50
   }
 };
-const accent = blueGrey[700];
+
 
 class ProjectModule extends Component {
 
@@ -77,6 +77,7 @@ class ProjectModule extends Component {
       ContentShow,
       ProjectTrue,
       ProjectFalse,
+      ProjectProgress,
       classes
     } = this.props
 
@@ -136,6 +137,14 @@ class ProjectModule extends Component {
             </DialogContentText>
           </DialogContent>
         </Dialog>
+        
+        <Dialog
+        open={ ProjectProgress }
+        >
+        <div >
+          <CircularProgress size={50} />
+        </div>`
+        </Dialog>
       </div>
     )
   }
@@ -147,6 +156,7 @@ ProjectModule.propTypes = {
   ContentShow: PropTypes.bool.isRequired,
   ProjectTrue: PropTypes.bool.isRequired,
   ProjectFalse: PropTypes.bool.isRequired,
+  ProjectProgress: PropTypes.bool.isRequired,
   handleProjectTrue:PropTypes.func.isRequired,
   handleProjectFalse:PropTypes.func.isRequired,
 };
@@ -158,12 +168,17 @@ const mapStateToProps = (state, ownProps) => {
     ContentShow: state.ProjectReduce.ContentShow,
     ProjectTrue: state.ProjectReduce.ProjectTrue,
     ProjectFalse: state.ProjectReduce.ProjectFalse,
+    ProjectProgress: state.ProjectReduce.ProjectProgress,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
+      dispatch({
+          type: 'handleProjectProgress',
+      }) 
+
       fetch('http://172.16.102.90:1338/project/list')
       .then(response => response.json())
       .then( json => {
@@ -173,7 +188,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
         console.log(json)
       })
-      .catch(e => console.log("Oops, error", e))
+      .catch(e =>{        
+        console.log("Oops, error", e)
+        dispatch({
+          type: 'handleProjectProgress',
+        }) 
+        dispatch({
+          type: 'handleProjectFalse',
+        })
+      })
     },
 
     handleContentClose: () => {
@@ -206,6 +229,7 @@ const ProjectReduce = (
     ContentShow: false,
     ProjectFalse:false,
     ProjectTrue:false,
+    ProjectProgress:false
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
@@ -292,6 +316,11 @@ const ProjectReduce = (
     return { ...state, ...newState }; 
   }
 
+  if (action.type === "handleProjectProgress") {
+    const ProjectProgress = { ProjectProgress: !state.ProjectProgress }
+    return Object.assign({}, state, { ...ProjectProgress })
+  }
+  
   if (action.type === "handleContentClose") {
     const ContentShow = { ContentShow: !state.ContentShow }
     return Object.assign({}, state, { ...ContentShow })

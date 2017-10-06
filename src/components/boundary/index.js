@@ -109,8 +109,6 @@ class BoundaryModule extends Component {
         >
         <div style={{ width: 320,marginTop: 30}}>
           <LinearProgress />
-          <br/>
-          下载照片
         </div>`
         </Dialog>
       </div>
@@ -140,11 +138,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           payload:json,
         })
         console.log(json)
+      })
+      .catch(err => {
+        console.log(err)
         dispatch({
           type: 'ProgressShow',
-        })
+        }) 
       })
-      .catch(err => {console.log(err)})
+
     },
 
     handleCameraClose: () => {
