@@ -1084,10 +1084,10 @@ clickObj =clickObj ||function(e) {
                 }
                 //将图层数据存储至项目变量中
                 console.log(projectData)
-                projectData.ProjectItem[0].L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
-                projectData.ProjectItem[0].L.szJSONData=JSON.stringify(saveData.szJSONData);
-                projectData.ProjectItem[0].L.zdJSONData=JSON.stringify(saveData.zdJSONData);
-                projectData.ProjectItem[0].L.zjJSONData=JSON.stringify(saveData.zjJSONData);
+                projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
+                projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
+                projectData.ProjectItem.L.zdJSONData=JSON.stringify(saveData.zdJSONData);
+                projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.zjJSONData);
                 console.log( projectData.ProjectItem.L);
 
                 return Object.assign({},state,{... saveData});
