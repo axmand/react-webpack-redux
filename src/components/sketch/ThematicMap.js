@@ -9,7 +9,12 @@ import Grid from "material-ui/Grid";
 import Paper from "material-ui/Paper";
 import Button from "material-ui/Button";
 import Snackbar from "material-ui/Snackbar";
-import Save from "material-ui-icons/Save"; //保存
+/* eslint-disable flowtype/require-valid-file-annotation */
+
+import green from "material-ui/colors/green";
+import { CircularProgress } from "material-ui/Progress";
+import CheckIcon from "material-ui-icons/Check";
+import SaveIcon from "material-ui-icons/Save"; //保存
 import Typography from "material-ui/Typography";
 
 const styles = theme => ({
@@ -104,6 +109,20 @@ const styles = theme => ({
     width: "90%",
     height: "40%"
   },
+  wrapper: {
+    // position: "relative",
+    position: "absolute",
+    top: "90%",
+    left: "75%",
+    height: "6%",
+    width: "6%"
+  },
+  successSaveButtonClass: {
+    backgroundColor: green[500],
+    "&:hover": {
+      backgroundColor: green[700]
+    }
+  },
   button: {
     position: "absolute",
     top: "90%",
@@ -124,6 +143,12 @@ const styles = theme => ({
   bt_text: {
     fontSize: "1em",
     color: "#fff"
+  },
+  progress: {
+    color: green[500],
+    position: "absolute",
+    top: -2,
+    left: -2
   }
 });
 
@@ -154,8 +179,8 @@ class ThematicMap extends Component {
         zoom: 16,
         baseLayer: new maptalks.TileLayer("base", {
           crossOrigin: "anonymous",
+          // 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
           urlTemplate:
-            // 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
             "http://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
           subdomains: ["01", "02", "03", "04"],
           attribution: '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
@@ -174,8 +199,15 @@ class ThematicMap extends Component {
       alertSave,
       saveIsChecked,
       onSaveAlertClose,
-      onSaveThematicMapClick
+      onSaveThematicMapClick,
+      thematicMapSaveSuccess,
+      thematicMapSaveLoading
     } = this.props;
+
+    let saveButtonClass = "";
+    if (thematicMapSaveSuccess) {
+      saveButtonClass = classes.successSaveButtonClass;
+    }
 
     return (
       <div className={classes.root}>
@@ -292,11 +324,25 @@ class ThematicMap extends Component {
             </Grid>
           </Grid>
         </Paper>
+        <div className={classes.wrapper}>
+          <Button
+            fab
+            color="primary"
+            className={saveButtonClass}
+            onClick={onSaveThematicMapClick}
+          >
+            {thematicMapSaveSuccess ? (
+              <CheckIcon className={classes.icon} />
+            ) : (
+              <SaveIcon className={classes.icon} />
+            )}
 
-        <Button className={classes.button} onClick={onSaveThematicMapClick}>
-          <Save className={classes.icon} />
-          <Typography className={classes.bt_text}>保存</Typography>
-        </Button>
+            {/* <Typography className={classes.bt_text}>保存</Typography> */}
+          </Button>
+          {thematicMapSaveLoading && (
+            <CircularProgress size={60} className={classes.progress} />
+          )}
+        </div>
       </div>
     );
   }
@@ -309,9 +355,12 @@ ThematicMap.PropTypes = {
 
 const mapStateToProps = state => {
   const sketchState = state.sketchReduce;
+  const canvasSeduce = state.CanvasReduce;
   return {
     alertSave: sketchState.alertSave,
     saveIsChecked: sketchState.saveIsChecked,
+    thematicMapSaveSuccess: canvasSeduce.thematicMapSaveSuccess,
+    thematicMapSaveLoading: canvasSeduce.thematicMapSaveLoading,
     mapCenter: sketchState.mapCenter,
     jzdJSONData: sketchState.jzdJSONData,
     szJSONData: sketchState.szJSONData,
@@ -329,20 +378,30 @@ const mapDispatchToProps = dispatch => {
     },
 
     onSaveThematicMapClick: () => {
+      dispatch({
+        type: "SAVE_THEMATICMAP_CLICK"
+      });
 
       const ThematicMapDataURL = thematicMap.toDataURL();
-      const ThematicMapDataLoad = ThematicMapDataURL.slice(ThematicMapDataURL.indexOf(",") + 1);
-      console.log(ThematicMapDataLoad)
+      const ThematicMapDataLoad = ThematicMapDataURL.slice(
+        ThematicMapDataURL.indexOf(",") + 1
+      );
+      console.log(ThematicMapDataLoad);
 
       fetch("http://172.16.102.90:1338/project/savepicture", {
         method: "POST",
-        body: ThematicMapDataLoad,
+        body: ThematicMapDataLoad
       })
         .then(response => response.json())
         .then(json => {
           dispatch({
-            type: "saveThematicMapClick"
+            type: "SUCCESS_SAVE_THEMATICMAP_CLICK"
           });
+          setTimeout(() => {
+            dispatch({
+              type: "RESTARE_SUCCESS_SAVE_THEMATICMAP_CLICK"
+            });
+          }, 1000);
           console.log(json);
         })
         .catch(err => {
@@ -357,12 +416,31 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 );
 
 //reducer
-const CanvasReduce = (state = { thematicMapImg: ImageData }, action) => {
-  if (action.type === "saveThematicMapClick") {
-    const newState = { thematicMapImg: thematicMap.toDataURL() };
-    console.log(newState);
-    return { ...state, ...newState };
+const CanvasReduce = (
+  state = {
+    thematicMapImg: ImageData,
+    thematicMapSaveSuccess: false,
+    thematicMapSaveLoading: false
+  },
+  action
+) => {
+  let newState = JSON.parse(JSON.stringify(state));
+
+  switch (action.type) {
+    case "SAVE_THEMATICMAP_CLICK":
+      if (!state.thematicMapSaveLoading) {
+        newState.thematicMapSaveLoading = true;
+      }
+      return { ...state, ...newState };
+    case "SUCCESS_SAVE_THEMATICMAP_CLICK":
+      newState.thematicMapSaveLoading = false;
+      newState.thematicMapSaveSuccess = true;
+      return { ...state, ...newState };
+    case "RESTARE_SUCCESS_SAVE_THEMATICMAP_CLICK":
+      newState.thematicMapSaveSuccess = false;
+      return { ...state, ...newState };
+    default:
+      return { ...state };
   }
-  return { ...state };
 };
 RootReducer.merge(CanvasReduce);
