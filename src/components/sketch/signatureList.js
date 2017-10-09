@@ -58,7 +58,7 @@ const styles = {
 class SignatureList extends Component {
 
   render() {
-    const { classes,signatureIsChecked,onSignatureListClose,poiTableData,onJzdTableClick} = this.props;
+    const { classes,signatureIsChecked,onSignatureListClose,poiTableData,onJzxTableClick} = this.props;
     return (
         <Dialog
           className={classes.root}
@@ -90,7 +90,7 @@ class SignatureList extends Component {
             <TableBody>
             {poiTableData.map(n => {
               return (
-                <TableRow key={n.id}  onClick={() => onJzdTableClick(n.num)}>
+                <TableRow key={n.id}  onClick={() => onJzxTableClick(n.num)}>
                   <TableCell>{n.num}</TableCell>
                   <TableCell>{n.coor[0]} , {n.coor[1]}</TableCell>
                 </TableRow>
@@ -128,7 +128,7 @@ const mapDispatchToProps = (dispatch,ownProps)=> {
     },
     onJzdTableClick:poi_num=>{
       dispatch({
-        type:'jzdTableClick',
+        type:'jzxTableClick',
         payload:{command:poi_num}
       })
     },

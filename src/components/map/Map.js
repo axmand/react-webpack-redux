@@ -318,7 +318,7 @@ let plot,
 const sketchReduce = (
   state = {
     pointNum: 0,
-    tableRowId: 0,
+    lineNum:0,
     isRealtimeOn: false,
     plotIsChecked: false,
     drawPointIsChecked: false,
@@ -612,6 +612,7 @@ const sketchReduce = (
   drawJZXEnd =
     drawJZXEnd ||
     function(param) {
+      state.lineNum++;
       let coorArr = param.geometry._coordinates;
       //为折线的每条线段添加长度标注
       for (let i = 0; i < coorArr.length - 1; i++) {
@@ -629,6 +630,7 @@ const sketchReduce = (
       param.geometry.config("isClicked", false);
 
       param.geometry.config("poiArr", linePoiArr);
+      param.geometry.config("id", state.lineNum);
       map.getLayer("JZX").addGeometry(param.geometry);
       param.geometry.on("click", clickObj);
       recoverObj();
@@ -991,6 +993,7 @@ const sketchReduce = (
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
+        drawJZXIsChecked: false,
         drawPolygonIsChecked: !state.drawPolygonIsChecked,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -1026,6 +1029,7 @@ const sketchReduce = (
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
+        drawJZXIsChecked: false,
         drawPolygonIsChecked: false,
         balconyIsChecked: !state.balconyIsChecked,
         addLabelIsChecked: false,
@@ -1062,6 +1066,7 @@ const sketchReduce = (
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
+        drawJZXIsChecked: false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: !state.addLabelIsChecked,
@@ -1136,6 +1141,7 @@ const sketchReduce = (
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
+        drawJZXIsChecked: false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -1191,13 +1197,13 @@ const sketchReduce = (
         zjJSONData: map.getLayer("label").toJSON()
       };
       //将图层数据存储至项目变量中
-      // console.log(projectData)
-      // projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
-      // projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
-      // projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.jzxJSONData);
-      // projectData.ProjectItem.L.zdJSONData=JSON.stringify(saveData.zdJSONData);
-      // projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.zjJSONData);
-      // console.log( projectData.ProjectItem.L);
+      console.log(projectData)
+      projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
+      projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
+      projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.jzxJSONData);
+      projectData.ProjectItem.L.zdJSONData=JSON.stringify(saveData.zdJSONData);
+      projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.zjJSONData);
+      console.log( projectData.ProjectItem.L);
 
       return Object.assign({}, state, { ...saveData });
     case "saveAlertClose":
@@ -1233,12 +1239,7 @@ const sketchReduce = (
           alertSignature: true,
           signatureIsChecked: false
         };
-        action.payload({
-          type: "choose",
-          payload: {
-            choice: 2
-          }
-        });
+
 
         return Object.assign({}, state, { ...signatureState2 });
       }
@@ -1256,6 +1257,7 @@ const sketchReduce = (
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
+        drawJZXIsChecked: false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -1270,17 +1272,17 @@ const sketchReduce = (
       };
       return Object.assign({}, state, { ...resetSketchState });
     //界址点签章表点击后高亮
-    case "jzdTableClick":
-      let poi_num = action.payload.command;
-      console.log(poi_num);
-      let jzdPoi = map.getLayer("point").getGeometryById(poi_num);
-      jzdPoi.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
-      map.setCenter(jzdPoi.coordinates);
+    case "jzxTableClick":
+      let line_num = action.payload.command;
+      console.log(line_num);
+      let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
+      jzxPoi.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
+      //map.setCenter(jzxPoi.coordinates);
 
-      const jzdTable = {
+      const jzxTable = {
         signatureIsChecked: false
       };
-      return Object.assign({}, state, { ...jzdTable });
+      return Object.assign({}, state, { ...jzxTable });
     default:
       return { ...state };
   }
