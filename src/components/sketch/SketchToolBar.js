@@ -17,6 +17,7 @@ import Typograghy from "material-ui/Typography";
 import LocationSearching from "material-ui-icons/LocationSearching"; //展点
 import Adjust from "material-ui-icons/Adjust"; //画点
 import Timeline from "material-ui-icons/Timeline"; //连线
+import BorderOuter from "material-ui-icons/BorderOuter"; //标注
 import CheckBoxOutlineBlank from "material-ui-icons/CheckBoxOutlineBlank"; //构面
 import ViewCarousel from "material-ui-icons/ViewCarousel"; //阳台
 import BookmarkBorder from "material-ui-icons/BookmarkBorder"; //标注
@@ -29,7 +30,7 @@ import CreateIcon from "material-ui-icons/Create"; //签章
 import DragHandle from "material-ui-icons/DragHandle"; //拖动
 import CloseIcon from "material-ui-icons/Close";
 import Snackbar from "material-ui/Snackbar";
-import SignatureList from "./SignatureList"
+import SecondDialog from '../obligee/SecondDialog'
 
 const styles = theme => ({
   // rootDiv:{
@@ -38,10 +39,10 @@ const styles = theme => ({
   // },
   root: {
     height: `${window.innerHeight * 0.09375}px`,
-    width: "86.67%",
+    width:  `${window.innerWidth*0.875}px`,
     position: "absolute",
     top: `${window.innerHeight * 0.1}px`,
-    left: "10%",
+    left: "1%",
     display: "flex",
     padding:0,
     background: "rgba(69, 90, 100, .6)",
@@ -51,7 +52,7 @@ const styles = theme => ({
   button: {
     display: "inline-block",
     minHeight: "100%",
-    minWidth: "7.42%",
+    minWidth: "7.14%",
     padding: 0,
     border: 0,
   },
@@ -84,6 +85,7 @@ class SkechToolBar extends Component {
       onPlotClick,
       onDrawPointClick,
       onDrawLineClick,
+      onDrawJZXClick,
       onDrawPolygonClick,
       onBalconyClick,
       onaddLabelClick,
@@ -108,6 +110,7 @@ class SkechToolBar extends Component {
       alertSignature,
       drawPointIsChecked,
       drawLineIsChecked,
+      drawJZXIsChecked,
       drawPolygonIsChecked,
       balconyIsChecked,
       addLabelIsChecked,
@@ -145,6 +148,18 @@ class SkechToolBar extends Component {
             >
                 <Timeline className={classes.icon} />
                 <Typograghy className={classes.text}>四至</Typograghy>
+            </Button>
+            <Button
+                className={classes.button}
+                style={{
+                backgroundColor: drawJZXIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onDrawJZXClick}
+            >
+                <BorderOuter className={classes.icon} />
+                <Typograghy className={classes.text}>界址线</Typograghy>
             </Button>
             <Button
                 className={classes.button}
@@ -223,7 +238,7 @@ class SkechToolBar extends Component {
             </List>
         </Draggable>
 
-          <SignatureList />
+          <SecondDialog />
           
           <Dialog open={showDelDialog} onRequestClose={handleCloseDelDialog}>
             <DialogContent>
@@ -283,6 +298,7 @@ SkechToolBar.PropTypes = {
   haveObjToDel: PropTypes.bool.isRequired,
   drawPointIsChecked: PropTypes.bool.isRequired,
   drawLineIsChecked: PropTypes.bool.isRequired,
+  drawJZXIsChecked: PropTypes.bool.isRequired,
   drawPolygonIsChecked: PropTypes.bool.isRequired,
   balconyIsChecked: PropTypes.bool.isRequired,
   addLabelIsChecked: PropTypes.bool.isRequired,
@@ -299,6 +315,7 @@ const mapStateToProps = state => {
     haveObjToDel: sketchState.haveObjToDel,
     drawPointIsChecked: sketchState.drawPointIsChecked,
     drawLineIsChecked: sketchState.drawLineIsChecked,
+    drawJZXIsChecked:sketchState.drawJZXIsChecked,
     drawPolygonIsChecked: sketchState.drawPolygonIsChecked,
     balconyIsChecked: sketchState.balconyIsChecked,
     addLabelIsChecked: sketchState.addLabelIsChecked,
@@ -353,6 +370,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onDrawLineClick: () => {
       dispatch({
         type: "drawLineClick",
+        payload: dispatch
+      });
+    },
+    //连线
+    onDrawJZXClick: () => {
+      dispatch({
+        type: "drawJZXClick",
         payload: dispatch
       });
     },

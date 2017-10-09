@@ -98,12 +98,14 @@ class LayerControl extends Component {
       tianDiTuIsChecked,
       pointIsChecked,
       lineIsChecked,
+      jzxIsChecked,
       polygonIsChecked,
       labelIsChecked,
       handleTopographicMapIsChecked,
       handleTianDiTuIsIsChecked,
       handlePointIsChecked,
       handleLineIsChecked,
+      handleJZXIsChecked,
       handlePolygonIsChecked,
       handleLabelIsChecked
     } = this.props;
@@ -216,6 +218,20 @@ class LayerControl extends Component {
           <MenuItem className={classes.menuitem}>
             <Checkbox
               classes={{ checked: classes.checked }}
+              checked={jzxIsChecked}
+              onChange={handleJZXIsChecked}
+              className={classes.checkbox}
+            />
+            <ListItemText
+              primary={"界址线层"}
+              disableTypography={true}
+              className={classes.listItemText}
+            />
+          </MenuItem>
+
+          <MenuItem className={classes.menuitem}>
+            <Checkbox
+              classes={{ checked: classes.checked }}
               checked={polygonIsChecked}
               onChange={handlePolygonIsChecked}
               className={classes.checkbox}
@@ -254,12 +270,14 @@ LayerControl.PropTypes = {
   tianDiTuIsChecked: PropTypes.bool.isRequired,
   pointIsChecked: PropTypes.bool.isRequired,
   lineIsChecked: PropTypes.bool.isRequired,
+  jzxIsChecked:PropTypes.bool.isRequired,
   polygonIsChecked: PropTypes.bool.isRequired,
   labelIsChecked: PropTypes.bool.isRequired,
   handleTopographicMapIsChecked: PropTypes.func.isRequired,
   handleTianDiTuIsIsChecked: PropTypes.func.isRequired,
   handlePointIsChecked: PropTypes.func.isRequired,
   handleLineIsChecked: PropTypes.func.isRequired,
+  handleJZXIsChecked:PropTypes.func.isRequired,
   handlePolygonIsChecked: PropTypes.func.isRequired,
   handleLabelIsChecked: PropTypes.func.isRequired
 };
@@ -274,10 +292,11 @@ const mapStateToProps = state => {
 
   return {
     handleTopographicMapIsChecked:
-      layerControlState.handleTopographicMapIsChecked,
+    layerControlState.handleTopographicMapIsChecked,
     tianDiTuIsChecked: layerControlState.tianDiTuIsChecked,
     pointIsChecked: layerControlState.pointIsChecked,
     lineIsChecked: layerControlState.lineIsChecked,
+    jzxIsChecked:layerControlState.jzxIsChecked,
     polygonIsChecked: layerControlState.polygonIsChecked,
     labelIsChecked: layerControlState.labelIsChecked
   };
@@ -303,6 +322,11 @@ const mapDispatchToProps = dispatch => {
     handleLineIsChecked: () => {
       dispatch({
         type: "handleLineIsChecked"
+      });
+    },
+    handleJZXIsChecked: () => {
+      dispatch({
+        type: "handleJZXIsChecked"
       });
     },
     handlePolygonIsChecked: () => {

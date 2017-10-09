@@ -163,6 +163,7 @@ class ThematicMap extends Component {
       mapCenter,
       jzdJSONData,
       szJSONData,
+      jzxJSONData,
       zdJSONData,
       zjJSONData
     } = this.props;
@@ -182,6 +183,7 @@ class ThematicMap extends Component {
       });
       maptalks.Layer.fromJSON(jzdJSONData).addTo(thematicMap);
       maptalks.Layer.fromJSON(szJSONData).addTo(thematicMap);
+      maptalks.Layer.fromJSON(jzxJSONData).addTo(thematicMap);
       maptalks.Layer.fromJSON(zdJSONData).addTo(thematicMap);
       maptalks.Layer.fromJSON(zjJSONData).addTo(thematicMap);
     }
@@ -360,6 +362,7 @@ const mapStateToProps = state => {
     mapCenter: sketchState.mapCenter,
     jzdJSONData: sketchState.jzdJSONData,
     szJSONData: sketchState.szJSONData,
+    jzxJSONData:sketchState.jzxJSONData,
     zdJSONData: sketchState.zdJSONData,
     zjJSONData: sketchState.zjJSONData
   };

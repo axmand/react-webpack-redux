@@ -10,7 +10,7 @@ import RootReducer from "./../../redux/RootReducer";
 import PropTypes from "prop-types";
 import * as maptalks from "maptalks";
 import { SnapTool } from "maptalks.snapto";
-import projectData from './../../redux/RootData';
+import projectData from "./../../redux/RootData";
 
 //引入地图组件
 import MapToolBar from "./MapToolBar";
@@ -30,18 +30,20 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     map = new maptalks.Map(mapDiv, {
-      center: [114.360734,30.541093],
+      center: [114.360734, 30.541093],
       zoom: 16,
       baseLayer: new maptalks.TileLayer("base", {
-        crossOrigin:'anonymous',
-        'urlTemplate' : 'http://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
-        'subdomains'  : ['01','02','03','04'],
-        'attribution' : '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
+        crossOrigin: "anonymous",
+        urlTemplate:
+          "http://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
+        subdomains: ["01", "02", "03", "04"],
+        attribution: '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
       }),
       layers: [
         new maptalks.VectorLayer("location"),
         new maptalks.VectorLayer("point"),
-        new maptalks.VectorLayer("line"),
+        new maptalks.VectorLayer("SZ"),
+        new maptalks.VectorLayer("JZX"),
         new maptalks.VectorLayer("polygon"),
         new maptalks.VectorLayer("label")
       ]
@@ -80,11 +82,7 @@ class Map extends Component {
             height: `${window.innerHeight}px`
           }}
         />
-        <MapToolBar 
-          onClick={onMenuItemClick} 
-          text="zoom_in"
-          
-          />
+        <MapToolBar onClick={onMenuItemClick} text="zoom_in" />
       </div>
     );
   }
@@ -100,68 +98,40 @@ Map.propTypes = {
 //加入reducer(mapReduce)
 const mapReduce = (state = 0, action) => {
   //通过HTML获取当前定位
-  if (action.type === "menuClick" &&action.payload.command === "get_location_html") {
+  if (
+    action.type === "menuClick" &&
+    action.payload.command === "get_location_html"
+  ) {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(locationSuccess, locationError,{
-          enableHighAccuracy: true,
-          timeout: 5000,
-        });
-      }else{
-        alert("浏览器不支持定位！");
-      }
-    function locationError(error){
-      switch(error.code) { 
-        case error.PERMISSION_DENIED: 
-            alert("定位失败,用户拒绝请求地理定位"); 
-            break; 
-        case error.POSITION_UNAVAILABLE: 
-            alert("定位失败,位置信息是不可用"); 
-            break; 
-        case error.TIMEOUT: 
-            alert("定位失败,请求获取用户位置超时"); 
-            break; 
-        case error.UNKNOWN_ERROR: 
-            alert("定位失败,定位系统失效"); 
-            break;       
-        default:break;
+      navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {
+        enableHighAccuracy: true,
+        timeout: 5000
+      });
+    } else {
+      alert("浏览器不支持定位！");
+    }
+    function locationError(error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          alert("定位失败,用户拒绝请求地理定位");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("定位失败,位置信息是不可用");
+          break;
+        case error.TIMEOUT:
+          alert("定位失败,请求获取用户位置超时");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("定位失败,定位系统失效");
+          break;
+        default:
+          break;
       }
     }
-    function locationSuccess(position){
-      let coords = position.coords;    
-      console.log(coords)
-      const center = new maptalks.Coordinate(coords.longitude,coords.latitude);
-      map.setCenter(center);
-      const circle = new maptalks.Circle(center, 1, {
-        symbol: {
-          lineColor: "#000000",
-          lineWidth: 1.5,
-          polygonFill: "#1bbc9b",
-          polygonOpacity: 0.4
-        }
-      });
-      const label = new maptalks.Label("当前定位", center, {
-        box: false,
-        type: "Label",
-        symbol: {
-          textWeight: "200",
-          textFaceName: "宋体",
-          textSize: 12,
-          textFill: "#000000",
-          textDy: -10,
-          textAlign: "auto"
-        }
-      });
-      //将对象添加至图层
-      map.getLayer("location").addGeometry(circle);
-      map.getLayer("location").addGeometry(label);
-    }
-}
-  //通过rtk获取当前定位
-  if(action.type === "menuClick" &&action.payload.command === "get_location_rtk"){
-    console.log("fetching...")
-      let coords=JSON.parse(action.payload.data);
+    function locationSuccess(position) {
+      let coords = position.coords;
       console.log(coords);
-      const center= new maptalks.Coordinate([coords[1],coords[0]]);
+      const center = new maptalks.Coordinate(coords.longitude, coords.latitude);
       map.setCenter(center);
       const circle = new maptalks.Circle(center, 1, {
         symbol: {
@@ -186,7 +156,41 @@ const mapReduce = (state = 0, action) => {
       //将对象添加至图层
       map.getLayer("location").addGeometry(circle);
       map.getLayer("location").addGeometry(label);
-  
+    }
+  }
+  //通过rtk获取当前定位
+  if (
+    action.type === "menuClick" &&
+    action.payload.command === "get_location_rtk"
+  ) {
+    console.log("fetching...");
+    let coords = JSON.parse(action.payload.data);
+    console.log(coords);
+    const center = new maptalks.Coordinate([coords[1], coords[0]]);
+    map.setCenter(center);
+    const circle = new maptalks.Circle(center, 1, {
+      symbol: {
+        lineColor: "#000000",
+        lineWidth: 1.5,
+        polygonFill: "#1bbc9b",
+        polygonOpacity: 0.4
+      }
+    });
+    const label = new maptalks.Label("当前定位", center, {
+      box: false,
+      type: "Label",
+      symbol: {
+        textWeight: "200",
+        textFaceName: "宋体",
+        textSize: 12,
+        textFill: "#000000",
+        textDy: -10,
+        textAlign: "auto"
+      }
+    });
+    //将对象添加至图层
+    map.getLayer("location").addGeometry(circle);
+    map.getLayer("location").addGeometry(label);
   }
 
   //地图放大
@@ -203,69 +207,83 @@ const mapReduce = (state = 0, action) => {
 RootReducer.merge(mapReduce);
 
 //加入reducer(layerControlReduce)
-  const layerControlReduce = (
-    state = {
-      pointIsChecked: true,
-      lineIsChecked: true,
-      polygonIsChecked: true,
-      labelIsChecked: true
-    },
-    action
-  ) => {
-    //点选point图层控制其显示
-    if (action.type === "handlePointIsChecked") {
-      const pointIsChecked = {
-        pointIsChecked: !state.pointIsChecked
-      };
-      if (pointIsChecked.pointIsChecked) {
-        map.getLayer("point").show();
-      } else {
-        map.getLayer("point").hide();
-      }
-      console.log(pointIsChecked);
-      return Object.assign({}, state, { ...pointIsChecked });
+const layerControlReduce = (
+  state = {
+    pointIsChecked: true,
+    lineIsChecked: true,
+    jzxIsChecked: true,
+    polygonIsChecked: true,
+    labelIsChecked: true
+  },
+  action
+) => {
+  //点选point图层控制其显示
+  if (action.type === "handlePointIsChecked") {
+    const pointIsChecked = {
+      pointIsChecked: !state.pointIsChecked
+    };
+    if (pointIsChecked.pointIsChecked) {
+      map.getLayer("point").show();
+    } else {
+      map.getLayer("point").hide();
     }
-    //点选line图层控制其显示
-    if (action.type === "handleLineIsChecked") {
-      const lineIsChecked = {
-        lineIsChecked: !state.lineIsChecked
-      };
-      if (lineIsChecked.lineIsChecked) {
-        map.getLayer("line").show();
-      } else {
-        map.getLayer("line").hide();
-      }
-      console.log(lineIsChecked);
-      return Object.assign({}, state, { ...lineIsChecked });
+    console.log(pointIsChecked);
+    return Object.assign({}, state, { ...pointIsChecked });
+  }
+  //点选line图层控制其显示
+  if (action.type === "handleLineIsChecked") {
+    const lineIsChecked = {
+      lineIsChecked: !state.lineIsChecked
+    };
+    if (lineIsChecked.lineIsChecked) {
+      map.getLayer("SZ").show();
+    } else {
+      map.getLayer("SZ").hide();
     }
-    //点选polygon图层控制其显示
-    if (action.type === "handlePolygonIsChecked") {
-      const polygonIsChecked = {
-        polygonIsChecked: !state.polygonIsChecked
-      };
-      if (polygonIsChecked.polygonIsChecked) {
-        map.getLayer("polygon").show();
-      } else {
-        map.getLayer("polygon").hide();
-      }
-      console.log(polygonIsChecked);
-      return Object.assign({}, state, { ...polygonIsChecked });
+    console.log(lineIsChecked);
+    return Object.assign({}, state, { ...lineIsChecked });
+  }
+  //点选jzx图层控制其显示
+  if (action.type === "handleJZXIsChecked") {
+    const jzxIsChecked = {
+      jzxIsChecked: !state.jzxIsChecked
+    };
+    if (jzxIsChecked.jzxIsChecked) {
+      map.getLayer("JZX").show();
+    } else {
+      map.getLayer("JZX").hide();
     }
-    //点选注记图层控制其显示
-    if (action.type === "handleLabelIsChecked") {
-      const labelIsChecked = {
-        labelIsChecked: !state.labelIsChecked
-      };
-      if (labelIsChecked.labelIsChecked) {
-        map.getLayer("label").show();
-      } else {
-        map.getLayer("label").hide();
-      }
-      console.log(labelIsChecked);
-      return Object.assign({}, state, { ...labelIsChecked });
+    console.log(jzxIsChecked);
+    return Object.assign({}, state, { ...jzxIsChecked });
+  }
+  //点选polygon图层控制其显示
+  if (action.type === "handlePolygonIsChecked") {
+    const polygonIsChecked = {
+      polygonIsChecked: !state.polygonIsChecked
+    };
+    if (polygonIsChecked.polygonIsChecked) {
+      map.getLayer("polygon").show();
+    } else {
+      map.getLayer("polygon").hide();
     }
-    return { ...state };
-  };
+    console.log(polygonIsChecked);
+    return Object.assign({}, state, { ...polygonIsChecked });
+  }
+  //点选注记图层控制其显示
+  if (action.type === "handleLabelIsChecked") {
+    const labelIsChecked = {
+      labelIsChecked: !state.labelIsChecked
+    };
+    if (labelIsChecked.labelIsChecked) {
+      map.getLayer("label").show();
+    } else {
+      map.getLayer("label").hide();
+    }
+    console.log(labelIsChecked);
+    return Object.assign({}, state, { ...labelIsChecked });
+  }
+  return { ...state };
+};
 
 RootReducer.merge(layerControlReduce);
 
@@ -275,6 +293,7 @@ let target,
   labels = [],
   length,
   clickedObj = [],
+  linePoiArr = [],
   addObjLabel,
   deleteObj,
   clickObj,
@@ -285,6 +304,8 @@ let plot,
   drawToolOn,
   drawLineEnd,
   drawLine,
+  drawJZXEnd,
+  drawJZX,
   drawPolygonEnd,
   drawPolygon,
   drawBalconyEnd,
@@ -297,74 +318,81 @@ let plot,
 const sketchReduce = (
   state = {
     pointNum: 0,
-    tableRowId:0,
+    tableRowId: 0,
     isRealtimeOn: false,
     plotIsChecked: false,
     drawPointIsChecked: false,
     drawLineIsChecked: false,
-    drawPolygonIsChecked:false,
-    balconyIsChecked:false,
-    addLabelIsChecked:false,
-    deleteIsChecked:false,
-    chooseObjIsChecked:false,
-    undoIsChecked:false,
-    redoIsChecked:false,
-    saveIsChecked:false,
-    alertSave:true,
-    alertPlotFail:false,
-    errorMessage:"",
-    alertSignature:false,
-    showDelDialog:false,
-    haveObjToDel:false,
-    signatureIsChecked:false,
-    jzdJSONData:JSON,
-    szJSONData:JSON,
-    zdJSONData:JSON,
-    zjJSONData:JSON,
-    poiTableData:[],
-    mapCenter:[],
-}, action) =>{
-
-//用于获取点线面对象
-clickObj =clickObj ||function(e) {
-  target = e.target;
-  clickedObj.push(target);
-  console.log(target);
-  if (target._jsonType === "Circle") {
-    target.options.isClicked = !target.options.isClicked;
-    if (target.options.isClicked) {
-      target.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
-    }
-    if (!target.options.isClicked) {
-      target.updateSymbol({ lineColor: "#000000", polygonFill: "#FFFFFF" });
-    }
-  }
-  if (target._jsonType === "LineString") {
-    target.options.isClicked = !target.options.isClicked;
-    if (target.options.isClicked) {
-      target.updateSymbol({ lineColor: "#00FFFF" });
-    }
-    if (!target.options.isClicked) {
-      target.updateSymbol({ lineColor: "#000000" });
-    }
-  }
-  if (target._jsonType === "Polygon") {
-    target.options.isClicked = !target.options.isClicked;
-    if (target.options.isClicked) {
-      target.updateSymbol({ lineColor: "#00FFFF" });
-    }
-    if (!target.options.isClicked) {
-      target.updateSymbol({ lineColor: "#000000" });
-    }
-  }
-  if (target.options.type === "Label") {
-    target.startEditText();
-    map.off("click", addLabel);
-    map.on("dblclick", labelEditEnd);
-  }
-};
+    drawJZXIsChecked: false,
+    drawPolygonIsChecked: false,
+    balconyIsChecked: false,
+    addLabelIsChecked: false,
+    deleteIsChecked: false,
+    chooseObjIsChecked: false,
+    undoIsChecked: false,
+    redoIsChecked: false,
+    saveIsChecked: false,
+    alertSave: true,
+    alertPlotFail: false,
+    errorMessage: "",
+    alertSignature: false,
+    showDelDialog: false,
+    haveObjToDel: false,
+    signatureIsChecked: false,
+    jzdJSONData: JSON,
+    szJSONData: JSON,
+    zdJSONData: JSON,
+    zjJSONData: JSON,
+    poiTableData: [],
+    mapCenter: []
+  },
+  action
+) => {
+  //用于获取点线面对象
+  clickObj =
+    clickObj ||
+    function(e) {
+      target = e.target;
+      clickedObj.push(target);
+      console.log(target);
+      if (target._jsonType === "Circle") {
+        target.options.isClicked = !target.options.isClicked;
+        if (target.options.isClicked) {
+          target.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
+          linePoiArr.push(target._id);
+        }
+        if (!target.options.isClicked) {
+          target.updateSymbol({ lineColor: "#000000", polygonFill: "#FFFFFF" });
+        }
+      }
+      if (target._jsonType === "LineString") {
+        target.options.isClicked = !target.options.isClicked;
+        if (target.options.isClicked) {
+          target.updateSymbol({ lineColor: "#00FFFF" });
+        }
+        if (!target.options.isClicked) {
+          target.updateSymbol({ lineColor: "#000000" });
+        }
+      }
+      if (target._jsonType === "Polygon") {
+        target.options.isClicked = !target.options.isClicked;
+        if (target.options.isClicked) {
+          target.updateSymbol({ lineColor: "#00FFFF" });
+        }
+        if (!target.options.isClicked) {
+          target.updateSymbol({ lineColor: "#000000" });
+        }
+      }
+      if (target.options.type === "Label") {
+        target.startEditText();
+        map.off("click", addLabel);
+        map.on("dblclick", labelEditEnd);
+      }
+    };
   //用于清除对象被选中的高亮效果
-  recoverObj =recoverObj ||function() {
+  recoverObj =
+    recoverObj ||
+    function() {
       let num = clickedObj.length;
       target = null;
       for (let i = 0; i < num; i++) {
@@ -417,8 +445,8 @@ clickObj =clickObj ||function(e) {
       });
 
       const rotation_rad = rotation / 180 * Math.PI;
-      const dx = 10 * Math.sin(rotation_rad);
-      const dy = -10 * Math.cos(rotation_rad);
+      const dx = 12 * Math.sin(rotation_rad);
+      const dy = -12 * Math.cos(rotation_rad);
 
       if (
         (rotation > 90 && rotation < 180) ||
@@ -566,7 +594,7 @@ clickObj =clickObj ||function(e) {
       labels = [];
       param.geometry.config("isClicked", false);
 
-      map.getLayer("line").addGeometry(param.geometry);
+      map.getLayer("SZ").addGeometry(param.geometry);
       param.geometry.on("click", clickObj);
       recoverObj();
     };
@@ -578,6 +606,44 @@ clickObj =clickObj ||function(e) {
       drawTool.setMode("LineString").enable();
       drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
       drawTool.on("drawend", drawLineEnd);
+    };
+
+  //画线时drawTool的绑定事件
+  drawJZXEnd =
+    drawJZXEnd ||
+    function(param) {
+      let coorArr = param.geometry._coordinates;
+      //为折线的每条线段添加长度标注
+      for (let i = 0; i < coorArr.length - 1; i++) {
+        //每条线段的起点和终点坐标
+        let startPoi = coorArr[i],
+          endPoi = coorArr[i + 1];
+        //计算每条线段的长度
+        length = map.computeLength(startPoi, endPoi);
+        param.geometry.config("length", length);
+        let content = param.geometry.options.length.toFixed(2);
+        addObjLabel(content, startPoi, endPoi);
+      }
+      param.geometry.config("labels", labels);
+      labels = [];
+      param.geometry.config("isClicked", false);
+
+      param.geometry.config("poiArr", linePoiArr);
+      map.getLayer("JZX").addGeometry(param.geometry);
+      param.geometry.on("click", clickObj);
+      recoverObj();
+      linePoiArr = [];
+      console.log(param);
+    };
+  //用于画线
+  drawJZX =
+    drawJZX ||
+    function() {
+      recoverObj();
+      linePoiArr = [];
+      drawTool.setMode("LineString").enable();
+      drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
+      drawTool.on("drawend", drawJZXEnd);
     };
 
   //构面时drawTool的绑定事件
@@ -718,457 +784,507 @@ clickObj =clickObj ||function(e) {
       drawTool.redo();
     };
 
+  //////
+  switch (action.type) {
+    //实时定位
+    case "handleRealtimeMapping":
+      const isRealtimeOn = { isRealtimeOn: !state.isRealtimeOn };
+      if (isRealtimeOn.isRealtimeOn) {
+        console.log("打开了");
+      } else {
+        console.log("没打开");
+      }
+      return Object.assign({}, state, { ...isRealtimeOn });
+    //展点
+    case "plotRTK":
+      console.log(state);
+      console.log("展点");
+      let plotData = [];
+      plotData = JSON.parse(action.payload.data);
+      console.log(plotData);
+      let poi = new maptalks.Coordinate([plotData[1], plotData[0]]);
+      plot(poi);
+      const plotSuccessState = {
+        pointNum: state.pointNum,
+        plotIsChecked: true,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawJZXIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        deleteIsChecked: false,
+        chooseObjIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        signatureIsChecked: false
+      };
+      return { ...state, ...plotSuccessState };
+    case "plotFail":
+      let error = action.payload;
+      console.log(error);
 
-//////
-        switch (action.type) {
-            //实时定位
-            case 'handleRealtimeMapping':
-                const isRealtimeOn={isRealtimeOn:!state.isRealtimeOn}
-                if (isRealtimeOn.isRealtimeOn) {
-                    console.log('打开了');
-                } else {
-                    console.log('没打开');
-                }
-                return Object.assign({},state,{... isRealtimeOn}); 
-            //展点  
-            case 'plotRTK':
-                    console.log(state)
-                    console.log("展点");
-                    let plotData=[];
-                    plotData = JSON.parse(action.payload.data);
-                    console.log(plotData);
-                     let poi= new maptalks.Coordinate([plotData[1],plotData[0]]);
-                    plot(poi);  
-                    const plotSuccessState={
-                        pointNum:state.pointNum,
-                        plotIsChecked: true,
-                        drawPointIsChecked: false,
-                        drawLineIsChecked: false,
-                        drawPolygonIsChecked:false,
-                        balconyIsChecked:false,
-                        addLabelIsChecked:false,
-                        deleteIsChecked:false,
-                        chooseObjIsChecked:false,
-                        undoIsChecked:false,
-                        redoIsChecked:false,
-                        saveIsChecked:false,
-                        alertSave:true,
-                        signatureIsChecked:false,
-                    };
-                    return {...state,...plotSuccessState};
-            case 'plotFail':
-                    let error=action.payload;
-                    console.log(error)
+      const plotFailState = {
+        pointNum: state.pointNum,
+        plotIsChecked: true,
+        alertPlotFail: true,
+        errorMessage: error,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawJZXIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        deleteIsChecked: false,
+        chooseObjIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        signatureIsChecked: false
+      };
+      return { ...state, ...plotFailState };
+    //通过文件展点
+    case "plotFile":
+      return { ...state };
 
-                    const plotFailState={
-                        pointNum:state.pointNum,
-                        plotIsChecked: true,
-                        alertPlotFail:true,
-                        errorMessage:error,
-                        drawPointIsChecked: false,
-                        drawLineIsChecked: false,
-                        drawPolygonIsChecked:false,
-                        balconyIsChecked:false,
-                        addLabelIsChecked:false,
-                        deleteIsChecked:false,
-                        chooseObjIsChecked:false,
-                        undoIsChecked:false,
-                        redoIsChecked:false,
-                        saveIsChecked:false,
-                        alertSave:true,
-                        signatureIsChecked:false,
-                    };
-                return {...state,...plotFailState};
-            //通过文件展点
-            case 'plotFile':
-            return{...state}
+    //关闭错误提示
+    case "plotAlerClose":
+      if (state.isRealtimeOn) {
+        const closePlotAlert1 = { alertPlotFail: false };
+        return Object.assign({}, state, { ...closePlotAlert1 });
+      } else {
+        const closePlotAlert2 = { alertPlot2: false };
+        return Object.assign({}, state, { ...closePlotAlert2 });
+      }
 
+    //画点
+    case "drawPointClick":
+      drawTool.disable();
+      snap.disable();
+      map.off("dblclick", drawToolOn);
+      if (!state.drawPointIsChecked) {
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        map.off("click", addLabel);
+        map.off("dblclick", labelEditEnd);
+        map.on("click", drawPoint);
+      } else {
+        map.off("click", drawPoint);
+      }
+      const newState1 = {
+        pointNum: state.pointNum,
+        plotIsChecked: false,
+        drawPointIsChecked: !state.drawPointIsChecked,
+        drawLineIsChecked: false,
+        drawJZXIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        chooseObjIsChecked: false,
+        deleteIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        signatureIsChecked: false
+      };
+      console.log(state);
+      return { ...state, ...newState1 };
 
-            //关闭错误提示
-            case 'plotAlerClose':
-                if(state.isRealtimeOn){
-                    const closePlotAlert1={alertPlotFail:false}
-                    return Object.assign({},state,{... closePlotAlert1}); 
-                }else{
-                    const closePlotAlert2={alertPlot2:false}
-                    return Object.assign({},state,{... closePlotAlert2}); 
-                }
-            
-            //画点
-            case 'drawPointClick':
-                drawTool.disable();
-                snap.disable();
-                map.off('dblclick',drawToolOn);
-                if(!state.drawPointIsChecked){
-                    drawTool.off('drawend', drawPolygonEnd);                      
-                    drawTool.off('drawend', drawLineEnd);                     
-                    drawTool.off('drawend', drawBalconyEnd);
-                    map.off('click',addLabel);
-                    map.off('dblclick',labelEditEnd);
-                    map.on('click',drawPoint);
-                }else{
-                    map.off('click',drawPoint)
-                }
-                const newState1={
-                    pointNum:state.pointNum,
-                    plotIsChecked:false,
-                    drawPointIsChecked:!state.drawPointIsChecked,
-                    drawLineIsChecked:false,
-                    drawPolygonIsChecked:false,
-                    balconyIsChecked:false,
-                    addLabelIsChecked:false,
-                    chooseObjIsChecked:false,
-                    deleteIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false,
-                    alertSave:true,
-                    signatureIsChecked:false
-                }
-                console.log(state)
-                return {...state,...newState1};
+    //画四至线
+    case "drawLineClick":
+      if (!state.drawLineIsChecked) {
+        map.off("click", drawPoint);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        map.off("click", addLabel);
+        map.off("dblclick", labelEditEnd);
+        snap.enable();
+        //开始画线
+        drawLine();
+        map.on("dblclick", drawToolOn);
+      } else {
+        drawTool.disable();
+        snap.disable();
+        map.off("dblclick", drawToolOn);
+      }
+      const newState2 = {
+        pointNum: state.pointNum,
+        plotIsChecked: false,
+        drawPointIsChecked: false,
+        drawLineIsChecked: !state.drawLineIsChecked,
+        drawJZXIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        chooseObjIsChecked: false,
+        deleteIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        signatureIsChecked: false
+      };
+      return { ...state, ...newState2 };
+    //画界址线
+    case "drawJZXClick":
+      if (!state.drawJZXIsChecked) {
+        map.off("click", drawPoint);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        map.off("click", addLabel);
+        map.off("dblclick", labelEditEnd);
+        snap.enable();
+        //开始画线
+        drawJZX();
+        map.on("dblclick", drawToolOn);
+      } else {
+        drawTool.disable();
+        snap.disable();
+        map.off("dblclick", drawToolOn);
+      }
+      const JZXState = {
+        pointNum: state.pointNum,
+        plotIsChecked: false,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawJZXIsChecked: !state.drawJZXIsChecked,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        chooseObjIsChecked: false,
+        deleteIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        signatureIsChecked: false
+      };
+      return { ...state, ...JZXState };
+    //构面
+    case "drawPolygonClick":
+      if (!state.drawPolygonIsChecked) {
+        map.off("click", drawPoint);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        map.off("click", addLabel);
+        map.off("dblclick", labelEditEnd);
+        snap.enable();
+        //开始构面
+        drawPolygon();
+        map.on("dblclick", drawToolOn);
+      } else {
+        drawTool.disable();
+        snap.disable();
+        map.off("dblclick", drawToolOn);
+      }
+      const newState3 = {
+        pointNum: state.pointNum,
+        plotIsChecked: false,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawPolygonIsChecked: !state.drawPolygonIsChecked,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        chooseObjIsChecked: false,
+        deleteIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        signatureIsChecked: false
+      };
+      return { ...state, ...newState3 };
+    //阳台
+    case "balconyClick":
+      if (!state.balconyIsChecked) {
+        map.off("click", drawPoint);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawPolygonEnd);
+        map.off("click", addLabel);
+        map.off("dblclick", labelEditEnd);
+        snap.enable();
+        //开始构面
+        drawBalcony();
+        map.on("dblclick", drawToolOn);
+      } else {
+        drawTool.disable();
+        snap.disable();
+        map.off("dblclick", drawToolOn);
+      }
+      const newState4 = {
+        pointNum: state.pointNum,
+        plotIsChecked: false,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: !state.balconyIsChecked,
+        addLabelIsChecked: false,
+        chooseObjIsChecked: false,
+        deleteIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        signatureIsChecked: false
+      };
+      return { ...state, ...newState4 };
+    //添加自定义注记
+    case "addLabelClick":
+      drawTool.disable();
+      snap.disable();
+      map.off("click", drawToolOn);
+      map.off("click", drawPoint);
+      map.off("dblclick", drawToolOn);
+      drawTool.off("drawend", drawLineEnd);
+      drawTool.off("drawend", drawJZXEnd);
+      drawTool.off("drawend", drawPolygonEnd);
+      drawTool.off("drawend", drawBalconyEnd);
+      map.off("dblclick", drawToolOn);
+      if (!state.addLabelIsChecked) {
+        map.on("click", addLabel);
+      } else {
+        map.off("click", addLabel);
+        map.off("dblclick", labelEditEnd);
+      }
 
-            //画线
-            case 'drawLineClick': 
-                if(!state.drawLineIsChecked){
-                    map.off('click',drawPoint)
-                    drawTool.off('drawend', drawPolygonEnd);
-                    drawTool.off('drawend', drawBalconyEnd);
-                    map.off('click',addLabel);
-                    map.off('dblclick',labelEditEnd);
-                    snap.enable();
-                    //开始画线                  
-                    drawLine(); 
-                    map.on('dblclick',drawToolOn);
-                }else{
-                    drawTool.disable();
-                    snap.disable();
-                    map.off('dblclick',drawToolOn);
-                }
-                const newState2={
-                    pointNum:state.pointNum,
-                    plotIsChecked:false,
-                    drawPointIsChecked:false,
-                    drawLineIsChecked:!state.drawLineIsChecked,
-                    drawPolygonIsChecked:false,
-                    balconyIsChecked:false,
-                    addLabelIsChecked:false,
-                    chooseObjIsChecked:false,
-                    deleteIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false,
-                    alertSave:true,
-                    signatureIsChecked:false
-                } 
-                return {...state,...newState2};
+      const newState5 = {
+        pointNum: state.pointNum,
+        plotIsChecked: false,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: !state.addLabelIsChecked,
+        chooseObjIsChecked: false,
+        deleteIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        signatureIsChecked: false
+      };
+      return { ...state, ...newState5 };
 
-            //构面
-            case  'drawPolygonClick':
-                if(!state.drawPolygonIsChecked){
-                    map.off('click',drawPoint)
-                    drawTool.off('drawend', drawLineEnd);
-                    drawTool.off('drawend', drawBalconyEnd);
-                    map.off('click',addLabel);
-                    map.off('dblclick',labelEditEnd);
-                    snap.enable();
-                    //开始构面
-                    drawPolygon();
-                    map.on('dblclick',drawToolOn);
-                }else{
-                    drawTool.disable();
-                    snap.disable();
-                    map.off('dblclick',drawToolOn);
-                }
-                const newState3={
-                    pointNum:state.pointNum,
-                    plotIsChecked:false,
-                    drawPointIsChecked:false,
-                    drawLineIsChecked:false,
-                    drawPolygonIsChecked:!state.drawPolygonIsChecked,
-                    balconyIsChecked:false,
-                    addLabelIsChecked:false,
-                    chooseObjIsChecked:false,
-                    deleteIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false,
-                    alertSave:true,
-                    signatureIsChecked:false
-                }
-                return {...state,...newState3};   
-            //阳台
-            case  'balconyClick':
-                if(!state.balconyIsChecked){
-                    map.off('click',drawPoint)
-                    drawTool.off('drawend', drawLineEnd);
-                    drawTool.off('drawend', drawPolygonEnd);
-                    map.off('click',addLabel);
-                    map.off('dblclick',labelEditEnd);
-                    snap.enable();
-                    //开始构面
-                    drawBalcony();
-                    map.on('dblclick',drawToolOn);
-                }else{
-                        drawTool.disable();
-                        snap.disable();
-                        map.off('dblclick',drawToolOn);
-                    }
-                const newState4={
-                    pointNum:state.pointNum,
-                    plotIsChecked:false,
-                    drawPointIsChecked:false,
-                    drawLineIsChecked:false,
-                    drawPolygonIsChecked:false,
-                    balconyIsChecked:!state.balconyIsChecked,
-                    addLabelIsChecked:false,
-                    chooseObjIsChecked:false,
-                    deleteIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false,
-                    alertSave:true,
-                    signatureIsChecked:false
-                }
-                return {...state,...newState4};   
-            //添加自定义注记
-            case 'addLabelClick':
-                drawTool.disable();
-                snap.disable();
-                map.off('click',drawToolOn);
-                map.off('click',drawPoint);
-                map.off('dblclick',drawToolOn);
-                drawTool.off('drawend', drawLineEnd);
-                drawTool.off('drawend', drawPolygonEnd);
-                drawTool.off('drawend', drawBalconyEnd);
-                map.off('dblclick',drawToolOn);
-                if(!state.addLabelIsChecked){
-                    map.on('click',addLabel);
-                }else{
-                    map.off('click',addLabel);
-                    map.off('dblclick',labelEditEnd);
-                }          
+    //删除
+    case "deleteClick":
+      console.log(target);
+      drawTool.disable();
+      map.off("click", drawToolOn);
+      map.off("click", drawPoint);
+      map.off("click", addLabel);
+      map.off("dblclick", labelEditEnd);
+      map.off("dblclick", drawToolOn);
+      snap.disable();
+      if (target) {
+        const newState6 = {
+          deleteIsChecked: !state.deleteIsChecked,
+          showDelDialog: true,
+          haveObjToDel: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          signatureIsChecked: false,
+          alertSave: true
+        };
+        return Object.assign({}, state, { ...newState6 });
+      } else {
+        const stateDelFail = {
+          deleteIsChecked: !state.deleteIsChecked,
+          showDelDialog: false,
+          haveObjToDel: true,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          signatureIsChecked: false,
+          alertSave: true
+        };
+        return Object.assign({}, state, { ...stateDelFail });
+      }
 
-                const newState5={
-                    pointNum:state.pointNum,
-                    plotIsChecked:false,
-                    drawPointIsChecked:false,
-                    drawLineIsChecked:false,
-                    drawPolygonIsChecked:false,
-                    balconyIsChecked:false,
-                    addLabelIsChecked:!state.addLabelIsChecked,
-                    chooseObjIsChecked:false,
-                    deleteIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false,
-                    alertSave:true,
-                    signatureIsChecked:false
-                }
-                return {...state,...newState5};   
+    case "handleCloseDelDialog":
+      const showDelDialog1 = { showDelDialog: false };
+      return Object.assign({}, state, { ...showDelDialog1 });
 
-            //删除
-            case 'deleteClick':
-                console.log(target);
-                drawTool.disable();
-                map.off('click',drawToolOn);
-                map.off('click',drawPoint);
-                map.off('click',addLabel);
-                map.off('dblclick',labelEditEnd);
-                map.off('dblclick',drawToolOn);
-                snap.disable();
-                if(target){
-                    const newState6={
-                        deleteIsChecked:!state.deleteIsChecked, 
-                        showDelDialog:true,
-                        haveObjToDel:false,                   
-                        undoIsChecked:false,
-                        redoIsChecked:false,
-                        saveIsChecked:false,
-                        signatureIsChecked:false,
-                        alertSave:true,
-                    }
-                    return Object.assign({},state,{... newState6});                       
-                }else{
-                    const stateDelFail={
-                        deleteIsChecked:!state.deleteIsChecked, 
-                        showDelDialog:false,
-                        haveObjToDel:true,                   
-                        undoIsChecked:false,
-                        redoIsChecked:false,
-                        saveIsChecked:false,
-                        signatureIsChecked:false,
-                        alertSave:true,
-                    }
-                    return Object.assign({},state,{... stateDelFail});         
-                }
-            
+    case "handleDelete":
+      deleteObj();
+      const showDelDialog2 = { showDelDialog: false };
+      return Object.assign({}, state, { ...showDelDialog2 });
+    case "delAlerClose":
+      const closeAlert = { haveObjToDel: false };
+      return Object.assign({}, state, { ...closeAlert });
+    //选中
+    case "chooseObjClick":
+      console.log("choose");
+      drawTool.disable();
+      map.off("click", drawToolOn);
+      map.off("click", drawPoint);
+      map.off("click", addLabel);
+      map.off("dblclick", labelEditEnd);
+      map.off("dblclick", drawToolOn);
+      const newState7 = {
+        pointNum: state.pointNum,
+        plotIsChecked: false,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        chooseObjIsChecked: !state.chooseObjIsChecked,
+        deleteIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        signatureIsChecked: false,
+        alertSave: true
+      };
+      return Object.assign({}, state, { ...newState7 });
+    //撤销
+    case "undoClick":
+      drawUndo();
+      return { ...state };
+    //重做
+    case "redoClick":
+      console.log("重做");
+      drawRedo();
+      return { ...state };
+    //保存
+    case "saveClick":
+      console.log("保存");
+      console.log(projectData);
+      let mapCenter = map.getCenter();
+      drawTool.disable();
+      map.off("click", drawToolOn);
+      map.off("click", drawPoint);
+      map.off("click", addLabel);
+      map.off("dblclick", labelEditEnd);
+      map.off("dblclick", drawToolOn);
+      const saveData = {
+        pointNum: state.pointNum,
+        plotIsChecked: false,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        chooseObjIsChecked: false,
+        deleteIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: true,
+        signatureIsChecked: false,
+        alertSave: false,
+        mapCenter: mapCenter,
+        jzdJSONData: map.getLayer("point").toJSON(),
+        szJSONData: map.getLayer("SZ").toJSON(),
+        jzxJSONData: map.getLayer("JZX").toJSON(),
+        zdJSONData: map.getLayer("polygon").toJSON(),
+        zjJSONData: map.getLayer("label").toJSON()
+      };
+      //将图层数据存储至项目变量中
+      // console.log(projectData)
+      // projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
+      // projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
+      // projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.jzxJSONData);
+      // projectData.ProjectItem.L.zdJSONData=JSON.stringify(saveData.zdJSONData);
+      // projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.zjJSONData);
+      // console.log( projectData.ProjectItem.L);
 
-            case 'handleCloseDelDialog':
-                const showDelDialog1 ={showDelDialog:false} 
-                return Object.assign({},state,{... showDelDialog1});
+      return Object.assign({}, state, { ...saveData });
+    case "saveAlertClose":
+      const saveAlertClose = { alertSave: false };
+      return Object.assign({}, state, { ...saveAlertClose });
+    //签章
+    case "signatureClick":
+      if (state.saveIsChecked) {
+        //将界址点图层数据整理为在表格中显示的数据内容
+        // let data=state.jzdJSONData.geometries;
+        // let tabelRow;
+        // let tableData=[];
+        // for(let i=0;i<data.length;i++){
+        //   tabelRow={
+        //     id:state.tableRowId,
+        //     num:data[i].feature.id,
+        //     coor:data[i].coordinates,
+        //   }
+        //   state.tableRowId +=1;
+        //   tableData.push(tabelRow);
+        // }
 
-            case 'handleDelete':
-                 deleteObj();
-                const  showDelDialog2 ={showDelDialog:false}
-                return Object.assign({},state,{... showDelDialog2});
-            case 'delAlerClose':
-                const closeAlert={haveObjToDel:false}
-                return Object.assign({},state,{... closeAlert});
-            //选中
-            case 'chooseObjClick':
-                console.log('choose')
-                drawTool.disable();
-                map.off('click',drawToolOn);
-                map.off('click',drawPoint);
-                map.off('click',addLabel);
-                map.off('dblclick',labelEditEnd);
-                map.off('dblclick',drawToolOn);
-                const newState7={
-                    pointNum:state.pointNum,
-                    plotIsChecked:false,
-                    drawPointIsChecked:false,
-                    drawLineIsChecked:false,
-                    drawPolygonIsChecked:false,
-                    balconyIsChecked:false,
-                    addLabelIsChecked:false,
-                    chooseObjIsChecked:!state.chooseObjIsChecked,
-                    deleteIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false,
-                    signatureIsChecked:false,
-                    alertSave:true,
-                }
-                return Object.assign({},state,{... newState7});   
-            //撤销
-            case 'undoClick':
-                drawUndo();
-                return { ...state }
-            //重做
-            case 'redoClick':
-                console.log('重做');
-                drawRedo();
-                return { ...state }
-            //保存
-            case 'saveClick':
-                console.log('保存');
-                console.log(projectData);
-                let mapCenter=map.getCenter();
-                drawTool.disable();
-                map.off('click',drawToolOn);
-                map.off('click',drawPoint);
-                map.off('click',addLabel);
-                map.off('dblclick',labelEditEnd);
-                map.off('dblclick',drawToolOn);
-                const saveData= {
-                    pointNum:state.pointNum,
-                    plotIsChecked:false,
-                    drawPointIsChecked:false,
-                    drawLineIsChecked:false,
-                    drawPolygonIsChecked:false,
-                    balconyIsChecked:false,
-                    addLabelIsChecked:false,
-                    chooseObjIsChecked:false,
-                    deleteIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:true,
-                    signatureIsChecked:false,
-                    alertSave:false,
-                    mapCenter:mapCenter,
-                    jzdJSONData:map.getLayer('point').toJSON(),
-                    szJSONData:map.getLayer('line').toJSON(),
-                    zdJSONData:map.getLayer('polygon').toJSON(),
-                    zjJSONData: map.getLayer('label').toJSON(),
-                }
-                //将图层数据存储至项目变量中
-                console.log(projectData)
-                projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
-                projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
-                projectData.ProjectItem.L.zdJSONData=JSON.stringify(saveData.zdJSONData);
-                projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.zjJSONData);
-                console.log( projectData.ProjectItem.L);
+        // console.log(tableData)
 
-                return Object.assign({},state,{... saveData});
-            case 'saveAlertClose':
-                const saveAlertClose ={alertSave:false} 
-                return Object.assign({},state,{... saveAlertClose});
-            //签章
-            case 'signatureClick':
-                if(state.saveIsChecked){
-                  //将界址点图层数据整理为在表格中显示的数据内容
-                  let data=state.jzdJSONData.geometries;
-                  let tabelRow;
-                  let tableData=[];
-                  for(let i=0;i<data.length;i++){
-                    tabelRow={
-                      id:state.tableRowId,
-                      num:data[i].feature.id,
-                      coor:data[i].coordinates,
-                    }
-                    state.tableRowId +=1;
-                    tableData.push(tabelRow);
-                  }
-                  
-                  console.log(tableData)
+        //   const signature={
+        //     poiTableData:tableData,
+        //     signatureIsChecked:true,}
+        //   return Object.assign({},state,{... signature});
+        const signature = { signatureIsChecked: true };
+        return Object.assign({}, state, { ...signature });
+      } else {
+        const signatureState2 = {
+          alertSignature: true,
+          signatureIsChecked: false
+        };
+        action.payload({
+          type: "choose",
+          payload: {
+            choice: 2
+          }
+        });
 
-                    const signature={
-                      poiTableData:tableData,
-                      signatureIsChecked:true,}
-                    return Object.assign({},state,{... signature});
-                }else{
-                    const signatureState2={
-                        alertSignature:true,
-                        signatureIsChecked:false
-                    }
-                    return Object.assign({},state,{... signatureState2});
-                }
-            case 'signatureAlerClose':
-                const signatureAlertClose ={alertSignature:false} 
-                return Object.assign({},state,{... signatureAlertClose});
-            case 'signatureClose':
-              const signatureClose ={signatureIsChecked:false} 
-              return Object.assign({},state,{... signatureClose});
+        return Object.assign({}, state, { ...signatureState2 });
+      }
+    case "signatureAlerClose":
+      const signatureAlertClose = { alertSignature: false };
+      return Object.assign({}, state, { ...signatureAlertClose });
+    case "signatureClose":
+      const signatureClose = { signatureIsChecked: false };
+      return Object.assign({}, state, { ...signatureClose });
 
-            //草图专题图切换时初始化数据
-            case 'resetSketchState':
-                console.log('reset')
-                const resetSketchState={
-                    plotIsChecked:false,
-                    drawPointIsChecked: false,
-                    drawLineIsChecked: false,
-                    drawPolygonIsChecked:false,
-                    balconyIsChecked:false,
-                    addLabelIsChecked:false,
-                    deleteIsChecked:false,
-                    chooseObjIsChecked:false,
-                    undoIsChecked:false,
-                    redoIsChecked:false,
-                    saveIsChecked:false,
-                    alertSave:true,
-                    showDelDialog:false,
-                    haveObjToDel:false,
-                }
-                return Object.assign({},state,{... resetSketchState});   
-           //界址点签章表点击后高亮
-            case 'jzdTableClick':
-                let poi_num=action.payload.command;
-                console.log(poi_num);
-                let jzdPoi=map.getLayer("point").getGeometryById(poi_num);
-                jzdPoi.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
-                map.setCenter(jzdPoi.coordinates);
+    //草图专题图切换时初始化数据
+    case "resetSketchState":
+      console.log("reset");
+      const resetSketchState = {
+        plotIsChecked: false,
+        drawPointIsChecked: false,
+        drawLineIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        addLabelIsChecked: false,
+        deleteIsChecked: false,
+        chooseObjIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+        showDelDialog: false,
+        haveObjToDel: false
+      };
+      return Object.assign({}, state, { ...resetSketchState });
+    //界址点签章表点击后高亮
+    case "jzdTableClick":
+      let poi_num = action.payload.command;
+      console.log(poi_num);
+      let jzdPoi = map.getLayer("point").getGeometryById(poi_num);
+      jzdPoi.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
+      map.setCenter(jzdPoi.coordinates);
 
-                const jzdTable={
-                  signatureIsChecked:false
-                }
-              return Object.assign({},state,{... jzdTable});
-            default:
-              return { ...state }
-            
-        }
-    
-}
+      const jzdTable = {
+        signatureIsChecked: false
+      };
+      return Object.assign({}, state, { ...jzdTable });
+    default:
+      return { ...state };
+  }
+};
 RootReducer.merge(sketchReduce);
 /**
 * 
@@ -1179,7 +1295,7 @@ const mapStateToProps = (state, ownProps) => {
   const props = ownProps;
 
   return {
-    text: ownProps.ownProps,
+    text: ownProps.ownProps
   };
 };
 /**
@@ -1190,23 +1306,24 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onMenuItemClick: text => {
-      if(text==="get_location"){
-        console.log(ownProps)
-        if(ownProps.isRealtimeOn){
+      if (text === "get_location") {
+        console.log(ownProps);
+        if (ownProps.isRealtimeOn) {
           fetch("http://172.16.102.90:1338/bluetooth/connect/RTK/printnmea")
-          .then(response => response.json())
-          .then(json => {
-            dispatch({
-              type: "menuClick",
-              payload: {
-                command: "get_location_rtk",
-                data:json
-              }
+            .then(response => response.json())
+            .then(json => {
+              dispatch({
+                type: "menuClick",
+                payload: {
+                  command: "get_location_rtk",
+                  data: json
+                }
+              });
+            })
+            .catch(e => {
+              console.log(e);
             });
-          }).catch(e => {
-            console.log(e)
-          });  
-        }else{
+        } else {
           dispatch({
             type: "menuClick",
             payload: {
@@ -1214,12 +1331,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             }
           });
         }
-      }else{
+      } else {
         dispatch({
           type: "menuClick",
           payload: {
             command: text
-          } 
+          }
         });
       }
     }
