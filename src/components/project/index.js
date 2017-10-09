@@ -55,13 +55,17 @@ const styles = {
     width: '900px',
     height: '600px',
     marginTop: 20,
-    marginLeft: 50
+    marginLeft: 30
   },
   prompt:{
     width: '300px',
     height: '400px',
     marginTop: 20,
     marginLeft: 50
+  },
+  divStyle:{
+    opacity:'1',
+    backgroundColor: 'transparent'
   }
 };
 
@@ -141,9 +145,9 @@ class ProjectModule extends Component {
         <Dialog
         open={ ProjectProgress }
         >
-        <div >
+        <div className={classes.divStyle}>
           <CircularProgress size={50} />
-        </div>`
+        </div>
         </Dialog>
       </div>
     )
@@ -187,6 +191,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           payload: json,
         })
         console.log(json)
+        dispatch({
+          type: 'handleProjectProgress',
+        }) 
       })
       .catch(e =>{        
         console.log("Oops, error", e)

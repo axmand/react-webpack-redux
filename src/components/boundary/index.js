@@ -53,7 +53,7 @@ const styles = {
     width: '900px',
     height: '600px',
     marginTop: 20,
-    marginLeft: 50
+    marginLeft: 30
   }
 }
 
@@ -138,6 +138,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           payload:json,
         })
         console.log(json)
+        dispatch({
+          type: 'ProgressShow',
+        }) 
       })
       .catch(err => {
         console.log(err)
