@@ -631,6 +631,7 @@ const sketchReduce = (
 
       param.geometry.config("poiArr", linePoiArr);
       param.geometry.config("id", state.lineNum);
+      param.geometry._id=param.geometry.options.id;
       map.getLayer("JZX").addGeometry(param.geometry);
       param.geometry.on("click", clickObj);
       recoverObj();
@@ -1276,7 +1277,7 @@ const sketchReduce = (
       let line_num = action.payload.command;
       console.log(line_num);
       let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
-      
+      console.log(jzxPoi)
       jzxPoi.updateSymbol({  lineColor: "#00FFFF" });
       //map.setCenter(jzxPoi.coordinates);
 

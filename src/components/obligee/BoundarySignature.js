@@ -16,7 +16,7 @@ function mapStateToProps(state ,ownProps) {
   var jzxID=[];
   for(var i=0;i<jzx.geometries.length;i++)
   {
-    var jzxID= jzx.geometries[i].options.id;
+    jzxID.push(jzx.geometries[i].options.id) ;
     var jzxPoints=jzx.geometries[i].options.poiArr;
     startPoints.push(jzxPoints[0]);
     endPoints.push(jzxPoints[jzxPoints.length-1]);
