@@ -631,6 +631,7 @@ const sketchReduce = (
 
       param.geometry.config("poiArr", linePoiArr);
       param.geometry.config("id", state.lineNum);
+      param.geometry._id=param.geometry.options.id;
       map.getLayer("JZX").addGeometry(param.geometry);
       param.geometry.on("click", clickObj);
       recoverObj();
@@ -1165,8 +1166,8 @@ const sketchReduce = (
       return { ...state };
     //保存
     case "saveClick":
-      console.log("保存");
-      console.log(projectData);
+      //console.log("保存");
+     // console.log(projectData);
       let mapCenter = map.getCenter();
       drawTool.disable();
       map.off("click", drawToolOn);
@@ -1197,13 +1198,13 @@ const sketchReduce = (
         zjJSONData: map.getLayer("label").toJSON()
       };
       //将图层数据存储至项目变量中
-      console.log(projectData)
+      //console.log(saveData.jzxJSONData);
       projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
       projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
-      projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.jzxJSONData);
+      projectData.ProjectItem.L.jzxJSONData=JSON.stringify(saveData.jzxJSONData);
       projectData.ProjectItem.L.zdJSONData=JSON.stringify(saveData.zdJSONData);
       projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.zjJSONData);
-      console.log( projectData.ProjectItem.L);
+      //console.log( projectData.ProjectItem.L);
 
       return Object.assign({}, state, { ...saveData });
     case "saveAlertClose":
@@ -1276,7 +1277,8 @@ const sketchReduce = (
       let line_num = action.payload.command;
       console.log(line_num);
       let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
-      jzxPoi.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
+      console.log(jzxPoi)
+      jzxPoi.updateSymbol({  lineColor: "#00FFFF" });
       //map.setCenter(jzxPoi.coordinates);
 
       const jzxTable = {

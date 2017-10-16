@@ -1,17 +1,49 @@
 import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux'
 import PointNameCell from './PointNameCell'
+import projectData from "./../../redux/RootData";
 // Map Redux state to component props
 function mapStateToProps(state ,ownProps) {
   const tableIndex =ownProps.tableIndex;
 
-  
+  var jzxData=projectData.ProjectItem.L.jzxJSONData;
+  var jzx = eval('(' + jzxData + ')');
+
+
+  var startPoints=[];
+  var endPoints=[];
+  var innerPoints=[];
+  var jzxID=[];
+  for(var i=0;i<jzx.geometries.length;i++)
+  {
+    jzxID.push(jzx.geometries[i].options.id) ;
+    var jzxPoints=jzx.geometries[i].options.poiArr;
+    startPoints.push(jzxPoints[0]);
+    endPoints.push(jzxPoints[jzxPoints.length-1]);
+    if(jzxPoints.length>2)
+    {
+      var temp="";
+      for(var j=1;j<jzxPoints.length-2;j++)
+      { temp+=jzxPoints[j]+",";
+
+      }   
+      temp+=jzxPoints[jzxPoints.length-2];
+      innerPoints.push(temp);
+          
+    }
+    else
+    {
+      innerPoints.push("");
+    }
+  }
+
+
+ 
   return {
-    startPoint:state.ObContentReducer[tableIndex].StartPointCodeList,
-    innerPoint:state.ObContentReducer[tableIndex].InnerPointCodeList,
-endPoint:state.ObContentReducer[tableIndex].EndPointCodeList
-    
-    
+    startPoint:startPoints,
+    innerPoint:innerPoints,
+    endPoint:endPoints,
+    jzxID:jzxID
   };
 }
 
@@ -36,7 +68,7 @@ function mapDispatchToProps(dispatch) {
 
 class BoundarySignature extends Component {  
   render() {
-     const { startPoint,innerPoint,endPoint,tableIndex } = this.props;
+     const { startPoint,innerPoint,endPoint,tableIndex,jzxID } = this.props;
 
 
 var tableContent=[];
@@ -69,9 +101,9 @@ var tableHead2=(<tr>
         var obj=(
         <tr>
             
-                  <td width="73"><p ><PointNameCell tableIndex="F3" name={startPoint[i]} row={i} type="StartPointCodeList"/></p></td>
-                  <td width="70"><p ><PointNameCell tableIndex="F3" name={startPoint[i]} row={i} type="InnerPointCodeList"/></p></td>
-                  <td width="74"><p ><PointNameCell tableIndex="F3" name={startPoint[i]} row={i} type="EndPointCodeList"/></p></td>
+                  <td width="73"><p ><PointNameCell tableIndex="F3" id={jzxID[i]} name={startPoint[i]} row={i} type="StartPointCodeList"/></p></td>
+                  <td width="70"><p ><PointNameCell tableIndex="F3" id={jzxID[i]} name={innerPoint[i]} row={i} type="InnerPointCodeList"/></p></td>
+                  <td width="74"><p ><PointNameCell tableIndex="F3" id={jzxID[i]} name={endPoint[i]} row={i} type="EndPointCodeList"/></p></td>
                   <td width="113"><p ></p></td>
                   <td width="100"><p ></p></td>
                   <td width="99"><p ></p></td>
