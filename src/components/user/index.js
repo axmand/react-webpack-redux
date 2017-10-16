@@ -39,13 +39,11 @@ import RootReducer from "./../../redux/RootReducer";
 import { NavLink } from "react-router-dom";
 import uuidv4 from "uuid/v4";
 //import icon
-// import FontAwesome from "react-fontawesome";
 import AccountCircleIcon from "material-ui-icons/AccountCircle";
 import Bluetooth from "material-ui-icons/Bluetooth";
 import Devices from "material-ui-icons/Devices";
 import Photo from "material-ui-icons/Photo";
-//import color
-import blue from "material-ui/colors/blue";
+
 //import page
 import LoginView from "../../views/LoginView";
 
@@ -55,17 +53,18 @@ import BluetoothConnect from "./BluetoothConnect";
 // inset css
 const styles = {
   dialog: {
-    // width: "50%",
-    // height: "100%",
-    // marginTop: "30px",
-    // marginLeft: "180px"
+    width: "50%",
+    height: "95%",
+    marginTop: "3%",
+    marginLeft: "7%",
+    padding:0,
   },
 
   dialogImage: {
-    width: "80%",
+    width: "85%",
     height: "80%",
-    marginTop: "30px",
-    marginLeft: "180px"
+    marginTop: "3%",
+    marginLeft: "10%"
   },
 
   listItem: {
@@ -85,7 +84,7 @@ const styles = {
   listItemText: {
     padding: "0px",
     fontSize: "0.8em",
-    color: "#ffffff",
+    color: "#455A64",
     fontFamily: "微软雅黑",
     fontWeight: "bold",
     justify: "center",
@@ -101,12 +100,13 @@ const styles = {
     paddingLeft: "0px"
   },
 
+  //用户头像大小固定
   avatar: {
     lineHeight: "2em",
-    // width:'40px',
-    // height:'40px',
-    // size: "80px",
-    size: "100%"
+    width:'50px',
+    height:'50px',
+    size: "100%",
+    marginTop:'0',
   },
 
   button: {
@@ -115,8 +115,8 @@ const styles = {
     fontFamily: "微软雅黑",
     fontWeight: "bold",
     fontSize: "32px",
-    color: "white",
-    background: blue[300],
+    color: "#455A64",
+    background: '#C1C6C9',
     borderRadius: "5px",
     border: 0,
     padding: 0
@@ -126,6 +126,7 @@ const styles = {
     display: "inline-block",
     padding: 0,
     lineHeight: "2em",
+    fontWeight:'bold',
     marginTop: "30px",
     marginLeft: "8%",
     // marginRight: "36px",
@@ -141,15 +142,15 @@ const styles = {
   //   padding:0,
   // },
 
-  buttonSecondaryAction: {
-    width: "40px",
-    height: "20px",
+  // buttonSecondaryAction: {
+  //   width: "40px",
+  //   height: "20px",
 
-    border: 0,
-    padding: 0,
-    borderRadius: "3px",
-    fontWeight: "bold"
-  },
+  //   border: 0,
+  //   padding: 0,
+  //   borderRadius: "3px",
+  //   fontWeight: "bold"
+  // },
 
   icon: {
     // width: "80px",
@@ -161,11 +162,9 @@ const styles = {
 
   typography: {
     fontFamily: "微软雅黑",
-    // fontSize: "28px",
-    fontSize: "1em",
-    // width: "140px",
+    fontSize: "1.2em",
     width: "100%",
-    // fontWeight:'bold',
+    fontWeight:'bold',
   },
   //specially for those descriptional(or definitional) typography
   labelUser: {
@@ -173,21 +172,22 @@ const styles = {
     width: "100%",
     padding: 0,
     // fontSize: "32px",
-    fontSize: "1em",
-    lineHeight: "2em"
+    fontSize: "1.2em",
+    fontWeight:'bold',
+    lineHeight: "2em",
+    color:'black', 
   },
   //specically for those state text
   userStateText: {
-    background: blue[100],
+    background:'#455A64',
     borderRadius: "5px",
     justify: "center",
     justifyContent: "center",
     width: "100%",
-    // width: "120px",
-    // fontSize: "28px",
-    fontSize: "1em",
+    fontSize: "1.2em",
     textAlign: "center",
-    padding: "5px 0px"
+    padding: "5px 0px",
+    color:'#C1C6C9',
   },
   navLink: {
     textDecoration: "none"
@@ -198,22 +198,27 @@ const styles = {
   },
 
   tableCellHead: {
-    backgroundColor: blue[100],
+    backgroundColor: '#455A64',
     backgroundClip: "text",
     borderRadius: "5px",
     justify: "center",
     justifyContent: "center",
-    width: "200px",
+    width: "30%",
     textAlign: "center",
     padding: "5px 0",
-    fontSize: "32px"
+    fontSize: "2em",
+    color: '#C1C6C9',
   },
   tableCellBody: {
-    width: "50px",
+    width: "40%",
     padding: 0,
     textAlign: "center",
-    padding: "15px 0",
-    fontSize: "28px"
+    padding: "0",
+    fontSize: "1.5em",
+    lineHeight:'2em',
+    border:'none',
+    borderBottom:'dotted 1px #455A64',
+    borderCollapse:'collapse',
   },
   usrInfo: {
     // width: '500px',
@@ -295,7 +300,9 @@ class UserModule extends Component {
           open={this.state.open}
           onRequestClose={this.handleRequestClose}
         >
-          <DialogContent>
+          <DialogContent
+            style={{ padding:0, }}
+          >
             <List className={classes.usrInfo}>
               <ListItem style={{ lineHeight: "3em" }}>
                 <ListItemAvatar style={{ lineHeight: "3em" }}>
@@ -434,12 +441,13 @@ class UserModule extends Component {
                   <Button
                     flat
                     style={{
-                      background: blue[100],
+                      background: '#455A64',
                       border: 0,
                       padding: "15px 25px",
                       borderRadius: "8px",
                       fontWeight: "bold",
-                      fontSize: "1em"
+                      fontSize: "1.5em",
+                      color: '#C1C6C9',
                     }}
                   >
                     退 出 登 录
@@ -459,10 +467,10 @@ class UserModule extends Component {
             <Table>
               <TableHead className={classes.tableHead}>
                 <TableRow className={classes.tableHead}>
-                  <TableCell width="250px" className={classes.tableCellHead}>
+                  <TableCell style={{width:"60%"}} className={classes.tableCellHead}>
                     影像名称
                   </TableCell>
-                  <TableCell width="150px" className={classes.tableCellHead}>
+                  <TableCell style={{width:"40%"}} className={classes.tableCellHead}>
                     影像大小
                   </TableCell>
                 </TableRow>
@@ -470,10 +478,10 @@ class UserModule extends Component {
               <TableBody className={classes.tableBody}>
                 {imageLists.map(imageList => (
                   <TableRow key={uuidv4()}>
-                    <TableCell className={classes.tableCellBody}>
+                    <TableCell style={{width:"60%"}}  className={classes.tableCellBody}>
                       {imageList.imageName}
                     </TableCell>
-                    <TableCell numeric className={classes.tableCellBody}>
+                    <TableCell numeric style={{width:"40%"}}  className={classes.tableCellBody}>
                       {imageList.imageSize}
                     </TableCell>
                   </TableRow>

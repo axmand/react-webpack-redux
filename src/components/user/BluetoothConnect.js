@@ -14,9 +14,6 @@ import { FormControl } from "material-ui/Form";
 import Select from "material-ui/Select";
 import Button from "material-ui/Button";
 
-import blue from "material-ui/colors/blue";
-import grey from "material-ui/colors/grey";
-
 import RootReducer from "./../../redux/RootReducer";
 
 import Snackbar from "material-ui/Snackbar";
@@ -27,26 +24,30 @@ const styles = {
   container: {
     display: "flex",
     flexWrap: "wrap",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    marginLeft:'7%',
+    marginTop:'10%',
   },
   formControl: {
     margin: "1em",
-    width: "800px",
-    height: "150px",
+    width: "100%",
+    height: "30%",
     lineHeight: "3em"
   },
   title: {
     display: "flex",
-    fontSize: "32px",
+    fontSize: "2em",
     fontWeight: "bold",
-    background: blue[300],
-    padding: "16px",
-    justifyContent: "center",
-    justify: "center",
-    letterSpacing: "30px"
+    background: '#455A64',
+    // padding: "1.2em",
+    justifyContent: "space-around",
+    justify: "space-around",
+    letterSpacing: "1em",
+    paddingRight:0,
+    
   },
   label: {
-    fontSize: "24px",
+    fontSize: "1.5em",
     lineHeight: "2em",
     width: "100px",
     height: "32px",
@@ -54,24 +55,24 @@ const styles = {
   },
 
   dialogBluetooth: {
-    width: "800px",
+    width: "70%",
     height: "30%",
     marginTop: "25%",
-    marginLeft: "45%"
+    marginLeft: "15%"
   },
 
   select: {
-    width: "80%",
-    height: "50px",
-    marginLeft: "10%",
+    width: "100%",
+    height: "4em",
+    marginLeft: "5%",
     textAlign: "center",
     lineHeight: "2em"
   },
   option: {
     display: "flex",
     color: "primary",
-    width: "100px",
-    height: "45px",
+    width: "80%",
+    height: "2em",
     marginLeft: "5%",
     textAlign: "center",
     lineHeight: "3em"
@@ -81,12 +82,21 @@ const styles = {
     display: "inline-block",
     lineHeight: "1.5em",
     fontSize: "1.5em",
-    background: blue[200],
-    color: "black",
+    fontWeight:'bold',
+    background: '#455A64',
+    color: "#C1C6C9",
     padding: "0 30px",
     paddingRight: "20px",
-    letterSpacing: "10px"
+    letterSpacing: "10px",
+
   },
+
+  port:{
+    fontSize:'1.5em',
+    fontWeight:'bold',
+
+  },
+
   root: {
     width: "1920px",
     height: "1280px"
@@ -126,7 +136,7 @@ class BluetoothConnect extends React.Component {
       handleRequestCloseBluetoothConnectAlert
     } = this.props;
 
-    console.log(portConnectStateShow);
+    console.log(portLists);
 
     return (
       <div>
@@ -141,7 +151,7 @@ class BluetoothConnect extends React.Component {
           <DialogContent>
             <form className={classes.container}>
               <FormControl fullWidth className={classes.formControl}>
-                <InputLabel htmlFor="bluetooth-port">Port</InputLabel>
+                <InputLabel className={ classes.port } htmlFor="bluetooth-port">Port</InputLabel>
                 <Select
                   value={COMPort}
                   onChange={this.handleChangeBluetooth("port")}
@@ -181,31 +191,13 @@ class BluetoothConnect extends React.Component {
             </form>
           </DialogContent>
         </Dialog>
-        {/* <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={portConnectStateShow}
-          onRequestClose={handleRequestCloseBluetoothStateShow}
-          SnackbarContentProps={{ "aria-describedby": "message-id" }}
-          message={<span id="message-id">bluetooth has been connected</span>}
-          action={
-            <IconButton
-              key="close"
-              aria-label="close"
-              color="inherit"
-              onClick={handleRequestCloseBluetoothStateShow}
-            >
-              <CloseIcon />
-            </IconButton>
-          }
-
-        /> */}
 
         <Dialog
           open={bluetoothConnectAlertShow}
           onRequestClose={handleRequestCloseBluetoothConnectAlert}
           style={{
-            background: grey[500],
-            color: "white",
+            background: '#455A64',
+            color: "#C1C6C9",
             textAlign: "center",
             justifyContent: "center",
             justify: "center"
@@ -339,7 +331,7 @@ const BluetoothReducer = (
       return { ...state, ...newState };
 
     case "COM_BLUETOOTH_MODULE_GET":
-      // console.log(action.payload)
+      console.log(action.payload)
       newState.portLists = action.payload;
       return { ...state, ...newState };
 
