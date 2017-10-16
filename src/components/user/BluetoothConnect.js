@@ -123,7 +123,6 @@ class BluetoothConnect extends React.Component {
   render() {
     const {
       classes,
-      COMPort,
       portLists,
       bluetoothSwitch,
       handleRequestCloseBluetooth,

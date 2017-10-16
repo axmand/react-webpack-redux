@@ -549,7 +549,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           });
           dispatch({
             type: "COM_BLUETOOTH_MODULE_GET",
-            payload: json
+            payload: json.data
           });
         })
         .catch(err => {
