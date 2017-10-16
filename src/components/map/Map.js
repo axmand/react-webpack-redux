@@ -1165,8 +1165,8 @@ const sketchReduce = (
       return { ...state };
     //保存
     case "saveClick":
-      console.log("保存");
-      console.log(projectData);
+      //console.log("保存");
+     // console.log(projectData);
       let mapCenter = map.getCenter();
       drawTool.disable();
       map.off("click", drawToolOn);
@@ -1197,13 +1197,13 @@ const sketchReduce = (
         zjJSONData: map.getLayer("label").toJSON()
       };
       //将图层数据存储至项目变量中
-      console.log(projectData)
+      console.log(saveData.jzxJSONData);
       projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
       projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
-      projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.jzxJSONData);
+      projectData.ProjectItem.L.jzxJSONData=JSON.stringify(saveData.jzxJSONData);
       projectData.ProjectItem.L.zdJSONData=JSON.stringify(saveData.zdJSONData);
       projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.zjJSONData);
-      console.log( projectData.ProjectItem.L);
+      //console.log( projectData.ProjectItem.L);
 
       return Object.assign({}, state, { ...saveData });
     case "saveAlertClose":
