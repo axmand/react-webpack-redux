@@ -1197,7 +1197,7 @@ const sketchReduce = (
         zjJSONData: map.getLayer("label").toJSON()
       };
       //将图层数据存储至项目变量中
-      console.log(saveData.jzxJSONData);
+      //console.log(saveData.jzxJSONData);
       projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
       projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
       projectData.ProjectItem.L.jzxJSONData=JSON.stringify(saveData.jzxJSONData);
@@ -1276,7 +1276,8 @@ const sketchReduce = (
       let line_num = action.payload.command;
       console.log(line_num);
       let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
-      jzxPoi.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
+      
+      jzxPoi.updateSymbol({  lineColor: "#00FFFF" });
       //map.setCenter(jzxPoi.coordinates);
 
       const jzxTable = {

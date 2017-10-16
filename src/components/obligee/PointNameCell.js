@@ -29,13 +29,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         //修改命令 修改的字段名 修改字段的值
-        onclick: (name) => {
+        onclick: (id) => {
             dispatch({
                 type: "jzxTableClick",
                 payload: {
-
-                    pointName: name
-
+                    command: id
                 }
             });
         }
@@ -47,7 +45,7 @@ class PointNameCellUI extends React.PureComponent {
 
 
     onClicked = () => {
-        var sss = this.props.name;
+        var sss = this.props.id;
         this.props.onclick(sss);
     };
 
@@ -55,7 +53,7 @@ class PointNameCellUI extends React.PureComponent {
 
 
     render() {
-        const { name, type, row, tableIndex } = this.props;
+        const { name, type, row, tableIndex,id } = this.props;
 
 
 
