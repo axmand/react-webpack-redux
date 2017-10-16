@@ -141,6 +141,7 @@ const obligeeReducer=(state = DialogState, action)=> {
       case 6:return Object.assign({}, state, {
         	forthDialogOpen:false
       });
+  
     }
     default:
       return state
