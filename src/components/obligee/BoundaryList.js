@@ -2,15 +2,37 @@ import React, { Component } from 'react';
 import CheckCell from './CheckCell'
 import { Provider, connect } from 'react-redux'
 import  PointNameCell from './PointNameCell'
+import projectData from "./../../redux/RootData";
+
 // Map Redux state to component props
 const mapStateToProps=(state,ownProps)=> {
   
   const tableIndex =ownProps.tableIndex;
-    
+ var LandPointCodeList=[];
+var LandPointDistance=[];
+  var jzxData=projectData.ProjectItem.L.jzxJSONData;
+  var jzx = eval('(' + jzxData + ')');
+
+
+  for(var i=0;i<jzx.geometries.length;i++)
+  {
+for(var j=0;j<jzx.geometries[i].options.poiArr.length;j++)
+{
+  LandPointCodeList.push(jzx.geometries[i].options.poiArr[j]);
+}
+for(var j=0;j<jzx.geometries[i].options.poiArr.length-1;j++)
+{
+  LandPointDistance.push(jzx.geometries[i].options.labels[j].content);
+}   
+
+   
+  }
+
+
     return {
-      LandPointCodeList:state.ObContentReducer[tableIndex].LandPointCodeList,
+      LandPointCodeList:LandPointCodeList,
       LandPointTypeList:state.ObContentReducer[tableIndex].LandPointTypeList,
-      LandPointDistance:state.ObContentReducer[tableIndex].LandPointDistance,
+      LandPointDistance:LandPointDistance,
       LandBoundaryType:state.ObContentReducer[tableIndex].LandBoundaryType,
       LandBoundaryLocation:state.ObContentReducer[tableIndex].LandBoundaryLocation,
       LandBoundaryExplain:state.ObContentReducer[tableIndex].LandBoundaryExplain
@@ -89,8 +111,8 @@ class BoundaryList extends Component {
 
 var firstLine=(
   <tr>
-           <td width="67"><p ><PointNameCell tableIndex="F2" name={LandPointCodeList[0]} row={0} type="LandPointCodeList"/></p></td>
-           
+           <td width="67"><p >{LandPointCodeList[0]}</p></td>
+
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={0} type="LandPointTypeList"/></p></td>
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={1} type="LandPointTypeList"/></p></td>
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={2} type="LandPointTypeList"/></p></td>
@@ -117,7 +139,7 @@ var firstLine=(
 
 var tr1=(
             <tr>
-    <td width="67" rowSpan="2"><p ><PointNameCell tableIndex="F2" name={LandPointCodeList[i]} row={i} type="LandPointCodeList"/></p></td>
+    <td width="67" rowSpan="2"><p >{LandPointCodeList[i]}</p></td>
     <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={0} type="LandPointTypeList"/></p></td>
     <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={1} type="LandPointTypeList"/></p></td>
     <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={2} type="LandPointTypeList"/></p></td>
@@ -145,7 +167,7 @@ var tr1=(
 
        var trlist=(
         <tr>
-<td width="67" rowSpan="2"><p ><PointNameCell tableIndex="F2" name={LandPointCodeList[LandPointCodeList.length-1]} row={LandPointCodeList.length-1} type="LandPointCodeList"/></p></td>
+<td width="67" rowSpan="2"><p >{LandPointCodeList[LandPointCodeList.length-1]}</p></td>
 <td width="29" rowSpan="2"><p ><CheckCell  tableIndex="F2" value={""} row={LandPointCodeList.length-1} col={0} type="LandPointTypeList"/></p></td>
 <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={LandPointCodeList.length-1} col={1} type="LandPointTypeList"/></p></td>
 <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={LandPointCodeList.length-1} col={2} type="LandPointTypeList"/></p></td>

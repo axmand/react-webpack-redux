@@ -251,13 +251,8 @@ loaded:false
       //console.log(projectData.ProjectItem)
       return returnState;
 
-
-  case 'changetest':
+     case 'changetest':
   
-
-    
-
-
     var newState=state;
     newState[action.payload.tableID][action.payload.type][action.payload.row]=action.payload.col;
 
@@ -266,6 +261,47 @@ loaded:false
     projectData.ProjectItem=returnState;
     return returnState;
    
+
+    case 'signatureClick':
+    var jzxData=projectData.ProjectItem.L.jzxJSONData;
+    var jzx = eval('(' + jzxData + ')');
+  
+  
+    var startPoints=[];
+    var endPoints=[];
+    var innerPoints=[];
+    var jzxID=[];
+    for(var i=0;i<jzx.geometries.length;i++)
+    {
+      jzxID.push(jzx.geometries[i].options.id) ;
+      var jzxPoints=jzx.geometries[i].options.poiArr;
+      startPoints.push(jzxPoints[0]);
+      endPoints.push(jzxPoints[jzxPoints.length-1]);
+      if(jzxPoints.length>2)
+      {
+        var temp="";
+        for(var j=1;j<jzxPoints.length-2;j++)
+        { temp+=jzxPoints[j]+",";
+  
+        }   
+        temp+=jzxPoints[jzxPoints.length-2];
+        innerPoints.push(temp);
+            
+      }
+      else
+      {
+        innerPoints.push("");
+      }
+    }
+      var newState=state;
+newState.F3.StartPointCodeList=startPoints;
+newState.F3.InnerPointCodeList=innerPoints;
+newState.F3.EndPointCodeList=endPoints;
+
+  
+      var returnState=Object.assign({}, state, newState);
+      projectData.ProjectItem=returnState;
+      return returnState;
 
   case 'changelist':
   

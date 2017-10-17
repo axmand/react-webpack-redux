@@ -28,9 +28,7 @@ class MapView extends Component {
     return (
       <div className={classes.root}>
         {sketchDisplayState && <Sketch /> }
-        <Map 
-         isRealtimeOn={isRealtimeOn} 
-        />
+        {projectData.Loaded&&<Map isRealtimeOn={isRealtimeOn} />}
       </div>
     )
   }

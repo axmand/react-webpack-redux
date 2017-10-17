@@ -21,7 +21,6 @@ import MapToolBar from "./MapToolBar";
 let map;
 let drawTool;
 let snap;
-
 /**
  * 地图组件
  * @class
@@ -39,16 +38,15 @@ class Map extends Component {
         subdomains: ["01", "02", "03", "04"],
         attribution: '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
       }),
-      layers: [
-        new maptalks.VectorLayer("location"),
-        new maptalks.VectorLayer("point"),
-        new maptalks.VectorLayer("SZ"),
-        new maptalks.VectorLayer("JZX"),
-        new maptalks.VectorLayer("polygon"),
-        new maptalks.VectorLayer("label")
-      ]
     });
     map.setZoom(18);
+    console.log(projectData)
+    maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData)).addTo(map);    
+    maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.szJSONData)).addTo(map);  
+    maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData)).addTo(map);  
+    maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zdJSONData)).addTo(map);  
+    maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zjJSONData)).addTo(map);  
+  
     //将画图工具添加至地图
     drawTool = new maptalks.DrawTool({
       mode: "Polygon",
@@ -214,8 +212,7 @@ const layerControlReduce = (
     jzxIsChecked: true,
     polygonIsChecked: true,
     labelIsChecked: true
-  },
-  action
+  },action
 ) => {
   //点选point图层控制其显示
   if (action.type === "handlePointIsChecked") {
@@ -317,7 +314,7 @@ let plot,
 
 const sketchReduce = (
   state = {
-    pointNum: 0,
+    pointNum:0,
     lineNum:0,
     isRealtimeOn: false,
     plotIsChecked: false,
@@ -532,48 +529,7 @@ const sketchReduce = (
       point.on("click", clickObj);
       console.log(point);
     };
-  //用于画点
-  drawPoint =
-    drawPoint ||
-    function(e) {
-      recoverObj();
-      state.pointNum++;
-      let content = state.pointNum;
-      //为界址点添加点号注记
-      let label = new maptalks.Label(content, e.coordinate, {
-        draggable: true,
-        box: false,
-        type: "Label",
-        symbol: {
-          textWeight: "200",
-          textFaceName: "宋体",
-          textSize: 12,
-          textFill: "#000000",
-          textDy: -10,
-          textAlign: "auto"
-        }
-      });
-      label.on("click", function(e) {
-        target = e.target;
-        drawTool.disable();
-        label.startEditText();
-      });
-      let point = new maptalks.Circle(e.coordinate, 0.5, {
-        id: state.pointNum,
-        labels: label,
-        picture: "",
-        isClicked: false,
-        symbol: {
-          lineColor: "#000000",
-          lineWidth: 1.5,
-          polygonFill: "#FFFFFF"
-        }
-      });
-      map.getLayer("label").addGeometry(label);
-      map.getLayer("point").addGeometry(point);
-      point.on("click", clickObj);
-    };
-
+ 
   //画线时drawTool的绑定事件
   drawLineEnd =
     drawLineEnd ||
@@ -607,47 +563,6 @@ const sketchReduce = (
       drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
       drawTool.on("drawend", drawLineEnd);
     };
-
-  //画线时drawTool的绑定事件
-  drawJZXEnd =
-    drawJZXEnd ||
-    function(param) {
-      state.lineNum++;
-      let coorArr = param.geometry._coordinates;
-      //为折线的每条线段添加长度标注
-      for (let i = 0; i < coorArr.length - 1; i++) {
-        //每条线段的起点和终点坐标
-        let startPoi = coorArr[i],
-          endPoi = coorArr[i + 1];
-        //计算每条线段的长度
-        length = map.computeLength(startPoi, endPoi);
-        param.geometry.config("length", length);
-        let content = param.geometry.options.length.toFixed(2);
-        addObjLabel(content, startPoi, endPoi);
-      }
-      param.geometry.config("labels", labels);
-      labels = [];
-      param.geometry.config("isClicked", false);
-
-      param.geometry.config("poiArr", linePoiArr);
-      param.geometry.config("id", state.lineNum);
-      map.getLayer("JZX").addGeometry(param.geometry);
-      param.geometry.on("click", clickObj);
-      recoverObj();
-      linePoiArr = [];
-      console.log(param);
-    };
-  //用于画线
-  drawJZX =
-    drawJZX ||
-    function() {
-      recoverObj();
-      linePoiArr = [];
-      drawTool.setMode("LineString").enable();
-      drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
-      drawTool.on("drawend", drawJZXEnd);
-    };
-
   //构面时drawTool的绑定事件
   drawPolygonEnd =
     drawPolygonEnd ||
@@ -862,8 +777,56 @@ const sketchReduce = (
         return Object.assign({}, state, { ...closePlotAlert2 });
       }
 
-    //画点
+    case "handleChooseItem":
+      const newNum={ 
+        pointNum:JSON.parse(projectData.ProjectItem.L.jzdJSONData).geometries.length,
+        lineNum:JSON.parse(projectData.ProjectItem.L.jzxJSONData).geometries.length,
+      }
+      return Object.assign({}, state, { ...newNum });
+      //画点
     case "drawPointClick":
+      drawPoint =
+        drawPoint ||
+        function(e) {
+          recoverObj();
+          console.log(state.pointNum)
+          state.pointNum++;
+          let content = state.pointNum;
+          //为界址点添加点号注记
+          let label = new maptalks.Label(content, e.coordinate, {
+            draggable: true,
+            box: false,
+            type: "Label",
+            symbol: {
+              textWeight: "200",
+              textFaceName: "宋体",
+              textSize: 12,
+              textFill: "#000000",
+              textDy: -10,
+              textAlign: "auto"
+            }
+          });
+          label.on("click", function(e) {
+            target = e.target;
+            drawTool.disable();
+            label.startEditText();
+          });
+          let point = new maptalks.Circle(e.coordinate, 0.5, {
+            id: state.pointNum,
+            labels: label,
+            picture: "",
+            isClicked: false,
+            symbol: {
+              lineColor: "#000000",
+              lineWidth: 1.5,
+              polygonFill: "#FFFFFF"
+            }
+          });
+          map.getLayer("label").addGeometry(label);
+          map.getLayer("point").addGeometry(point);
+          point.on("click", clickObj);
+      };
+      console.log(state.pointNum)
       drawTool.disable();
       snap.disable();
       map.off("dblclick", drawToolOn);
@@ -936,6 +899,47 @@ const sketchReduce = (
       return { ...state, ...newState2 };
     //画界址线
     case "drawJZXClick":
+     //画线时drawTool的绑定事件
+      drawJZXEnd =
+        drawJZXEnd ||
+        function(param) {
+          state.lineNum++;
+          let coorArr = param.geometry._coordinates;
+          //为折线的每条线段添加长度标注
+          for (let i = 0; i < coorArr.length - 1; i++) {
+            //每条线段的起点和终点坐标
+            let startPoi = coorArr[i],
+              endPoi = coorArr[i + 1];
+            //计算每条线段的长度
+            length = map.computeLength(startPoi, endPoi);
+            param.geometry.config("length", length);
+            let content = param.geometry.options.length.toFixed(2);
+            addObjLabel(content, startPoi, endPoi);
+          }
+          param.geometry.config("labels", labels);
+          labels = [];
+          param.geometry.config("isClicked", false);
+
+          param.geometry.config("poiArr", linePoiArr);
+          param.geometry.config("id", state.lineNum);
+          param.geometry._id=param.geometry.options.id;
+          map.getLayer("JZX").addGeometry(param.geometry);
+          param.geometry.on("click", clickObj);
+          recoverObj();
+          linePoiArr = [];
+          console.log(param);
+        };
+      //用于画线
+      drawJZX =
+        drawJZX ||
+        function() {
+          recoverObj();
+          linePoiArr = [];
+          drawTool.setMode("LineString").enable();
+          drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
+          drawTool.on("drawend", drawJZXEnd);
+        };
+
       if (!state.drawJZXIsChecked) {
         map.off("click", drawPoint);
         drawTool.off("drawend", drawLineEnd);
@@ -954,6 +958,7 @@ const sketchReduce = (
       }
       const JZXState = {
         pointNum: state.pointNum,
+        lineNum: state.lineNum,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1165,8 +1170,8 @@ const sketchReduce = (
       return { ...state };
     //保存
     case "saveClick":
-      console.log("保存");
-      console.log(projectData);
+      //console.log("保存");
+     // console.log(projectData);
       let mapCenter = map.getCenter();
       drawTool.disable();
       map.off("click", drawToolOn);
@@ -1197,13 +1202,12 @@ const sketchReduce = (
         zjJSONData: map.getLayer("label").toJSON()
       };
       //将图层数据存储至项目变量中
-      console.log(projectData)
       projectData.ProjectItem.L.jzdJSONData=JSON.stringify(saveData.jzdJSONData);
       projectData.ProjectItem.L.szJSONData=JSON.stringify(saveData.szJSONData);
-      projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.jzxJSONData);
+      projectData.ProjectItem.L.jzxJSONData=JSON.stringify(saveData.jzxJSONData);
       projectData.ProjectItem.L.zdJSONData=JSON.stringify(saveData.zdJSONData);
       projectData.ProjectItem.L.zjJSONData=JSON.stringify(saveData.zjJSONData);
-      console.log( projectData.ProjectItem.L);
+      //console.log( projectData.ProjectItem.L);
 
       return Object.assign({}, state, { ...saveData });
     case "saveAlertClose":
@@ -1276,7 +1280,8 @@ const sketchReduce = (
       let line_num = action.payload.command;
       console.log(line_num);
       let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
-      jzxPoi.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
+      console.log(jzxPoi)
+      jzxPoi.updateSymbol({  lineColor: "#00FFFF" });
       //map.setCenter(jzxPoi.coordinates);
 
       const jzxTable = {
