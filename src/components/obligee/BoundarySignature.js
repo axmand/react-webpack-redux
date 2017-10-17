@@ -9,7 +9,7 @@ function mapStateToProps(state ,ownProps) {
   var jzxData=projectData.ProjectItem.L.jzxJSONData;
   var jzx = eval('(' + jzxData + ')');
 
-
+console.log(jzx);
   var startPoints=[];
   var endPoints=[];
   var innerPoints=[];

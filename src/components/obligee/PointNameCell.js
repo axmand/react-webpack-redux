@@ -36,6 +36,14 @@ const mapDispatchToProps = (dispatch) => {
                     command: id
                 }
             });
+
+            dispatch({
+                type: "close",
+                payload: {
+                  choice: 2,
+                  tab: this.tabIndex
+                }
+              });
         }
     }
 }
