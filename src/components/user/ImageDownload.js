@@ -1,9 +1,3 @@
-/*
-whole page----dialog
-                table
-
-*/
-
 import React , { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -18,9 +12,6 @@ import Button from 'material-ui/Button';
 import RootReducer from './../../redux/RootReducer';
 //import unique ID as key for map() function (or method?)
 import uuidv4 from 'uuid/v4';
-
-//import color
-import blue from 'material-ui/colors/blue';
 
 // inset css
 const styles = {
@@ -97,20 +88,20 @@ class ImageDownload extends Component{
 
     render() {
         const imageLists=[
-            {imageName:'1',imageSize:'1'},
-            {imageName:'2',imageSize:'2'},
-            {imageName:'1',imageSize:'1'},
-            {imageName:'2',imageSize:'2'},
-            {imageName:'1',imageSize:'1'},
-            {imageName:'2',imageSize:'2'},      
-            {imageName:'1',imageSize:'1'},
-            {imageName:'2',imageSize:'2'},
-            {imageName:'1',imageSize:'1'},
-            {imageName:'2',imageSize:'2'},
-            {imageName:'1',imageSize:'1'},
-            {imageName:'2',imageSize:'2'},
-            {imageName:'1',imageSize:'1'},
-            {imageName:'2',imageSize:'2'},
+            {imageName:'imageName1',imageSize:'1.5GB'},
+            {imageName:'imageName2',imageSize:'2GB'},
+            {imageName:'imageName3',imageSize:'1'},
+            {imageName:'imageName4',imageSize:'2'},
+            {imageName:'iamgeName5',imageSize:'1'},
+            {imageName:'iamgeName6',imageSize:'2'},      
+            {imageName:'imageName7',imageSize:'1'},
+            {imageName:'iamgeName8',imageSize:'2'},
+            {imageName:'imageName9',imageSize:'1'},
+            {imageName:'imageName10',imageSize:'2'},
+            {imageName:'inageName11',imageSize:'1'},
+            {imageName:'imageName12',imageSize:'2'},
+            {imageName:'imageName13',imageSize:'1'},
+            {imageName:'imageName14',imageSize:'2'},
           ];
     }
     return(
