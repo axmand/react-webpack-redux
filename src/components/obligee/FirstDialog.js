@@ -41,10 +41,10 @@ const styleSheet = {
   },
   
   dialog: {
-    width: '840px',
+    width: '900px',
     height: '600px',
-    marginTop: "30px",
-    marginLeft: "8%",
+    marginTop: 20,
+    marginLeft: 30
   },
 };
 
@@ -68,7 +68,7 @@ class FirstDialog extends Component {
 
   render() {
     const classes = this.props.classes;
-    const { open, close } = this.props;
+    const { open, close,save } = this.props;
 
     return (
       <div >
@@ -89,6 +89,7 @@ class FirstDialog extends Component {
                   <Tab label="宗地信息" />
                   <Tab label="使用信息" />
                 </Tabs>
+             
               </Typography>
 
               <IconButton color="contrast" onClick={close} aria-label="Close">
@@ -151,12 +152,43 @@ function mapStateToProps(state) {
 // Map Redux actions to component props
 function mapDispatchToProps(dispatch) {
   return {
-    close: () => dispatch({
+    close: () =>{ dispatch({
       type: 'close',
       payload: {
         choice: 1
       }
-    }),
+    })
+    let JsonData = JSON.stringify([projectData.ProjectItem]);
+    
+          console.log(JsonData)
+          fetch('http://172.16.102.90:1338//project/forms/post', 
+          { 
+          method: 'POST', 
+          // headers: {
+          //   //  "Access-Control-Allow-Origin": "*",
+          //   // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
+          //   // 'Accept': 'application/json',
+          //   'Content-Type': 'application/json',
+          //   //  'Content-Type': 'text/plain', 
+          // }, 
+          // body: params(JsonData) 
+          body: JsonData
+          })
+        .then(response => response.json())
+        .then( json => {
+          // dispatch({
+          //   type: 'handleOutput',
+          //   payload: json,
+          // })
+          console.log(json)})
+          .catch(err => {
+            console.log(err)
+          })
+  
+  
+  },
+ 
+    
   }
 }
 var FD1 = withStyles(styleSheet)(FirstDialog);
