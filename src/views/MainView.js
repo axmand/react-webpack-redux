@@ -30,17 +30,15 @@ class MainView extends Component {
     const classes = this.props.classes;
 
     return (
-      <div className={classes.root}>
-          <Grid container spacing={0}>
-            <Grid item xs={1}>
-              <NavigationView />
-            </Grid>
-            <Grid item xs={11} >
-              <MapView />
-              <div style={{ position: 'fixed', zIndex: '999999', bottom: '15px', marginLeft: '15px',fontSize:'16px',textShadow:'5px 2px 6px #aaa'}}>打印机已丢失连接.....</div>
-            </Grid>
-          </Grid>    
-      </div>
+      <Grid container spacing={0} className={classes.root}>
+        <Grid item xs={1}>
+          <NavigationView />
+        </Grid>
+        <Grid item xs={11} >
+          <MapView />
+          <div style={{ position: 'fixed', zIndex: '999999', bottom: '15px', marginLeft: '15px',fontSize:'16px',textShadow:'5px 2px 6px #aaa'}}>打印机已丢失连接.....</div>
+        </Grid>
+      </Grid>    
     )
   }
 }
