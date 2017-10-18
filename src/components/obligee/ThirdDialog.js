@@ -17,6 +17,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import RootReducer from './../../redux/RootReducer';
+import projectData from './../../redux/RootData'
 
 
 import { createStore } from 'redux'
@@ -163,12 +164,41 @@ const mapStateToProps=(state)=> {
 // Map Redux actions to component props
 const mapDispatchToProps=(dispatch) =>{
   return {
-   close: () => dispatch({
-                type: 'close',
-                payload: {
-                    choice: 5
-                }
-            }),
+    close: () =>{ dispatch({
+      type: 'close',
+      payload: {
+        choice: 5
+      }
+    })
+    let JsonData = JSON.stringify([projectData.ProjectItem]);
+    
+          console.log(JsonData)
+          fetch('http://172.16.102.90:1338//project/forms/post', 
+          { 
+          method: 'POST', 
+          // headers: {
+          //   //  "Access-Control-Allow-Origin": "*",
+          //   // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
+          //   // 'Accept': 'application/json',
+          //   'Content-Type': 'application/json',
+          //   //  'Content-Type': 'text/plain', 
+          // }, 
+          // body: params(JsonData) 
+          body: JsonData
+          })
+        .then(response => response.json())
+        .then( json => {
+          // dispatch({
+          //   type: 'handleOutput',
+          //   payload: json,
+          // })
+          console.log(json)})
+          .catch(err => {
+            console.log(err)
+          })
+  
+  
+  },
   }
 }
 var TD1=withStyles(styleSheet)(ThirdDialog);
