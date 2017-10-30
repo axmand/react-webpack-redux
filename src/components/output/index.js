@@ -10,6 +10,7 @@ import FileUploadIcon from 'material-ui-icons/FileUpload';
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 import projectData from './../../redux/RootData';
+import appConfig from "../../redux/Config"
 
 const styles = {
   listitem: {
@@ -113,7 +114,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       let JsonData = JSON.stringify([projectData.ProjectItem]);
 
       console.log(JsonData)
-      fetch('http://172.16.102.90:1338//project/forms/post', 
+      fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
       { 
       method: 'POST', 
       // headers: {

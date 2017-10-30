@@ -17,9 +17,8 @@ import ProjectCard from './ProjectCard'
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
-
 import projectData from './../../redux/RootData';
-
+import appConfig from "../../redux/Config"
 
 const styles = {
   listitem: {
@@ -183,7 +182,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: 'handleProjectProgress',
       }) 
 
-      fetch('http://172.16.102.90:1338/project/list')
+      fetch(appConfig.fileServiceRootPath + '/project/list')
       .then(response => response.json())
       .then( json => {
         dispatch({

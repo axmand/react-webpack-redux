@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import * as maptalks from "maptalks";
 import { SnapTool } from "maptalks.snapto";
 import projectData from "./../../redux/RootData";
+import appConfig from "../../redux/Config"
 
 //引入地图组件
 import MapToolBar from "./MapToolBar";
@@ -1316,7 +1317,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       if (text === "get_location") {
         console.log(ownProps);
         if (ownProps.isRealtimeOn) {
-          fetch("http://172.16.102.90:1338/bluetooth/connect/RTK/printnmea")
+          fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea")
             .then(response => response.json())
             .then(json => {
               dispatch({

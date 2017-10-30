@@ -18,6 +18,7 @@ import { LinearProgress } from 'material-ui/Progress';
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 import projectData from './../../redux/RootData';
+import appConfig from "../../redux/Config";
 
 const styles = {
   listitem: {
@@ -130,7 +131,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: 'ProgressShow',
       }) 
 
-      fetch('http://172.16.102.90:1338//project/photolist' )
+      fetch(appConfig.fileServiceRootPath + '//project/photolist' )
       .then(response => response.json())
       .then( json => {
         dispatch({
@@ -224,7 +225,7 @@ const BoundaryReduce = (
         PhotoString: PhotoString,
     });
 
-    fetch('http://172.16.102.90:1338//project/photo', 
+    fetch(appConfig.fileServiceRootPath + '//project/photo', 
     { 
       method: 'POST', 
       body: PhotoData

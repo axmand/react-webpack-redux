@@ -19,6 +19,8 @@ import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
 import PasswordFeild from "./PasswordField";
 
+import appConfig from "../../redux/Config"
+
 const styles = theme => ({
   container: {
     width: "100%",
@@ -114,7 +116,7 @@ Login.propTypes = {
 const mapDispatchToProps = dispatch => {
   return {
     onInitialAppState: () => {
-      fetch("http://172.16.102.90:1338//project/list")
+      fetch(appConfig.fileServiceRootPath + "//project/list")
         .then(response => response.json())
         .then(json => {
           dispatch({

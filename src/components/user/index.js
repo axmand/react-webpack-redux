@@ -47,6 +47,7 @@ import Photo from "material-ui-icons/Photo";
 //import page
 import LoginView from "../../views/LoginView";
 
+import appConfig from "../../redux/Config"
 import BluetoothConnect from "./BluetoothConnect";
 
 
@@ -541,7 +542,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       //   type: "COM_BLUETOOTH_MODULE_GET",
       // });
 
-      fetch("http://172.16.102.90:1338/bluetooth/connect/splist")
+      fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/splist")
         .then(response => response.json())
         .then(json => {
           dispatch({

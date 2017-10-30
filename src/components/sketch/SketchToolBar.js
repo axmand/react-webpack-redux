@@ -32,6 +32,8 @@ import CloseIcon from "material-ui-icons/Close";
 import Snackbar from "material-ui/Snackbar";
 import SecondDialog from '../obligee/SecondDialog'
 
+import appConfig from "../../redux/Config"
+
 const styles = theme => ({
   // rootDiv:{
   //   height: `${window.innerHeight-48}px`,
@@ -335,7 +337,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onPlotClick: () => {
       if (ownProps.isRealtimeOn) {
         console.log("fetching ...");
-        fetch("http://172.16.102.90:1338/bluetooth/connect/RTK/printnmea")
+        fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea")
           .then(response => response.json())
           .then(json => {
             dispatch({

@@ -6,6 +6,7 @@ import { withStyles } from 'material-ui/styles';
 //img
 //自定义
 import ShowCard from './ShowCard';
+import appConfig from "../../redux/Config"
 //Redux
 import {connect} from 'react-redux'
 
@@ -38,7 +39,7 @@ class ProjectCard extends Component {
           {...todo} 
           entries = { todo }
           handleContentClose2 = { () => handleContentClose2() } 
-          handleChooseItem = { () => handleChooseItem('http://172.16.102.90:1338//project/Open/' + todo.text) }
+          handleChooseItem = { () => handleChooseItem(appConfig.fileServiceRootPath + '//project/Open/' + todo.text) }
           />
         )}
       </div>

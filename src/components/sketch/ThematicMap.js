@@ -18,6 +18,8 @@ import SaveIcon from "material-ui-icons/Save"; //保存
 import Typography from "material-ui/Typography";
 import Dialog, {DialogContent} from "material-ui/Dialog";
 
+import appConfig from "../../redux/Config"
+
 const styles = theme => ({
   root: {
     width: "100%",
@@ -387,7 +389,7 @@ const mapDispatchToProps = dispatch => {
       );
       console.log(ThematicMapDataLoad);
 
-      fetch("http://172.16.102.90:1338/project/savepicture", {
+      fetch(appConfig.fileServiceRootPath + "/project/savepicture", {
         method: "POST",
         body: ThematicMapDataLoad
       })

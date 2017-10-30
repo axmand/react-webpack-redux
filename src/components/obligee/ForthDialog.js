@@ -19,6 +19,7 @@ import Grid from 'material-ui/Grid';
 import RootReducer from './../../redux/RootReducer';
 import CommonAreaTable from './CommonAreaTable'
 import projectData from './../../redux/RootData'
+import appConfig from "../../redux/Config"
 
 import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
@@ -143,7 +144,7 @@ const mapDispatchToProps=(dispatch)=> {
             let JsonData = JSON.stringify([projectData.ProjectItem]);
             
                   console.log(JsonData)
-                  fetch('http://172.16.102.90:1338//project/forms/post', 
+                  fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
                   { 
                   method: 'POST', 
                   // headers: {

@@ -17,6 +17,7 @@ import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 import PrintIcon from 'material-ui-icons/Print';
 import projectData from './../../redux/RootData';
+import appConfig from "../../redux/Config"
 
 const styles = {
   listitem: {
@@ -206,7 +207,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
 
-      fetch('http://172.16.102.90:1338/project/print/1')
+      fetch(appConfig.fileServiceRootPath + '/project/print/1')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -234,7 +235,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch('http://172.16.102.90:1338/project/print/2')
+      fetch(appConfig.fileServiceRootPath + '/project/print/2')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -261,7 +262,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch('http://172.16.102.90:1338/project/print/3')
+      fetch(appConfig.fileServiceRootPath + '/project/print/3')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -289,7 +290,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch('http://172.16.102.90:1338/project/printpicture')
+      fetch(appConfig.fileServiceRootPath + '/project/printpicture')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -316,7 +317,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch('http://172.16.102.90:1338/project/print/5')
+      fetch(appConfig.fileServiceRootPath + '/project/print/5')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -343,7 +344,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch('http://172.16.102.90:1338/project/print/6')
+      fetch(appConfig.fileServiceRootPath + '/project/print/6')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -371,7 +372,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch('http://172.16.102.90:1338/project/print/7')
+      fetch(appConfig.fileServiceRootPath + '/project/print/7')
         .then(response => response.json())
         .then( json => {
           dispatch({

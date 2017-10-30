@@ -20,6 +20,8 @@ import Snackbar from "material-ui/Snackbar";
 import IconButton from "material-ui/IconButton";
 import CloseIcon from "material-ui-icons/Close";
 
+import appConfig from "../../redux/Config"
+
 const styles = {
   container: {
     display: "flex",
@@ -252,7 +254,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       console.log(COMPortSelected);
 
       const RTKBlutoothConnectURLBase =
-        "http://172.16.102.90:1338/bluetooth/connect/sp/";
+      appConfig.fileServiceRootPath + "/bluetooth/connect/sp/";
       const RTKBlutoothConnectURL = RTKBlutoothConnectURLBase + COMPortSelected;
       console.log(RTKBlutoothConnectURL);
 
@@ -280,7 +282,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       console.log(COMPortSelected);
 
       const RTKBlutoothDisconnectURLBase =
-        "http://172.16.102.90:1338/bluetooth/connect/closesp/";
+        appConfig.fileServiceRootPath + "/bluetooth/connect/closesp/";
       const RTKBlutoothDisconnectURL =
         RTKBlutoothDisconnectURLBase + COMPortSelected;
       console.log(RTKBlutoothDisconnectURL);
