@@ -124,7 +124,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: 'handleChooseList',
           id
 				})
-      },
+    },
 
     handleShowDialog:()=>{
       dispatch({

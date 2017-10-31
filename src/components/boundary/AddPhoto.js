@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
 //UI
 import Card, { CardContent} from 'material-ui/Card';
+import Checkbox from 'material-ui/Checkbox';
 import Typography from 'material-ui/Typography';
 //图标
 //img
@@ -19,20 +20,23 @@ class AddPhoto extends Component {
 
   render(){
     const {  
+      handleChoosePhoto,
       classes
     } = this.props
     
     let item = this.props.entries;
+    let key = this.props.keys;
 
     return(
-      <div style={{padding:'20px'}}>
-      <Card  style={{maxWidth:150,maxHeight:220,}}>
+      <div style={{paddingBottom:20,paddingLeft:20,paddingRight:20,paddingTop:0}}>
+      <Card  style={{maxWidth:150,}}>
         <img src={item} alt="Contemplative Reptile"  
              style={{justifyContent:'center',}} 
              width="100%" height="150"/>
-        <CardContent >
-          <Typography type="headline" component="h2">
-             指界点
+        <CardContent style={{padding: '0px',}}>
+          <Checkbox onClick={  handleChoosePhoto }/>
+          <Typography  component="p"> 
+            {key}
           </Typography>
         </CardContent>
       </Card>

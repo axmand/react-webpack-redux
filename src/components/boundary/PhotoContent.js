@@ -38,6 +38,7 @@ class PhotoContent extends Component {
     const {
       handleCardClose,
       handleCardShow,
+      handleChoosePhoto,
       CardShow,
       classes
 		} = this.props
@@ -48,7 +49,9 @@ class PhotoContent extends Component {
         {projectData.PhotoItem.map( todo => 
           <AddPhoto
           {...todo} 
+          handleChoosePhoto={ () => handleChoosePhoto(todo.key) }
           entries = { 'data:image/jpeg;base64,'+todo.text }
+          keys = { todo.key }
           />
         )}
        
@@ -89,6 +92,7 @@ class PhotoContent extends Component {
 PhotoContent.propTypes = {
   handleCardClose:PropTypes.func.isRequired,
   handleCardShow:PropTypes.func.isRequired,
+  handleChoosePhoto:PropTypes.func.isRequired,
   CardShow:PropTypes.bool.isRequired
 };
 
@@ -112,6 +116,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
          type: 'handleCardShow',
 			})
+    },
+    
+    handleChoosePhoto:(id)=>{
+        dispatch({
+          type: 'handleChoosePhoto',
+          id
+				})
     },
 	} 
 }  		
