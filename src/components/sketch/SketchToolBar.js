@@ -331,7 +331,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  console.log(ownProps);
+  //console.log(ownProps);
   return {
     //展点
     onPlotClick: () => {

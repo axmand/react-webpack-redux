@@ -137,7 +137,7 @@ class BluetoothConnect extends React.Component {
       handleRequestCloseBluetoothConnectAlert
     } = this.props;
 
-    console.log(portLists);
+    //console.log(portLists);
 
     return (
       <div>

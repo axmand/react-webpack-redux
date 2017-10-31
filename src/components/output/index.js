@@ -100,8 +100,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleOutputShow: () => {
       dispatch({
+        type: "saveClick",
+      });
+      dispatch({
+        type: 'MAP_SKETCH_VIEW_HIDE',
+      });
+      dispatch({
         type: 'handleOutputShow',
-      })
+      });
     },
 
     handleOutputClose: () => {

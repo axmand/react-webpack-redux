@@ -192,8 +192,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handlePrintShow: () => {
       dispatch({
+        type: "saveClick",
+      });
+      dispatch({
+        type: 'MAP_SKETCH_VIEW_HIDE',
+      });
+      dispatch({
         type: 'handlePrintShow',
-      })
+      });
     },
 
     handlePrintClose: () => {

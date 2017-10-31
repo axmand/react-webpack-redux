@@ -65,8 +65,12 @@ class InvestigationModule extends Component {
           open={this.state.open}
           onRequestClose={this.handleRequestClose}
           anchorOrigin={{
-              horizontal:'right',
-              vertical:'center',
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
           }}
         >
           <MenuItem onClick={this.handleRequestClose}>照片</MenuItem>

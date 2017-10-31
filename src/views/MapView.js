@@ -48,11 +48,15 @@ const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
 
   switch(action.type) {
     case 'MAP_SKETCH_VIEW_SWITCH':
-    if(projectData.Loaded === false)
-      alert("请选择项目！");
-    else
-      { newState.sketchDisplayState =  !state.sketchDisplayState }
+      if(projectData.Loaded === false)
+        alert("请选择项目！");
+      else
+        { newState.sketchDisplayState =  !state.sketchDisplayState }
     return { ...state, ...newState }; 
+    case 'MAP_SKETCH_VIEW_HIDE':
+      if(state.sketchDisplayState === true)
+        { newState.sketchDisplayState =  false }
+      return { ...state, ...newState }; 
     default:
       return state
   }
