@@ -203,7 +203,6 @@ const BoundaryReduce = (
     PrintProgress:false
   }, action) => {
   
-  // let PhotoId = 0;
   let newState = JSON.parse(JSON.stringify(state))
   
   if (action.type === "ProgressShow") {
@@ -248,8 +247,10 @@ const BoundaryReduce = (
   }
   
   if (action.type === "capture") {       
-    let PhotoId = projectData.PhotoId;
-    projectData.PhotoId = projectData.PhotoId + 1;
+    // let PhotoId = projectData.PhotoId;
+    // projectData.PhotoId = projectData.PhotoId + 1;
+    const uuidv4 = require('uuid/v4');
+    let PhotoId = uuidv4();
 
     let Stringitem = action.payload;
     let PhotoString = Stringitem.slice(23);
@@ -296,7 +297,7 @@ const BoundaryReduce = (
       return todo;
     })
     projectData.PhotoItem =Photoitems.slice(0);
-    // console.log(projectData.PhotoItem)
+    console.log(projectData.PhotoItem)
     return state;
   }
   

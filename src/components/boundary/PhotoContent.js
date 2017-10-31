@@ -79,11 +79,9 @@ class PhotoContent extends Component {
                 <ClearIcon />
               </IconButton>
             </Toolbar>
-          </AppBar>
-         
+          </AppBar>   
           <CameraWrapper/>
-       
-        </Dialog>       
+      </Dialog>       
     </div>
   );
   }
