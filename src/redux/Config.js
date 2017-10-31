@@ -1,5 +1,5 @@
 const appConfig = {
-  fileServiceRootPath: "http://127.0.0.1:1338"
+  fileServiceRootPath: "http://172.16.103.250:1338"
 }
 
 export default appConfig
