@@ -41,7 +41,7 @@ class Map extends Component {
       }),
     });
     map.setZoom(18);
-    console.log(projectData)
+    //console.log(projectData)
     maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData)).addTo(map);    
     maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.szJSONData)).addTo(map);  
     maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData)).addTo(map);  
@@ -1172,7 +1172,9 @@ const sketchReduce = (
     //保存
     case "saveClick":
       //console.log("保存");
-     // console.log(projectData);
+      // console.log(projectData);
+      if (map === undefined)
+        return { ...state };
       let mapCenter = map.getCenter();
       drawTool.disable();
       map.off("click", drawToolOn);

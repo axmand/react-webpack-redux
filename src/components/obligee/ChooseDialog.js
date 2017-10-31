@@ -192,17 +192,24 @@ const mapDispatchToProps= (dispatch)=> {
                     choice: 6
                 }
     }),
-  close:()=>dispatch({
-    type: 'closeChoose',
-                payload: {
-                   
+    close:()=>dispatch({
+      type: 'closeChoose',
+                  payload: {
+                    
+      }
+    }),
+    clickIcon:() => {
+      dispatch({
+        type: "saveClick",
+      });
+      dispatch({
+        type: 'MAP_SKETCH_VIEW_HIDE',
+      });
+      dispatch({
+        type: 'clickIcon',
+      });
     }
-  }),
-clickIcon:()=>dispatch({
-  type: 'clickIcon',
-
-  })
-}
+  }
 }
 const ChooseDialog = withStyles(styles,{name:'ChooseTableDialog'})(ChooseTableDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseDialog);

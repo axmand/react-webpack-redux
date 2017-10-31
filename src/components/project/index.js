@@ -142,7 +142,7 @@ class ProjectModule extends Component {
         </Dialog>
         
         <Dialog
-        open={ ProjectProgress }
+          open={ ProjectProgress }
         >
         <div className={classes.divStyle}>
           <CircularProgress size={50} />
@@ -179,9 +179,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
       dispatch({
+        type: "saveClick",
+      });
+      dispatch({
+          type: 'MAP_SKETCH_VIEW_HIDE',
+      });
+      dispatch({
           type: 'handleProjectProgress',
-      }) 
-
+      });
+      //console.log(appConfig.fileServiceRootPath + '/project/list')
       fetch(appConfig.fileServiceRootPath + '/project/list')
       .then(response => response.json())
       .then( json => {
@@ -189,7 +195,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: 'handleContentShow',
           payload: json,
         })
-        console.log(json)
+        //console.log(json)
         dispatch({
           type: 'handleProjectProgress',
         }) 
@@ -299,7 +305,7 @@ const ProjectReduce = (
   // }
 
   if (action.type === "handleContentShow") {
-    console.log('Project Module ...')
+    //console.log('Project Module ...')
     let list = [];
     newState.inputItems = list.slice(0);
     

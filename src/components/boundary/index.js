@@ -142,10 +142,16 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleCameraShow: () => {   
+    handleCameraShow: () => {
+      dispatch({
+        type: "saveClick",
+      }); 
+      dispatch({
+        type: 'MAP_SKETCH_VIEW_HIDE',
+      });
       dispatch({
           type: 'ProgressShow',
-      }) 
+      });
 
       fetch(appConfig.fileServiceRootPath + '//project/photolist' )
       .then(response => response.json())
@@ -154,7 +160,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: 'handleCameraShow',
           payload:json,
         })
-        console.log(json)
+        //console.log(json)
         dispatch({
           type: 'ProgressShow',
         }) 

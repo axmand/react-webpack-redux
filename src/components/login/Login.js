@@ -123,7 +123,7 @@ const mapDispatchToProps = dispatch => {
             type: "handleContentShow",
             payload: json
           });
-          console.log(json);
+          //console.log(json);
         })
         .catch(e => console.log("Oops, error", e));
     }
