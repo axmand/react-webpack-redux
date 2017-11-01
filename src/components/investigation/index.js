@@ -1,12 +1,14 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles'
+import { connect } from 'react-redux';
 
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import ContactsIcon from 'material-ui-icons/Contacts';
 // import FontAwesome from 'react-fontawesome'
 // import DevicesIcon from 'material-ui-icons/Devices'
-
 import Menu, { MenuItem } from 'material-ui/Menu'
+
+import IdentityVerificationModule from './IdentityVerificationWrapper'
 
 const styles = {
   listitem: {
@@ -78,7 +80,8 @@ class InvestigationModule extends Component {
           <MenuItem onClick={this.handleRequestClose}>指纹</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>身份证</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>其他证明文件</MenuItem>
-        </Menu>          
+        </Menu>
+        <IdentityVerificationModule />
       </div>
     )
   } 
