@@ -98,7 +98,6 @@ const mapStateToProps = state => {
   return {
     saveIsChecked: sketchState.saveIsChecked,
     isRealtimeOn: sketchState.isRealtimeOn,
-    saveIsChecked: sketchState.saveIsChecked,
   };
 };
 

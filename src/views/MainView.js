@@ -13,7 +13,6 @@ import MapView from './MapView'
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
 
 const styles = {
   root: {

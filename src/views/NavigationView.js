@@ -10,7 +10,7 @@ import ObligeeModule from '../components/obligee'
 import PrintModule from '../components/print'
 import OutputModule from '../components/output'
 
-import List, { ListItem } from 'material-ui/List';
+import List from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
 const styles = {

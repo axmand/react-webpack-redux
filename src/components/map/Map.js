@@ -1302,8 +1302,6 @@ RootReducer.merge(sketchReduce);
 * @param {*} ownProps 
 */
 const mapStateToProps = (state, ownProps) => {
-  const props = ownProps;
-
   return {
     text: ownProps.ownProps
   };

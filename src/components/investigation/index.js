@@ -8,7 +8,8 @@ import ContactsIcon from 'material-ui-icons/Contacts';
 // import DevicesIcon from 'material-ui-icons/Devices'
 import Menu, { MenuItem } from 'material-ui/Menu'
 
-import IdentityVerificationModule from './IdentityVerificationWrapper'
+import IdentityVerificationModule from './IdentityVerificationModule'
+import RootReducer from '../../redux/RootReducer';
 
 const styles = {
   listitem: {
@@ -48,7 +49,10 @@ class InvestigationModule extends Component {
   }
 
   render() {
-    const classes = this.props.classes
+    const {
+      classes,
+      handleOpenIdentityVerificationModule,
+    } = this.props
   
     return (
       <div>
@@ -78,7 +82,7 @@ class InvestigationModule extends Component {
           <MenuItem onClick={this.handleRequestClose}>照片</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>音频</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>指纹</MenuItem>
-          <MenuItem onClick={this.handleRequestClose}>身份证</MenuItem>
+          <MenuItem onClick={handleOpenIdentityVerificationModule}>身份证</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>其他证明文件</MenuItem>
         </Menu>
         <IdentityVerificationModule />
@@ -87,4 +91,44 @@ class InvestigationModule extends Component {
   } 
 }
 
-export default withStyles(styles)(InvestigationModule)
+const mapStateToProps = (state) => {
+  const investigationState = state.investigationReduce;
+  return {
+    investigationMenuDisplayState: investigationState.investigationMenuDisplayState,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleOpenIdentityVerificationModule: () => {
+      dispatch({
+        type: "OPEN_IDENTITY_VERIFICATION_MODULE"
+      })
+    }
+	} 
+}  	
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{name:'InvestigationModule'})(InvestigationModule));
+
+const investigationReduce = (
+  state = {
+    investigationMenuDisplayState: false,
+    idVerificationDisplayState: false,
+  }, action) => {
+  let newState = JSON.parse(JSON.stringify(state))
+
+  switch (action.type) {
+    case 'OPEN_IDENTITY_VERIFICATION_MODULE':
+      newState.idVerificationDisplayState = true;
+      return { ...state, ...newState };
+    
+    case 'CLOSE_IDENTITY_VERIFICATION_MODULE':
+      newState.idVerificationDisplayState = false;
+      return { ...state, ...newState };
+
+    default:
+      return { ...state};
+  }
+
+}
+RootReducer.merge(investigationReduce);

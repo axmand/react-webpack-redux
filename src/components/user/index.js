@@ -23,7 +23,6 @@ import List, {
   ListItemAvatar,
   ListItemIcon,
   ListItemText,
-  ListItemSecondaryAction
 } from "material-ui/List";
 import Dialog, { DialogContent } from "material-ui/Dialog";
 import Table, {
@@ -497,6 +496,10 @@ class UserModule extends Component {
     );
   }
 }
+
+UserModule.propTypes = {
+  handleClickBluetooth: PropTypes.func.isRequired,
+};
 
 //import reducer
 const userReduce = (
