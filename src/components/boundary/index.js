@@ -186,6 +186,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePhotoDelete: () => {
+    
+      let deletedPhotoItems = projectData.PhotoItem.filter( (todo) =>{return todo.checked === true } )
+      console.log(deletedPhotoItems)
+
       dispatch({
         type: 'handlePhotoDelete',
       })

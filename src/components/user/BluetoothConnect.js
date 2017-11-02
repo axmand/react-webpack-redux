@@ -332,8 +332,14 @@ const BluetoothReducer = (
       return { ...state, ...newState };
 
     case "COM_BLUETOOTH_MODULE_GET":
-      console.log(action.payload)
-      newState.portLists = action.payload;
+      //console.log(action.payload)
+      let newPortListsStr = action.payload;
+      newPortListsStr = newPortListsStr.slice(
+        newPortListsStr.indexOf("[") + 1,
+        newPortListsStr.indexOf("]")
+      );
+      const newPortLists = newPortListsStr.split(',');
+      newState.portLists = newPortLists;
       return { ...state, ...newState };
 
     case "COM_BLUETOOTH_MODULE_CONNECT":
