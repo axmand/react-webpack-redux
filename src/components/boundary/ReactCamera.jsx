@@ -37,7 +37,7 @@ export class Camera extends Component {
 
       const handleStream = stream => resolve(window.URL.createObjectURL(stream))
       const mediaConfig = {
-        video: true,
+        video: { facingMode: { exact: "environment" } } ,
         audio: false
       }
 

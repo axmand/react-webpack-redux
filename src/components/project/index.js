@@ -238,6 +238,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, {
 const ProjectReduce = (
   state = {
     inputItems: [],
+    ProjectDataTest: {
+      ProjectItem: [],
+      ProjectName:[],
+      PhotoItem:[],
+      Loaded:false,   
+      PhotoId:0,
+    },
     ContentShow: false,
     ProjectFalse:false,
     ProjectTrue:false,
@@ -357,6 +364,8 @@ const ProjectReduce = (
    
     projectData.ProjectName = Prolist;
     projectData.ProjectItem = list0[0];
+
+    newState.ProjectDataTest.ProjectName = Prolist;
     
     projectData.Loaded = ! projectData.Loaded;
    
