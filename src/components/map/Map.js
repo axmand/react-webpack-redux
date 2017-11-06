@@ -336,7 +336,7 @@ const sketchReduce = (
     alertSignature: false,
     showDelDialog: false,
     haveObjToDel: false,
-    signatureIsChecked: false,
+    signatureIsChecked: false,    
     jzdJSONData: JSON,
     szJSONData: JSON,
     zdJSONData: JSON,
@@ -1219,26 +1219,6 @@ const sketchReduce = (
     //签章
     case "signatureClick":
       if (state.saveIsChecked) {
-        //将界址点图层数据整理为在表格中显示的数据内容
-        // let data=state.jzdJSONData.geometries;
-        // let tabelRow;
-        // let tableData=[];
-        // for(let i=0;i<data.length;i++){
-        //   tabelRow={
-        //     id:state.tableRowId,
-        //     num:data[i].feature.id,
-        //     coor:data[i].coordinates,
-        //   }
-        //   state.tableRowId +=1;
-        //   tableData.push(tabelRow);
-        // }
-
-        // console.log(tableData)
-
-        //   const signature={
-        //     poiTableData:tableData,
-        //     signatureIsChecked:true,}
-        //   return Object.assign({},state,{... signature});
         const signature = { signatureIsChecked: true };
         return Object.assign({}, state, { ...signature });
       } else {
@@ -1246,8 +1226,6 @@ const sketchReduce = (
           alertSignature: true,
           signatureIsChecked: false
         };
-
-
         return Object.assign({}, state, { ...signatureState2 });
       }
     case "signatureAlerClose":
@@ -1285,12 +1263,11 @@ const sketchReduce = (
       let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
       console.log(jzxPoi)
       jzxPoi.updateSymbol({  lineColor: "#00FFFF" });
-      //map.setCenter(jzxPoi.coordinates);
-
       const jzxTable = {
         signatureIsChecked: false
       };
       return Object.assign({}, state, { ...jzxTable });
+
     default:
       return { ...state };
   }

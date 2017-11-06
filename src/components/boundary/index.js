@@ -18,6 +18,7 @@ import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 import projectData from './../../redux/RootData';
 import appConfig from "../../redux/Config";
+import JZDList from "./JZDList";
 
 
 const styles = {
@@ -61,20 +62,22 @@ const styles = {
 class BoundaryModule extends Component {
 
   render() {
-    const {
-      handleCameraClose,
-      handleCameraShow,
-      handlePhotoDeleteShow,
-      handlePhotoDelete,
-      CameraShow,
-      DeleteShow,
-      PrintProgress,
-      classes
-    } = this.props;
+    // const {
+    //   handleCameraClose,
+    //   handleCameraShow,
+    //   handlePhotoDeleteShow,
+    //   handlePhotoDelete,
+    //   CameraShow,
+    //   DeleteShow,
+    //   PrintProgress,
+    //   classes
+    // } = this.props;
+    const {XCZJclick,classes}=this.props;
   
     return (
     <div>
-      <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleCameraShow }>
+      {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleCameraShow }> */}      
+      <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }>
         <ListItemIcon>
           <PhotoCameraIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
@@ -84,8 +87,8 @@ class BoundaryModule extends Component {
           primary="现场指界"
         />
       </ListItem>
-      
-      <Dialog
+      <JZDList />
+      {/* <Dialog
           fullScreen
           className={classes.dialog}
           open={CameraShow}
@@ -126,7 +129,7 @@ class BoundaryModule extends Component {
               取消
             </Button>
           </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </div>
     )
   }
@@ -142,13 +145,19 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    XCZJclick:()=>{
+      dispatch({
+        type:'XCZJclick',
+      });
+      dispatch({
+        type: 'MAP_SKETCH_VIEW_HIDE',
+      });
+    },
     handleCameraShow: () => {
       dispatch({
         type: "saveClick",
       }); 
-      dispatch({
-        type: 'MAP_SKETCH_VIEW_HIDE',
-      });
+
       dispatch({
           type: 'ProgressShow',
       });
