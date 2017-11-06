@@ -70,7 +70,6 @@ class PhotoContent extends Component {
           fullScreen
           open={CardShow}
           onRequestClose={handleCardClose}
-          transition={<Slide direction="up" />}
         >
           <AppBar position="static" style ={{backgroundColor:"#455A64"}}>
             <Toolbar>

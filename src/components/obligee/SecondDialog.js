@@ -90,7 +90,6 @@ class SecondDialog extends Component {
           open={open}
           onRequestClose={close}
           className={classes.dialog}
-          transition={<Slide direction="up" />}
         >
           <AppBar style={{ backgroundColor: "#455A64" }}>
             <Toolbar>

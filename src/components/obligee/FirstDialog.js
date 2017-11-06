@@ -77,7 +77,6 @@ class FirstDialog extends Component {
         className={classes.dialog}
           open={open}
           onRequestClose={close}
-          transition={<Slide direction="up" />}
         >
           <AppBar style ={{backgroundColor:"#455A64"}}>
 
