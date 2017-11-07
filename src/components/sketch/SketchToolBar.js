@@ -20,6 +20,7 @@ import Timeline from "material-ui-icons/Timeline"; //连线
 import BorderOuter from "material-ui-icons/BorderOuter"; //标注
 import CheckBoxOutlineBlank from "material-ui-icons/CheckBoxOutlineBlank"; //构面
 import ViewCarousel from "material-ui-icons/ViewCarousel"; //阳台
+import Looks from "material-ui-icons/Looks"; //弧线
 import BookmarkBorder from "material-ui-icons/BookmarkBorder"; //标注
 import NearMe from "material-ui-icons/NearMe"; //选中
 import Delete from "material-ui-icons/Delete"; //删除
@@ -88,6 +89,7 @@ class SkechToolBar extends Component {
       onDrawPointClick,
       onDrawLineClick,
       onDrawJZXClick,
+      onDrawArcClick,
       onDrawPolygonClick,
       onBalconyClick,
       onaddLabelClick,
@@ -113,6 +115,7 @@ class SkechToolBar extends Component {
       drawPointIsChecked,
       drawLineIsChecked,
       drawJZXIsChecked,
+      drawArcIsChecked,
       drawPolygonIsChecked,
       balconyIsChecked,
       addLabelIsChecked,
@@ -162,6 +165,18 @@ class SkechToolBar extends Component {
             >
                 <BorderOuter className={classes.icon} />
                 <Typograghy className={classes.text}>界址线</Typograghy>
+            </Button>
+            <Button
+                className={classes.button}
+                style={{
+                backgroundColor: drawArcIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onDrawArcClick}
+            >
+                <Looks className={classes.icon} />
+                <Typograghy className={classes.text}>弧线</Typograghy>
             </Button>
             <Button
                 className={classes.button}
@@ -318,6 +333,7 @@ const mapStateToProps = state => {
     drawPointIsChecked: sketchState.drawPointIsChecked,
     drawLineIsChecked: sketchState.drawLineIsChecked,
     drawJZXIsChecked:sketchState.drawJZXIsChecked,
+    drawArcIsChecked:sketchState.drawArcIsChecked,
     drawPolygonIsChecked: sketchState.drawPolygonIsChecked,
     balconyIsChecked: sketchState.balconyIsChecked,
     addLabelIsChecked: sketchState.addLabelIsChecked,
@@ -381,6 +397,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: "drawJZXClick",
         payload: dispatch
       });
+    },
+    //画弧线
+    onDrawArcClick:()=>{
+      dispatch({
+        type:"drawArcClick",
+        payload:dispatch
+      })
+
     },
     //构面
     onDrawPolygonClick: () => {
