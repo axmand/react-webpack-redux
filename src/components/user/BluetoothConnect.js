@@ -244,33 +244,56 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleCOMPortConnect: () => {
-      console.log("handleCOMPortConnect Triggerd ...");
-      console.log(COMPort);
+      // console.log("handleCOMPortConnect Triggerd ...");
+      // console.log(COMPort);
 
       const COMPortSelected = COMPort.slice(
         COMPort.indexOf("(") + 1,
         COMPort.indexOf(")")
       );
-      console.log(COMPortSelected);
+      // console.log(COMPortSelected);
 
       const RTKBlutoothConnectURLBase =
       appConfig.fileServiceRootPath + "/bluetooth/connect/sp/";
       const RTKBlutoothConnectURL = RTKBlutoothConnectURLBase + COMPortSelected;
-      console.log(RTKBlutoothConnectURL);
+      // console.log(RTKBlutoothConnectURL);
 
       fetch(RTKBlutoothConnectURL, {
         method: "GET"
       })
-        .then(response => response.json())
+        .then(response => {
+          if (response.ok) {
+            return response.json()
+          } 
+          else {
+            return Promise.reject({
+              status: response.status,
+              statusText: response.statusText
+            })
+          }
+        })
         .then(json => {
           console.log(json);
           dispatch({
-            type: "COM_BLUETOOTH_MODULE_CONNECT"
+            type: "COM_BLUETOOTH_MODULE_CONNECT",
+            payload: {
+              notification: "RTK蓝牙已连接",
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
           });
         });
 
-      bluetoothConnectAlertShow: true;
+        
     },
+    
     handleCOMPortDisconnect: () => {
       console.log("handleCOMPortDisconnect Triggerd ...");
       console.log(COMPort);
@@ -290,11 +313,33 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       fetch(RTKBlutoothDisconnectURL, {
         method: "GET"
       })
-        .then(response => response.json())
+        .then(response => {
+          if (response.ok) {
+            return response.json()
+          } 
+          else {
+            return Promise.reject({
+              status: response.status,
+              statusText: response.statusText
+            })
+          }
+        })
         .then(json => {
           console.log(json);
           dispatch({
-            type: "COM_BLUETOOTH_MODULE_DISCONNECT"
+            type: "COM_BLUETOOTH_MODULE_DISCONNECT",
+            payload: {
+              notification: "已断开RTK蓝牙连接",
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
           });
         });
     },
