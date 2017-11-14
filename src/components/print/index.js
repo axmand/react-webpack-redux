@@ -90,32 +90,12 @@ class PrintModule extends Component {
         </TableHead>
         <TableBody>
           <TableRow >
-            <TableCell >宗地基本信息表</TableCell>
+            <TableCell >不动产权籍调查表</TableCell>
             <TableCell><Button onClick = { handlePrint1 }>打印</Button></TableCell>
-          </TableRow>
-          <TableRow >
-            <TableCell >界址标示表</TableCell>                         
-            <TableCell><Button onClick = { handlePrint2 }>打印</Button></TableCell>        
-          </TableRow>
-          <TableRow >
-            <TableCell >界址签章表</TableCell>
-            <TableCell><Button onClick = { handlePrint3 }>打印</Button></TableCell>
-          </TableRow>
+          </TableRow> 
           <TableRow >
             <TableCell >不动产单元草图</TableCell>
             <TableCell><Button onClick = { handlePrint4 }>打印</Button></TableCell>
-          </TableRow>
-          <TableRow >
-            <TableCell >界址说明表</TableCell>
-            <TableCell><Button onClick = { handlePrint5 }>打印</Button></TableCell>
-          </TableRow>
-          <TableRow >
-            <TableCell>调查审核表</TableCell>
-            <TableCell><Button onClick = { handlePrint6 }>打印</Button></TableCell>  
-          </TableRow>
-          <TableRow >
-            <TableCell>共有宗地面积分摊表</TableCell>
-            <TableCell><Button onClick = { handlePrint7 }>打印</Button></TableCell>  
           </TableRow>
         </TableBody>
         </Table>

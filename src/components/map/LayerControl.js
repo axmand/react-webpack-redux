@@ -12,17 +12,24 @@ import Checkbox from "material-ui/Checkbox";
 import LayersIcon from "material-ui-icons/Layers";
 
 const styles = {
+  // root:{    
+  //   height: `${window.innerHeight * 0.05625}px`,
+  //   width: `${window.innerHeight * 0.05625}px`,
+  // },
   listitem: {
+    flexDirection: "column",
+    justifyContent: "center",
     padding: "0px",
-    marggin: "0px",
     border: 0,
     background: "rgba(69, 90, 100, .6)",
-    borderRadius: "12.5%",
+    borderRadius: '12.5%',
+    height: `${window.innerHeight * 0.05625}px`,
+    width: `${window.innerHeight * 0.05625}px`,
   },
   icon: {
     color: "#fff",
-    width: "100%",
-    height: "100%"
+    width: "80%",
+    height: "80%"
   },
   menu: {
     // top: '88px !important',
@@ -119,7 +126,7 @@ class LayerControl extends Component {
     } = this.state;
 
     return (
-      <div>
+      <div className={classes.root}>
         <ListItem
           ref={node => {
             this.button = node;

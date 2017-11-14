@@ -33,17 +33,62 @@ export class Camera extends Component {
       navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
         navigator.mozGetUserMedia || navigator.msGetUserMedia
 
-      if (!navigator.getUserMedia) reject('This camera is not supported by your browser!')
+      var exArray = []; //存储设备源ID 
+      navigator.mediaDevices.enumerateDevices().then(function(devices) {
+      devices.forEach(function(device) {
+      console.log(device.kind + ": " + device.label +
+                " id = " + device.deviceId);
+      if (device.kind === "videoinput") {  
+                    exArray.push(device.deviceId);  
+                }  
+                  
+      });
+              console.log(exArray);
+})     
 
-      const handleStream = stream => resolve(window.URL.createObjectURL(stream))
+        // getMediaDevices.enumerateDevices().then(function (sourceInfos) {  
+        //     for (var i = 0; i != sourceInfos.length; ++i) {  
+        //         var sourceInfo = sourceInfos[i];  
+        //         //这里会遍历audio,video，所以要加以区分  
+        //         if (sourceInfo.kind === 'video') {  
+        //             exArray.push(sourceInfo.id);  
+        //         }  
+        //     }  
+        // })     
+        
+        // navigator.mediaStreamTrack.getSources(function (sourceInfos) {  
+        //     for (var i = 0; i != sourceInfos.length; ++i) {  
+        //         var sourceInfo = sourceInfos[i];  
+        //         //这里会遍历audio,video，所以要加以区分  
+        //         if (sourceInfo.kind === 'video') {  
+        //             exArray.push(sourceInfo.id);  
+        //         }  
+        //     }  
+        // })
+        
+      // if (!navigator.getUserMedia) reject('This camera is not supported by your browser!')
+
+      // const handleStream = stream => resolve(window.URL.createObjectURL(stream))
+      
+
+
+      
       const mediaConfig = {
-        video: true,
+        video: { 'optional': [{'sourceId': exArray[1] }] },  //0为前置摄像头，1为后置
         audio: false
       }
 
       //Access media input device, handle stream of media output
-      navigator.getUserMedia(mediaConfig, handleStream, reject)
-    })
+      navigator.mediaDevices.getUserMedia(mediaConfig)
+      .then(function(mediaStream) {
+          var video = document.querySelector('video');
+          video.src = window.URL.createObjectURL(mediaStream);
+          video.onloadedmetadata = function(e) {
+          // Do something with the video here.
+          video.play();
+      };})
+      .catch(function(err) { console.log(err.name); })
+      })
   }
 
   snapshot() {

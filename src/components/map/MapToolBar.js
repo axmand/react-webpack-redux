@@ -20,7 +20,7 @@ const styles = {
     position: "absolute",
     top: "20%",
     right: "2.0833%",
-    width: "3.5%"
+    width: `${window.innerHeight * 0.05625}px`,
   },
   listitem: {
     flexDirection: "column",
@@ -29,11 +29,13 @@ const styles = {
     border: 0,
     background: "rgba(69, 90, 100, .6)",
     borderRadius: '12.5%',
+    height: `${window.innerHeight * 0.05625}px`,
+    width: `${window.innerHeight * 0.05625}px`,
   },
   icon: {
     color: "#fff",
-    width: "100%",
-    height: "100%"
+    width: "80%",
+    height: "80%"
   }
 };
 

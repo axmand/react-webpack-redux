@@ -17,10 +17,14 @@ import Typograghy from "material-ui/Typography";
 import LocationSearching from "material-ui-icons/LocationSearching"; //展点
 import Adjust from "material-ui-icons/Adjust"; //画点
 import Timeline from "material-ui-icons/Timeline"; //连线
-import BorderOuter from "material-ui-icons/BorderOuter"; //标注
+import BorderStyle from "material-ui-icons/BorderStyle"; //界址线
 import CheckBoxOutlineBlank from "material-ui-icons/CheckBoxOutlineBlank"; //构面
 import ViewCarousel from "material-ui-icons/ViewCarousel"; //阳台
+import Looks from "material-ui-icons/Looks"; //弧线
+import PictureInPicture from "material-ui-icons/PictureInPicture"; //中空地块
 import BookmarkBorder from "material-ui-icons/BookmarkBorder"; //标注
+import Straighten from "material-ui-icons/Straighten"; //测距
+import FlipToFront from "material-ui-icons/FlipToFront"; //测面
 import NearMe from "material-ui-icons/NearMe"; //选中
 import Delete from "material-ui-icons/Delete"; //删除
 import Undo from "material-ui-icons/Undo"; //撤销
@@ -35,13 +39,9 @@ import SecondDialog from '../obligee/SecondDialog'
 import appConfig from "../../redux/Config"
 
 const styles = theme => ({
-  // rootDiv:{
-  //   height: `${window.innerHeight-48}px`,
-  //   width: `${window.innerWidth*0.916}px`,
-  // },
   root: {
-    height: `${window.innerHeight * 0.09375}px`,
-    width:  `${window.innerWidth*0.875}px`,
+    height: `${window.innerHeight * 0.075}px`,
+    width:  `${window.innerHeight * 1.35}px`,
     position: "absolute",
     top: `${window.innerHeight * 0.1}px`,
     left: "1%",
@@ -54,7 +54,7 @@ const styles = theme => ({
   button: {
     display: "inline-block",
     minHeight: "100%",
-    minWidth: "7.14%",
+    minWidth: "5%",
     padding: 0,
     border: 0,
   },
@@ -88,6 +88,7 @@ class SkechToolBar extends Component {
       onDrawPointClick,
       onDrawLineClick,
       onDrawJZXClick,
+      onDrawArcClick,
       onDrawPolygonClick,
       onBalconyClick,
       onaddLabelClick,
@@ -113,6 +114,7 @@ class SkechToolBar extends Component {
       drawPointIsChecked,
       drawLineIsChecked,
       drawJZXIsChecked,
+      drawArcIsChecked,
       drawPolygonIsChecked,
       balconyIsChecked,
       addLabelIsChecked,
@@ -160,8 +162,20 @@ class SkechToolBar extends Component {
                 }}
                 onClick={onDrawJZXClick}
             >
-                <BorderOuter className={classes.icon} />
+                <BorderStyle className={classes.icon} />
                 <Typograghy className={classes.text}>界址线</Typograghy>
+            </Button>
+            <Button
+                className={classes.button}
+                style={{
+                backgroundColor: drawArcIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onDrawArcClick}
+            >
+                <Looks className={classes.icon} />
+                <Typograghy className={classes.text}>弧线</Typograghy>
             </Button>
             <Button
                 className={classes.button}
@@ -190,6 +204,18 @@ class SkechToolBar extends Component {
             <Button
                 className={classes.button}
                 style={{
+                backgroundColor: balconyIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onBalconyClick}
+            >
+                <PictureInPicture className={classes.icon} />
+                <Typograghy className={classes.text}>异型地</Typograghy>
+            </Button>
+            <Button
+                className={classes.button}
+                style={{
                 backgroundColor: addLabelIsChecked
                     ? "rgba(69, 90, 100, .8)"
                     : "transparent"
@@ -198,6 +224,30 @@ class SkechToolBar extends Component {
             >
                 <BookmarkBorder className={classes.icon} />
                 <Typograghy className={classes.text}>标注</Typograghy>
+            </Button>
+            <Button
+                className={classes.button}
+                style={{
+                backgroundColor: chooseObjIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onChooseObjClick}
+            >
+                <Straighten className={classes.icon} />
+                <Typograghy className={classes.text}>测距</Typograghy>
+            </Button>
+            <Button
+                className={classes.button}
+                style={{
+                backgroundColor: chooseObjIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onChooseObjClick}
+            >
+                <FlipToFront className={classes.icon} />
+                <Typograghy className={classes.text}>测面</Typograghy>
             </Button>
             <Button
                 className={classes.button}
@@ -318,6 +368,7 @@ const mapStateToProps = state => {
     drawPointIsChecked: sketchState.drawPointIsChecked,
     drawLineIsChecked: sketchState.drawLineIsChecked,
     drawJZXIsChecked:sketchState.drawJZXIsChecked,
+    drawArcIsChecked:sketchState.drawArcIsChecked,
     drawPolygonIsChecked: sketchState.drawPolygonIsChecked,
     balconyIsChecked: sketchState.balconyIsChecked,
     addLabelIsChecked: sketchState.addLabelIsChecked,
@@ -381,6 +432,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: "drawJZXClick",
         payload: dispatch
       });
+    },
+    //画弧线
+    onDrawArcClick:()=>{
+      dispatch({
+        type:"drawArcClick",
+        payload:dispatch
+      })
+
     },
     //构面
     onDrawPolygonClick: () => {
