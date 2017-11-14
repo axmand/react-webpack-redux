@@ -58,6 +58,15 @@ class Map extends Component {
     })
       .addTo(map)
       .disable();
+      drawTool.registerMode('CubicBezierCurve', {
+        'action': 'clickDblclick',
+        'create': path => new maptalks.CubicBezierCurve(path),
+        'update': (path, geometry) => {
+            geometry.setCoordinates(path);
+        },
+        'generate': geometry => geometry
+       }
+    );
     //为界址点图层添加snapto工具
     snap = new SnapTool({
       tolerance: 5,
@@ -304,6 +313,8 @@ let plot,
   drawLine,
   drawJZXEnd,
   drawJZX,
+  drawCurve,
+  drawCurveEnd,
   drawPolygonEnd,
   drawPolygon,
   drawBalconyEnd,
@@ -321,7 +332,8 @@ const sketchReduce = (
     plotIsChecked: false,
     drawPointIsChecked: false,
     drawLineIsChecked: false,
-    drawJZXIsChecked: false,
+    drawJZXIsChecked: false,  
+    drawArcIsChecked:false,
     drawPolygonIsChecked: false,
     balconyIsChecked: false,
     addLabelIsChecked: false,
@@ -728,6 +740,7 @@ const sketchReduce = (
         drawPointIsChecked: false,
         drawLineIsChecked: false,
         drawJZXIsChecked: false,
+        drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -752,6 +765,7 @@ const sketchReduce = (
         drawPointIsChecked: false,
         drawLineIsChecked: false,
         drawJZXIsChecked: false,
+        drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -836,6 +850,7 @@ const sketchReduce = (
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
         drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend", drawCurveEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
         map.on("click", drawPoint);
@@ -848,6 +863,7 @@ const sketchReduce = (
         drawPointIsChecked: !state.drawPointIsChecked,
         drawLineIsChecked: false,
         drawJZXIsChecked: false,
+        drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -867,6 +883,7 @@ const sketchReduce = (
       if (!state.drawLineIsChecked) {
         map.off("click", drawPoint);
         drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
@@ -886,6 +903,7 @@ const sketchReduce = (
         drawPointIsChecked: false,
         drawLineIsChecked: !state.drawLineIsChecked,
         drawJZXIsChecked: false,
+        drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -944,6 +962,7 @@ const sketchReduce = (
       if (!state.drawJZXIsChecked) {
         map.off("click", drawPoint);
         drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawCurveEnd);        
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
@@ -962,7 +981,8 @@ const sketchReduce = (
         lineNum: state.lineNum,
         plotIsChecked: false,
         drawPointIsChecked: false,
-        drawLineIsChecked: false,
+        drawLineIsChecked: false,        
+        drawArcIsChecked:false,
         drawJZXIsChecked: !state.drawJZXIsChecked,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
@@ -976,12 +996,93 @@ const sketchReduce = (
         signatureIsChecked: false
       };
       return { ...state, ...JZXState };
+    //画弧线
+    case "drawArcClick":
+      //画线时drawTool的绑定事件
+      drawCurveEnd =
+      drawCurveEnd ||
+      function(param) {
+        state.lineNum++;
+        // let coorArr = param.geometry._coordinates;
+        // //为折线的每条线段添加长度标注
+        // for (let i = 0; i < coorArr.length - 1; i++) {
+        //   //每条线段的起点和终点坐标
+        //   let startPoi = coorArr[i],
+        //     endPoi = coorArr[i + 1];
+        //   //计算每条线段的长度
+        //   length = map.computeLength(startPoi, endPoi);
+        //   param.geometry.config("length", length);
+        //   let content = param.geometry.options.length.toFixed(2);
+        //   addObjLabel(content, startPoi, endPoi);
+        // }
+        // param.geometry.config("labels", labels);
+        // labels = [];
+        // param.geometry.config("isClicked", false);
+
+        param.geometry.config("poiArr", linePoiArr);
+        param.geometry.config("id", state.lineNum);
+        param.geometry._id=param.geometry.options.id;
+        map.getLayer("JZX").addGeometry(param.geometry);
+        param.geometry.on("click", clickObj);
+        recoverObj();
+        linePoiArr = [];
+        console.log(param);
+      };
+    //用于画线
+    drawCurve =
+    drawCurve ||
+      function() {
+        recoverObj();
+        linePoiArr = [];
+        drawTool.setMode("CubicBezierCurve").enable();
+        drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
+        drawTool.on("drawend", drawCurveEnd);
+      };
+
+    if (!state.drawArcIsChecked) {
+      map.off("click", drawPoint);
+      drawTool.off("drawend", drawLineEnd);
+      drawTool.off("drawend", drawJZXEnd);      
+      drawTool.off("drawend", drawPolygonEnd);
+      drawTool.off("drawend", drawBalconyEnd);
+      map.off("click", addLabel);
+      map.off("dblclick", labelEditEnd);
+      //snap.enable();
+      //开始画线
+      drawCurve();
+      map.on("dblclick", drawToolOn);
+    } else {
+      drawTool.disable();
+      snap.disable();
+      map.off("dblclick", drawToolOn);
+    }
+    const CurveState = {
+      pointNum: state.pointNum,
+      lineNum: state.lineNum,
+      plotIsChecked: false,
+      drawPointIsChecked: false,
+      drawLineIsChecked: false,
+      drawJZXIsChecked: false,
+      drawArcIsChecked:!state.drawArcIsChecked,
+      drawPolygonIsChecked: false,
+      balconyIsChecked: false,
+      addLabelIsChecked: false,
+      chooseObjIsChecked: false,
+      deleteIsChecked: false,
+      undoIsChecked: false,
+      redoIsChecked: false,
+      saveIsChecked: false,
+      alertSave: true,
+      signatureIsChecked: false
+    };
+    return { ...state, ...CurveState };
     //构面
     case "drawPolygonClick":
       if (!state.drawPolygonIsChecked) {
         map.off("click", drawPoint);
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawCurveEnd);        
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
@@ -1001,6 +1102,7 @@ const sketchReduce = (
         drawLineIsChecked: false,
         drawJZXIsChecked: false,
         drawPolygonIsChecked: !state.drawPolygonIsChecked,
+        drawArcIsChecked:false,        
         balconyIsChecked: false,
         addLabelIsChecked: false,
         chooseObjIsChecked: false,
@@ -1018,6 +1120,7 @@ const sketchReduce = (
         map.off("click", drawPoint);
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
@@ -1036,6 +1139,7 @@ const sketchReduce = (
         drawPointIsChecked: false,
         drawLineIsChecked: false,
         drawJZXIsChecked: false,
+        drawArcIsChecked:false,        
         drawPolygonIsChecked: false,
         balconyIsChecked: !state.balconyIsChecked,
         addLabelIsChecked: false,
@@ -1057,6 +1161,7 @@ const sketchReduce = (
       map.off("dblclick", drawToolOn);
       drawTool.off("drawend", drawLineEnd);
       drawTool.off("drawend", drawJZXEnd);
+      drawTool.off("drawend", drawCurveEnd);
       drawTool.off("drawend", drawPolygonEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("dblclick", drawToolOn);
@@ -1073,6 +1178,7 @@ const sketchReduce = (
         drawPointIsChecked: false,
         drawLineIsChecked: false,
         drawJZXIsChecked: false,
+        drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: !state.addLabelIsChecked,
@@ -1148,6 +1254,7 @@ const sketchReduce = (
         drawPointIsChecked: false,
         drawLineIsChecked: false,
         drawJZXIsChecked: false,
+        drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -1187,6 +1294,8 @@ const sketchReduce = (
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
+        drawJZXIsChecked:false,
+        drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
@@ -1228,6 +1337,7 @@ const sketchReduce = (
         };
         return Object.assign({}, state, { ...signatureState2 });
       }
+
     case "signatureAlerClose":
       const signatureAlertClose = { alertSignature: false };
       return Object.assign({}, state, { ...signatureAlertClose });
@@ -1243,6 +1353,7 @@ const sketchReduce = (
         drawPointIsChecked: false,
         drawLineIsChecked: false,
         drawJZXIsChecked: false,
+        drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,

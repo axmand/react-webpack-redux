@@ -43,6 +43,8 @@ class PhotoContent extends Component {
       classes
 		} = this.props
 
+    console.log(projectData.PhotoItem)
+
     return (
     <div>
       <div className = {classes.box}>
