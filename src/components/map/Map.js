@@ -448,7 +448,7 @@ const sketchReduce = (
     alertSignature: false,
     showDelDialog: false,
     haveObjToDel: false,
-    signatureIsChecked: false,
+    signatureIsChecked: false,    
     jzdJSONData: JSON,
     szJSONData: JSON,
     zdJSONData: JSON,
@@ -1474,12 +1474,11 @@ const sketchReduce = (
       let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
       console.log(jzxPoi)
       jzxPoi.updateSymbol({  lineColor: "#00FFFF" });
-      //map.setCenter(jzxPoi.coordinates);
-
       const jzxTable = {
         signatureIsChecked: false
       };
       return Object.assign({}, state, { ...jzxTable });
+
     default:
       return { ...state };
   }
