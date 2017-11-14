@@ -34,6 +34,9 @@ import Table, {
 import Divider from "material-ui/Divider";
 import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
+import { CircularProgress } from 'material-ui/Progress';
+import green from 'material-ui/colors/green';
+
 import RootReducer from "./../../redux/RootReducer";
 import { NavLink } from "react-router-dom";
 import uuidv4 from "uuid/v4";
@@ -51,7 +54,7 @@ import BluetoothConnect from "./BluetoothConnect";
 
 
 // inset css
-const styles = {
+const styles = theme => ({
   dialog: {
     width: "50%",
     height: "95%",
@@ -223,7 +226,19 @@ const styles = {
   usrInfo: {
     // width: '500px',
   },
-};
+  wrapperWithProgress: {
+    margin: theme.spacing.unit,
+    position: 'relative',
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: '-30%',
+    marginLeft: '-16%',
+  },
+});
 
 class UserModule extends Component {
   constructor(props) {
@@ -264,6 +279,7 @@ class UserModule extends Component {
       lastLoginTime,
       lastLoginAddress,
       handleClickBluetooth,
+      bluetoothConnectModuleLoading
     } = this.props;
     const imageLists = [
       { imageName: "*****区域影像图1", imageSize: "105MB" },
@@ -399,32 +415,40 @@ class UserModule extends Component {
                 className={classes.listItemUser}
                 style={{ lineHeight: "5em" }}
               >
-                <Button
-                  className={classes.buttonAttach}
-                  onClick={handleClickBluetooth}
-                >
-                  <Bluetooth className={classes.icon} />
-                  <Typography className={classes.typography} bold>
-                    蓝牙连接
-                  </Typography>
-                </Button>
+                <div className={classes.wrapperWithProgress}>
+                  <Button
+                    className={classes.buttonAttach}
+                    onClick={handleClickBluetooth}
+                  >
+                    <Bluetooth className={classes.icon} />                  
+                    <Typography className={classes.typography} bold>
+                      蓝牙连接
+                    </Typography>
+                  </Button>
+                  {bluetoothConnectModuleLoading && <CircularProgress size={48} className={classes.buttonProgress} />}
+                </div>
 
-                <Button className={classes.buttonAttach}>
-                  <Devices className={classes.icon} />
-                  <Typography className={classes.typography} bold>
-                    连接到电脑
-                  </Typography>
-                </Button>
+                <div className={classes.wrapperWithProgress}>
+                  <Button className={classes.buttonAttach}>
+                    <Devices className={classes.icon} />
+                    <Typography className={classes.typography} bold>
+                      连接到电脑
+                    </Typography>
+                  </Button>
+                </div>
 
-                <Button
-                  className={classes.buttonAttach}
-                  onClick={this.handleClickImage}
-                >
-                  <Photo className={classes.icon} />
-                  <Typography className={classes.typography} bold>
-                    影像下载
-                  </Typography>
-                </Button>
+                <div className={classes.wrapperWithProgress}>
+                  <Button
+                    className={classes.buttonAttach}
+                    onClick={this.handleClickImage}
+                  >
+                    <Photo className={classes.icon} />
+                    <Typography className={classes.typography} bold>
+                      影像下载
+                    </Typography>
+                  </Button>
+                </div>
+                
               </ListItem>
 
               <listItem style={{ lineHeight: "2em" }}> </listItem>
@@ -457,6 +481,7 @@ class UserModule extends Component {
             </List>
           </DialogContent>
         </Dialog>
+
         <Dialog
           fullScreen
           className={(classes.dialog, classes.dialogImage)}
@@ -510,12 +535,20 @@ const userReduce = (
     userCompany: "南宁市国土测绘地理信息中心",
     userJob: "地籍测量员",
     lastLoginTime: "2017/08/24/21:38",
-    lastLoginAddress: "115.101.26"
+    lastLoginAddress: "115.101.26",
+    bluetoothConnectModuleLoading: false,
   },
   action
 ) => {
+  let newState = JSON.parse(JSON.stringify(state));
 
-  return { ...state };
+  switch (action.type) {
+    case 'BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH':
+      newState.bluetoothConnectModuleLoading = !newState.bluetoothConnectModuleLoading;
+      return { ...state, ...newState };
+    default:
+      return { ...state };
+  }
 
 };
 RootReducer.merge(userReduce);
@@ -531,7 +564,8 @@ const mapStateToProps = state => {
     userCompany: userState.userCompany,
     userJob: userState.userJob,
     lastLoginTime: userState.lastLoginTime,
-    lastLoginAddress: userState.lastLoginAddress
+    lastLoginAddress: userState.lastLoginAddress,
+    bluetoothConnectModuleLoading: userState.bluetoothConnectModuleLoading,
   };
 };
 
@@ -544,7 +578,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       // dispatch({
       //   type: "COM_BLUETOOTH_MODULE_GET",
       // });
-
+      dispatch({
+        type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
+      });
       fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/splist")
         .then(response => response.json())
         .then(json => {
@@ -555,9 +591,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: "COM_BLUETOOTH_MODULE_GET",
             payload: json.data
           });
+          dispatch({
+            type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
+          });
         })
         .catch(err => {
           console.log(err);
+          dispatch({
+            type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
+          });
         });
     }
   };
