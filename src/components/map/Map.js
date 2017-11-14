@@ -20,7 +20,7 @@ import MapToolBar from "./MapToolBar";
  * 全局的地图对象和方法
  */
 let map;
-let drawTool;
+let drawTool,distanceTool,AreaTool;
 let snap;
 /**
  * 地图组件
@@ -55,18 +55,118 @@ class Map extends Component {
         lineColor: "#000",
         lineWidth: 3
       }
-    })
-      .addTo(map)
-      .disable();
-      drawTool.registerMode('CubicBezierCurve', {
-        'action': 'clickDblclick',
-        'create': path => new maptalks.CubicBezierCurve(path),
-        'update': (path, geometry) => {
-            geometry.setCoordinates(path);
+    }).addTo(map).disable();
+    drawTool.registerMode('CubicBezierCurve', {
+      'action': 'clickDblclick',
+      'create': path => new maptalks.CubicBezierCurve(path),
+      'update': (path, geometry) => {
+          geometry.setCoordinates(path);
+      },
+      'generate': geometry => geometry
+      }
+     );
+    //将测距工具添加至地图
+    distanceTool=new maptalks.DistanceTool({
+      'symbol': {
+        'lineColor' : '#34495e',
+        'lineWidth' : 1.5
+      },
+      'vertexSymbol' : {
+        'markerType'        : 'ellipse',
+        'markerFill'        : '#1bbc9b',
+        'markerLineColor'   : '#000',
+        'markerLineWidth'   : 3,
+        'markerWidth'       : 10,
+        'markerHeight'      : 10
+      },
+      'labelOptions' : {
+        'textSymbol': {
+          'textFaceName': 'monospace',
+          'textFill' : '#fff',
+          'textLineSpacing': 1,
+          'textHorizontalAlignment': 'right',
+          'textDx': 15,
+          'markerLineColor': '#b4b3b3',
+          'markerFill' : '#000'
+        }, 'boxStyle' : {
+          'padding' : [6, 2],
+          'symbol' : {
+            'markerType' : 'square',
+            'markerFill' : '#000',
+            'markerFillOpacity' : 0.9,
+            'markerLineColor' : '#b4b3b3'
+          }
+        }
+      },
+      'clearButtonSymbol' :[{
+        'markerType': 'square',
+        'markerFill': '#000',
+        'markerLineColor': '#b4b3b3',
+        'markerLineWidth': 2,
+        'markerWidth': 15,
+        'markerHeight': 15,
+        'markerDx': 20
+      }, {
+        'markerType': 'x',
+        'markerWidth': 10,
+        'markerHeight': 10,
+        'markerLineColor' : '#fff',
+        'markerDx': 20
+      }],
+      'language' : 'en-US'
+    }).addTo(map).disable();
+    //将测面工具添加至地图
+    AreaTool=new maptalks.AreaTool({
+      'symbol': {
+        'lineColor' : '#1bbc9b',
+        'lineWidth' : 2,
+        'polygonFill' : '#fff',
+        'polygonOpacity' : 0.3
+      },
+      'vertexSymbol' : {
+        'markerType'        : 'ellipse',
+        'markerFill'        : '#34495e',
+        'markerLineColor'   : '#1bbc9b',
+        'markerLineWidth'   : 3,
+        'markerWidth'       : 10,
+        'markerHeight'      : 10
+      },
+      'labelOptions' : {
+        'textSymbol': {
+          'textFaceName': 'monospace',
+          'textFill' : '#fff',
+          'textLineSpacing': 1,
+          'textHorizontalAlignment': 'right',
+          'textDx': 15
         },
-        'generate': geometry => geometry
-       }
-    );
+        'boxStyle' : {
+          'padding' : [6, 2],
+          'symbol' : {
+            'markerType' : 'square',
+            'markerFill' : '#000',
+            'markerFillOpacity' : 0.9,
+            'markerLineColor' : '#b4b3b3'
+          }
+        }
+      },
+      'clearButtonSymbol' :[{
+        'markerType': 'square',
+        'markerFill': '#000',
+        'markerLineColor': '#b4b3b3',
+        'markerLineWidth': 2,
+        'markerWidth': 15,
+        'markerHeight': 15,
+        'markerDx': 22
+      }, {
+        'markerType': 'x',
+        'markerWidth': 10,
+        'markerHeight': 10,
+        'markerLineColor' : '#fff',
+        'markerDx': 22
+      }],
+      language: ''
+    }).addTo(map).disable();
+    
     //为界址点图层添加snapto工具
     snap = new SnapTool({
       tolerance: 5,
