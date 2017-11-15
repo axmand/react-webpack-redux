@@ -86,10 +86,7 @@ class ThirdDialog extends Component {
         className={classes.dialog}
           open={open}
           onRequestClose={close}
-<<<<<<< HEAD
-=======
           transition={Transition}
->>>>>>> 19ee0dc32aaeb663c4b565b75af660d2007f3fbc
         >
           <AppBar style ={{backgroundColor:"#455A64"}}>
              

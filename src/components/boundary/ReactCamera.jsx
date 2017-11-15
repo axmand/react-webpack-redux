@@ -74,12 +74,7 @@ export class Camera extends Component {
 
       
       const mediaConfig = {
-<<<<<<< HEAD
-        video: { facingMode: { exact: "environment" } } ,
-        // video: true,
-=======
         video: { 'optional': [{'sourceId': exArray[1] }] },  //0为前置摄像头，1为后置
->>>>>>> 9ecab70084d691118334187841621b8a229e6f4e
         audio: false
       }
 
