@@ -44,6 +44,9 @@ const styles = {
   }
 };
 
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 class JZDList extends Component {
 
@@ -54,7 +57,7 @@ class JZDList extends Component {
       fullScreen
       open={showXCZJDialog}
       onRequestClose={onJZDListClose}
-      transition={<Slide direction="up" />}
+      transition={Transition}
     >
           <Toolbar className={classes.toolBar}>
             <Typography type="title" color="inherit" className={classes.title}>

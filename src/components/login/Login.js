@@ -16,8 +16,12 @@ import { FormGroup } from "material-ui/Form";
 import Paper from "material-ui/Paper";
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
+import IconButton from 'material-ui/IconButton';
 import Typography from "material-ui/Typography";
-import PasswordFeild from "./PasswordField";
+import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import Visibility from 'material-ui-icons/Visibility';
+import VisibilityOff from 'material-ui-icons/VisibilityOff';
 
 import appConfig from "../../redux/Config"
 
@@ -41,8 +45,7 @@ const styles = theme => ({
   },
   textField: {
     width: "310px",
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   iconButton: {
     position: "absolute",
@@ -51,7 +54,8 @@ const styles = theme => ({
   },
   button: {
     width: "310px",
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 3,
   },
   buttonForgetPassword: {
     width: "70px",
@@ -60,12 +64,38 @@ const styles = theme => ({
   },
   navLink: {
     textDecoration: "none"
-  }
+  },
+  formControl: {
+    width: "310px",
+    margin: theme.spacing.unit,
+  },
 });
 
 class Login extends Component {
+
+  state = {
+    showPassword: false,
+  };
+
+  handleChange = prop => event => {
+    this.setState({ [prop]: event.target.value });
+  };
+
+  handleMouseDownPassword = event => {
+    event.preventDefault();
+  };
+
+  handleClickShowPasssword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
+
   render() {
-    const { classes, onInitialAppState } = this.props;
+    const { 
+      classes,
+      username,
+      password,
+      onInitialAppState 
+    } = this.props;
 
     return (
       <div className={classes.container}>
@@ -80,9 +110,30 @@ class Login extends Component {
               className={classes.textField}
               margin="dense"
               required={true}
+              value={username}
             />
-            <PasswordFeild />
-            <div
+
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <Input
+                id="password"
+                type={this.state.showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={this.handleChange('password')}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={this.handleClickShowPasssword}
+                      onMouseDown={this.handleMouseDownPassword}
+                    >
+                      {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+
+            {/* <div
               style={{
                 display: "flex",
                 width: "310px",
@@ -92,7 +143,8 @@ class Login extends Component {
               <Button className={classes.buttonForgetPassword}>
                 <Typography>忘记密码?</Typography>
               </Button>
-            </div>
+            </div> */}
+
             <NavLink className={classes.navLink} to="/mainview">
               <Button raised color="primary" className={classes.button} onClick={onInitialAppState}>
                 <Typography type="title" style={{ color: "#FFF" }}>
@@ -113,6 +165,14 @@ Login.propTypes = {
   onChange: PropTypes.func.isRequired
 };
 
+const mapStateToProps = state => {
+  const loginState = state.loginReduce;
+  return {
+    username: loginState.username,
+    password: loginState.password,
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     onInitialAppState: () => {
@@ -126,12 +186,24 @@ const mapDispatchToProps = dispatch => {
           //console.log(json);
         })
         .catch(e => console.log("Oops, error", e));
+    },
+    handleChange: (inputID, event) => {
+      dispatch({
+        type: "CHANGE_INPUT_VALUE_LOGIN",
+        payload: {
+          targetID: inputID,
+          targetValue: event.target.value
+        }
+      });
     }
   };
 };
 
 //加入reducer
-const loginReduce = (state = 0, action) => {
+const loginReduce = (state = {
+  username: '',
+  password: '',
+}, action) => {
   if (action.type === "LOGIN_TODO") {
     //登录认证操作
   }
@@ -140,6 +212,6 @@ const loginReduce = (state = 0, action) => {
 
 RootReducer.merge(loginReduce);
 
-export default connect(null, mapDispatchToProps)(
+export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles, { name: "Login" })(Login)
 );

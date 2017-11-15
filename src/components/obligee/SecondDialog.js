@@ -25,6 +25,11 @@ import { Provider, connect } from "react-redux";
 import BoundaryList from "./BoundaryList";
 import BoundarySignature from "./BoundarySignature";
 import BoundarySpecification from "./BoundarySpecification";
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 const TabContainer = props => (
   <div style={{ padding: 20, overflow: "auto" }}>{props.children}</div>
 );
@@ -90,6 +95,10 @@ class SecondDialog extends Component {
           open={open}
           onRequestClose={close}
           className={classes.dialog}
+<<<<<<< HEAD
+=======
+          transition={Transition}
+>>>>>>> 19ee0dc32aaeb663c4b565b75af660d2007f3fbc
         >
           <AppBar style={{ backgroundColor: "#455A64" }}>
             <Toolbar>
