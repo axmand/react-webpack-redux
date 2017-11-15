@@ -8,13 +8,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import { connect } from "react-redux";
+import RootReducer from "./../redux/RootReducer";
+
 import NavigationView from './NavigationView'
 import MapView from './MapView'
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 
-const styles = {
+const styleSheet = {
   root: {
     flexGrow: 1,
     width: '100%',
@@ -26,7 +29,10 @@ const styles = {
 class MainView extends Component {
 
   render() {
-    const classes = this.props.classes;
+    const {
+      classes,
+      notification,
+    } = this.props;
 
     return (
       <Grid container spacing={0} className={classes.root}>
@@ -35,7 +41,7 @@ class MainView extends Component {
         </Grid>
         <Grid item xs={11} >
           <MapView />
-          <div style={{ position: 'fixed', zIndex: '999999', bottom: '15px', marginLeft: '15px',fontSize:'16px',textShadow:'5px 2px 6px #aaa'}}>打印机已丢失连接.....</div>
+          <div style={{ position: 'fixed', zIndex: '999999', bottom: '15px', marginLeft: '15px',fontSize:'16px',textShadow:'5px 2px 6px #aaa'}}>{notification}</div>
         </Grid>
       </Grid>    
     )
@@ -46,4 +52,32 @@ MainView.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MainView);
+const mapStateToProps = state => {
+  const mainViewState = state.mainViewReduce;
+
+  return {
+    notification: mainViewState.notification,
+  };
+};
+
+export default withStyles(styleSheet,{name:'MainView'})(connect(mapStateToProps, null)(MainView))
+
+//import reducer
+const mainViewReduce = (
+  state = {
+    notification: "打印机已丢失连接.....",
+  },
+  action
+) => {
+  let newState = JSON.parse(JSON.stringify(state));
+
+  switch (action.type) {
+    case 'STATUS_BAR_NOTIFICATION':
+      newState.notification = action.payload.notification;
+      return { ...state, ...newState };
+    default:
+      return { ...state };
+  }
+
+};
+RootReducer.merge(mainViewReduce);
