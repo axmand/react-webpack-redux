@@ -26,6 +26,12 @@ import ObligeeTable1 from './ObligeeTable1'
 import ObligeeTable2 from './ObligeeTable2'
 import ObligeeTable3 from './ObligeeTable3'
 import InputCell from './InputCell'
+import { Transitions } from 'material-ui/styles/transitions';
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 const TabContainer = props =>
   <div style={{ padding: 20,  overflowY: "auto" ,overflowX:"hidden"}}>
     {props.children}
@@ -80,7 +86,7 @@ class ThirdDialog extends Component {
         className={classes.dialog}
           open={open}
           onRequestClose={close}
-          transition={<Slide direction="up" />}
+          transition={Transition}
         >
           <AppBar style ={{backgroundColor:"#455A64"}}>
              

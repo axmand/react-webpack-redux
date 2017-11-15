@@ -25,6 +25,11 @@ import { Provider, connect } from 'react-redux'
 import ObligeeTable1 from './ObligeeTable1'
 import ObligeeTable2 from './ObligeeTable2'
 import ObligeeTable3 from './ObligeeTable3'
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 const TabContainer = props =>
   <div style={{ padding: 20 }}>
   
@@ -77,7 +82,7 @@ class FirstDialog extends Component {
         className={classes.dialog}
           open={open}
           onRequestClose={close}
-          transition={<Slide direction="up" />}
+          transition={Transition}
         >
           <AppBar style ={{backgroundColor:"#455A64"}}>
 
