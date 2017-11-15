@@ -24,6 +24,10 @@ import appConfig from "../../redux/Config"
 import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
 
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 const TabContainer = props =>
   <div style={{ padding: 20,overflow:"auto" }}>
     {props.children}
@@ -79,7 +83,7 @@ class ForthDialog extends Component {
 
           open={open}
           onRequestClose={close}
-          transition={<Slide direction="up" />}
+          transition={Transition}
         >
         <AppBar style ={{backgroundColor:"#455A64"}}>
 
