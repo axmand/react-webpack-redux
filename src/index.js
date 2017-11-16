@@ -13,7 +13,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { HashRouter as Router, Route } from "react-router-dom";
+import { Router, Route } from "react-router-dom";
 import { createStore } from "redux";
 
 //1.引入view
@@ -23,6 +23,7 @@ import MainView from "./views/MainView";
 //import store, { history } from 'STORE'
 //3.引入assets文件夹下的 icon，css等资源文件
 import RootReducer from "./redux/RootReducer";
+import history from "./redux/history"
 //4.引入reducer
 
 // const initialState = Object.assign({},{
@@ -37,7 +38,7 @@ const root = document.getElementById("root");
  */
 ReactDOM.render(
   <Provider store={store}>
-    <Router basename="/">
+    <Router basename="/" history={history}>
       <div>
         <Route exact path="/" component={LoginView} />
         <Route path="/mainview" component={MainView} />

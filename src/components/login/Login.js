@@ -6,9 +6,9 @@
  */
 
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import RootReducer from "../../redux/RootReducer";
+import history from "../../redux/history";
 import PropTypes from "prop-types";
 
 import { withStyles } from "material-ui/styles";
@@ -24,6 +24,7 @@ import Visibility from 'material-ui-icons/Visibility';
 import VisibilityOff from 'material-ui-icons/VisibilityOff';
 
 import appConfig from "../../redux/Config"
+import WaitingModule from "../universe/WaitingModule"
 
 const styles = theme => ({
   container: {
@@ -62,9 +63,9 @@ const styles = theme => ({
     padding: "0px",
     margin: theme.spacing.unit
   },
-  navLink: {
-    textDecoration: "none"
-  },
+  // navLink: {
+  //   textDecoration: "none"
+  // },
   formControl: {
     width: "310px",
     margin: theme.spacing.unit,
@@ -94,6 +95,7 @@ class Login extends Component {
       classes,
       username,
       password,
+      handleChange,
       onInitialAppState 
     } = this.props;
 
@@ -108,9 +110,9 @@ class Login extends Component {
               id="username"
               label="用户名"
               className={classes.textField}
-              margin="dense"
-              required={true}
+              margin="none"
               value={username}
+              onChange={handleChange('username')}
             />
 
             <FormControl className={classes.formControl}>
@@ -119,7 +121,7 @@ class Login extends Component {
                 id="password"
                 type={this.state.showPassword ? 'text' : 'password'}
                 value={password}
-                onChange={this.handleChange('password')}
+                onChange={handleChange('password')}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -145,15 +147,14 @@ class Login extends Component {
               </Button>
             </div> */}
 
-            <NavLink className={classes.navLink} to="/mainview">
               <Button raised color="primary" className={classes.button} onClick={onInitialAppState}>
                 <Typography type="title" style={{ color: "#FFF" }}>
                   登&nbsp;&nbsp;录
                 </Typography>
               </Button>
-            </NavLink>
           </Paper>
         </FormGroup>
+        <WaitingModule />
       </div>
     );
   }
@@ -166,36 +167,125 @@ Login.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const loginState = state.loginReduce;
-  return {
-    username: loginState.username,
-    password: loginState.password,
-  };
+  // const loginState = state.loginReduce;
+  // return {
+  //   username: loginState.username,
+  //   password: loginState.password,
+  // };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onInitialAppState: () => {
-      fetch(appConfig.fileServiceRootPath + "//project/list")
-        .then(response => response.json())
-        .then(json => {
-          dispatch({
-            type: "handleContentShow",
-            payload: json
-          });
-          //console.log(json);
+
+      dispatch({
+        type: "OPEN_WAITING_MODULE",
+      });
+
+      const LoginRequestURL = appConfig.affairsInterfaceRootPath + "/token";
+
+      const LoginRequestDetails = {
+        'grant_type': 'password',
+        'username': ownProps.username,
+        'password': ownProps.password,
+      };
+      let LoginRequesFormBodyPost = [];
+      
+      for (let property in LoginRequestDetails) {
+        const encodedKey = encodeURIComponent(property);
+        const encodedValue = encodeURIComponent(LoginRequestDetails[property]);
+        LoginRequesFormBodyPost.push(encodedKey + "=" + encodedValue);
+      }
+      
+      const LoginRequestBodyPost = LoginRequesFormBodyPost.join("&");
+
+      console.log(LoginRequestBodyPost);
+
+      fetch(LoginRequestURL, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: LoginRequestBodyPost
+      })
+        .then(response => {
+          return response.json()
+            .then(json => {
+              if (response.ok) {
+                return json
+              } 
+              else {
+                return Promise.reject(json)
+              }
+            })
         })
-        .catch(e => console.log("Oops, error", e));
+        .then(json => {
+          
+          console.log(json);
+
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
+          history.push('/mainview');
+
+          dispatch({
+            type: "LOGIN_SUCCESS",
+            payload: {
+              notification: "登录成功！",
+            }
+          });
+
+          fetch(appConfig.fileServiceRootPath + "//project/list")
+            .then(response => response.json())
+            .then(json => {
+              dispatch({
+                type: "handleContentShow",
+                payload: json
+              });
+              //console.log(json);
+            })
+            .catch(e => console.log("Oops, error", e));
+          
+        })
+        .catch(err => {
+
+          console.log(err);
+
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err.error_description,
+            }
+          });
+        });
+      
+      // fetch(appConfig.fileServiceRootPath + "//project/list")
+      //   .then(response => response.json())
+      //   .then(json => {
+      //     dispatch({
+      //       type: "handleContentShow",
+      //       payload: json
+      //     });
+      //     //console.log(json);
+      //   })
+      //   .catch(e => console.log("Oops, error", e));      
     },
-    handleChange: (inputID, event) => {
+
+    handleChange: props => event => {
       dispatch({
         type: "CHANGE_INPUT_VALUE_LOGIN",
         payload: {
-          targetID: inputID,
+          targetID: props,
           targetValue: event.target.value
         }
       });
-    }
+    },
+
+
   };
 };
 
@@ -204,10 +294,23 @@ const loginReduce = (state = {
   username: '',
   password: '',
 }, action) => {
-  if (action.type === "LOGIN_TODO") {
+
+  let newState = JSON.parse(JSON.stringify(state));
+
+  switch (action.type) {
     //登录认证操作
+    case 'CHANGE_INPUT_VALUE_LOGIN':
+      if (action.payload.targetID === 'username')
+        newState.username = action.payload.targetValue; 
+      if (action.payload.targetID === 'password')
+        newState.password = action.payload.targetValue; 
+      return {...state, ...newState}
+
+    
+    default:
+      return state;
   }
-  return state;
+  
 };
 
 RootReducer.merge(loginReduce);
