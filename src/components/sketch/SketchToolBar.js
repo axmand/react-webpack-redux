@@ -92,6 +92,8 @@ class SkechToolBar extends Component {
       onDrawPolygonClick,
       onBalconyClick,
       onaddLabelClick,
+      onMeasureDistanceClick,
+      onMeasureAreaClick,
       onChooseObjClick,
       onDeleteClick,
       onUndoClick,
@@ -118,6 +120,8 @@ class SkechToolBar extends Component {
       drawPolygonIsChecked,
       balconyIsChecked,
       addLabelIsChecked,
+      measureDistanceIsChecked,
+      measureAreaIsChecked,
       chooseObjIsChecked,
       haveObjToDel
     } = this.props;
@@ -228,11 +232,11 @@ class SkechToolBar extends Component {
             <Button
                 className={classes.button}
                 style={{
-                backgroundColor: chooseObjIsChecked
+                backgroundColor: measureDistanceIsChecked
                     ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
-                onClick={onChooseObjClick}
+                onClick={onMeasureDistanceClick}
             >
                 <Straighten className={classes.icon} />
                 <Typograghy className={classes.text}>测距</Typograghy>
@@ -240,11 +244,11 @@ class SkechToolBar extends Component {
             <Button
                 className={classes.button}
                 style={{
-                backgroundColor: chooseObjIsChecked
+                backgroundColor: measureAreaIsChecked
                     ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
-                onClick={onChooseObjClick}
+                onClick={onMeasureAreaClick}
             >
                 <FlipToFront className={classes.icon} />
                 <Typograghy className={classes.text}>测面</Typograghy>
@@ -372,6 +376,8 @@ const mapStateToProps = state => {
     drawPolygonIsChecked: sketchState.drawPolygonIsChecked,
     balconyIsChecked: sketchState.balconyIsChecked,
     addLabelIsChecked: sketchState.addLabelIsChecked,
+    measureDistanceIsChecked: sketchState.measureDistanceIsChecked,
+    measureAreaIsChecked: sketchState.measureAreaIsChecked,
     chooseObjIsChecked: sketchState.chooseObjIsChecked,
     undoIsChecked: sketchState.undoIsChecked,
     redoIsChecked: sketchState.redoIsChecked,
@@ -461,6 +467,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: "addLabelClick",
         payload: dispatch
       });
+    },
+    //测距
+    onMeasureDistanceClick:()=>{
+      dispatch({
+        type:"measureDistanceClick"
+      })
+    },
+    //测面积
+    onMeasureAreaClick:()=>{
+      dispatch({
+        type:"measureAreaClick"
+      })
     },
     //选中对象
     onChooseObjClick: () => {

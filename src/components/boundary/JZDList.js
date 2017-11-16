@@ -108,7 +108,6 @@ class JZDList extends Component {
 JZDList.propTypes = {
   classes: PropTypes.object.isRequired,
   showXCZJDialog:PropTypes.bool.isRequired,
-  poiTableData:PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state =>{
