@@ -74,6 +74,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           ProjectUrl
         })
         //console.log(json)
+       
         setTimeout(() => {
           dispatch({
               type:'handleProjectTrue2'

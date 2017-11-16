@@ -93,7 +93,7 @@ class BoundaryModule extends Component {
           className={classes.dialog}
           open={CameraShow}
           onRequestClose={handleCameraClose}
-          transition={<Slide direction="up" />}>
+        >
           <AppBar position="static" style ={{backgroundColor:"#455A64"}}>
             <Toolbar>
               <Typography type="title" color="inherit" className={classes.flex}>
