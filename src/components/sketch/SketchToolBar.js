@@ -120,6 +120,8 @@ class SkechToolBar extends Component {
       drawPolygonIsChecked,
       balconyIsChecked,
       addLabelIsChecked,
+      measureDistanceIsChecked,
+      measureAreaIsChecked,
       chooseObjIsChecked,
       haveObjToDel
     } = this.props;
@@ -230,7 +232,7 @@ class SkechToolBar extends Component {
             <Button
                 className={classes.button}
                 style={{
-                backgroundColor: chooseObjIsChecked
+                backgroundColor: measureDistanceIsChecked
                     ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
@@ -242,7 +244,7 @@ class SkechToolBar extends Component {
             <Button
                 className={classes.button}
                 style={{
-                backgroundColor: chooseObjIsChecked
+                backgroundColor: measureAreaIsChecked
                     ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
@@ -374,6 +376,8 @@ const mapStateToProps = state => {
     drawPolygonIsChecked: sketchState.drawPolygonIsChecked,
     balconyIsChecked: sketchState.balconyIsChecked,
     addLabelIsChecked: sketchState.addLabelIsChecked,
+    measureDistanceIsChecked: sketchState.measureDistanceIsChecked,
+    measureAreaIsChecked: sketchState.measureAreaIsChecked,
     chooseObjIsChecked: sketchState.chooseObjIsChecked,
     undoIsChecked: sketchState.undoIsChecked,
     redoIsChecked: sketchState.redoIsChecked,

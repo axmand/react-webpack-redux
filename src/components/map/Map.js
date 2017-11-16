@@ -20,8 +20,112 @@ import MapToolBar from "./MapToolBar";
  * 全局的地图对象和方法
  */
 let map;
-let drawTool,distanceTool,AreaTool;
-//let snap;
+let drawTool;
+//定义测距工具
+let distanceTool = new maptalks.DistanceTool({
+      'symbol': {
+        'lineColor' : '#34495e',
+        'lineWidth' : 2
+      },
+      'vertexSymbol' : {
+        'markerType'        : 'ellipse',
+        'markerFill'        : '#1bbc9b',
+        'markerLineColor'   : '#000',
+        'markerLineWidth'   : 3,
+        'markerWidth'       : 10,
+        'markerHeight'      : 10
+      },
+  
+      'labelOptions' : {
+        'textSymbol': {
+          'textFaceName': 'monospace',
+          'textFill' : '#fff',
+          'textLineSpacing': 1,
+          'textHorizontalAlignment': 'right',
+          'textDx': 15,
+          'markerLineColor': '#b4b3b3',
+          'markerFill' : '#000'
+        },
+        'boxStyle' : {
+          'padding' : [6, 2],
+          'symbol' : {
+            'markerType' : 'square',
+            'markerFill' : '#000',
+            'markerFillOpacity' : 0.9,
+            'markerLineColor' : '#b4b3b3'
+          }
+        }
+      },
+      'clearButtonSymbol' :[{
+        'markerType': 'square',
+        'markerFill': '#000',
+        'markerLineColor': '#b4b3b3',
+        'markerLineWidth': 2,
+        'markerWidth': 15,
+        'markerHeight': 15,
+        'markerDx': 20
+      }, {
+        'markerType': 'x',
+        'markerWidth': 10,
+        'markerHeight': 10,
+        'markerLineColor' : '#fff',
+        'markerDx': 20
+      }],
+      'language' : 'en-US'
+    });
+//定义测面积工具
+let areaTool = new maptalks.AreaTool({
+  'symbol': {
+    'lineColor' : '#1bbc9b',
+    'lineWidth' : 2,
+    'polygonFill' : '#fff',
+    'polygonOpacity' : 0.3
+  },
+  'vertexSymbol' : {
+    'markerType'        : 'ellipse',
+    'markerFill'        : '#34495e',
+    'markerLineColor'   : '#1bbc9b',
+    'markerLineWidth'   : 3,
+    'markerWidth'       : 10,
+    'markerHeight'      : 10
+  },
+  'labelOptions' : {
+    'textSymbol': {
+      'textFaceName': 'monospace',
+      'textFill' : '#fff',
+      'textLineSpacing': 1,
+      'textHorizontalAlignment': 'right',
+      'textDx': 15
+    },
+    'boxStyle' : {
+      'padding' : [6, 2],
+      'symbol' : {
+        'markerType' : 'square',
+        'markerFill' : '#000',
+        'markerFillOpacity' : 0.9,
+        'markerLineColor' : '#b4b3b3'
+      }
+    }
+  },
+  'clearButtonSymbol' :[{
+    'markerType': 'square',
+    'markerFill': '#000',
+    'markerLineColor': '#b4b3b3',
+    'markerLineWidth': 2,
+    'markerWidth': 15,
+    'markerHeight': 15,
+    'markerDx': 22
+  }, {
+    'markerType': 'x',
+    'markerWidth': 10,
+    'markerHeight': 10,
+    'markerLineColor' : '#fff',
+    'markerDx': 22
+  }],
+  language: ''
+});
+
+let snap;
 let target,
      clickedObj = [];
 let clickObj,
@@ -191,10 +295,6 @@ class Map extends Component {
     let jzx =maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData));
     let zd =maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zdJSONData));
     let zj =maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zjJSONData));
-    console.log(sz); 
-    console.log(jzx); 
-    console.log(zd); 
-    console.log(zj);
     //为地图对象添加点击绑定事件
     for(let i=0;i<jzd._geoList.length;i++){
       jzd._geoList[i].on('click',clickObj)
@@ -216,7 +316,9 @@ class Map extends Component {
     jzx.addTo(map);
     zd.addTo(map);
     zj.addTo(map);
-  
+    //将测距测面积工具添加至地图
+    distanceTool.addTo(map).disable();
+    areaTool.addTo(map).disable();
     //将画图工具添加至地图
     drawTool = new maptalks.DrawTool({
       mode: "Polygon",
@@ -234,11 +336,21 @@ class Map extends Component {
       'generate': geometry => geometry
       }
      );
+    
+   
+    // //为界址点图层添加snapto工具
+    // snap = new SnapTool({
+    //   tolerance: 5,
+    //   mode: "point"
+    // });
+    // snap.addTo(map);
+    // snap.setLayer(map.getLayer("point"));
+    // snap.disable();
     //将测距工具添加至地图
     distanceTool=new maptalks.DistanceTool({
       'symbol': {
         'lineColor' : '#34495e',
-        'lineWidth' : 1.5
+        'lineWidth' : 2
       },
       'vertexSymbol' : {
         'markerType'        : 'ellipse',
@@ -248,6 +360,7 @@ class Map extends Component {
         'markerWidth'       : 10,
         'markerHeight'      : 10
       },
+  
       'labelOptions' : {
         'textSymbol': {
           'textFaceName': 'monospace',
@@ -257,7 +370,8 @@ class Map extends Component {
           'textDx': 15,
           'markerLineColor': '#b4b3b3',
           'markerFill' : '#000'
-        }, 'boxStyle' : {
+        },
+        'boxStyle' : {
           'padding' : [6, 2],
           'symbol' : {
             'markerType' : 'square',
@@ -283,67 +397,7 @@ class Map extends Component {
         'markerDx': 20
       }],
       'language' : 'en-US'
-    }).addTo(map).disable();
-    //将测面工具添加至地图
-    AreaTool=new maptalks.AreaTool({
-      'symbol': {
-        'lineColor' : '#1bbc9b',
-        'lineWidth' : 2,
-        'polygonFill' : '#fff',
-        'polygonOpacity' : 0.3
-      },
-      'vertexSymbol' : {
-        'markerType'        : 'ellipse',
-        'markerFill'        : '#34495e',
-        'markerLineColor'   : '#1bbc9b',
-        'markerLineWidth'   : 3,
-        'markerWidth'       : 10,
-        'markerHeight'      : 10
-      },
-      'labelOptions' : {
-        'textSymbol': {
-          'textFaceName': 'monospace',
-          'textFill' : '#fff',
-          'textLineSpacing': 1,
-          'textHorizontalAlignment': 'right',
-          'textDx': 15
-        },
-        'boxStyle' : {
-          'padding' : [6, 2],
-          'symbol' : {
-            'markerType' : 'square',
-            'markerFill' : '#000',
-            'markerFillOpacity' : 0.9,
-            'markerLineColor' : '#b4b3b3'
-          }
-        }
-      },
-      'clearButtonSymbol' :[{
-        'markerType': 'square',
-        'markerFill': '#000',
-        'markerLineColor': '#b4b3b3',
-        'markerLineWidth': 2,
-        'markerWidth': 15,
-        'markerHeight': 15,
-        'markerDx': 22
-      }, {
-        'markerType': 'x',
-        'markerWidth': 10,
-        'markerHeight': 10,
-        'markerLineColor' : '#fff',
-        'markerDx': 22
-      }],
-      language: ''
-    }).addTo(map).disable();
-    
-    // //为界址点图层添加snapto工具
-    // snap = new SnapTool({
-    //   tolerance: 5,
-    //   mode: "point"
-    // });
-    // snap.addTo(map);
-    // snap.setLayer(map.getLayer("point"));
-    // snap.disable();
+    }).addTo(map);
   }
 
   render() {
@@ -599,6 +653,8 @@ const sketchReduce = (
     drawPolygonIsChecked: false,
     balconyIsChecked: false,
     addLabelIsChecked: false,
+    measureDistanceIsChecked:false,
+    measureAreaIsChecked:false,
     deleteIsChecked: false,
     chooseObjIsChecked: false,
     undoIsChecked: false,
@@ -700,8 +756,9 @@ const sketchReduce = (
     plot ||
     function(poi) {
       recoverObj();
-      state.pointNum++;
-      let content = state.pointNum;
+      let jzdnum=map.getLayer("point")._geoList.length;
+      jzdnum++;
+      let content = jzdnum;
       //为界址点添加点号注记
       let label = new maptalks.Label(content, poi, {
         draggable: true,
@@ -723,7 +780,7 @@ const sketchReduce = (
         label.startEditText();
       });
       let point = new maptalks.Circle(poi, 0.5, {
-        id: state.pointNum,
+        id: jzdnum,
         labels: label,
         picture: "",
         isClicked: false,
@@ -860,6 +917,7 @@ const sketchReduce = (
     //实时定位
     case "handleRealtimeMapping":
       const isRealtimeOn = { isRealtimeOn: !state.isRealtimeOn };
+
       if (isRealtimeOn.isRealtimeOn) {
         console.log("打开了");
       } else {
@@ -870,13 +928,17 @@ const sketchReduce = (
     case "plotRTK":
       console.log(state);
       console.log("展点");
+      drawTool.disable();
+      distanceTool.disable();
+      areaTool.disable();
+      //snap.disable();
       let plotData = [];
       plotData = JSON.parse(action.payload.data);
       console.log(plotData);
       let poi = new maptalks.Coordinate([plotData[1], plotData[0]]);
       plot(poi);
       const plotSuccessState = {
-        pointNum: state.pointNum,
+        pointNum:map.getLayer("point")._geoList.length,
         plotIsChecked: true,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -884,6 +946,8 @@ const sketchReduce = (
         drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
+        measureDistanceIsChecked:false,
+        measureAreaIsChecked:false,
         addLabelIsChecked: false,
         deleteIsChecked: false,
         chooseObjIsChecked: false,
@@ -899,7 +963,7 @@ const sketchReduce = (
       console.log(error);
 
       const plotFailState = {
-        pointNum: state.pointNum,
+        pointNum:map.getLayer("point")._geoList.length,
         plotIsChecked: true,
         alertPlotFail: true,
         errorMessage: error,
@@ -909,6 +973,8 @@ const sketchReduce = (
         drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
+        measureDistanceIsChecked:false,
+        measureAreaIsChecked:false,
         addLabelIsChecked: false,
         deleteIsChecked: false,
         chooseObjIsChecked: false,
@@ -941,13 +1007,15 @@ const sketchReduce = (
       return Object.assign({}, state, { ...newNum });
       //画点
     case "drawPointClick":
+    
       drawPoint =
         drawPoint ||
         function(e) {
           recoverObj();
           console.log(state.pointNum)
-          state.pointNum++;
-          let content = state.pointNum;
+          let jzdNum = map.getLayer("point")._geoList.length;
+          jzdNum++;
+          let content = jzdNum;
           //为界址点添加点号注记
           let label = new maptalks.Label(content, e.coordinate, {
             draggable: true,
@@ -968,7 +1036,7 @@ const sketchReduce = (
             label.startEditText();
           });
           let point = new maptalks.Circle(e.coordinate, 0.5, {
-            id: state.pointNum,
+            id: jzdNum,
             labels: label,
             picture: "",
             isClicked: false,
@@ -982,8 +1050,10 @@ const sketchReduce = (
           map.getLayer("point").addGeometry(point);
           point.on("click", clickObj);
       };
-      console.log(state.pointNum)
+      console.log(state)
       drawTool.disable();
+      distanceTool.disable();
+      areaTool.disable();
       //snap.disable();
       map.off("dblclick", drawToolOn);
       if (!state.drawPointIsChecked) {
@@ -999,7 +1069,7 @@ const sketchReduce = (
         map.off("click", drawPoint);
       }
       const newState1 = {
-        pointNum: state.pointNum,
+        pointNum: map.getLayer("point")._geoList.length,
         plotIsChecked: false,
         drawPointIsChecked: !state.drawPointIsChecked,
         drawLineIsChecked: false,
@@ -1007,6 +1077,8 @@ const sketchReduce = (
         drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
+        measureDistanceIsChecked:false,
+        measureAreaIsChecked:false,
         addLabelIsChecked: false,
         chooseObjIsChecked: false,
         deleteIsChecked: false,
@@ -1016,13 +1088,14 @@ const sketchReduce = (
         alertSave: true,
         signatureIsChecked: false
       };
-      console.log(state);
       return { ...state, ...newState1 };
 
     //画四至线
     case "drawLineClick":
       if (!state.drawLineIsChecked) {
         map.off("click", drawPoint);
+        distanceTool.disable();
+        areaTool.disable();
         drawTool.off("drawend", drawJZXEnd);
         drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawPolygonEnd);
@@ -1039,7 +1112,6 @@ const sketchReduce = (
         map.off("dblclick", drawToolOn);
       }
       const newState2 = {
-        pointNum: state.pointNum,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: !state.drawLineIsChecked,
@@ -1047,6 +1119,8 @@ const sketchReduce = (
         drawArcIsChecked:false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
+        measureDistanceIsChecked:false,
+        measureAreaIsChecked:false,
         addLabelIsChecked: false,
         chooseObjIsChecked: false,
         deleteIsChecked: false,
@@ -1059,10 +1133,12 @@ const sketchReduce = (
       return { ...state, ...newState2 };
     //画界址线
     case "drawJZXClick":
+    console.log(state)
      //画线时drawTool的绑定事件
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
+          console.log(state.lineNum)
           state.lineNum++;
           let coorArr = param.geometry._coordinates;
           //为折线的每条线段添加长度标注
@@ -1102,6 +1178,8 @@ const sketchReduce = (
 
       if (!state.drawJZXIsChecked) {
         map.off("click", drawPoint);
+        distanceTool.disable();
+        areaTool.disable();
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawCurveEnd);        
         drawTool.off("drawend", drawPolygonEnd);
@@ -1118,8 +1196,7 @@ const sketchReduce = (
         map.off("dblclick", drawToolOn);
       }
       const JZXState = {
-        pointNum: state.pointNum,
-        lineNum: state.lineNum,
+        lineNum:map.getLayer("JZX")._geoList.length,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,        
@@ -1127,6 +1204,8 @@ const sketchReduce = (
         drawJZXIsChecked: !state.drawJZXIsChecked,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
+        measureDistanceIsChecked:false,
+        measureAreaIsChecked:false,
         addLabelIsChecked: false,
         chooseObjIsChecked: false,
         deleteIsChecked: false,
@@ -1139,27 +1218,14 @@ const sketchReduce = (
       return { ...state, ...JZXState };
     //画弧线
     case "drawArcClick":
+      console.log(state.lineNum)
       //画线时drawTool的绑定事件
       drawCurveEnd =
       drawCurveEnd ||
       function(param) {
+        console.log(state.lineNum)
         state.lineNum++;
-        // let coorArr = param.geometry._coordinates;
-        // //为折线的每条线段添加长度标注
-        // for (let i = 0; i < coorArr.length - 1; i++) {
-        //   //每条线段的起点和终点坐标
-        //   let startPoi = coorArr[i],
-        //     endPoi = coorArr[i + 1];
-        //   //计算每条线段的长度
-        //   length = map.computeLength(startPoi, endPoi);
-        //   param.geometry.config("length", length);
-        //   let content = param.geometry.options.length.toFixed(2);
-        //   addObjLabel(content, startPoi, endPoi);
-        // }
-        // param.geometry.config("labels", labels);
-        // labels = [];
         param.geometry.config("isClicked", false);
-
         param.geometry.config("poiArr", linePoiArr);
         param.geometry.config("id", state.lineNum);
         param.geometry._id=param.geometry.options.id;
@@ -1182,6 +1248,8 @@ const sketchReduce = (
 
     if (!state.drawArcIsChecked) {
       map.off("click", drawPoint);
+      distanceTool.disable();
+      areaTool.disable();
       drawTool.off("drawend", drawLineEnd);
       drawTool.off("drawend", drawJZXEnd);      
       drawTool.off("drawend", drawPolygonEnd);
@@ -1198,8 +1266,7 @@ const sketchReduce = (
       map.off("dblclick", drawToolOn);
     }
     const CurveState = {
-      pointNum: state.pointNum,
-      lineNum: state.lineNum,
+      lineNum:map.getLayer("JZX")._geoList.length,
       plotIsChecked: false,
       drawPointIsChecked: false,
       drawLineIsChecked: false,
@@ -1207,6 +1274,8 @@ const sketchReduce = (
       drawArcIsChecked:!state.drawArcIsChecked,
       drawPolygonIsChecked: false,
       balconyIsChecked: false,
+      measureDistanceIsChecked:false,
+      measureAreaIsChecked:false,
       addLabelIsChecked: false,
       chooseObjIsChecked: false,
       deleteIsChecked: false,
@@ -1216,11 +1285,14 @@ const sketchReduce = (
       alertSave: true,
       signatureIsChecked: false
     };
+    console.log(state)
     return { ...state, ...CurveState };
     //构面
     case "drawPolygonClick":
       if (!state.drawPolygonIsChecked) {
         map.off("click", drawPoint);
+        distanceTool.disable();
+        areaTool.disable();
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
         drawTool.off("drawend", drawCurveEnd);        
@@ -1237,7 +1309,6 @@ const sketchReduce = (
         map.off("dblclick", drawToolOn);
       }
       const newState3 = {
-        pointNum: state.pointNum,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1245,6 +1316,8 @@ const sketchReduce = (
         drawPolygonIsChecked: !state.drawPolygonIsChecked,
         drawArcIsChecked:false,        
         balconyIsChecked: false,
+        measureDistanceIsChecked:false,
+        measureAreaIsChecked:false,
         addLabelIsChecked: false,
         chooseObjIsChecked: false,
         deleteIsChecked: false,
@@ -1259,6 +1332,8 @@ const sketchReduce = (
     case "balconyClick":
       if (!state.balconyIsChecked) {
         map.off("click", drawPoint);
+        distanceTool.disable();
+        areaTool.disable();
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
         drawTool.off("drawend", drawCurveEnd);
@@ -1275,7 +1350,6 @@ const sketchReduce = (
         map.off("dblclick", drawToolOn);
       }
       const newState4 = {
-        pointNum: state.pointNum,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1283,6 +1357,8 @@ const sketchReduce = (
         drawArcIsChecked:false,        
         drawPolygonIsChecked: false,
         balconyIsChecked: !state.balconyIsChecked,
+        measureDistanceIsChecked:false,
+        measureAreaIsChecked:false,
         addLabelIsChecked: false,
         chooseObjIsChecked: false,
         deleteIsChecked: false,
@@ -1296,6 +1372,8 @@ const sketchReduce = (
     //添加自定义注记
     case "addLabelClick":
       drawTool.disable();
+      distanceTool.disable();
+      areaTool.disable();
       //snap.disable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
@@ -1314,7 +1392,6 @@ const sketchReduce = (
       }
 
       const newState5 = {
-        pointNum: state.pointNum,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1323,6 +1400,8 @@ const sketchReduce = (
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: !state.addLabelIsChecked,
+        measureDistanceIsChecked:false,
+        measureAreaIsChecked:false,
         chooseObjIsChecked: false,
         deleteIsChecked: false,
         undoIsChecked: false,
@@ -1332,11 +1411,92 @@ const sketchReduce = (
         signatureIsChecked: false
       };
       return { ...state, ...newState5 };
-
+//测距
+case "measureDistanceClick":
+  if(!state.measureDistanceIsChecked){
+    drawTool.off("drawend", drawPolygonEnd);
+    drawTool.off("drawend", drawLineEnd);
+    drawTool.off("drawend", drawJZXEnd);
+    drawTool.off("drawend", drawBalconyEnd);
+    drawTool.off("drawend", drawCurveEnd);
+    map.off("click", addLabel);
+    map.off("click", drawPoint);
+    map.off("dblclick", labelEditEnd);
+    map.off("dblclick", drawToolOn);
+    drawTool.disable();
+    areaTool.disable();
+    distanceTool.enable();
+    console.log(state.measureDistanceIsChecked)
+  }else{
+    distanceTool.disable();
+    console.log(state.measureDistanceIsChecked)
+  }
+  const measureDis={
+    plotIsChecked: false,
+    drawPointIsChecked: false,
+    drawLineIsChecked: false,
+    drawJZXIsChecked: false,
+    drawArcIsChecked:false,
+    drawPolygonIsChecked: false,
+    balconyIsChecked: false,
+    addLabelIsChecked:false,
+    measureDistanceIsChecked:!state.measureDistanceIsChecked,
+    measureAreaIsChecked:false,
+    chooseObjIsChecked: false,
+    deleteIsChecked: false,
+    undoIsChecked: false,
+    redoIsChecked: false,
+    saveIsChecked: false,
+    alertSave: true,
+    signatureIsChecked: false
+  }  
+  return{...state,...measureDis}
+//测面积
+case "measureAreaClick":
+if(!state.measureAreaIsChecked){
+  drawTool.off("drawend", drawPolygonEnd);
+  drawTool.off("drawend", drawLineEnd);
+  drawTool.off("drawend", drawJZXEnd);
+  drawTool.off("drawend", drawBalconyEnd);
+  drawTool.off("drawend", drawCurveEnd);
+  map.off("click", addLabel);
+  map.off("click", drawPoint);
+  map.off("dblclick", labelEditEnd);
+  map.off("dblclick", drawToolOn);
+  drawTool.disable();
+  distanceTool.disable();
+  areaTool.enable();
+  console.log(state.measureAreaIsChecked)
+}else{
+  areaTool.disable();
+  console.log(state.measureAreaIsChecked)
+}
+const measureArea={
+  plotIsChecked: false,
+  drawPointIsChecked: false,
+  drawLineIsChecked: false,
+  drawJZXIsChecked: false,
+  drawArcIsChecked:false,
+  drawPolygonIsChecked: false,
+  balconyIsChecked: false,
+  addLabelIsChecked:false,
+  measureAreaIsChecked:!state.measureAreaIsChecked,
+  measureDistanceIsChecked:false,
+  chooseObjIsChecked: false,
+  deleteIsChecked: false,
+  undoIsChecked: false,
+  redoIsChecked: false,
+  saveIsChecked: false,
+  alertSave: true,
+  signatureIsChecked: false
+}  
+return{...state,...measureArea}
     //删除
     case "deleteClick":
       console.log(target);
       drawTool.disable();
+      distanceTool.disable();
+      areaTool.disable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
@@ -1384,13 +1544,14 @@ const sketchReduce = (
     case "chooseObjClick":
       console.log("choose");
       drawTool.disable();
+      distanceTool.disable();
+      areaTool.disable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
       map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
       const newState7 = {
-        pointNum: state.pointNum,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1399,6 +1560,8 @@ const sketchReduce = (
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
+        measureAreaIsChecked:false,
+        measureDistanceIsChecked:false,
         chooseObjIsChecked: !state.chooseObjIsChecked,
         deleteIsChecked: false,
         undoIsChecked: false,
@@ -1425,13 +1588,14 @@ const sketchReduce = (
         return { ...state };
       let mapCenter = map.getCenter();
       drawTool.disable();
+      distanceTool.disable();
+      areaTool.disable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
       map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
       const saveData = {
-        pointNum: state.pointNum,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1440,6 +1604,8 @@ const sketchReduce = (
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
+        measureAreaIsChecked:false,
+        measureDistanceIsChecked:false,
         chooseObjIsChecked: false,
         deleteIsChecked: false,
         undoIsChecked: false,
@@ -1498,6 +1664,8 @@ const sketchReduce = (
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
         addLabelIsChecked: false,
+        measureAreaIsChecked:false,
+        measureDistanceIsChecked:false,
         deleteIsChecked: false,
         chooseObjIsChecked: false,
         undoIsChecked: false,
