@@ -20,7 +20,6 @@ import MapToolBar from "./MapToolBar";
  * 全局的地图对象和方法
  */
 let map;
-let drawTool;
 //定义测距工具
 let distanceTool = new maptalks.DistanceTool({
       'symbol': {
@@ -123,6 +122,13 @@ let areaTool = new maptalks.AreaTool({
     'markerDx': 22
   }],
   language: ''
+});
+let drawTool = new maptalks.DrawTool({
+  mode: "Polygon",
+  symbol: {
+    lineColor: "#000",
+    lineWidth: 3
+  }
 });
 
 let snap;
@@ -320,13 +326,7 @@ class Map extends Component {
     distanceTool.addTo(map).disable();
     areaTool.addTo(map).disable();
     //将画图工具添加至地图
-    drawTool = new maptalks.DrawTool({
-      mode: "Polygon",
-      symbol: {
-        lineColor: "#000",
-        lineWidth: 3
-      }
-    }).addTo(map).disable();
+    drawTool.addTo(map).disable();
     drawTool.registerMode('CubicBezierCurve', {
       'action': 'clickDblclick',
       'create': path => new maptalks.CubicBezierCurve(path),

@@ -42,7 +42,7 @@ const styles = theme => ({
   root: {
     height: `${window.innerHeight * 0.075}px`,
     width:  `${window.innerHeight * 1.35}px`,
-    position: "absolute",
+    position: "absolute", 
     top: `${window.innerHeight * 0.1}px`,
     left: "1%",
     display: "flex",
