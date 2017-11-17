@@ -277,7 +277,6 @@ class UserModule extends Component {
       userCompany,
       userJob,
       lastLoginTime,
-      lastLoginAddress,
       handleClickBluetooth,
       bluetoothConnectModuleLoading
     } = this.props;
@@ -393,19 +392,6 @@ class UserModule extends Component {
                   disableTypography
                   className={classes.userStateText}
                   primary={lastLoginTime}
-                />
-              </ListItem>
-
-              <ListItem dense>
-                <ListItemText
-                  disableTypography
-                  className={classes.labelUser}
-                  primary="上次登录地址"
-                />
-                <ListItemText
-                  disableTypography
-                  className={classes.userStateText}
-                  primary={lastLoginAddress}
                 />
               </ListItem>
 
@@ -535,7 +521,6 @@ const userReduce = (
     userCompany: "南宁市国土测绘地理信息中心",
     userJob: "地籍测量员",
     lastLoginTime: "2017/08/24/21:38",
-    lastLoginAddress: "115.101.26",
     bluetoothConnectModuleLoading: false,
   },
   action
@@ -545,6 +530,12 @@ const userReduce = (
   switch (action.type) {
     case 'BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH':
       newState.bluetoothConnectModuleLoading = !newState.bluetoothConnectModuleLoading;
+      return { ...state, ...newState };
+    case 'LOGIN_SUCCESS':
+      const userInfo = action.payload.data;
+      newState.userName = userInfo.userName;
+      newState.userID = userInfo.userId;
+      newState.lastLoginTime = localStorage.getItem('latestLoginTime');
       return { ...state, ...newState };
     default:
       return { ...state };
@@ -564,7 +555,6 @@ const mapStateToProps = state => {
     userCompany: userState.userCompany,
     userJob: userState.userJob,
     lastLoginTime: userState.lastLoginTime,
-    lastLoginAddress: userState.lastLoginAddress,
     bluetoothConnectModuleLoading: userState.bluetoothConnectModuleLoading,
   };
 };

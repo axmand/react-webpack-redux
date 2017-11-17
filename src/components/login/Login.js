@@ -25,6 +25,7 @@ import VisibilityOff from 'material-ui-icons/VisibilityOff';
 
 import appConfig from "../../redux/Config"
 import WaitingModule from "../universe/WaitingModule"
+import time from "../../utils//time"
 
 const styles = theme => ({
   container: {
@@ -308,6 +309,10 @@ const loginReduce = (state = {
       localStorage
         localStorage.setItem(key, authenticationInfo[key])        
       }
+      if (localStorage.getItem('latestLoginTime') != localStorage.getItem('currentLoginTime'))
+        localStorage.setItem('latestLoginTime', localStorage.getItem('currentLoginTime'))
+      localStorage.setItem('currentLoginTime', time.getNowFormatDate())
+      
       return {...state, ...newState}
     case 'LOGIN_FAILURE':
       newState.loginNotificaion = action.payload.data.error_description;
