@@ -78,10 +78,6 @@ class Login extends Component {
     showPassword: false,
   };
 
-  handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
-  };
-
   handleMouseDownPassword = event => {
     event.preventDefault();
   };
@@ -95,6 +91,7 @@ class Login extends Component {
       classes,
       username,
       password,
+      loginNotificaion,
       handleChange,
       onInitialAppState 
     } = this.props;
@@ -133,6 +130,7 @@ class Login extends Component {
                   </InputAdornment>
                 }
               />
+              <FormHelperText>{loginNotificaion}</FormHelperText>
             </FormControl>
 
             {/* <div
@@ -167,11 +165,10 @@ Login.propTypes = {
 };
 
 const mapStateToProps = state => {
-  // const loginState = state.loginReduce;
-  // return {
-  //   username: loginState.username,
-  //   password: loginState.password,
-  // };
+  const loginState = state.loginReduce;
+  return {
+    loginNotificaion: loginState.loginNotificaion,
+  };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -199,7 +196,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       
       const LoginRequestBodyPost = LoginRequesFormBodyPost.join("&");
 
-      console.log(LoginRequestBodyPost);
+      // console.log(LoginRequestBodyPost);
 
       fetch(LoginRequestURL, {
         method: "POST",
@@ -222,20 +219,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
         .then(json => {
           
-          console.log(json);
+          // console.log(json);
 
           dispatch({
             type: "CLOSE_WAITING_MODULE",
           });
-          history.push('/mainview');
-
           dispatch({
             type: "LOGIN_SUCCESS",
             payload: {
-              notification: "登录成功！",
+              data: json,
             }
           });
-
+          history.push('/mainview');
+          
           fetch(appConfig.fileServiceRootPath + "//project/list")
             .then(response => response.json())
             .then(json => {
@@ -256,9 +252,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: "CLOSE_WAITING_MODULE",
           });
           dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
+            type: "LOGIN_FAILURE",
             payload: {
-              notification: err.error_description,
+              data: err,
             }
           });
         });
@@ -293,6 +289,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const loginReduce = (state = {
   username: '',
   password: '',
+  loginNotificaion: '',
 }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state));
@@ -305,7 +302,16 @@ const loginReduce = (state = {
       if (action.payload.targetID === 'password')
         newState.password = action.payload.targetValue; 
       return {...state, ...newState}
-
+    case 'LOGIN_SUCCESS':
+      const authenticationInfo = action.payload.data
+      for (let key in authenticationInfo) {
+      localStorage
+        localStorage.setItem(key, authenticationInfo[key])        
+      }
+      return {...state, ...newState}
+    case 'LOGIN_FAILURE':
+      newState.loginNotificaion = action.payload.data.error_description;
+      return {...state, ...newState}
     
     default:
       return state;

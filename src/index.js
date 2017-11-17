@@ -40,7 +40,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router basename="/" history={history}>
       <div>
-        <Route exact path="/" component={MainView} />
+        <Route exact path="/" component={LoginView} />
         <Route path="/mainview" component={MainView} />
       </div>
     </Router>
