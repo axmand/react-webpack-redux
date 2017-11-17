@@ -51,6 +51,8 @@ class InvestigationModule extends Component {
   render() {
     const {
       classes,
+      IDCardNumber,
+      IDCardName,
       handleOpenIdentityVerificationModule,
     } = this.props
   
@@ -85,7 +87,7 @@ class InvestigationModule extends Component {
           <MenuItem onClick={handleOpenIdentityVerificationModule}>身份证</MenuItem>
           <MenuItem onClick={this.handleRequestClose}>其他证明文件</MenuItem>
         </Menu>
-        <IdentityVerificationModule />
+        <IdentityVerificationModule IDCardNumber={IDCardNumber} IDCardName={IDCardName}/>
       </div>
     )
   } 
@@ -94,6 +96,8 @@ class InvestigationModule extends Component {
 const mapStateToProps = (state) => {
   const investigationState = state.investigationReduce;
   return {
+    IDCardNumber: investigationState.IDCardNumber,
+    IDCardName: investigationState.IDCardName,
     investigationMenuDisplayState: investigationState.investigationMenuDisplayState,
   }
 }
@@ -112,8 +116,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{n
 
 const investigationReduce = (
   state = {
+    IDCardNumber: '',
+    IDCardName: '',
+    identityVerificationNotification: '',
     investigationMenuDisplayState: false,
-    idVerificationDisplayState: false,
+    idVerificationDisplayState: true,
   }, action) => {
   let newState = JSON.parse(JSON.stringify(state))
 
@@ -125,6 +132,20 @@ const investigationReduce = (
     case 'CLOSE_IDENTITY_VERIFICATION_MODULE':
       newState.idVerificationDisplayState = false;
       return { ...state, ...newState };
+
+    case 'CHANGE_INPUT_VALUE_IDENTITY_VERIFICATION':
+      if (action.payload.targetID === 'IDCardNumber')
+        newState.IDCardNumber = action.payload.targetValue; 
+      if (action.payload.targetID === 'IDCardName')
+        newState.IDCardName = action.payload.targetValue; 
+      return {...state, ...newState}
+
+    case 'IDENTITY_VERIFICATION_QUERY_SUCCESS':
+      if (action.payload.identityVerificationQueryResult === true)
+        newState.identityVerificationNotification = "验证成功！"
+      if (action.payload.identityVerificationQueryResult === false)
+        newState.identityVerificationNotification = "公民身份证号码和姓名与数据库记录不符！"
+      return {...state, ...newState}
 
     default:
       return { ...state};
