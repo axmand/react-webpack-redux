@@ -62,22 +62,22 @@ const styles = {
 class BoundaryModule extends Component {
 
   render() {
-    // const {
-    //   handleCameraClose,
-    //   handleCameraShow,
-    //   handlePhotoDeleteShow,
-    //   handlePhotoDelete,
-    //   CameraShow,
-    //   DeleteShow,
-    //   PrintProgress,
-    //   classes
-    // } = this.props;
-    const {XCZJclick,classes}=this.props;
+    const {
+      handleCameraClose,
+      handleCameraShow,
+      handlePhotoDeleteShow,
+      handlePhotoDelete,
+      CameraShow,
+      DeleteShow,
+      PrintProgress,
+      classes
+    } = this.props;
+    // const {XCZJclick,classes}=this.props;
   
     return (
     <div>
-      {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleCameraShow }> */}      
-      <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }>
+       <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleCameraShow }>       
+      {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }> */}
         <ListItemIcon>
           <PhotoCameraIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
@@ -87,8 +87,8 @@ class BoundaryModule extends Component {
           primary="现场指界"
         />
       </ListItem>
-      <JZDList />
-      {/* <Dialog
+      {/* <JZDList /> */}
+       <Dialog
           fullScreen
           className={classes.dialog}
           open={CameraShow}
@@ -129,7 +129,7 @@ class BoundaryModule extends Component {
               取消
             </Button>
           </DialogActions>
-      </Dialog> */}
+      </Dialog> 
     </div>
     )
   }
