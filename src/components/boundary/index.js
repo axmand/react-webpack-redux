@@ -70,14 +70,14 @@ class BoundaryModule extends Component {
       CameraShow,
       DeleteShow,
       PrintProgress,
+      XCZJclick,
       classes
     } = this.props;
-    // const {XCZJclick,classes}=this.props;
   
     return (
     <div>
-       <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleCameraShow }>       
-      {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }> */}
+       {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleCameraShow }>        */}
+       <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }> 
         <ListItemIcon>
           <PhotoCameraIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
@@ -87,8 +87,8 @@ class BoundaryModule extends Component {
           primary="现场指界"
         />
       </ListItem>
-      {/* <JZDList /> */}
-       <Dialog
+       <JZDList /> 
+        <Dialog
           fullScreen
           className={classes.dialog}
           open={CameraShow}
@@ -129,7 +129,7 @@ class BoundaryModule extends Component {
               取消
             </Button>
           </DialogActions>
-      </Dialog> 
+      </Dialog>  
     </div>
     )
   }
@@ -153,34 +153,35 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'MAP_SKETCH_VIEW_HIDE',
       });
     },
-    handleCameraShow: () => {
-      dispatch({
-        type: "saveClick",
-      }); 
+    
+    // handleCameraShow: () => {
+    //   dispatch({
+    //     type: "saveClick",
+    //   }); 
 
-      dispatch({
-          type: 'ProgressShow',
-      });
-
-      fetch(appConfig.fileServiceRootPath + '//project/photolist' )
-      .then(response => response.json())
-      .then( json => {
-        dispatch({
-          type: 'handleCameraShow',
-          payload:json,
-        })
-        //console.log(json)
-        dispatch({
-          type: 'ProgressShow',
-        }) 
-      })
-      .catch(err => {
-        console.log(err)
-        dispatch({
-          type: 'ProgressShow',
-        }) 
-      })
-    },
+    //   dispatch({
+    //       type: 'ProgressShow',
+    //   });
+    
+    //   fetch(appConfig.fileServiceRootPath + '//project/photolist' )
+    //   .then(response => response.json())
+    //   .then( json => {
+    //     dispatch({
+    //       type: 'handleCameraShow',
+    //       payload:json,
+    //     })
+    //     //console.log(json)
+    //     dispatch({
+    //       type: 'ProgressShow',
+    //     }) 
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //     dispatch({
+    //       type: 'ProgressShow',
+    //     }) 
+    //   })
+    // },
 
     handleCameraClose: () => {
       dispatch({
