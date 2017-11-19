@@ -13,6 +13,7 @@ import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 import projectData from "./../../redux/RootData";
+import appConfig from "../../redux/Config";
 
 const styles = {
   toolBar:{
@@ -131,11 +132,38 @@ const mapDispatchToProps = (dispatch,ownProps)=> {
         type:'jzdXCZJClick',
         payload:{command:poi_id}
       });
+      
       dispatch({
         type:'JZDListClose'
+      });
+      
+      dispatch({
+        type: "saveClick",
+      }); 
+
+      dispatch({
+          type: 'ProgressShow',
+      });
+
+      fetch(appConfig.fileServiceRootPath + '//project/photolist' )
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'handleCameraShow',
+          payload:json,
+        })
+        //console.log(json)
+        dispatch({
+          type: 'ProgressShow',
+        }) 
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch({
+          type: 'ProgressShow',
+        }) 
       })
     },
-    
   }
 }
 
