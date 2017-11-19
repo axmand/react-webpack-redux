@@ -91,10 +91,10 @@ class SecondDialog extends Component {
     return (
       <div>
         <Dialog
-          //fullScreen
+          fullScreen
           open={open}
           onRequestClose={close}
-          className={classes.dialog}
+         
           transition={Transition}
         >
           <AppBar style={{ backgroundColor: "#455A64" }}>

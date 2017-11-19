@@ -79,7 +79,8 @@ class FirstDialog extends Component {
     return (
       <div >
         <Dialog
-        className={classes.dialog}
+
+        fullScreen
           open={open}
           onRequestClose={close}
           transition={Transition}
