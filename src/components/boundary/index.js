@@ -72,6 +72,7 @@ class BoundaryModule extends Component {
       PrintProgress,
       XCZJclick,
       PhotoItemTest,
+      DeleteId,
       classes
     } = this.props;
   
@@ -139,7 +140,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     CameraShow: state.BoundaryReduce.CameraShow,
     DeleteShow: state.BoundaryReduce.DeleteShow,
-    PhotoItemTest: state.BoundaryReduce.PhotoItemTest
+    PhotoItemTest: state.BoundaryReduce.PhotoItemTest,
+    DeleteId: state.BoundaryReduce.DeleteId
   }
 }
 
@@ -167,8 +169,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePhotoDelete: () => {
-      // let deletedPhotoItems = PhotoItemTest.filter( (todo) =>{return todo.checked === true } )
-      // console.log(deletedPhotoItems)
       dispatch({
         type: 'handlePhotoDelete',
       })
@@ -184,6 +184,7 @@ const BoundaryReduce = (
     CardShow:false,
     DeleteShow:false,
     PrintProgress:false,
+    DeleteId:[],
     PhotoItemTest:[],
   }, action) => {
   
@@ -284,11 +285,16 @@ const BoundaryReduce = (
     let Photoitems = newState.PhotoItemTest.filter( (todo) =>{return todo.checked === false } )
     projectData.PhotoItem = Photoitems.slice(0);
     newState.PhotoItemTest = Photoitems;
-    return { ...state, ...newState };
+
+    // fetch(appConfig.fileServiceRootPath + '//project/deletephoto/' + DeleteId)
+    // .then(response => response.json())
+    // .then( json => {console.log(json)})
+    // .catch(err => {console.log(err)})
+    // return { ...state, ...newState };
   }
 
   if(action.type === "handleChoosePhoto"){
-    let Photoitems = newState.PhotoItemTest.map( todo => {
+      let Photoitems = newState.PhotoItemTest.map( todo => {
         if ( todo.key === action.id ) {
           return {
             ...todo, 
@@ -297,6 +303,11 @@ const BoundaryReduce = (
         }
         return todo;
       })
+      // Photoitems.map(todo =>{
+      //   if(todo.checked === true){
+      //     newState.DeleteId.push(todo.key)
+      //   }
+      // })
       projectData.PhotoItem =Photoitems.slice(0);
       newState.PhotoItemTest = Photoitems;
       return { ...state, ...newState };
