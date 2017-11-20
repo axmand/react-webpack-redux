@@ -71,12 +71,12 @@ class BoundaryModule extends Component {
       DeleteShow,
       PrintProgress,
       XCZJclick,
+      PhotoItemTest,
       classes
     } = this.props;
   
     return (
     <div>
-       {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleCameraShow }>        */}
        <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }> 
         <ListItemIcon>
           <PhotoCameraIcon className={classes.listItemIcon}/>
@@ -136,10 +136,10 @@ class BoundaryModule extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-
   return {
     CameraShow: state.BoundaryReduce.CameraShow,
     DeleteShow: state.BoundaryReduce.DeleteShow,
+    PhotoItemTest: state.BoundaryReduce.PhotoItemTest
   }
 }
 
@@ -153,35 +153,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'MAP_SKETCH_VIEW_HIDE',
       });
     },
-    
-    // handleCameraShow: () => {
-    //   dispatch({
-    //     type: "saveClick",
-    //   }); 
-
-    //   dispatch({
-    //       type: 'ProgressShow',
-    //   });
-    
-    //   fetch(appConfig.fileServiceRootPath + '//project/photolist' )
-    //   .then(response => response.json())
-    //   .then( json => {
-    //     dispatch({
-    //       type: 'handleCameraShow',
-    //       payload:json,
-    //     })
-    //     //console.log(json)
-    //     dispatch({
-    //       type: 'ProgressShow',
-    //     }) 
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //     dispatch({
-    //       type: 'ProgressShow',
-    //     }) 
-    //   })
-    // },
 
     handleCameraClose: () => {
       dispatch({
@@ -196,10 +167,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePhotoDelete: () => {
-    
-      let deletedPhotoItems = projectData.PhotoItem.filter( (todo) =>{return todo.checked === true } )
-      console.log(deletedPhotoItems)
-
+      // let deletedPhotoItems = PhotoItemTest.filter( (todo) =>{return todo.checked === true } )
+      // console.log(deletedPhotoItems)
       dispatch({
         type: 'handlePhotoDelete',
       })
@@ -214,7 +183,8 @@ const BoundaryReduce = (
     CameraShow: false,
     CardShow:false,
     DeleteShow:false,
-    PrintProgress:false
+    PrintProgress:false,
+    PhotoItemTest:[],
   }, action) => {
   
   let newState = JSON.parse(JSON.stringify(state))
@@ -232,11 +202,13 @@ const BoundaryReduce = (
       { 
         let list = [];
         projectData.PhotoItem = list.slice(0);
+        newState.PhotoItemTest = list.slice(0);
         list = JSON.parse(action.payload.data);
 
         for(let i = 0;i<list.length;i++)
           {
-            projectData.PhotoItem.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false})
+            projectData.PhotoItem.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false});
+            newState.PhotoItemTest.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false})
           }
         newState.CameraShow =  !state.CameraShow
       }
@@ -297,8 +269,9 @@ const BoundaryReduce = (
     .catch(err => {console.log(err)})
     
     projectData.PhotoItem.push({text:PhotoString,key:PhotoId,checked:false})
-    const CardShow = {CardShow: !state.CardShow }
-    return Object.assign({}, state, { ...CardShow })
+    newState.PhotoItemTest.push({text:PhotoString,key:PhotoId,checked:false})
+    newState.CardShow =  !state.CardShow 
+    return { ...state, ...newState };
   }
   
   if (action.type === "handlePhotoDeleteShow") {
@@ -308,25 +281,25 @@ const BoundaryReduce = (
   
   if(action.type === "handlePhotoDelete"){
     newState.DeleteShow = !state.DeleteShow;
-    let Photoitems = projectData.PhotoItem.filter( (todo) =>{return todo.checked === false } )
-    projectData.PhotoItem =Photoitems.slice(0);
-    console.log(projectData.PhotoItem)
+    let Photoitems = newState.PhotoItemTest.filter( (todo) =>{return todo.checked === false } )
+    projectData.PhotoItem = Photoitems.slice(0);
+    newState.PhotoItemTest = Photoitems;
     return { ...state, ...newState };
   }
 
   if(action.type === "handleChoosePhoto"){
-   let Photoitems = projectData.PhotoItem.map( todo => {
-      if ( todo.key === action.id ) {
-        return {
-          ...todo, 
-          checked: !todo.checked
+    let Photoitems = newState.PhotoItemTest.map( todo => {
+        if ( todo.key === action.id ) {
+          return {
+            ...todo, 
+            checked: !todo.checked
+          }
         }
-      }
-      return todo;
-    })
-    projectData.PhotoItem =Photoitems.slice(0);
-    console.log(projectData.PhotoItem)
-    return state;
+        return todo;
+      })
+      projectData.PhotoItem =Photoitems.slice(0);
+      newState.PhotoItemTest = Photoitems;
+      return { ...state, ...newState };
   }
   
   else

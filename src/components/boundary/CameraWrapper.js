@@ -63,8 +63,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          type: 'capture',
          payload: data
          })
-        /* data: string (base-64-jqeg)
-        Process your data here*/
         console.log(data)
       })
       .catch(console.error)

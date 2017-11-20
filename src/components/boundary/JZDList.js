@@ -127,6 +127,7 @@ const mapDispatchToProps = (dispatch,ownProps)=> {
         type:'JZDListClose'
       })
     },
+   
     onjzdXCZJClick:poi_id=>{
       dispatch({
         type:'jzdXCZJClick',
