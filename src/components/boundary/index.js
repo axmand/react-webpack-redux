@@ -71,12 +71,13 @@ class BoundaryModule extends Component {
       DeleteShow,
       PrintProgress,
       XCZJclick,
+      PhotoItemTest,
+      DeleteId,
       classes
     } = this.props;
   
     return (
     <div>
-       {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ handleCameraShow }>        */}
        <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }> 
         <ListItemIcon>
           <PhotoCameraIcon className={classes.listItemIcon}/>
@@ -136,10 +137,11 @@ class BoundaryModule extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-
   return {
     CameraShow: state.BoundaryReduce.CameraShow,
     DeleteShow: state.BoundaryReduce.DeleteShow,
+    PhotoItemTest: state.BoundaryReduce.PhotoItemTest,
+    DeleteId: state.BoundaryReduce.DeleteId
   }
 }
 
@@ -153,35 +155,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'MAP_SKETCH_VIEW_HIDE',
       });
     },
-    
-    // handleCameraShow: () => {
-    //   dispatch({
-    //     type: "saveClick",
-    //   }); 
-
-    //   dispatch({
-    //       type: 'ProgressShow',
-    //   });
-    
-    //   fetch(appConfig.fileServiceRootPath + '//project/photolist' )
-    //   .then(response => response.json())
-    //   .then( json => {
-    //     dispatch({
-    //       type: 'handleCameraShow',
-    //       payload:json,
-    //     })
-    //     //console.log(json)
-    //     dispatch({
-    //       type: 'ProgressShow',
-    //     }) 
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //     dispatch({
-    //       type: 'ProgressShow',
-    //     }) 
-    //   })
-    // },
 
     handleCameraClose: () => {
       dispatch({
@@ -196,10 +169,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     
     handlePhotoDelete: () => {
-    
-      let deletedPhotoItems = projectData.PhotoItem.filter( (todo) =>{return todo.checked === true } )
-      console.log(deletedPhotoItems)
-
       dispatch({
         type: 'handlePhotoDelete',
       })
@@ -214,7 +183,9 @@ const BoundaryReduce = (
     CameraShow: false,
     CardShow:false,
     DeleteShow:false,
-    PrintProgress:false
+    PrintProgress:false,
+    DeleteId:[],
+    PhotoItemTest:[],
   }, action) => {
   
   let newState = JSON.parse(JSON.stringify(state))
@@ -232,14 +203,15 @@ const BoundaryReduce = (
       { 
         let list = [];
         projectData.PhotoItem = list.slice(0);
+        newState.PhotoItemTest = list.slice(0);
         list = JSON.parse(action.payload.data);
 
         for(let i = 0;i<list.length;i++)
           {
-            projectData.PhotoItem.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false})
+            projectData.PhotoItem.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false});
+            newState.PhotoItemTest.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false})
           }
         newState.CameraShow =  !state.CameraShow
-        // console.log(projectData.PhotoItem)
       }
    
       return { ...state, ...newState }; 
@@ -261,11 +233,26 @@ const BoundaryReduce = (
   }
   
   if (action.type === "capture") {       
-    // let PhotoId = projectData.PhotoId;
-    // projectData.PhotoId = projectData.PhotoId + 1;
-    const uuidv4 = require('uuid/v4');
-    let PhotoId = uuidv4();
-
+    function timetrans()
+      {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = "-";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + "-" + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+        return currentdate;
+      }
+    let PhotoId = projectData.PoiId.toString() + '-' + timetrans();
+    
     let Stringitem = action.payload;
     let PhotoString = Stringitem.slice(23);
     let PhotoData = JSON.stringify({
@@ -283,8 +270,9 @@ const BoundaryReduce = (
     .catch(err => {console.log(err)})
     
     projectData.PhotoItem.push({text:PhotoString,key:PhotoId,checked:false})
-    const CardShow = {CardShow: !state.CardShow }
-    return Object.assign({}, state, { ...CardShow })
+    newState.PhotoItemTest.push({text:PhotoString,key:PhotoId,checked:false})
+    newState.CardShow =  !state.CardShow 
+    return { ...state, ...newState };
   }
   
   if (action.type === "handlePhotoDeleteShow") {
@@ -294,25 +282,35 @@ const BoundaryReduce = (
   
   if(action.type === "handlePhotoDelete"){
     newState.DeleteShow = !state.DeleteShow;
-    let Photoitems = projectData.PhotoItem.filter( (todo) =>{return todo.checked === false } )
-    projectData.PhotoItem =Photoitems.slice(0);
-    console.log(projectData.PhotoItem)
-    return { ...state, ...newState };
+    let Photoitems = newState.PhotoItemTest.filter( (todo) =>{return todo.checked === false } )
+    projectData.PhotoItem = Photoitems.slice(0);
+    newState.PhotoItemTest = Photoitems;
+
+    // fetch(appConfig.fileServiceRootPath + '//project/deletephoto/' + DeleteId)
+    // .then(response => response.json())
+    // .then( json => {console.log(json)})
+    // .catch(err => {console.log(err)})
+    // return { ...state, ...newState };
   }
 
   if(action.type === "handleChoosePhoto"){
-   let Photoitems = projectData.PhotoItem.map( todo => {
-      if ( todo.key === action.id ) {
-        return {
-          ...todo, 
-          checked: !todo.checked
+      let Photoitems = newState.PhotoItemTest.map( todo => {
+        if ( todo.key === action.id ) {
+          return {
+            ...todo, 
+            checked: !todo.checked
+          }
         }
-      }
-      return todo;
-    })
-    projectData.PhotoItem =Photoitems.slice(0);
-    console.log(projectData.PhotoItem)
-    return state;
+        return todo;
+      })
+      // Photoitems.map(todo =>{
+      //   if(todo.checked === true){
+      //     newState.DeleteId.push(todo.key)
+      //   }
+      // })
+      projectData.PhotoItem =Photoitems.slice(0);
+      newState.PhotoItemTest = Photoitems;
+      return { ...state, ...newState };
   }
   
   else

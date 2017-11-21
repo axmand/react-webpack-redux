@@ -3,7 +3,8 @@ let projectData = {
     ProjectName:[],
     PhotoItem:[],
     Loaded:false,   
-    PhotoId:0,
+    PoiId:0,
 };
+
 
 export default projectData;
