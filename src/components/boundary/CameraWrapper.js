@@ -31,10 +31,11 @@ class CameraWrapper extends Component {
       <div>
   		<ReactCamera 
 				ref={ node => camera = node }
-				width={990} 
-				height={550} />
+				width={896} 
+				height={672} 
+        />
         <br/>
-  		<IconButton onClick={capture} style={{marginLeft:'450px',paddingBottom:'80px',width: '100px',}}> 
+  		<IconButton onClick={capture} style={{marginLeft:'600px',paddingBottom:'80px',width: '100px',}}> 
         <PhotoCameraIcon/>
       </IconButton>
   	</div>

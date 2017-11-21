@@ -15,7 +15,8 @@ export class Camera extends Component {
     //provide mirror effect for preview video
     this.style = {
       WebkitTransition: 'scaleX(-1)',
-      transform: 'scaleX(-1)'
+      transform: 'scaleX(-1)',
+      marginLeft: '200px'
     }
 
     this.initializeCam = this.initializeCam.bind(this)
@@ -114,8 +115,8 @@ Camera.propTypes = {
 }
 
 Camera.defaultProps = {
-  width: 900,
-  height: 500
+  width: 990,
+  height: 550
 }
 
 export default Camera

@@ -290,7 +290,7 @@ const BoundaryReduce = (
     // .then(response => response.json())
     // .then( json => {console.log(json)})
     // .catch(err => {console.log(err)})
-    // return { ...state, ...newState };
+    return { ...state, ...newState };
   }
 
   if(action.type === "handleChoosePhoto"){
