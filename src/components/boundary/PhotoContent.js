@@ -40,15 +40,16 @@ class PhotoContent extends Component {
       handleCardShow,
       handleChoosePhoto,
       CardShow,
-      classes
+      classes,
+      PhotoItemTest,
 		} = this.props
 
-    console.log(projectData.PhotoItem)
+    console.log(PhotoItemTest)
 
     return (
     <div>
       <div className = {classes.box}>
-        {projectData.PhotoItem.map( todo => 
+        {PhotoItemTest.map( todo => 
           <AddPhoto
           {...todo} 
           handleChoosePhoto={ () => handleChoosePhoto(todo.key) }
@@ -92,7 +93,8 @@ PhotoContent.propTypes = {
   handleCardClose:PropTypes.func.isRequired,
   handleCardShow:PropTypes.func.isRequired,
   handleChoosePhoto:PropTypes.func.isRequired,
-  CardShow:PropTypes.bool.isRequired
+  CardShow:PropTypes.bool.isRequired,
+  PhotoItemTest:PropTypes.array.isRequired
 };
 
 //声明state和方法
@@ -100,6 +102,7 @@ PhotoContent.propTypes = {
 const mapStateToProps = (state,ownProps) => {
   return {
    CardShow: state.BoundaryReduce.CardShow,
+   PhotoItemTest: state.BoundaryReduce.PhotoItemTest,
   }
 }
 

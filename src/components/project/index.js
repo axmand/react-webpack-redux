@@ -243,7 +243,7 @@ const ProjectReduce = (
       ProjectName:[],
       PhotoItem:[],
       Loaded:false,   
-      PhotoId:0,
+      PoiId:0,
     },
     ContentShow: false,
     ProjectFalse:false,

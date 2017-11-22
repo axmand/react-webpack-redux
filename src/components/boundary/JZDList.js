@@ -127,6 +127,7 @@ const mapDispatchToProps = (dispatch,ownProps)=> {
         type:'JZDListClose'
       })
     },
+   
     onjzdXCZJClick:poi_id=>{
       dispatch({
         type:'jzdXCZJClick',
@@ -144,8 +145,8 @@ const mapDispatchToProps = (dispatch,ownProps)=> {
       dispatch({
           type: 'ProgressShow',
       });
-
-      fetch(appConfig.fileServiceRootPath + '//project/photolist' )
+      // fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
+      fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
       .then(response => response.json())
       .then( json => {
         dispatch({
@@ -199,8 +200,7 @@ const JZDListReduce =( state = {
                 return Object.assign({},state,{... XCZJ1});
             //点击拍照按钮后读取所选的界址点点号并打开摄像头进行拍照
             case 'jzdXCZJClick':
-                console.log('拍照')
-                console.log(action.payload.command)
+                projectData.PoiId =  action.payload.command;
                 return {...state}
             //关闭界址点列表   
             case 'JZDListClose':

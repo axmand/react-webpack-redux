@@ -13,7 +13,7 @@ import Input from 'material-ui/Input';
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Tabs, { Tab } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
-
+import { FormControl, FormHelperText } from 'material-ui/Form';
 
 // Map Redux state to component props
 function mapStateToProps(state,ownProps) {
@@ -22,7 +22,7 @@ function mapStateToProps(state,ownProps) {
   let obj = {};
   obj['key2'] = key;
   // obj[key] = state.value[key];
-var ttt=state.ObContentReducer[tableIndex][key];
+  var ttt=state.ObContentReducer[tableIndex][key];
   obj[key] =ttt;// state.ObContentReducer[tableIndex][key];
   
   return obj;
@@ -51,25 +51,23 @@ class InputCellUI extends React.PureComponent {
 
   state = {
     cellShow: false,
+    inputValue:""
     
   };
   showInputCell = () => {
     this.setState({ cellShow: true });
   }
-  closeInputCell = () => {
+  closeInputCell = (e) => {
+    
+    var inputData = this.state.inputValue;
+    this.props.onCompleteInput(inputData,this.props.name,this.props.tableIndex);
     this.setState({ cellShow: false });
   }
+  
   onChanged = (e) => {
-    var inputData = e.target.value;
-    this.props.onCompleteInput(inputData,this.props.name,this.props.tableIndex);
+    this.setState({inputValue:e.target.value});
+   
   }
-
-  // shouldComponentUpdate(nextProps,nextStates){
-  //   const {name,key2}=this.props;
-  //   if(!key2)
-  //     return true;
-  //   return name === key2;
-  // }
 
   render() {
     const { onCompleteInput, dialogShow, key2, name,title,tips,tableIndex } = this.props;
@@ -102,7 +100,9 @@ class InputCellUI extends React.PureComponent {
           </DialogTitle>
           <DialogContent>
 
-            {/* <Input ref="NameInput" defaultValue={value} onChange={this.onChanged} /> */}
+          
+          
+        
 
 
             <TextField
@@ -111,14 +111,17 @@ class InputCellUI extends React.PureComponent {
           fullWidth
           multiline
           margin="normal"
-          value={value}
+          //value={value}
           defaultValue={value} 
           onChange={this.onChanged}
         />
-            <br/>
+
+        <FormHelperText>{tips}</FormHelperText>
+
+            {/* <br/>
             提示
             <br />
-{tips}
+{tips} */}
           </DialogContent>
           <DialogActions>
             <Button color="primary" onClick={this.closeInputCell}>

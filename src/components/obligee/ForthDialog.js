@@ -79,7 +79,7 @@ class ForthDialog extends Component {
     return (
       <div>
         <Dialog
-        className={classes.dialog}
+        fullScreen
 
           open={open}
           onRequestClose={close}
