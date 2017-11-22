@@ -52,10 +52,10 @@ const styles = {
     flex: 1,
   },
   dialog: {
-    width: '900px',
-    height: '600px',
+    width: '1200px',
+    height: '730px',
     marginTop: 20,
-    marginLeft: 30
+    marginLeft: 40
   }
 }
 
