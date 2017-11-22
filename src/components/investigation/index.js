@@ -120,7 +120,7 @@ const investigationReduce = (
     IDCardName: '',
     identityVerificationNotification: '',
     investigationMenuDisplayState: false,
-    idVerificationDisplayState: true,
+    idVerificationDisplayState: false,
   }, action) => {
   let newState = JSON.parse(JSON.stringify(state))
 

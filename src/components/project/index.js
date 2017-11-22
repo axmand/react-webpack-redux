@@ -119,7 +119,7 @@ class ProjectModule extends Component {
           </DialogContent>
         </Dialog>
        
-        <Dialog
+        <Dialog  
           open={ ProjectTrue }
           onRequestClose={ handleProjectTrue } 
         >

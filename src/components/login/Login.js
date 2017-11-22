@@ -306,7 +306,6 @@ const loginReduce = (state = {
     case 'LOGIN_SUCCESS':
       const authenticationInfo = action.payload.data
       for (let key in authenticationInfo) {
-      localStorage
         localStorage.setItem(key, authenticationInfo[key])        
       }
       if (localStorage.getItem('latestLoginTime') != localStorage.getItem('currentLoginTime'))
