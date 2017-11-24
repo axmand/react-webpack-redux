@@ -502,7 +502,6 @@ class UserModule extends Component {
           </DialogContent>
         </Dialog>
         <BluetoothConnect />
-
       </div>
     );
   }

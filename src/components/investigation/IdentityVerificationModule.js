@@ -106,6 +106,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     handleIdentityVerificationQuery: () => {
 
+      dispatch({
+        type: "OPEN_WAITING_MODULE",
+      });
+
       const IdentityVerificationRequestDetails = {
         'personid': ownProps.IDCardNumber,
         'personname': ownProps.IDCardName,

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 //import UI
@@ -10,7 +10,10 @@ import Dialog, {
 } from "material-ui/Dialog";
 import Input, { InputLabel } from "material-ui/Input";
 import List, { ListItem } from "material-ui/List";
-import { FormControl } from "material-ui/Form";
+import { 
+  FormControl,
+  FormHelperText 
+ } from "material-ui/Form";
 import Select from "material-ui/Select";
 import Button from "material-ui/Button";
 
@@ -31,10 +34,10 @@ const styles = {
     marginTop:'10%',
   },
   formControl: {
-    margin: "1em",
-    width: "100%",
-    height: "30%",
-    lineHeight: "3em"
+    // margin: "1em",
+    // width: "100%",
+    // height: "30%",
+    // lineHeight: "3em"
   },
   title: {
     display: "flex",
@@ -64,11 +67,11 @@ const styles = {
   },
 
   select: {
-    width: "100%",
-    height: "4em",
-    marginLeft: "5%",
-    textAlign: "center",
-    lineHeight: "2em"
+    // width: "100%",
+    // height: "4em",
+    // marginLeft: "5%",
+    // textAlign: "center",
+    // lineHeight: "2em"
   },
   option: {
     display: "flex",
@@ -114,14 +117,6 @@ class BluetoothConnect extends React.Component {
     // console.log(COMPort);
   };
 
-  handleClickBluetoothConnectAlert = () => {
-    this.setState({ bluetoothConnectAlertShow: true });
-  };
-
-  handleRequestCloseBluetoothConnectAlert = () => {
-    this.setState({ bluetoothConnectAlertShow: false });
-  };
-
   render() {
     const {
       classes,
@@ -132,9 +127,10 @@ class BluetoothConnect extends React.Component {
       handleCOMPortDisconnect,
       portConnectStateShow,
       handleRequestCloseBluetoothSwitch,
-      bluetoothConnectAlertShow,
+      // bluetoothConnectAlertShow,
       handleClickBluetoothConnectAlert,
-      handleRequestCloseBluetoothConnectAlert
+      // handleRequestCloseBluetoothConnectAlert,
+      bluetoothConnectNotification,
     } = this.props;
 
     //console.log(portLists);
@@ -167,6 +163,7 @@ class BluetoothConnect extends React.Component {
                     </option>
                   ))}
                 </Select>
+                <FormHelperText>{bluetoothConnectNotification}</FormHelperText>
               </FormControl>
 
               <List>
@@ -193,23 +190,6 @@ class BluetoothConnect extends React.Component {
           </DialogContent>
         </Dialog>
 
-        <Dialog
-          open={bluetoothConnectAlertShow}
-          onRequestClose={handleRequestCloseBluetoothConnectAlert}
-          style={{
-            background: '#455A64',
-            color: "#C1C6C9",
-            textAlign: "center",
-            justifyContent: "center",
-            justify: "center"
-          }}
-        >
-          <DialogContent>
-            <DialogContentText>
-              bluetooth status has been changed
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
       </div>
     );
   }
@@ -225,7 +205,8 @@ const mapStateToProps = state => {
     portLists: bluetoothState.portLists,
     bluetoothSwitch: bluetoothState.bluetoothSwitch,
     portConnectStateShow: bluetoothState.portConnectStateShow,
-    bluetoothConnectAlertShow: bluetoothState.bluetoothConnectAlertShow
+    bluetoothConnectAlertShow: bluetoothState.bluetoothConnectAlertShow,
+    bluetoothConnectNotification: bluetoothState.bluetoothConnectNotification,
   };
 };
 
@@ -246,6 +227,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     handleCOMPortConnect: () => {
       // console.log("handleCOMPortConnect Triggerd ...");
       // console.log(COMPort);
+      dispatch({
+        type: "OPEN_WAITING_MODULE",
+      });
 
       const COMPortSelected = COMPort.slice(
         COMPort.indexOf("(") + 1,
@@ -280,6 +264,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               notification: "RTK蓝牙已连接",
             }
           });
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
         })
         .catch(err => {
           console.log(err);
@@ -289,6 +276,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               notification: err,
             }
           });
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
         });
 
         
@@ -297,6 +287,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     handleCOMPortDisconnect: () => {
       console.log("handleCOMPortDisconnect Triggerd ...");
       console.log(COMPort);
+
+      dispatch({
+        type: "OPEN_WAITING_MODULE",
+      });
 
       const COMPortSelected = COMPort.slice(
         COMPort.indexOf("(") + 1,
@@ -314,6 +308,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         method: "GET"
       })
         .then(response => {
+          console.log(response)
           if (response.ok) {
             return response.json()
           } 
@@ -332,6 +327,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               notification: "已断开RTK蓝牙连接",
             }
           });
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
         })
         .catch(err => {
           console.log(err);
@@ -341,13 +339,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               notification: err,
             }
           });
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
         });
     },
-    handleRequestCloseBluetoothConnectAlert: () => {
-      dispatch({
-        type: "COM_BLUETOOTH_CONNECT_ALERT_SWITCH"
-      });
-    }
+    // handleRequestCloseBluetoothConnectAlert: () => {
+    //   dispatch({
+    //     type: "COM_BLUETOOTH_CONNECT_ALERT_SWITCH"
+    //   });
+    // }
   };
 };
 
@@ -361,7 +362,8 @@ const BluetoothReducer = (
     portLists: ["COM1", "COM2", "COM3", "COM4"],
     bluetoothSwitch: false,
     portConnectStateShow: false,
-    bluetoothConnectAlertShow: false
+    bluetoothConnectAlertShow: false,
+    bluetoothConnectNotification: '',
   },
   action
 ) => {
@@ -389,15 +391,17 @@ const BluetoothReducer = (
 
     case "COM_BLUETOOTH_MODULE_CONNECT":
       // console.log(action.payload)
-      newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
+      // newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
+      newState.bluetoothConnectNotification = action.payload.notification
       return { ...state, ...newState };
 
     case "COM_BLUETOOTH_MODULE_DISCONNECT":
-      newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
+      // newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
+      newState.bluetoothConnectNotification = action.payload.notification
       return { ...state, ...newState };
 
-    case "COM_BLUETOOTH_CONNECT_ALERT_SWITCH":
-      newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
+    // case "COM_BLUETOOTH_CONNECT_ALERT_SWITCH":
+    //   newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
       return { ...state, ...newState };
 
     default:
@@ -405,3 +409,22 @@ const BluetoothReducer = (
   }
 };
 RootReducer.merge(BluetoothReducer);
+
+
+// {/* <Dialog
+//   open={bluetoothConnectAlertShow}
+//   onRequestClose={handleRequestCloseBluetoothConnectAlert}
+//   style={{
+//     background: '#455A64',
+//     color: "#C1C6C9",
+//     textAlign: "center",
+//     justifyContent: "center",
+//     justify: "center"
+//   }}
+// >
+//   <DialogContent>
+//     <DialogContentText>
+//       bluetooth status has been changed
+//     </DialogContentText>
+//   </DialogContent>
+// </Dialog> */}

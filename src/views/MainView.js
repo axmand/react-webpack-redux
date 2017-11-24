@@ -73,7 +73,8 @@ const mainViewReduce = (
 
   switch (action.type) {
     case 'STATUS_BAR_NOTIFICATION':
-      newState.notification = action.payload.notification;
+      const statusBarNotification = JSON.stringify(action.payload.notification)
+      newState.notification = statusBarNotification;
       return { ...state, ...newState };
     default:
       return { ...state };
