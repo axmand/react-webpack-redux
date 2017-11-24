@@ -9,9 +9,14 @@ import Dialog, {
   DialogContent,
   DialogContentText
 } from "material-ui/Dialog";
+import Drawer from 'material-ui/Drawer';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
 import Button from "material-ui/Button";
 import List from "material-ui/List"
 import Typograghy from "material-ui/Typography";
+import IconButton from 'material-ui/IconButton';
 
 //import icon
 import LocationSearching from "material-ui-icons/LocationSearching"; //展点
@@ -79,6 +84,43 @@ const styles = theme => ({
     color:"#455A64",
     textAlign: "center",
   }, 
+  drawerPaper: {
+    left:`${window.innerWidth * 0.083}px`,
+    top:`${window.innerHeight * 0.2}px`,
+    height: '60%',
+    width:`${window.innerHeight * 0.35}px`,
+  },
+  toolBar:{
+    padding:0,
+    minHeight:'40px',
+    background:'#455A64',
+  },
+  title: {
+    flex: 1,
+    fontSize:'1.2em',
+    fontWeight: '800',
+    textAlign:'center',
+    color:'#fff',
+  },
+  headcell:{
+    padding:0,
+    minHeight:'30px',
+    minWidth:'40px',
+  },
+  headtext:{
+    fontSize:'1.2em',
+    textAlign:'center',
+    width:'100%',    
+    fontWeight:'600',
+  },
+  tablecell:{
+    padding:0,
+    fontSize:'1em',
+    fontWeight:'400',
+    textAlign:'center',
+    minHeight:'30px',
+    minWidth:'40px',
+  }
 });
 class SkechToolBar extends Component {
   render() {
@@ -103,6 +145,7 @@ class SkechToolBar extends Component {
       onDelAlerClose,
       onSignatureAlerClose,
       onJzdTableClick,
+      onjzdPlotClick,
     } = this.props;
     const {
       onPlotAlerClose,
@@ -112,6 +155,7 @@ class SkechToolBar extends Component {
     } = this.props;
     const {
       alertPlotFail,
+      plotListData,
       alertSignature,
       drawPointIsChecked,
       drawLineIsChecked,
@@ -340,6 +384,61 @@ class SkechToolBar extends Component {
               </Typograghy>
               </DialogContent>
           </Dialog>
+      <Drawer
+        type="persistent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        anchor= 'left'
+        open={drawPointIsChecked}
+      >
+        <Toolbar className={classes.toolBar}>
+          <Typography type="title" color="inherit" className={classes.title}>
+              实时成图点列表
+          </Typography>
+          <IconButton color="contrast" aria-label="Close" >
+            <CloseIcon />
+          </IconButton>
+        </Toolbar> 
+        <div style={{overflowX: 'auto', overflowY: 'auto'}}>
+          <Table>
+            <TableHead>
+              <TableRow style={{height:'40px'}}>
+                <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>            
+                  <Typography className={classes.headtext} >点号</Typography>      
+                </TableCell>
+                <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.1}px`,padding:0}}>
+                  <Typography className={classes.headtext} >坐标</Typography>  
+                </TableCell>
+                <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>
+                  <Typography className={classes.headtext} >修正</Typography>  
+                </TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {plotListData.map(n => {
+                return (
+                  <TableRow key={n.id}>
+                    <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>{n.id}</TableCell>
+                    <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.1}px`,padding:0,textAlign:'left'}}>
+                      Lng:{n.coordinates[0]}<br/>Lat:{n.coordinates[1]}
+                    </TableCell>
+                    <TableCell 
+                      className={classes.tablecell}
+                      style={{width:`${window.innerWidth * 0.05}px`,padding:0}}
+                      onClick={()=>onjzdPlotClick(n.id)}
+                    >
+                    <Adjust style={{color:'#000',width:`${window.innerWidth * 0.015}px`}}/>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+      </Drawer>
+
       </div>     
     );
   }
@@ -384,6 +483,7 @@ const mapStateToProps = state => {
     saveIsChecked: sketchState.saveIsChecked,
     alertPlotFail: sketchState.alertPlotFail,
     alertSignature:sketchState.alertSignature,
+    plotListData:sketchState.plotListData
   };
 };
 
@@ -557,6 +657,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type:"signatureAlerClose"
         })
     },
+    onjzdPlotClick:poi_id=>{
+      dispatch({
+        type:'jzdPlotClick',
+        payload:{command:poi_id}
+      });
+    }
 
   };
 };

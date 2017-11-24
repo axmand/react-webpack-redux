@@ -29,10 +29,10 @@ class AddPhoto extends Component {
 
     return(
       <div style={{paddingBottom:20,paddingLeft:20,paddingRight:20,paddingTop:0}}>
-      <Card  style={{maxWidth:150,}}>
+      <Card  style={{maxWidth:221,}}>
         <img src={item} alt="Contemplative Reptile"  
              style={{justifyContent:'center',}} 
-             width="100%" height="150"/>
+             width="170" height="170"/>
         <CardContent style={{padding: '0px',}}>
           <Checkbox onClick={  handleChoosePhoto }/>
           <Typography  component="p"> 

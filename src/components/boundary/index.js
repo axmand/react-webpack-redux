@@ -52,10 +52,10 @@ const styles = {
     flex: 1,
   },
   dialog: {
-    width: '900px',
-    height: '600px',
+    width: '1200px',
+    height: '730px',
     marginTop: 20,
-    marginLeft: 30
+    marginLeft: 40
   }
 }
 
@@ -285,11 +285,12 @@ const BoundaryReduce = (
     let Photoitems = newState.PhotoItemTest.filter( (todo) =>{return todo.checked === false } )
     projectData.PhotoItem = Photoitems.slice(0);
     newState.PhotoItemTest = Photoitems;
-
-    // fetch(appConfig.fileServiceRootPath + '//project/deletephoto/' + DeleteId)
-    // .then(response => response.json())
-    // .then( json => {console.log(json)})
-    // .catch(err => {console.log(err)})
+    
+    console.log(appConfig.fileServiceRootPath + '//project/deletephoto/' + newState.DeleteId)
+    fetch(appConfig.fileServiceRootPath + '//project/deletephoto/' + newState.DeleteId)
+    .then(response => response.json())
+    .then( json => {console.log(json)})
+    .catch(err => {console.log(err)})
     return { ...state, ...newState };
   }
 
@@ -303,11 +304,13 @@ const BoundaryReduce = (
         }
         return todo;
       })
-      // Photoitems.map(todo =>{
-      //   if(todo.checked === true){
-      //     newState.DeleteId.push(todo.key)
-      //   }
-      // })
+      newState.DeleteId = [];
+      Photoitems.map(todo =>{
+        if(todo.checked === true){
+          let data=todo.key.replace('.png','')
+          newState.DeleteId.push(data)
+        }
+      })
       projectData.PhotoItem =Photoitems.slice(0);
       newState.PhotoItemTest = Photoitems;
       return { ...state, ...newState };
