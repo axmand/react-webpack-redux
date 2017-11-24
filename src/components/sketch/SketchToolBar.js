@@ -167,7 +167,8 @@ class SkechToolBar extends Component {
       measureDistanceIsChecked,
       measureAreaIsChecked,
       chooseObjIsChecked,
-      haveObjToDel
+      haveObjToDel,
+      onFetchPoi_NumClick
     } = this.props;
     return (
     <div>
@@ -396,8 +397,8 @@ class SkechToolBar extends Component {
           <Typography type="title" color="inherit" className={classes.title}>
               实时成图点列表
           </Typography>
-          <IconButton color="contrast" aria-label="Close" >
-            <CloseIcon />
+          <IconButton onClick={onFetchPoi_NumClick} >
+          <Typography style={{fontSize:'0.875rem',fontWeight:'600', color:'#fff'}}>取号</Typography>
           </IconButton>
         </Toolbar> 
         <div style={{overflowX: 'auto', overflowY: 'auto'}}>
@@ -662,7 +663,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type:'jzdPlotClick',
         payload:{command:poi_id}
       });
-    }
+    },
+    onFetchPoi_NumClick:()=>{
+      dispatch({
+        type:'fetchPoi_NumClick'
+      })
+   },
 
   };
 };
