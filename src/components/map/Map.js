@@ -995,7 +995,7 @@ const sketchReduce = (
           });
 
           oldPoi.remove();
-         // oldLabel.remove();
+          oldLabel.remove();
           map.getLayer("label").addGeometry(label);
           map.getLayer("point").addGeometry(point);
           point.on("click", clickObj);
@@ -1088,8 +1088,8 @@ const sketchReduce = (
    
     //画点
     case "drawPointClick":
-      const jzdData = JSON.parse(projectData.ProjectItem.L.jzdJSONData);
-      console.log(jzdData);
+      const jzdData = map.getLayer("point").toJSON()
+      //const jzdData = JSON.parse(projectData.ProjectItem.L.jzdJSONData);
       let jzdpoi = jzdData.geometries;
       let tableRow;
       let tableData = [];
@@ -1745,6 +1745,10 @@ const sketchReduce = (
         signatureIsChecked: false
       };
       return Object.assign({}, state, { ...jzxTable });
+    //点击拍照按钮后读取所选的界址点点号并打开摄像头进行拍照
+    case 'jzdXCZJClick':
+      projectData.PoiId =  action.payload.command;
+      return {...state}
 
     default:
       return { ...state };

@@ -17,6 +17,7 @@ import Button from "material-ui/Button";
 import List from "material-ui/List"
 import Typograghy from "material-ui/Typography";
 import IconButton from 'material-ui/IconButton';
+import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 
 //import icon
 import LocationSearching from "material-ui-icons/LocationSearching"; //展点
@@ -40,8 +41,8 @@ import DragHandle from "material-ui-icons/DragHandle"; //拖动
 import CloseIcon from "material-ui-icons/Close";
 import Snackbar from "material-ui/Snackbar";
 import SecondDialog from '../obligee/SecondDialog'
-
-import appConfig from "../../redux/Config"
+import projectData from "./../../redux/RootData";
+import appConfig from "../../redux/Config";
 
 const styles = theme => ({
   root: {
@@ -87,20 +88,23 @@ const styles = theme => ({
   drawerPaper: {
     left:`${window.innerWidth * 0.083}px`,
     top:`${window.innerHeight * 0.2}px`,
-    height: '60%',
-    width:`${window.innerHeight * 0.35}px`,
+    height: '70%',
+    width:`${window.innerHeight * 0.45}px`,
   },
   toolBar:{
     padding:0,
-    minHeight:'40px',
+    minHeight:'45px',
     background:'#455A64',
   },
   title: {
     flex: 1,
-    fontSize:'1.2em',
     fontWeight: '800',
+    fontSize:'1rem',
     textAlign:'center',
     color:'#fff',
+  },
+  fetchpoibut:{
+    backgroundColor:'rgba(255, 255, 255, .3)',
   },
   headcell:{
     padding:0,
@@ -108,14 +112,14 @@ const styles = theme => ({
     minWidth:'40px',
   },
   headtext:{
-    fontSize:'1.2em',
+    fontSize:'0.875rem',
     textAlign:'center',
     width:'100%',    
     fontWeight:'600',
   },
   tablecell:{
     padding:0,
-    fontSize:'1em',
+    fontSize:'0.875rem',
     fontWeight:'400',
     textAlign:'center',
     minHeight:'30px',
@@ -168,7 +172,8 @@ class SkechToolBar extends Component {
       measureAreaIsChecked,
       chooseObjIsChecked,
       haveObjToDel,
-      onFetchPoi_NumClick
+      onFetchPoi_NumClick,
+      onjzdXCZJClick
     } = this.props;
     return (
     <div>
@@ -188,7 +193,7 @@ class SkechToolBar extends Component {
                 onClick={onDrawPointClick}
             >
                 <Adjust className={classes.icon} />
-                <Typograghy className={classes.text}>画点</Typograghy>
+                <Typograghy className={classes.text}>纠点拍照</Typograghy>
             </Button>
             <Button
                 className={classes.button}
@@ -360,8 +365,8 @@ class SkechToolBar extends Component {
             open={haveObjToDel} 
             onRequestClose={onDelAlerClose}>
               <DialogContent className={classes.alert} onClick={onDelAlerClose}>
-              <Typograghy className={classes.message}>
-                未选中需要删除的对象！                
+                <Typograghy className={classes.message}>
+                  未选中需要删除的对象！                
                 </Typograghy>
               </DialogContent>
           </Dialog>
@@ -370,9 +375,9 @@ class SkechToolBar extends Component {
             open={alertPlotFail} 
             onRequestClose={onPlotAlerClose}>
               <DialogContent className={classes.alert} onClick={onPlotAlerClose}>
-              <Typograghy className={classes.message}>
-              请求RTK数据失败！                
-              </Typograghy>
+                <Typograghy className={classes.message}>
+                    请求RTK数据失败！                
+                </Typograghy>
               </DialogContent>
           </Dialog>
 
@@ -380,9 +385,9 @@ class SkechToolBar extends Component {
             open={alertSignature} 
             onRequestClose={onSignatureAlerClose}>
               <DialogContent className={classes.alert} onClick={onSignatureAlerClose}>
-              <Typograghy className={classes.message}>
-              您还未点击保存！                
-              </Typograghy>
+                <Typograghy className={classes.message}>
+                  您还未点击保存！                
+                </Typograghy>
               </DialogContent>
           </Dialog>
       <Drawer
@@ -394,12 +399,14 @@ class SkechToolBar extends Component {
         open={drawPointIsChecked}
       >
         <Toolbar className={classes.toolBar}>
-          <Typography type="title" color="inherit" className={classes.title}>
+          <Typography className={classes.title}>
               实时成图点列表
           </Typography>
-          <IconButton onClick={onFetchPoi_NumClick} >
-          <Typography style={{fontSize:'0.875rem',fontWeight:'600', color:'#fff'}}>取号</Typography>
-          </IconButton>
+          <Button className={classes.fetchpoibut} onClick={onFetchPoi_NumClick} >
+          <Typography style={{fontSize:'0.875rem', color:'#fff'}}>
+            取号
+            </Typography>
+          </Button>
         </Toolbar> 
         <div style={{overflowX: 'auto', overflowY: 'auto'}}>
           <Table>
@@ -413,6 +420,9 @@ class SkechToolBar extends Component {
                 </TableCell>
                 <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>
                   <Typography className={classes.headtext} >修正</Typography>  
+                </TableCell>
+                <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>
+                  <Typography className={classes.headtext} >拍照</Typography>  
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -432,6 +442,12 @@ class SkechToolBar extends Component {
                     >
                     <Adjust style={{color:'#000',width:`${window.innerWidth * 0.015}px`}}/>
                     </TableCell>
+                    <TableCell 
+                    className={classes.tablecell}
+                    style={{width:`${window.innerWidth * 0.05}px`,padding:0}}
+                    onClick={()=>onjzdXCZJClick(n.id)}> 
+                    <PhotoCameraIcon style={{color:'#000',width:`${window.innerWidth * 0.015}px`}}/>
+                  </TableCell>
                   </TableRow>
                 );
               })}
@@ -494,29 +510,75 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     //展点
     onPlotClick: () => {
       if (ownProps.isRealtimeOn) {
-        console.log("fetching ...");
+
+        dispatch({
+          type: "OPEN_WAITING_MODULE",
+        });
+
+        console.log("Fetching latitude and longtitude from the satellite ...");
         fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea")
-          .then(response => response.json())
-          .then(json => {
+          .then(response => {
+          if (response.ok) {
+            return response.json()
+          } 
+          else {
+            return Promise.reject({
+              status: response.status,
+              statusText: response.statusText
+            })
+          }
+        })
+        .then(json => {
+          console.log(json);
+          // 处理不同HTTP状态码下的对应操作
+          if (json.status === 500)
+          {
+            dispatch({
+                type:"plotFail",
+                payload: "尚未获取到差分后的测量点坐标数据"
+            })           
+          };
+          if (json.status === 200)
+          {
             dispatch({
               type: "plotRTK",
               payload: json
             });
-            console.log(json);
-          })
-          .catch(e => {
-              
-              dispatch({
-                  type:"plotFail",
-                  payload:e
-              })
-              console.log(e)
+          };
+          // 在状态栏显示调试信息
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: json,
+            }
           });
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
+          });
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
+        });
       } else {
-        console.log("importing ...");
+        console.log("Importing surveying data from the files ...");
         dispatch({
             type:'plotFile'
         })
+        dispatch({
+          type: "STATUS_BAR_NOTIFICATION",
+          payload: {
+            notification: "尚未实现从文件中展出测量点，请将实时成图按钮打开，从RTK获取测量数据！",
+          }
+        });
       }
     },
     //画点
@@ -664,7 +726,48 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         payload:{command:poi_id}
       });
     },
+
     onFetchPoi_NumClick:()=>{
+<<<<<<< HEAD
+=======
+      dispatch({
+        type:'fetchPoi_NumClick'
+      })
+   },
+   onjzdXCZJClick:poi_id=>{
+    dispatch({
+      type:'jzdXCZJClick',
+      payload:{command:poi_id}
+    });
+    
+    dispatch({
+      type: "saveClick",
+    }); 
+
+    dispatch({
+        type: 'ProgressShow',
+    });
+    // fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
+    fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
+    .then(response => response.json())
+    .then( json => {
+      dispatch({
+        type: 'handleCameraShow',
+        payload:json,
+      })
+      //console.log(json)
+      dispatch({
+        type: 'ProgressShow',
+      }) 
+    })
+    .catch(err => {
+      console.log(err)
+      dispatch({
+        type: 'ProgressShow',
+      }) 
+    })
+  },
+>>>>>>> 23d4c1e3a3b617bf5911a95a87664fbf53901a2f
 
       fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
