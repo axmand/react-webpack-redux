@@ -145,8 +145,9 @@ const mapDispatchToProps = (dispatch,ownProps)=> {
       dispatch({
           type: 'ProgressShow',
       });
-      fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
-      // fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
+      
+      // fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
+      fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
       .then(response => response.json())
       .then( json => {
         dispatch({

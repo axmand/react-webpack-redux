@@ -665,11 +665,46 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       });
     },
     onFetchPoi_NumClick:()=>{
-      dispatch({
-        type:'fetchPoi_NumClick'
-      })
-   },
 
+      fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
+        {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : 'RcMfFkbrDahQeyiyWi4KTcpcN19bmaj-7TUkBUU7lNH5Io4k-LQDRgYlqJAS_qaKWnjIfIDtpUN2K6jCGoqz0kfN9o0NmvmwwkHHuSoVcjgXSuDGf58p2LxHNs4fZAZCO_ODXarkvtmycaWspUlkgScane8bf5lh5_Dkxod8G2C1Dz7LFAfynSbKdun0d3EYaJeZMCbM5L5MII_LslmlW588I43kgv3N0BaPTwM5UqehrCnTcb49JovmNusgiHcRYKS4sHTd8vGLpq0-rrQegf1jSDtspb6acCgxMLEnRD07eInRnzMYSG5SH-N7U0W6sDqbNHOaUO3P2qciDWBUGPnz9ea3DliiPqeL6MmtQlgjYsnBXLbCqMAuWF7x_Oe-8NQ_DAMMqA1G6ynGCoetvkh5XZTQFRkLee4-XNrqyH71ebMJFuRBeV61iOmxZ3qSWzt4sNTOOnJnFmPdEQ7BFg0p48X9zHwXfhfURUTtmZ7XthAWWErkJcrikTiy8xh6KMti-Ue6pyIXzVMyPXfetf0mPqdnK-9UUOd45JrnALo6dRChlMle3CG32l0q7dygvRXukgyUVpGxC7zUSQ-UgJq6Va3Ud4J_zZIFjpj1I8C-GzBZeeyyjTBnCAvWi-2C2JWW5yuwE_zQ6qbZVMZRl0qwuZqtUlvNVRuPHtSgnNFoOZIUT9VfW52Y5Ckpm5taBCzqqt4NnEeDHLaZVDL2IRNLUvN8tHYVPkg1AdKETV2MB7_qAzdiZX-blBW9BpARxkzRjhGNS53gLpFMMM761skeJEuNYfkZ6WkiFrD6-v6hrlPLmy60WU_kIdediLkeNL3f-K72mTwH61d6o3VwS-1EWjEbkp4mryaX58KHb3bsQWAwZAMr3z8rFkvbR24dyjv_fIsuI9AV1dv44n7isd0CqmwjuYYLRmLzob9oOMDRS4v8_-zppDQxn8MwsklxaMVjH6ysIb48icAzS4GmxfDcYksMfR--QsqagwRjtj0O47hPpWNiz8L-n4mD5YhAeAWyzRgpYw_kwYF7cbOeStq1C0uJM23M-A8sqJYLgcJlJfKN25nUfYb3qtUHOBf8'
+          },
+          body: {
+            	PointX: 123.123,
+              PointY: 456.456,
+              strType: null,
+              strUserName: null
+          }
+        }
+      )
+        .then(response => {
+          console.log(response)
+          return response.json()
+            .then(json => {
+              if (response.ok) {
+                return json
+              } 
+              else {
+                return Promise.reject(json)
+              }
+            })
+        })
+      .then( json => {
+        dispatch({
+          type: 'fetchPoi_NumClick',
+          payload:json,
+        })
+        console.log(json)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+   }
   };
 };
 

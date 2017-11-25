@@ -1085,6 +1085,7 @@ const sketchReduce = (
           .length
       };
       return Object.assign({}, state, { ...newNum });
+   
     //画点
     case "drawPointClick":
       const jzdData = JSON.parse(projectData.ProjectItem.L.jzdJSONData);
