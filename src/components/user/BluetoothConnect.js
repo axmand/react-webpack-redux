@@ -225,22 +225,24 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleCOMPortConnect: () => {
-      // console.log("handleCOMPortConnect Triggerd ...");
+      console.log("handleCOMPortConnect Triggerd ...");
       // console.log(COMPort);
       dispatch({
         type: "OPEN_WAITING_MODULE",
       });
 
-      const COMPortSelected = COMPort.slice(
-        COMPort.indexOf("(") + 1,
-        COMPort.indexOf(")")
-      );
+      // const COMPortSelected = COMPort.slice(
+      //   COMPort.indexOf("(") + 1,
+      //   COMPort.indexOf(")")
+      // );
       // console.log(COMPortSelected);
+
+      const COMPortSelected = COMPort
 
       const RTKBlutoothConnectURLBase =
       appConfig.fileServiceRootPath + "/bluetooth/connect/sp/";
       const RTKBlutoothConnectURL = RTKBlutoothConnectURLBase + COMPortSelected;
-      // console.log(RTKBlutoothConnectURL);
+      console.log(RTKBlutoothConnectURL);
 
       fetch(RTKBlutoothConnectURL, {
         method: "GET"
@@ -258,15 +260,97 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
         .then(json => {
           console.log(json);
+          // 处理不同HTTP状态码下的对应操作
+          if (json.status === 500)
+          {
+            dispatch({
+              type: "COM_BLUETOOTH_MODULE_CONNECT",
+              payload: {
+                notification: "RTK同平板蓝牙连接信号受阻，无法获取COM端口！！！",
+              }
+            });
+          };
+
+          if (json.status === 200)
+          {
+            dispatch({
+              type: "COM_BLUETOOTH_MODULE_CONNECT",
+              payload: {
+                notification: "RTK蓝牙已连接！",
+              }
+            });
+
+            console.log(appConfig.fileServiceRootPath + appConfig.CORSConnectionInterface)
+            fetch(appConfig.fileServiceRootPath + appConfig.CORSConnectionInterface, {
+              method: "GET"
+            })
+              .then(response => {
+                if (response.ok) {
+                  return response.json()
+                } 
+                else {
+                  return Promise.reject({
+                    status: response.status,
+                    statusText: response.statusText
+                  })
+                }
+              })
+              .then(json => {
+                console.log(json);
+                // 处理不同HTTP状态码下的对应操作
+                if (json.status === 500)
+                {
+                  dispatch({
+                    type: "COM_BLUETOOTH_MODULE_CONNECT",
+                    payload: {
+                      notification: "RTK同CORS站连接信号受阻，无法获取差分数据！！！",
+                    }
+                  });
+                };
+      
+                if (json.status === 200)
+                {
+                  dispatch({
+                    type: "COM_BLUETOOTH_MODULE_CONNECT",
+                    payload: {
+                      notification: "RTK同CORS站已建立连接！",
+                    }
+                  });
+                };
+                // 在状态栏显示调试信息
+                dispatch({
+                  type: "STATUS_BAR_NOTIFICATION",
+                  payload: {
+                    notification: json,
+                  }
+                });
+                dispatch({
+                  type: "CLOSE_WAITING_MODULE",
+                });
+              })
+            .catch(err => {
+              console.log(err);
+              dispatch({
+                type: "STATUS_BAR_NOTIFICATION",
+                payload: {
+                  notification: err,
+                }
+              });
+              dispatch({
+                type: "CLOSE_WAITING_MODULE",
+              });
+            });
+          };
+          // 在状态栏显示调试信息
           dispatch({
-            type: "COM_BLUETOOTH_MODULE_CONNECT",
+            type: "STATUS_BAR_NOTIFICATION",
             payload: {
-              notification: "RTK蓝牙已连接",
+              notification: json,
             }
           });
-          dispatch({
-            type: "CLOSE_WAITING_MODULE",
-          });
+          // dispatch({
+          //   type: "CLOSE_WAITING_MODULE",
+          // });
         })
         .catch(err => {
           console.log(err);
@@ -279,9 +363,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch({
             type: "CLOSE_WAITING_MODULE",
           });
-        });
-
-        
+        });       
     },
     
     handleCOMPortDisconnect: () => {
@@ -292,10 +374,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: "OPEN_WAITING_MODULE",
       });
 
-      const COMPortSelected = COMPort.slice(
-        COMPort.indexOf("(") + 1,
-        COMPort.indexOf(")")
-      );
+      const COMPortSelected = COMPort
+      // const COMPortSelected = COMPort.slice(
+      //   COMPort.indexOf("(") + 1,
+      //   COMPort.indexOf(")")
+      // );
       console.log(COMPortSelected);
 
       const RTKBlutoothDisconnectURLBase =
@@ -321,12 +404,26 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
         .then(json => {
           console.log(json);
-          dispatch({
-            type: "COM_BLUETOOTH_MODULE_DISCONNECT",
-            payload: {
-              notification: "已断开RTK蓝牙连接",
-            }
-          });
+          // 处理不同HTTP状态码下的对应操作
+          if (json.status === 500)
+          {
+            dispatch({
+              type: "COM_BLUETOOTH_MODULE_DISCONNECT",
+              payload: {
+                notification: "断开RTK蓝牙连接失败！！！",
+              }
+            });
+          };
+
+          if (json.status === 200)
+          {
+            dispatch({
+              type: "COM_BLUETOOTH_MODULE_DISCONNECT",
+              payload: {
+                notification: "已断开RTK蓝牙连接",
+              }
+            });
+          };
           dispatch({
             type: "CLOSE_WAITING_MODULE",
           });
@@ -381,12 +478,14 @@ const BluetoothReducer = (
     case "COM_BLUETOOTH_MODULE_GET":
       //console.log(action.payload)
       let newPortListsStr = action.payload;
-      newPortListsStr = newPortListsStr.slice(
-        newPortListsStr.indexOf("[") + 1,
-        newPortListsStr.indexOf("]")
-      );
-      const newPortLists = newPortListsStr.split(',');
-      newState.portLists = newPortLists;
+      console.log(newPortListsStr)
+      console.log(JSON.parse(newPortListsStr))
+      // newPortListsStr = newPortListsStr.slice(
+      //   newPortListsStr.indexOf("[") + 1,
+      //   newPortListsStr.indexOf("]")
+      // );
+      // const newPortLists = newPortListsStr.split(',');
+      newState.portLists = JSON.parse(newPortListsStr);
       return { ...state, ...newState };
 
     case "COM_BLUETOOTH_MODULE_CONNECT":

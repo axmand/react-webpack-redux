@@ -25,7 +25,7 @@ import VisibilityOff from 'material-ui-icons/VisibilityOff';
 
 import appConfig from "../../redux/Config"
 import WaitingModule from "../universe/WaitingModule"
-import time from "../../utils//time"
+import time from "../../utils/time"
 
 const styles = theme => ({
   container: {

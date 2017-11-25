@@ -365,8 +365,8 @@ class SkechToolBar extends Component {
             open={haveObjToDel} 
             onRequestClose={onDelAlerClose}>
               <DialogContent className={classes.alert} onClick={onDelAlerClose}>
-              <Typograghy className={classes.message}>
-                未选中需要删除的对象！                
+                <Typograghy className={classes.message}>
+                  未选中需要删除的对象！                
                 </Typograghy>
               </DialogContent>
           </Dialog>
@@ -375,9 +375,9 @@ class SkechToolBar extends Component {
             open={alertPlotFail} 
             onRequestClose={onPlotAlerClose}>
               <DialogContent className={classes.alert} onClick={onPlotAlerClose}>
-              <Typograghy className={classes.message}>
-              请求RTK数据失败！                
-              </Typograghy>
+                <Typograghy className={classes.message}>
+                    请求RTK数据失败！                
+                </Typograghy>
               </DialogContent>
           </Dialog>
 
@@ -385,9 +385,9 @@ class SkechToolBar extends Component {
             open={alertSignature} 
             onRequestClose={onSignatureAlerClose}>
               <DialogContent className={classes.alert} onClick={onSignatureAlerClose}>
-              <Typograghy className={classes.message}>
-              您还未点击保存！                
-              </Typograghy>
+                <Typograghy className={classes.message}>
+                  您还未点击保存！                
+                </Typograghy>
               </DialogContent>
           </Dialog>
       <Drawer
@@ -510,29 +510,75 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     //展点
     onPlotClick: () => {
       if (ownProps.isRealtimeOn) {
-        console.log("fetching ...");
+
+        dispatch({
+          type: "OPEN_WAITING_MODULE",
+        });
+
+        console.log("Fetching latitude and longtitude from the satellite ...");
         fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea")
-          .then(response => response.json())
-          .then(json => {
+          .then(response => {
+          if (response.ok) {
+            return response.json()
+          } 
+          else {
+            return Promise.reject({
+              status: response.status,
+              statusText: response.statusText
+            })
+          }
+        })
+        .then(json => {
+          console.log(json);
+          // 处理不同HTTP状态码下的对应操作
+          if (json.status === 500)
+          {
+            dispatch({
+                type:"plotFail",
+                payload: "尚未获取到差分后的测量点坐标数据"
+            })           
+          };
+          if (json.status === 200)
+          {
             dispatch({
               type: "plotRTK",
               payload: json
             });
-            console.log(json);
-          })
-          .catch(e => {
-              
-              dispatch({
-                  type:"plotFail",
-                  payload:e
-              })
-              console.log(e)
+          };
+          // 在状态栏显示调试信息
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: json,
+            }
           });
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
+          });
+          dispatch({
+            type: "CLOSE_WAITING_MODULE",
+          });
+        });
       } else {
-        console.log("importing ...");
+        console.log("Importing surveying data from the files ...");
         dispatch({
             type:'plotFile'
         })
+        dispatch({
+          type: "STATUS_BAR_NOTIFICATION",
+          payload: {
+            notification: "尚未实现从文件中展出测量点，请将实时成图按钮打开，从RTK获取测量数据！",
+          }
+        });
       }
     },
     //画点

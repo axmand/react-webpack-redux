@@ -587,6 +587,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         .catch(err => {
           console.log(err);
           dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
+          });
+          dispatch({
             type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
           });
         });

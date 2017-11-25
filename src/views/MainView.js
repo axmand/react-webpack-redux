@@ -13,6 +13,7 @@ import RootReducer from "./../redux/RootReducer";
 
 import NavigationView from './NavigationView'
 import MapView from './MapView'
+import time from "../utils/time"
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
@@ -73,7 +74,12 @@ const mainViewReduce = (
 
   switch (action.type) {
     case 'STATUS_BAR_NOTIFICATION':
-      const statusBarNotification = JSON.stringify(action.payload.notification)
+      const currentTime = time.getNowFormatDate();
+      let statusBarNotification = "上次操作的时间：" + currentTime + "    上次操作的输出："
+      if ( typeof(action.payload.notification) === 'object' )
+        statusBarNotification += JSON.stringify(action.payload.notification)
+      else
+        statusBarNotification += action.payload.notification
       newState.notification = statusBarNotification;
       return { ...state, ...newState };
     default:
