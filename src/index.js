@@ -13,7 +13,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { Router, Route } from "react-router-dom";
+import { HashRouter as Router, Route } from "react-router-dom";
 import { createStore } from "redux";
 
 //1.引入view
@@ -38,10 +38,10 @@ const root = document.getElementById("root");
  */
 ReactDOM.render(
   <Provider store={store}>
-    <Router basename="/" history={history}>
+    <Router basename="/">
       <div>
-        <Route exact path="/" component={MainView} />
-        <Route path="/mainview" component={MainView} />
+        <Route exact path="/" component={ LoginView } />
+        <Route path="/mainview" component={ MainView } />
       </div>
     </Router>
   </Provider>,
