@@ -728,47 +728,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     onFetchPoi_NumClick:()=>{
-<<<<<<< HEAD
-=======
-      dispatch({
-        type:'fetchPoi_NumClick'
-      })
-   },
-   onjzdXCZJClick:poi_id=>{
-    dispatch({
-      type:'jzdXCZJClick',
-      payload:{command:poi_id}
-    });
-    
-    dispatch({
-      type: "saveClick",
-    }); 
-
-    dispatch({
-        type: 'ProgressShow',
-    });
-    // fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
-    fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
-    .then(response => response.json())
-    .then( json => {
-      dispatch({
-        type: 'handleCameraShow',
-        payload:json,
-      })
-      //console.log(json)
-      dispatch({
-        type: 'ProgressShow',
-      }) 
-    })
-    .catch(err => {
-      console.log(err)
-      dispatch({
-        type: 'ProgressShow',
-      }) 
-    })
-  },
->>>>>>> 23d4c1e3a3b617bf5911a95a87664fbf53901a2f
-
       fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
           method: "POST",
@@ -807,6 +766,40 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       .catch(err => {
         console.log(err)
       })
+   },
+   
+   onjzdXCZJClick:poi_id=>{
+    dispatch({
+      type:'jzdXCZJClick',
+      payload:{command:poi_id}
+    });
+    
+    dispatch({
+      type: "saveClick",
+    }); 
+
+    dispatch({
+        type: 'ProgressShow',
+    });
+    // fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
+    fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
+    .then(response => response.json())
+    .then( json => {
+      dispatch({
+        type: 'handleCameraShow',
+        payload:json,
+      })
+      //console.log(json)
+      dispatch({
+        type: 'ProgressShow',
+      }) 
+    })
+    .catch(err => {
+      console.log(err)
+      dispatch({
+        type: 'ProgressShow',
+      }) 
+    })
    }
   };
 };
