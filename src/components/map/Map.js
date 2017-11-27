@@ -701,6 +701,7 @@ const sketchReduce = (
   },
   action
 ) => {
+  let newState = JSON.parse(JSON.stringify(state))
   //用于计算标签的角度
   computeAngle =
     computeAngle ||
@@ -1085,6 +1086,48 @@ const sketchReduce = (
           .length
       };
       return Object.assign({}, state, { ...newNum });
+   
+    //取界址点号
+    case "fetchPoi_NumClick":
+    //   newState.plotListData.map(n=>{
+    //     let Poi_Data = JSON.stringify({
+    //         	PointX: n.coordinates[0],
+    //           PointY: n.coordinates[1],
+    //           strType: null,
+    //           strUserName: null
+    //     });
+    //     fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
+    //     {
+    //       method: "POST",
+    //       mode: "cors",
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization' : '_xMo3tbdjHjIsF9GN9UP_ZS9tmo4jdQl1rCRc8qpkscFQ0zUk_F9t9mMC3FrsoL-JjSXBjZrXInes1YptzvjJQcoQl34aTvfBz1WcjhF4aHUR651KEIPVt00J-4gQeAmRr6r0sOue7QtoIZNBZezG7cdx10CzBAZOXd7hLuv2wqEV9OhcDMeDfocvwwsB8Nj3fSIwUbwE7OUMB4-5YwLOJ1UVvPF0WsPjlJFimd2E3yUcllMSfXienLev3kYssBeIJ05mmNeDpl55dqDIK_tvRo_xOpu4mlSXnvy0cAECpiis9U0Xq8k4rQ1j8o-5-dMkjXKVmcqZzZlj-HT8xI0UO9fg-Ihsm7j78oCKDJDDck_UhfT0YgLvQojOk7xRL-y4MryV-JROs_rsAq9FcfpqXhSIskkiPJwEoga8XjR7Hq0DoILnyIUdQS-LgXoecE8pqcja0z1pgU7E8BaF8UddjYe1glsFJXLXgdH5Tat9YPMFkFM_ikFZocuFBOItNJRdC7dYBcro9TdZWyW6rKOB1VNNYjzFxZMeoxQr-NnjlGrCco6Rd5NzimiVTzVmFexhJzU9Atn0EGzTLZcm2moWfvun0dwzDvJkdyXjF0ifGqytDDX2KKmCH2FEr00kY2tx316txboIbAvys6Q_hyv4C7SQUvaGslfmUydHPouFlKreNTi1w1aw3HuaQ2N24s4eptP8Xy-OK6yEB4uxgld6C5D-_9je1BfVgukf-GStGAR-ibc3gyeeVPAHWCy6jzstpDe0C8YrtH-Z6iPD-A5sJajxPy2tKpZeTJsEFAtehauVk-HbArQCQ4qazYhsPdtJD2_cLdBgBAj4tM7FSCe_n3Q2BnGd4JBW9nym4YEjWNFThRMqOBrPw2fz4oWihrU-JZuJTZwD64stVVOhO1uw2tZiJ874qRNfe1bCaKXwfYyHGGsiv385ty7fg_8eWOf4g7NtiJMe-m9SpdHyIeNjrQtRXWugLGZLbgFd0g4lTgU3Q93ydCU74kPzezH_XnhVm991HkX9jG90NasgVV8WKlvnb_fjjb-pZd7hv8HV4acdm3uK1brkOKf6OJlF6i6'
+    //       },
+    //       body: Poi_Data
+    //     })
+    //     .then(response => {
+    //       // console.log(response)
+    //       return response.json()
+    //         .then(json => {
+    //           if (response.ok) {
+    //             return json
+    //           } 
+    //           else {
+    //             return Promise.reject(json)
+    //           }
+    //         })
+    //     })
+    //   .then( json => {
+    //     let list = json;
+    //     n.id = list.d;
+    //     console.log(n)
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //   })
+    //   }) 
+    return {...state}
    
     //画点
     case "drawPointClick":

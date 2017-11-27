@@ -500,7 +500,7 @@ const mapStateToProps = state => {
     saveIsChecked: sketchState.saveIsChecked,
     alertPlotFail: sketchState.alertPlotFail,
     alertSignature:sketchState.alertSignature,
-    plotListData:sketchState.plotListData
+    // plotListData:sketchState.plotListData
   };
 };
 
@@ -728,22 +728,32 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     onFetchPoi_NumClick:()=>{
-      fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
+        // dispatch({
+        //   type: 'fetchPoi_NumClick'
+        // })
+      ownProps.plotListData.map(n=>{          
+        // let Poi_Data = JSON.stringify({
+        //     	PointX: n.coordinates[0],
+        //       PointY: n.coordinates[1],
+        //       strType: null,
+        //       strUserName: null
+        //   });
+        console.log(n)
+        fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
           method: "POST",
           mode: "cors",
           headers: {
             'Content-Type': 'application/json',
-            'Authorization' : 'RcMfFkbrDahQeyiyWi4KTcpcN19bmaj-7TUkBUU7lNH5Io4k-LQDRgYlqJAS_qaKWnjIfIDtpUN2K6jCGoqz0kfN9o0NmvmwwkHHuSoVcjgXSuDGf58p2LxHNs4fZAZCO_ODXarkvtmycaWspUlkgScane8bf5lh5_Dkxod8G2C1Dz7LFAfynSbKdun0d3EYaJeZMCbM5L5MII_LslmlW588I43kgv3N0BaPTwM5UqehrCnTcb49JovmNusgiHcRYKS4sHTd8vGLpq0-rrQegf1jSDtspb6acCgxMLEnRD07eInRnzMYSG5SH-N7U0W6sDqbNHOaUO3P2qciDWBUGPnz9ea3DliiPqeL6MmtQlgjYsnBXLbCqMAuWF7x_Oe-8NQ_DAMMqA1G6ynGCoetvkh5XZTQFRkLee4-XNrqyH71ebMJFuRBeV61iOmxZ3qSWzt4sNTOOnJnFmPdEQ7BFg0p48X9zHwXfhfURUTtmZ7XthAWWErkJcrikTiy8xh6KMti-Ue6pyIXzVMyPXfetf0mPqdnK-9UUOd45JrnALo6dRChlMle3CG32l0q7dygvRXukgyUVpGxC7zUSQ-UgJq6Va3Ud4J_zZIFjpj1I8C-GzBZeeyyjTBnCAvWi-2C2JWW5yuwE_zQ6qbZVMZRl0qwuZqtUlvNVRuPHtSgnNFoOZIUT9VfW52Y5Ckpm5taBCzqqt4NnEeDHLaZVDL2IRNLUvN8tHYVPkg1AdKETV2MB7_qAzdiZX-blBW9BpARxkzRjhGNS53gLpFMMM761skeJEuNYfkZ6WkiFrD6-v6hrlPLmy60WU_kIdediLkeNL3f-K72mTwH61d6o3VwS-1EWjEbkp4mryaX58KHb3bsQWAwZAMr3z8rFkvbR24dyjv_fIsuI9AV1dv44n7isd0CqmwjuYYLRmLzob9oOMDRS4v8_-zppDQxn8MwsklxaMVjH6ysIb48icAzS4GmxfDcYksMfR--QsqagwRjtj0O47hPpWNiz8L-n4mD5YhAeAWyzRgpYw_kwYF7cbOeStq1C0uJM23M-A8sqJYLgcJlJfKN25nUfYb3qtUHOBf8'
+            'Authorization' : '_xMo3tbdjHjIsF9GN9UP_ZS9tmo4jdQl1rCRc8qpkscFQ0zUk_F9t9mMC3FrsoL-JjSXBjZrXInes1YptzvjJQcoQl34aTvfBz1WcjhF4aHUR651KEIPVt00J-4gQeAmRr6r0sOue7QtoIZNBZezG7cdx10CzBAZOXd7hLuv2wqEV9OhcDMeDfocvwwsB8Nj3fSIwUbwE7OUMB4-5YwLOJ1UVvPF0WsPjlJFimd2E3yUcllMSfXienLev3kYssBeIJ05mmNeDpl55dqDIK_tvRo_xOpu4mlSXnvy0cAECpiis9U0Xq8k4rQ1j8o-5-dMkjXKVmcqZzZlj-HT8xI0UO9fg-Ihsm7j78oCKDJDDck_UhfT0YgLvQojOk7xRL-y4MryV-JROs_rsAq9FcfpqXhSIskkiPJwEoga8XjR7Hq0DoILnyIUdQS-LgXoecE8pqcja0z1pgU7E8BaF8UddjYe1glsFJXLXgdH5Tat9YPMFkFM_ikFZocuFBOItNJRdC7dYBcro9TdZWyW6rKOB1VNNYjzFxZMeoxQr-NnjlGrCco6Rd5NzimiVTzVmFexhJzU9Atn0EGzTLZcm2moWfvun0dwzDvJkdyXjF0ifGqytDDX2KKmCH2FEr00kY2tx316txboIbAvys6Q_hyv4C7SQUvaGslfmUydHPouFlKreNTi1w1aw3HuaQ2N24s4eptP8Xy-OK6yEB4uxgld6C5D-_9je1BfVgukf-GStGAR-ibc3gyeeVPAHWCy6jzstpDe0C8YrtH-Z6iPD-A5sJajxPy2tKpZeTJsEFAtehauVk-HbArQCQ4qazYhsPdtJD2_cLdBgBAj4tM7FSCe_n3Q2BnGd4JBW9nym4YEjWNFThRMqOBrPw2fz4oWihrU-JZuJTZwD64stVVOhO1uw2tZiJ874qRNfe1bCaKXwfYyHGGsiv385ty7fg_8eWOf4g7NtiJMe-m9SpdHyIeNjrQtRXWugLGZLbgFd0g4lTgU3Q93ydCU74kPzezH_XnhVm991HkX9jG90NasgVV8WKlvnb_fjjb-pZd7hv8HV4acdm3uK1brkOKf6OJlF6i6'
           },
-          body: {
-            	PointX: 123.123,
-              PointY: 456.456,
+          body:  JSON.stringify({
+            	PointX: n.coordinates[0],
+              PointY: n.coordinates[1],
               strType: null,
               strUserName: null
-          }
-        }
-      )
+          })
+        })
         .then(response => {
           console.log(response)
           return response.json()
@@ -766,6 +776,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       .catch(err => {
         console.log(err)
       })
+      })     
    },
    
    onjzdXCZJClick:poi_id=>{
@@ -781,8 +792,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     dispatch({
         type: 'ProgressShow',
     });
-    // fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
-    fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
+    fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
+    // fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
     .then(response => response.json())
     .then( json => {
       dispatch({
