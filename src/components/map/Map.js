@@ -1002,7 +1002,25 @@ const sketchReduce = (
         };
       }
       map.on("click", drawPoint);
-      return { ...state };
+      const new_jzdData = map.getLayer("point").toJSON()
+      let new_jzdpoi = new_jzdData.geometries;
+      let new_tableRow;
+      let new_tableData = [];
+      for (let i = 0; i < new_jzdpoi.length; i++) {
+        new_tableRow = {
+          id: new_jzdpoi[i].feature.id,
+          coordinates: new_jzdpoi[i].coordinates
+        };
+        new_tableData.push(new_tableRow);
+      }
+      const updateTableData={
+        plotListData: new_tableData
+      }
+      return Object.assign({}, state, { ...updateTableData });
+    case "fetchPoi_NumClick":
+
+    
+    return{...state}
     //展点
     case "plotRTK":
       console.log("展点");
