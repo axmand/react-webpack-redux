@@ -25,7 +25,7 @@ import VisibilityOff from 'material-ui-icons/VisibilityOff';
 
 import appConfig from "../../redux/Config"
 import WaitingModule from "../universe/WaitingModule"
-import time from "../../utils//time"
+import time from "../../utils/time"
 
 const styles = theme => ({
   container: {
@@ -304,6 +304,7 @@ const loginReduce = (state = {
         newState.password = action.payload.targetValue; 
       return {...state, ...newState}
     case 'LOGIN_SUCCESS':
+      newState.loginNotificaion = "登陆成功！";
       const authenticationInfo = action.payload.data
       for (let key in authenticationInfo) {
         localStorage.setItem(key, authenticationInfo[key])        
