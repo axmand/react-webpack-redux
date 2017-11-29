@@ -44,6 +44,8 @@ import SecondDialog from '../obligee/SecondDialog'
 import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
 
+import coordinate from "../../utils/coordinate"
+
 const styles = theme => ({
   root: {
     height: `${window.innerHeight * 0.075}px`,
@@ -728,16 +730,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     onFetchPoi_NumClick:()=>{
-        // dispatch({
-        //   type: 'fetchPoi_NumClick'
-        // })
-      ownProps.plotListData.map(n=>{          
-        // let Poi_Data = JSON.stringify({
-        //     	PointX: n.coordinates[0],
-        //       PointY: n.coordinates[1],
-        //       strType: null,
-        //       strUserName: null
-        //   });
+      ownProps.plotListData.map(n=>{
+        let Poi_Data = JSON.stringify({
+            	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
+              PointY: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesY,
+              strType: null,
+              strUserName: null
+          });
+        console.log(Poi_Data)
         console.log(n)
         fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
@@ -745,17 +745,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           mode: "cors",
           headers: {
             'Content-Type': 'application/json',
-            'Authorization' : '_xMo3tbdjHjIsF9GN9UP_ZS9tmo4jdQl1rCRc8qpkscFQ0zUk_F9t9mMC3FrsoL-JjSXBjZrXInes1YptzvjJQcoQl34aTvfBz1WcjhF4aHUR651KEIPVt00J-4gQeAmRr6r0sOue7QtoIZNBZezG7cdx10CzBAZOXd7hLuv2wqEV9OhcDMeDfocvwwsB8Nj3fSIwUbwE7OUMB4-5YwLOJ1UVvPF0WsPjlJFimd2E3yUcllMSfXienLev3kYssBeIJ05mmNeDpl55dqDIK_tvRo_xOpu4mlSXnvy0cAECpiis9U0Xq8k4rQ1j8o-5-dMkjXKVmcqZzZlj-HT8xI0UO9fg-Ihsm7j78oCKDJDDck_UhfT0YgLvQojOk7xRL-y4MryV-JROs_rsAq9FcfpqXhSIskkiPJwEoga8XjR7Hq0DoILnyIUdQS-LgXoecE8pqcja0z1pgU7E8BaF8UddjYe1glsFJXLXgdH5Tat9YPMFkFM_ikFZocuFBOItNJRdC7dYBcro9TdZWyW6rKOB1VNNYjzFxZMeoxQr-NnjlGrCco6Rd5NzimiVTzVmFexhJzU9Atn0EGzTLZcm2moWfvun0dwzDvJkdyXjF0ifGqytDDX2KKmCH2FEr00kY2tx316txboIbAvys6Q_hyv4C7SQUvaGslfmUydHPouFlKreNTi1w1aw3HuaQ2N24s4eptP8Xy-OK6yEB4uxgld6C5D-_9je1BfVgukf-GStGAR-ibc3gyeeVPAHWCy6jzstpDe0C8YrtH-Z6iPD-A5sJajxPy2tKpZeTJsEFAtehauVk-HbArQCQ4qazYhsPdtJD2_cLdBgBAj4tM7FSCe_n3Q2BnGd4JBW9nym4YEjWNFThRMqOBrPw2fz4oWihrU-JZuJTZwD64stVVOhO1uw2tZiJ874qRNfe1bCaKXwfYyHGGsiv385ty7fg_8eWOf4g7NtiJMe-m9SpdHyIeNjrQtRXWugLGZLbgFd0g4lTgU3Q93ydCU74kPzezH_XnhVm991HkX9jG90NasgVV8WKlvnb_fjjb-pZd7hv8HV4acdm3uK1brkOKf6OJlF6i6'
+            'Authorization' : 'AWLRB0dwckiEfil-RQAEUBiS48Nd9vCuAA5Jfokr1XjyR98J3Ithu9BK-q-tWMbAVNFFdIBJEn3Gv-CLTtFOS6uSJvercgsMd85-MokzfJNWqlTprPWaWierX9NlLZSPuYdMzfIMxFITRvXr6QoTMv8ZNsV4F8YM2TM4JTC0lTJJVPvJEV5cd-N85YT0XZnWISUSNFb0E_-5HCybhciMi0-NFYJtCFMz9dgj-QmsA64pAHE3DTJ2T-DDx9ODah6HVzSffqzTbvcK4nL6eY7p4KOMuWL2Ws-IWI_yu1C4shvWLTcYO0vKgudnx5fHk7r7nXfVVupa24fx1LpJ4jvyj103sywufnPP4KbJ0fNZAK8slhgGTf6JxqWbBU0A32HYM10ihBuEMIsnXpyPjbckZ7eTFc6jCzQ-Ce3OZwmmmYqroEKvttfkepRBBFdqwh1q-gUcJ-C7wsLkf2cbiK7eCb9XFigF6aJydGevZH7paXjuZqok9q8T3CGbNbD85Bxax84qj4O8Ucid3SFxt05UE5h4xxwgm_1WYvhK4syB9G4wGwD0pgCZvyfP8IS3T2G3nedvcAtcCclwgp7681Mu8znaefYLeNbDqLXa8fZxXnPXXs3C0PE82zJij0Bz6EPyypARwgaxq1ViVQ8ZblRNunT0NZTzIk3hFPTqOFE3gbpaYlDfwkO6qCdDyNGXxmtNTf97Z7LKBMPUYMZFyyeIO6S25PESH45zeSKMy4iFtSvXzGS6YUUhoH5EUg42A8OfQ8xLO6QKTiPc3U1kCg3n0P16PXMFaXTzk96imvluuqDZ5-FU83kISapbCILWH_TYnPb_I0KPysV_Ro8C5j1vRqXzKb5HTqcbXpRFu7t9Mi6ovm6hyAxPzaE_caSJY8V6k-xsnX0NOEXJS00Fxzws65WrgVwmdgRqS4RlUm3-dZUIJKr5gM3660WN75KnL1nRyWIPso_KRrjxh2YzgR-Xz34Z5F9SHhLZ5Ii2kZURcs0AkpSWXJ5RLNg5_U_Bdn6bB59dHZ9EJQmviAO61RdwT1jwlmM8E9upox0MUDsIEEXgL4gQ2MuFYtKaZVEuypvj'
           },
-          body:  JSON.stringify({
-            	PointX: n.coordinates[0],
-              PointY: n.coordinates[1],
-              strType: null,
-              strUserName: null
-          })
+          body: Poi_Data
         })
         .then(response => {
-          console.log(response)
           return response.json()
             .then(json => {
               if (response.ok) {
