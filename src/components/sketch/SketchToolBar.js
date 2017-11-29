@@ -88,8 +88,8 @@ const styles = theme => ({
   drawerPaper: {
     left:`${window.innerWidth * 0.083}px`,
     top:`${window.innerHeight * 0.2}px`,
-    height: '70%',
-    width:`${window.innerHeight * 0.45}px`,
+    height: '75%',
+    width:`${window.innerHeight * 0.525}px`,
   },
   toolBar:{
     padding:0,
@@ -112,7 +112,7 @@ const styles = theme => ({
     minWidth:'40px',
   },
   headtext:{
-    fontSize:'0.875rem',
+    fontSize:'0.8rem',
     textAlign:'center',
     width:'100%',    
     fontWeight:'600',
@@ -413,7 +413,10 @@ class SkechToolBar extends Component {
             <TableHead>
               <TableRow style={{height:'40px'}}>
                 <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>            
-                  <Typography className={classes.headtext} >点号</Typography>      
+                  <Typography className={classes.headtext} >id</Typography>      
+                </TableCell>
+                <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}>            
+                  <Typography className={classes.headtext}>界址点编号</Typography>      
                 </TableCell>
                 <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.1}px`,padding:0}}>
                   <Typography className={classes.headtext} >坐标</Typography>  
@@ -431,10 +434,15 @@ class SkechToolBar extends Component {
               {plotListData.map(n => {
                 return (
                   <TableRow key={n.id}>
+                    {/* id */}
                     <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>{n.id}</TableCell>
+                    {/* 界址点编号 */}
+                    <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}></TableCell>
+                    {/* 坐标 */}
                     <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.1}px`,padding:0,textAlign:'left'}}>
-                      Lng:{n.coordinates[0]}<br/>Lat:{n.coordinates[1]}
+                      Lng:{n.coordinates[0].toFixed(7)}<br/>Lat:{n.coordinates[1].toFixed(7)}
                     </TableCell>
+                    {/* 纠点 */}
                     <TableCell 
                       className={classes.tablecell}
                       style={{width:`${window.innerWidth * 0.05}px`,padding:0}}
@@ -442,6 +450,7 @@ class SkechToolBar extends Component {
                     >
                     <Adjust style={{color:'#000',width:`${window.innerWidth * 0.015}px`}}/>
                     </TableCell>
+                    {/* 拍照*/}
                     <TableCell 
                     className={classes.tablecell}
                     style={{width:`${window.innerWidth * 0.05}px`,padding:0}}
