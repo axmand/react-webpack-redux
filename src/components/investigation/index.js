@@ -146,7 +146,7 @@ const investigationReduce = (
     landInfoQueryResultQLR: [],
     investigationMenuDisplayState: false,
     idVerificationDisplayState: false,
-    landInfoQueryDisplayState: true,
+    landInfoQueryDisplayState: false,
   }, action) => {
   let newState = JSON.parse(JSON.stringify(state))
   // console.log(action.type)

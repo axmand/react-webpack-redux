@@ -215,7 +215,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         'strZL': ownProps.TuDiZuoLuo,
       };
       
-      fetch("http://webapi.nlis.local:52417/SSBdcWebService/ServicePad.asmx/QueryLandInfo", {
+
+      const LandInfoQueryURL =
+      appConfig.affairsInterfaceRootPath + "/SSBdcWebService/ServicePad.asmx/QueryLandInfo";
+      fetch(LandInfoQueryURL, {
         method: "POST",
         mode: "cors",
         headers: {
