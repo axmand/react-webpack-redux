@@ -5,10 +5,10 @@ import PropTypes from "prop-types";
 import * as maptalks from "maptalks";
 //import UI
 import { withStyles } from "material-ui/styles";
-import Grid from "material-ui/Grid";
 import Paper from "material-ui/Paper";
 import Button from "material-ui/Button";
-import Snackbar from "material-ui/Snackbar";
+import TextField from 'material-ui/TextField';
+import Toolbar from 'material-ui/Toolbar';
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import green from "material-ui/colors/green";
@@ -16,9 +16,12 @@ import { CircularProgress } from "material-ui/Progress";
 import CheckIcon from "material-ui-icons/Check";
 import SaveIcon from "material-ui-icons/Save"; //保存
 import Typography from "material-ui/Typography";
+import Divider from "material-ui/Divider";
 import Dialog, {DialogContent} from "material-ui/Dialog";
 
-import appConfig from "../../redux/Config"
+import appConfig from "../../redux/Config";
+import html2canvas from "html2canvas";
+import projectData from "./../../redux/RootData";
 
 const styles = theme => ({
   root: {
@@ -31,7 +34,7 @@ const styles = theme => ({
   thematicMap: {
     position: "absolute",
     top: "7.8125%",
-    width: "46%",
+    width: `${window.innerHeight * 0.61875}px`,
     height: `${window.innerHeight * 0.875}px`
   },
   title: {
@@ -39,63 +42,92 @@ const styles = theme => ({
     fontSize: "1.5em",
     fontFamily: "宋体",
     fontWeight: "800",
-    height: "43.75%"
+    height: "5%"
   },
-  table: {
-    width: "100%",
-    position: "absolute",
-    top: "7%"
+  table:{    
+    position:'absolute',
+    left:'7.5%',
+    width:`${window.innerHeight * 0.61875*0.85}px`,
+    height: `${window.innerHeight * 0.875*0.85}px`,
+    borderCollapse:'collapse',
+    border:'solid 2px #000'
   },
-  tabletext12: {
-    width: "100%"
+  head:{    
+    height: "5%",
   },
-  tabletext1: {
-    border: "solid 0.5px #000",
-    fontSize: "0.5em",
-    fontFamily: "宋体",
-    textAlign: "center"
+  headcell:{
+    padding:0,
+    border:'solid 1px #000'
   },
-  tabletext2: {
-    border: "solid 0.5px #000",
+  headtext:{
     fontSize: "1em",
     fontFamily: "宋体",
-    textAlign: "center"
+    fontWeight: "400",
+    padding:0,
+    border:0,
   },
-  mapdiv: {
-    border: "solid 0.5px #000",
-    width: "100%"
+  mapPic:{
+    padding:0,
+    border:'solid 1px #000'
   },
-  bottom1: {
+  pic:{
+    color: "#000",
     width: "100%",
-    height: `${window.innerHeight * 0.05}px`,
-    position: "absolute",
-    top: "90%"
+    height: "100%"
   },
-  bottom2: {
-    width: "100%",
-    height: `${window.innerHeight * 0.05}px`,
-    position: "absolute",
-    top: "94%"
-  },
-  bottom11: {
+  bottom1: {    
+    position:'absolute',
+    top: "89%",
+    left:'40%',
+    width:'60%',
+    height: `${window.innerHeight * 0.03}px`,
+    padding: 0,
     fontSize: "1em",
     fontFamily: "宋体",
-    padding: 0
+    fontWeight: "400",
   },
-
+  bottom2: {    
+    position: "absolute",
+    top: "93%",
+    left:'40%',
+    width:'60%',
+    height: `${window.innerHeight * 0.03}px`,
+    padding: 0,
+    fontSize: "1em",
+    fontFamily: "宋体",
+    fontWeight: "400",
+  },
+  btm_fill1:{
+    width:'20%',
+    height:`${window.innerHeight * 0.0375}px`,
+    padding:0,
+    border:0,
+    fontSize: "1em",
+    fontFamily: "宋体",
+    fontWeight: "400",
+  },
+  btm_fill2:{
+    width:'30%',
+    height:`${window.innerHeight * 0.0375}px`,
+    padding:0,
+    border:0,
+    fontSize: "1em",
+    fontFamily: "宋体",
+    fontWeight: "400",
+  },
   right: {
     position: "absolute",
+    top: "62%",
+    left:"92.5%",
     fontSize: "1em",
     fontFamily: "宋体",
     letterSpacing: "20px",
     width: "2%",
     height: "40%",
-    top: "61%",
     padding: "0 1% 0 1%"
   },
   alert: { 
     display: "flex",
-    padding:0,
     height:`${window.innerHeight * 0.12}px`,
     padding:'0 10px 0 10px',
   },
@@ -152,7 +184,7 @@ const styles = theme => ({
  * @type {maptalks.Map}
  * 全局的专题图地图对象和方法
  */
-let thematicMap, isOpen;
+let thematicMap,test;
 
 /**
  * 专题图组件
@@ -160,6 +192,8 @@ let thematicMap, isOpen;
  */
 class ThematicMap extends Component {
   componentDidMount() {
+    test=document.body;
+
     const {
       saveIsChecked,
       mapCenter,
@@ -193,6 +227,8 @@ class ThematicMap extends Component {
 
   render() {
     const classes = this.props.classes;
+    const d= new Date();
+    const date=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日";
     const {
       alertSave,
       saveIsChecked,
@@ -210,7 +246,7 @@ class ThematicMap extends Component {
     return (
       <div className={classes.root}>
         <Paper className={classes.thematicMap}>
-        <Dialog 
+          <Dialog 
             open={alertSave} 
             onRequestClose={onSaveAlertClose}
             style={{ zIndex: "999999"}}>
@@ -220,109 +256,70 @@ class ThematicMap extends Component {
                 </Typography>
               </DialogContent>
           </Dialog>
-          
-          <Grid container direction="column" spacing={0}>
-            <Grid item xs>
-              <Typography type="headline" className={classes.title}>
-                不动产单元草图
-              </Typography>
-            </Grid>
-            <Grid item xs={12} className={classes.table}>
-              <Grid container spacing={0}>
-                <Grid item xs />
-                <Grid item xs={10}>
-                  <Grid
-                    container
-                    direction="column"
-                    spacing={0}
-                    style={{
-                      border: "solid 0.5px #606060"
-                    }}
-                  >
-                    <Grid item className={classes.tabletext12}>
-                      <Grid container spacing={0}>
-                        <Grid item xs={3}>
-                          <Typography
-                            type="subheading"
-                            className={classes.tabletext1}
-                          >
-                            土地权利人
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <Typography
-                            type="subheading"
-                            className={classes.tabletext2}
-                          >
-                            张XX、王xx
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={1}>
-                          <Typography
-                            type="subheading"
-                            className={classes.tabletext1}
-                          >
-                            坐落
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={5}>
-                          <Typography
-                            type="subheading"
-                            className={classes.tabletext2}
-                          >
-                            南宁市blablabla
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item className={classes.mapdiv}>
-                      <div
-                        ref="ThematicMap"
-                        style={{
-                          color: "#000",
-                          width: "100%",
-                          height: `${window.innerHeight * 0.69}px`
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs>
-                  <div className={classes.right}>X X不动产权籍调查机构绘制</div>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item item xs={12} className={classes.bottom1}>
-              <Grid container spacing={0}>
-                <Grid item xs={5} />
-                <Grid item xs={2}>
-                  <Typography type="headline" className={classes.bottom11}>
-                    调查者：
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography type="headline" className={classes.bottom11}>
-                    调查日期：
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item item xs={12} className={classes.bottom2}>
-              <Grid container spacing={0}>
-                <Grid item xs={5} />
-                <Grid item xs={2}>
-                  <Typography type="headline" className={classes.bottom11}>
-                    审核者：
-                  </Typography>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography type="headline" className={classes.bottom11}>
-                    调查日期：
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+
+          <Typography type="headline" className={classes.title}>
+            不动产单元草图
+          </Typography>
+
+          <table ref="tabletest" className={classes.table}>
+            <tbody>
+              <tr className={classes.head}>
+                <td className={classes.headcell} style={{width:'20%'}}>            
+                  <Typography className={classes.headtext} >土地权利人</Typography>      
+                </td>
+                <td className={classes.headcell} style={{width:'30%'}}>
+                  <input 
+                  className={classes.headtext} 
+                  defaultValue={projectData.ProjectItem}
+                  required/>
+                </td>
+                <td className={classes.headcell} style={{width:'15%'}}>
+                  <Typography className={classes.headtext} >坐落</Typography>  
+                </td>
+                <td className={classes.headcell} style={{width:'35%'}}>
+                  <input 
+                  className={classes.headtext} 
+                  defaultValue={projectData.ProjectItem}
+                  required/>
+                </td>
+              </tr>
+              <tr className={classes.mapPic}>
+                <td colSpan="4">
+                  <div
+                    className={classes.pic}
+                    ref="ThematicMap"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <Toolbar className={classes.bottom1}>
+            调查者：
+            <input
+            className={classes.btm_fill1}
+            required
+            id="investigator"/>
+            调查日期：
+            <input
+            className={classes.btm_fill2}
+            required
+            defaultValue={date}
+            id="invest_time"/>
+          </Toolbar>
+          <Toolbar className={classes.bottom2}>
+            审核者：
+            <input
+            className={classes.btm_fill1}
+            required
+            id="auditor"/>
+            审核日期：         
+            <input
+            className={classes.btm_fill2}
+            required
+            defaultValue={date}
+            id="audit_time"/>
+          </Toolbar>
+          <div className={classes.right}>南宁市不动产权籍调查机构绘制</div>
         </Paper>
         <div className={classes.wrapper}>
           <Button
@@ -337,7 +334,6 @@ class ThematicMap extends Component {
               <SaveIcon className={classes.icon} />
             )}
 
-            {/* <Typography className={classes.bt_text}>保存</Typography> */}
           </Button>
           {thematicMapSaveLoading && (
             <CircularProgress size={60} className={classes.progress} />
@@ -383,31 +379,36 @@ const mapDispatchToProps = dispatch => {
         type: "SAVE_THEMATICMAP_CLICK"
       });
 
-      const ThematicMapDataURL = thematicMap.toDataURL();
-      const ThematicMapDataLoad = ThematicMapDataURL.slice(
-        ThematicMapDataURL.indexOf(",") + 1
-      );
-      console.log(ThematicMapDataLoad);
-
-      fetch(appConfig.fileServiceRootPath + "/project/savepicture", {
-        method: "POST",
-        body: ThematicMapDataLoad
+      console.log(test)
+      html2canvas(test).then(function(canvas) {
+        console.log(canvas.toDataURL())
       })
-        .then(response => response.json())
-        .then(json => {
-          dispatch({
-            type: "SUCCESS_SAVE_THEMATICMAP_CLICK"
-          });
-          setTimeout(() => {
-            dispatch({
-              type: "RESTARE_SUCCESS_SAVE_THEMATICMAP_CLICK"
-            });
-          }, 1000);
-          console.log(json);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+
+      // const ThematicMapDataURL = thematicMap.toDataURL();
+      // const ThematicMapDataLoad = ThematicMapDataURL.slice(
+      //   ThematicMapDataURL.indexOf(",") + 1
+      // );
+      // console.log(ThematicMapDataLoad);
+
+      // fetch(appConfig.fileServiceRootPath + "/project/savepicture", {
+      //   method: "POST",
+      //   body: ThematicMapDataLoad
+      // })
+      //   .then(response => response.json())
+      //   .then(json => {
+      //     dispatch({
+      //       type: "SUCCESS_SAVE_THEMATICMAP_CLICK"
+      //     });
+      //     setTimeout(() => {
+      //       dispatch({
+      //         type: "RESTARE_SUCCESS_SAVE_THEMATICMAP_CLICK"
+      //       });
+      //     }, 1000);
+      //     console.log(json);
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     }
   };
 };
