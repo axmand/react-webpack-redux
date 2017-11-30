@@ -1089,8 +1089,9 @@ const sketchReduce = (
    
     //取界址点号
     case "fetchPoi_NumClick":
-
-    return {...state}
+        let i = action.payload2.id
+        newState.plotListData[i].afterId = action.payload1.d
+    return {...state,...newState}
    
     //画点
     case "drawPointClick":
@@ -1102,7 +1103,8 @@ const sketchReduce = (
       for (let i = 0; i < jzdpoi.length; i++) {
         tableRow = {
           id: jzdpoi[i].feature.id,
-          coordinates: jzdpoi[i].coordinates
+          coordinates: jzdpoi[i].coordinates,
+          afterId: ''
         };
         tableData.push(tableRow);
       }

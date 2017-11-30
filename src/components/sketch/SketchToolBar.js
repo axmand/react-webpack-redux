@@ -730,6 +730,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     onFetchPoi_NumClick:()=>{
+
       ownProps.plotListData.map(n=>{
         let Poi_Data = JSON.stringify({
             	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
@@ -737,8 +738,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               strType: null,
               strUserName: null
           });
-        console.log(Poi_Data)
-        console.log(n)
+
         fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
           method: "POST",
@@ -760,16 +760,46 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               }
             })
         })
-      .then( json => {
+      .then( json => {      
+        
+        let Id_Data_0 = []
+        Id_Data_0.push({BeforeId:n.id,AfterId:json.d}) 
+        let Id_Data =JSON.stringify(Id_Data_0);   
+        
+              fetch(appConfig.fileServiceRootPath + '//project/changeid',
+                {
+                  method: "POST",
+                  body: Id_Data
+                })
+              .then(response => {
+                return response.json()
+                  .then(json => {
+                    if (response.ok) {
+                      return json
+                    } 
+                    else {
+                      return Promise.reject(json)
+                    }
+                  })
+              })
+              .then( json => {
+                console.log(json)
+              })
+              .catch(err => {
+                console.log(err)
+              })  
+        
         dispatch({
-          type: 'fetchPoi_NumClick',
-          payload:json,
+              type: 'fetchPoi_NumClick',
+              payload1:json,
+              payload2:n
         })
         console.log(json)
       })
+      
       .catch(err => {
         console.log(err)
-      })
+      })  
       })     
    },
    
