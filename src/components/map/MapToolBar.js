@@ -76,15 +76,15 @@ class MapToolBar extends Component {
             <Remove className={classes.icon} />
           </ListItem>
           <ListItem dense={true} />
-          <ListItem
+          {/* <ListItem
             button
             className={classes.listitem}
             disableGutters={true}
-            onClick={() => onClick("LAND_INFORMATION_QUERY")}
+            onClick={() => onClick("zoom_out")}
           >
             <Search className={classes.icon} />
           </ListItem>
-          <ListItem dense={true} />
+          <ListItem dense={true} /> */}
           <RealtimeMapping />
         </List>
       </div>
