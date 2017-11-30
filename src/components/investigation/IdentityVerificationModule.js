@@ -18,6 +18,13 @@ const styles = {
   dialog: {
     width: '100%',
   },
+  dialogTitle: {
+    backgroundColor: '#455A64',
+    fontSize: '2em',
+    color: '#ffffff',
+    fontFamily: "微软雅黑",
+    fontWeight: 'bold',
+  },
 };
 
 class IdentityVerificationModule extends Component {
@@ -41,6 +48,8 @@ class IdentityVerificationModule extends Component {
           onRequestClose={handleCloseIdentityVerificationModule}
         >
           <DialogTitle
+            className={classes.dialogTitle}
+            disableTypography
             style={{
               width: `${window.innerWidth}px`,
             }}

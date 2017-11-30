@@ -25,6 +25,13 @@ const styles = {
   dialog: {
     width: '100%',
   },
+  dialogTitle: {
+    backgroundColor: '#455A64',
+    fontSize: '2em',
+    color: '#ffffff',
+    fontFamily: "微软雅黑",
+    fontWeight: 'bold',
+  },
 };
 
 class LandInfoQueryModule extends Component {
@@ -52,7 +59,10 @@ class LandInfoQueryModule extends Component {
           open={landInfoQueryDisplayState}
           onRequestClose={handleCloseLandInfoQueryModule}
         >
-          <DialogTitle>
+          <DialogTitle
+            className={classes.dialogTitle}
+            disableTypography
+          >
             宗地信息查询
           </DialogTitle>
           <DialogContent>
