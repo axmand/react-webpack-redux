@@ -1029,10 +1029,7 @@ const sketchReduce = (
         plotListData: new_tableData
       }
       return Object.assign({}, state, { ...updateTableData });
-    case "fetchPoi_NumClick":
 
-    
-    return{...state}
     //展点
     case "plotRTK":
       console.log("展点");
@@ -1118,8 +1115,10 @@ const sketchReduce = (
    
     //取界址点号
     case "fetchPoi_NumClick":
+        console.log("trigger fetchPoi_NumClick redux ... ")
         let i = action.payload2.id
-        newState.plotListData[i].afterId = action.payload1.d
+        newState.plotListData[i].id = action.payload1.d
+        console.log(newState.plotListData)
     return {...state,...newState}
    
     //画点
@@ -1132,7 +1131,7 @@ const sketchReduce = (
         tableRow = {
           id: jzdpoi[i].feature.id,
           coordinates: jzdpoi[i].coordinates,
-          afterId: ''
+          // afterId: ''
         };
         tableData.push(tableRow);
       }
