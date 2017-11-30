@@ -139,7 +139,8 @@ let drawTool = new maptalks.DrawTool({
 
 let snap;
 let target,
-  clickedObj = [];
+  clickedObj = [],
+  linePoiArr = [];
 let clickObj, deleteObj, recoverObj, addLabel, labelEditEnd;
 //用于获取点线面对象
 clickObj =
@@ -269,6 +270,9 @@ deleteObj =
         .getGeometryById(line_labels[i])
         .remove();
       }
+    }
+    if (target._jsonType === "CubicBezierCurve") {
+      target.remove();
     }
     if (target._jsonType === "Polygon") {
       target.remove();
@@ -643,7 +647,6 @@ RootReducer.merge(layerControlReduce);
 //初始化相关量
 let labels = [],
   length,
-  linePoiArr = [],
   addObjLabel,
   computeAngle;
 let plot,
@@ -666,8 +669,6 @@ let modifyPointId;
 
 const sketchReduce = (
   state = {
-    pointNum: 0,
-    lineNum: 0,
     isRealtimeOn: false,
     plotIsChecked: false,
     drawPointIsChecked: false,
@@ -831,6 +832,8 @@ const sketchReduce = (
     drawLineEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
+      let sznum = map.getLayer("SZ")._geoList.length
+      sznum++;
       //为折线的每条线段添加长度标注
       for (let i = 0; i < coorArr.length - 1; i++) {
         //每条线段的起点和终点坐标
@@ -845,7 +848,7 @@ const sketchReduce = (
       param.geometry.config("labels", labels);
       labels = [];
       param.geometry.config("isClicked", false);
-
+      param.geometry.setId(sznum)
       map.getLayer("SZ").addGeometry(param.geometry);
       param.geometry.on("click", clickObj);
       recoverObj();
@@ -864,6 +867,9 @@ const sketchReduce = (
     drawPolygonEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
+      let zdnum = map.getLayer("polygon")._geoList.length
+      zdnum++;
+      console.log(zdnum);
       let startPoi = [],
         endPoi = [];
       //为地块添加每段边长的注记
@@ -884,6 +890,7 @@ const sketchReduce = (
       labels = [];
       param.geometry.config("isClicked", false);
       param.geometry.config("polygonType", "ZD");
+      param.geometry.setId(zdnum);
       map.getLayer("polygon").addGeometry(param.geometry);
       param.geometry.on("click", clickObj);
       recoverObj();
@@ -906,10 +913,14 @@ const sketchReduce = (
   drawBalconyEnd =
     drawBalconyEnd ||
     function(param) {
+      let zdnum = map.getLayer("ZD")._geoList.length
+      zdnum++;
       param.geometry.config("isClicked", false);
-      param.geometry.config("polygonType", "YT");
+      param.geometry.config("polygonType", "YT");      
+      param.geometry.setId(zdnum);
       map.getLayer("polygon").addGeometry(param.geometry);
       param.geometry.on("click", clickObj);
+
       recoverObj();
     };
   drawBalcony =
@@ -1003,7 +1014,25 @@ const sketchReduce = (
         };
       }
       map.on("click", drawPoint);
-      return { ...state };
+      const new_jzdData = map.getLayer("point").toJSON()
+      let new_jzdpoi = new_jzdData.geometries;
+      let new_tableRow;
+      let new_tableData = [];
+      for (let i = 0; i < new_jzdpoi.length; i++) {
+        new_tableRow = {
+          id: new_jzdpoi[i].feature.id,
+          coordinates: new_jzdpoi[i].coordinates
+        };
+        new_tableData.push(new_tableRow);
+      }
+      const updateTableData={
+        plotListData: new_tableData
+      }
+      return Object.assign({}, state, { ...updateTableData });
+    case "fetchPoi_NumClick":
+
+    
+    return{...state}
     //展点
     case "plotRTK":
       console.log("展点");
@@ -1096,7 +1125,6 @@ const sketchReduce = (
     //画点
     case "drawPointClick":
       const jzdData = map.getLayer("point").toJSON()
-      //const jzdData = JSON.parse(projectData.ProjectItem.L.jzdJSONData);
       let jzdpoi = jzdData.geometries;
       let tableRow;
       let tableData = [];
@@ -1195,8 +1223,8 @@ const sketchReduce = (
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
-          console.log(state.lineNum);
-          state.lineNum++;
+          let jzxnum = map.getLayer("JZX")._geoList.length
+          jzxnum++;
           let coorArr = param.geometry._coordinates;
           //为折线的每条线段添加长度标注
           for (let i = 0; i < coorArr.length - 1; i++) {
@@ -1212,10 +1240,8 @@ const sketchReduce = (
           param.geometry.config("labels", labels);
           labels = [];
           param.geometry.config("isClicked", false);
-
           param.geometry.config("poiArr", linePoiArr);
-          param.geometry.config("id", state.lineNum);
-          param.geometry._id = param.geometry.options.id;
+          param.geometry.setId(jzxnum);
           map.getLayer("JZX").addGeometry(param.geometry);
           param.geometry.on("click", clickObj);
           recoverObj();
@@ -1253,7 +1279,6 @@ const sketchReduce = (
         map.off("dblclick", drawToolOn);
       }
       const JZXState = {
-        lineNum: map.getLayer("JZX")._geoList.length,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1275,17 +1300,15 @@ const sketchReduce = (
       return { ...state, ...JZXState };
     //画弧线
     case "drawArcClick":
-      console.log(state.lineNum);
       //画线时drawTool的绑定事件
       drawCurveEnd =
         drawCurveEnd ||
         function(param) {
-          console.log(state.lineNum);
-          state.lineNum++;
+          let jzxnum = map.getLayer("JZX")._geoList.length
+          jzxnum++;
           param.geometry.config("isClicked", false);
           param.geometry.config("poiArr", linePoiArr);
-          param.geometry.config("id", state.lineNum);
-          param.geometry._id = param.geometry.options.id;
+          param.geometry.setId(jzxnum);
           map.getLayer("JZX").addGeometry(param.geometry);
           param.geometry.on("click", clickObj);
           recoverObj();
@@ -1323,7 +1346,6 @@ const sketchReduce = (
         map.off("dblclick", drawToolOn);
       }
       const CurveState = {
-        lineNum: map.getLayer("JZX")._geoList.length,
         plotIsChecked: false,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
