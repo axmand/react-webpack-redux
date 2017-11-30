@@ -417,9 +417,9 @@ class SkechToolBar extends Component {
                 <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>            
                   <Typography className={classes.headtext} >id</Typography>      
                 </TableCell>
-                <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}>            
+                {/* <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}>            
                   <Typography className={classes.headtext}>界址点编号</Typography>      
-                </TableCell>
+                </TableCell> */}
                 <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.1}px`,padding:0}}>
                   <Typography className={classes.headtext} >坐标</Typography>  
                 </TableCell>
@@ -438,8 +438,8 @@ class SkechToolBar extends Component {
                   <TableRow key={n.id}>
                     {/* id */}
                     <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>{n.id}</TableCell>
-                    {n.afterId}
-                    <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}></TableCell>
+                    {/* 界址点号 */}
+                    {/* <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}></TableCell> */}
                     {/* 坐标 */}
                     <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.1}px`,padding:0,textAlign:'left'}}>
                       Lng:{n.coordinates[0].toFixed(7)}<br/>Lat:{n.coordinates[1].toFixed(7)}
@@ -773,12 +773,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         let Id_Data_0 = []
         Id_Data_0.push({BeforeId:n.id,AfterId:json.d}) 
         let Id_Data =JSON.stringify(Id_Data_0);   
-        console.log("trigger fetchPoi_NumClick dispatch ... ")
+
         dispatch({
               type: 'fetchPoi_NumClick',
               payload1:json,
               payload2:n
-        });
+        }) 
              
               fetch(appConfig.fileServiceRootPath + '//project/changeid',
                 {
