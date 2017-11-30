@@ -360,14 +360,14 @@ class Map extends Component {
       generate: geometry => geometry
     });
 
-    // //为界址点图层添加snapto工具
-    // snap = new SnapTool({
-    //   tolerance: 5,
-    //   mode: "point"
-    // });
-    // snap.addTo(map);
-    // snap.setLayer(map.getLayer("point"));
-    // snap.disable();
+    //为界址点图层添加snapto工具
+    snap = new SnapTool({
+      tolerance: 5,
+      mode: "point"
+    });
+    snap.addTo(map);
+    snap.setLayer(map.getLayer("point"));
+    snap.disable();
     //将测距工具添加至地图
     distanceTool = new maptalks.DistanceTool({
       symbol: {
