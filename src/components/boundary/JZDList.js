@@ -92,7 +92,7 @@ class JZDList extends Component {
                   <TableCell className={classes.tablecell}>{n.coordinates}</TableCell>
                   <TableCell 
                     className={classes.tablecell}
-                    onClick={()=>onjzdXCZJClick(n.id)}> 
+                    onClick={()=>onjzdXCZJClick(n.id_JZD)}> 
                     <PhotoCameraIcon style={{color:'#CCCCCC'}}/>
                   </TableCell>
                 </TableRow>

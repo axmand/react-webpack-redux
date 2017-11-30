@@ -1117,8 +1117,8 @@ const sketchReduce = (
     case "fetchPoi_NumClick":
         
         let i = action.payload2.id - 1
-        map.getLayer("point").getGeometryById(action.payload2.id).config("_id",action.payload1.d);
-        newState.plotListData[i].id = action.payload1.d
+        map.getLayer("point").getGeometryById(action.payload2.id).config("id_JZD",action.payload1.d);
+        newState.plotListData[i].id_JZD = action.payload1.d
 
     return {...state,...newState}
    
@@ -1132,6 +1132,7 @@ const sketchReduce = (
         tableRow = {
           id: jzdpoi[i].feature.id,
           coordinates: jzdpoi[i].coordinates,
+          id_JZD: jzdpoi[i].feature.id
         };
         tableData.push(tableRow);
       }

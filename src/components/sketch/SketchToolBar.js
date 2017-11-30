@@ -417,9 +417,9 @@ class SkechToolBar extends Component {
                 <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>            
                   <Typography className={classes.headtext} >id</Typography>      
                 </TableCell>
-                {/* <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}>            
+                 <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}>            
                   <Typography className={classes.headtext}>界址点编号</Typography>      
-                </TableCell> */}
+                </TableCell> 
                 <TableCell className={classes.headcell} style={{width:`${window.innerWidth * 0.1}px`,padding:0}}>
                   <Typography className={classes.headtext} >坐标</Typography>  
                 </TableCell>
@@ -439,7 +439,7 @@ class SkechToolBar extends Component {
                     {/* id */}
                     <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.05}px`,padding:0}}>{n.id}</TableCell>
                     {/* 界址点号 */}
-                    {/* <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}></TableCell> */}
+                     <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.075}px`,padding:0}}>{n.id_JZD}</TableCell> 
                     {/* 坐标 */}
                     <TableCell className={classes.tablecell} style={{width:`${window.innerWidth * 0.1}px`,padding:0,textAlign:'left'}}>
                       Lng:{n.coordinates[0].toFixed(7)}<br/>Lat:{n.coordinates[1].toFixed(7)}
@@ -456,7 +456,7 @@ class SkechToolBar extends Component {
                     <TableCell 
                     className={classes.tablecell}
                     style={{width:`${window.innerWidth * 0.05}px`,padding:0}}
-                    onClick={()=>onjzdXCZJClick(n.id)}> 
+                    onClick={()=>onjzdXCZJClick(n.id_JZD)}> 
                     <PhotoCameraIcon style={{color:'#000',width:`${window.innerWidth * 0.015}px`}}/>
                   </TableCell>
                   </TableRow>
@@ -746,7 +746,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               PointY: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesY,
               strType: null,
               strUserName: null
-          });
+        });
 
         fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
@@ -754,7 +754,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           mode: "cors",
           headers: {
             'Content-Type': 'application/json',
-            'Authorization' : 'AWLRB0dwckiEfil-RQAEUBiS48Nd9vCuAA5Jfokr1XjyR98J3Ithu9BK-q-tWMbAVNFFdIBJEn3Gv-CLTtFOS6uSJvercgsMd85-MokzfJNWqlTprPWaWierX9NlLZSPuYdMzfIMxFITRvXr6QoTMv8ZNsV4F8YM2TM4JTC0lTJJVPvJEV5cd-N85YT0XZnWISUSNFb0E_-5HCybhciMi0-NFYJtCFMz9dgj-QmsA64pAHE3DTJ2T-DDx9ODah6HVzSffqzTbvcK4nL6eY7p4KOMuWL2Ws-IWI_yu1C4shvWLTcYO0vKgudnx5fHk7r7nXfVVupa24fx1LpJ4jvyj103sywufnPP4KbJ0fNZAK8slhgGTf6JxqWbBU0A32HYM10ihBuEMIsnXpyPjbckZ7eTFc6jCzQ-Ce3OZwmmmYqroEKvttfkepRBBFdqwh1q-gUcJ-C7wsLkf2cbiK7eCb9XFigF6aJydGevZH7paXjuZqok9q8T3CGbNbD85Bxax84qj4O8Ucid3SFxt05UE5h4xxwgm_1WYvhK4syB9G4wGwD0pgCZvyfP8IS3T2G3nedvcAtcCclwgp7681Mu8znaefYLeNbDqLXa8fZxXnPXXs3C0PE82zJij0Bz6EPyypARwgaxq1ViVQ8ZblRNunT0NZTzIk3hFPTqOFE3gbpaYlDfwkO6qCdDyNGXxmtNTf97Z7LKBMPUYMZFyyeIO6S25PESH45zeSKMy4iFtSvXzGS6YUUhoH5EUg42A8OfQ8xLO6QKTiPc3U1kCg3n0P16PXMFaXTzk96imvluuqDZ5-FU83kISapbCILWH_TYnPb_I0KPysV_Ro8C5j1vRqXzKb5HTqcbXpRFu7t9Mi6ovm6hyAxPzaE_caSJY8V6k-xsnX0NOEXJS00Fxzws65WrgVwmdgRqS4RlUm3-dZUIJKr5gM3660WN75KnL1nRyWIPso_KRrjxh2YzgR-Xz34Z5F9SHhLZ5Ii2kZURcs0AkpSWXJ5RLNg5_U_Bdn6bB59dHZ9EJQmviAO61RdwT1jwlmM8E9upox0MUDsIEEXgL4gQ2MuFYtKaZVEuypvj'
+            'Authorization' : localStorage.getItem('access_token')
           },
           body: Poi_Data
         })
@@ -769,17 +769,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               }
             })
         })
-      .then( json => {      
-        let Id_Data_0 = []
-        Id_Data_0.push({BeforeId:n.id,AfterId:json.d}) 
-        let Id_Data =JSON.stringify(Id_Data_0);   
+        .then( json => {      
+            let Id_Data_0 = []
+            Id_Data_0.push({BeforeId:n.id,AfterId:json.d}) 
+            let Id_Data =JSON.stringify(Id_Data_0);   
 
-        dispatch({
-              type: 'fetchPoi_NumClick',
-              payload1:json,
-              payload2:n
-        }) 
-             
+            dispatch({
+                  type: 'fetchPoi_NumClick',
+                  payload1:json,
+                  payload2:n
+            }) 
+                
               fetch(appConfig.fileServiceRootPath + '//project/changeid',
                 {
                   method: "POST",
@@ -802,11 +802,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               .catch(err => {
                 console.log(err)
               })
-        
 
         // console.log(json)
-      })
-      
+      })    
       .catch(err => {
         console.log(err)
       })  
@@ -826,7 +824,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     dispatch({
         type: 'ProgressShow',
     });
-    fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
+    fetch(appConfig.fileServiceRootPath + '//project/photolist/'+ poi_id )
     // fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
     .then(response => response.json())
     .then( json => {
