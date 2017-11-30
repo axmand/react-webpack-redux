@@ -230,12 +230,14 @@ class ThematicMap extends Component {
     const d= new Date();
     const date=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日";
     const {
+      TuDiQuanLiRen,
+      ZuoLuo,
       alertSave,
       saveIsChecked,
       onSaveAlertClose,
       onSaveThematicMapClick,
       thematicMapSaveSuccess,
-      thematicMapSaveLoading
+      thematicMapSaveLoading,
     } = this.props;
 
     let saveButtonClass = "";
@@ -270,7 +272,7 @@ class ThematicMap extends Component {
                 <td className={classes.headcell} style={{width:'30%'}}>
                   <input 
                   className={classes.headtext} 
-                  defaultValue={projectData.ProjectItem}
+                  defaultValue={TuDiQuanLiRen}
                   required/>
                 </td>
                 <td className={classes.headcell} style={{width:'15%'}}>
@@ -279,7 +281,7 @@ class ThematicMap extends Component {
                 <td className={classes.headcell} style={{width:'35%'}}>
                   <input 
                   className={classes.headtext} 
-                  defaultValue={projectData.ProjectItem}
+                  defaultValue={ZuoLuo}
                   required/>
                 </td>
               </tr>
@@ -352,7 +354,12 @@ ThematicMap.PropTypes = {
 const mapStateToProps = state => {
   const sketchState = state.sketchReduce;
   const canvasSeduce = state.CanvasReduce;
+  console.log(projectData.ProjectItem.F1.PrincipalName)
+
+
   return {
+    TuDiQuanLiRen: projectData.ProjectItem.F1.PrincipalName,
+    ZuoLuo: projectData.ProjectItem.F1.Location,
     alertSave: sketchState.alertSave,
     saveIsChecked: sketchState.saveIsChecked,
     thematicMapSaveSuccess: canvasSeduce.thematicMapSaveSuccess,
