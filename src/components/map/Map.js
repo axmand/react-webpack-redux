@@ -1127,6 +1127,7 @@ const sketchReduce = (
    
     //画点
     case "drawPointClick":
+      console.log(state.plotListData)
       const jzdData = map.getLayer("point").toJSON()
       let jzdpoi = jzdData.geometries;
       let tableRow;
@@ -1135,7 +1136,7 @@ const sketchReduce = (
         tableRow = {
           id: jzdpoi[i].feature.id,
           coordinates: jzdpoi[i].coordinates,
-          id_JZD: jzdpoi[i].options.id_JZD
+          id_JZD: jzdpoi[i].options.id_JZD || jzdpoi[i].feature.id
         };
         tableData.push(tableRow);
       }
