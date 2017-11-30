@@ -820,6 +820,7 @@ const sketchReduce = (
           polygonFill: "#FFFFFF"
         }
       });
+      point.config('id_JZD',jzdnum);
       map.getLayer("label").addGeometry(label);
       map.getLayer("point").addGeometry(point);
       map.setCenter(poi);
@@ -970,7 +971,6 @@ const sketchReduce = (
         drawPoint = function(e) {
           let content = modifyPointId;
           let num = modifyPointId;
-
           let oldPoi = map.getLayer("point").getGeometryById(num);
           let oldLabel = map.getLayer("label").getGeometryById(num);
           //为界址点添加点号注记
@@ -1005,6 +1005,8 @@ const sketchReduce = (
               polygonFill: "#FFFFFF"
             }
           });
+          
+          point.config('id_JZD',num);
 
           oldPoi.remove();
           oldLabel.remove();
@@ -1021,7 +1023,8 @@ const sketchReduce = (
       for (let i = 0; i < new_jzdpoi.length; i++) {
         new_tableRow = {
           id: new_jzdpoi[i].feature.id,
-          coordinates: new_jzdpoi[i].coordinates
+          coordinates: new_jzdpoi[i].coordinates,
+          id_JZD:new_jzdpoi[i].options.id_JZD,
         };
         new_tableData.push(new_tableRow);
       }
@@ -1132,7 +1135,7 @@ const sketchReduce = (
         tableRow = {
           id: jzdpoi[i].feature.id,
           coordinates: jzdpoi[i].coordinates,
-          id_JZD: jzdpoi[i].feature.id
+          id_JZD: jzdpoi[i].options.id_JZD
         };
         tableData.push(tableRow);
       }
