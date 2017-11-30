@@ -44,7 +44,7 @@ class Sketch extends Component {
   };
 
   render() {
-    const { classes, onClick, onResetSketchState, isRealtimeOn, saveIsChecked } = this.props;
+    const { classes, onClick, onResetSketchState, isRealtimeOn, saveIsChecked, plotListData } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -74,7 +74,11 @@ class Sketch extends Component {
           </IconButton>
         </AppBar>
         {this.state.index === 0 && (
-          <SketchToolBar isRealtimeOn={isRealtimeOn}  saveIsChecked={saveIsChecked}/>
+          <SketchToolBar 
+            isRealtimeOn={isRealtimeOn}  
+            saveIsChecked={saveIsChecked}
+            plotListData={plotListData}
+          />
         )}
         {this.state.index === 1 && <ThematicMap />}
       </div>
@@ -98,6 +102,7 @@ const mapStateToProps = state => {
   return {
     saveIsChecked: sketchState.saveIsChecked,
     isRealtimeOn: sketchState.isRealtimeOn,
+    plotListData:sketchState.plotListData,
   };
 };
 

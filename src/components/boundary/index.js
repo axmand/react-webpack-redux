@@ -78,7 +78,8 @@ class BoundaryModule extends Component {
   
     return (
     <div>
-       <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }> 
+       {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }>  */}
+       <ListItem button className={classes.listitem} disableGutters={true}> 
         <ListItemIcon>
           <PhotoCameraIcon className={classes.listItemIcon}/>
         </ListItemIcon>            

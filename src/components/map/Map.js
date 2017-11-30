@@ -360,14 +360,14 @@ class Map extends Component {
       generate: geometry => geometry
     });
 
-    // //为界址点图层添加snapto工具
-    // snap = new SnapTool({
-    //   tolerance: 5,
-    //   mode: "point"
-    // });
-    // snap.addTo(map);
-    // snap.setLayer(map.getLayer("point"));
-    // snap.disable();
+    //为界址点图层添加snapto工具
+    snap = new SnapTool({
+      tolerance: 5,
+      mode: "point"
+    });
+    snap.addTo(map);
+    snap.setLayer(map.getLayer("point"));
+    snap.disable();
     //将测距工具添加至地图
     distanceTool = new maptalks.DistanceTool({
       symbol: {
@@ -702,6 +702,7 @@ const sketchReduce = (
   },
   action
 ) => {
+  let newState = JSON.parse(JSON.stringify(state))
   //用于计算标签的角度
   computeAngle =
     computeAngle ||
@@ -1028,10 +1029,7 @@ const sketchReduce = (
         plotListData: new_tableData
       }
       return Object.assign({}, state, { ...updateTableData });
-    case "fetchPoi_NumClick":
 
-    
-    return{...state}
     //展点
     case "plotRTK":
       console.log("展点");
@@ -1114,6 +1112,16 @@ const sketchReduce = (
           .length
       };
       return Object.assign({}, state, { ...newNum });
+   
+    //取界址点号
+    case "fetchPoi_NumClick":
+        
+        let i = action.payload2.id - 1
+        map.getLayer("point").getGeometryById(action.payload2.id).config("_id",action.payload1.d);
+        newState.plotListData[i].id = action.payload1.d
+
+    return {...state,...newState}
+   
     //画点
     case "drawPointClick":
       const jzdData = map.getLayer("point").toJSON()
@@ -1123,7 +1131,7 @@ const sketchReduce = (
       for (let i = 0; i < jzdpoi.length; i++) {
         tableRow = {
           id: jzdpoi[i].feature.id,
-          coordinates: jzdpoi[i].coordinates
+          coordinates: jzdpoi[i].coordinates,
         };
         tableData.push(tableRow);
       }
