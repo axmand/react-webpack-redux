@@ -10,7 +10,6 @@ import ClearIcon from "material-ui-icons/Clear";
 //import component
 import SketchToolBar from "./SketchToolBar";
 import ThematicMap from "./ThematicMap";
-import Test from "./Test";
 
 const styles = {
   root: {
@@ -77,8 +76,7 @@ class Sketch extends Component {
         {this.state.index === 0 && (
           <SketchToolBar isRealtimeOn={isRealtimeOn}  saveIsChecked={saveIsChecked}/>
         )}
-        {/* {this.state.index === 1 && <ThematicMap />} */}
-        {this.state.index === 1 && <Test />}
+        {this.state.index === 1 && <ThematicMap />}
       </div>
     );
   }
