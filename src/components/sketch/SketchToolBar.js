@@ -44,6 +44,8 @@ import SecondDialog from '../obligee/SecondDialog'
 import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
 
+import coordinate from "../../utils/coordinate"
+
 const styles = theme => ({
   root: {
     height: `${window.innerHeight * 0.075}px`,
@@ -509,7 +511,7 @@ const mapStateToProps = state => {
     saveIsChecked: sketchState.saveIsChecked,
     alertPlotFail: sketchState.alertPlotFail,
     alertSignature:sketchState.alertSignature,
-    plotListData:sketchState.plotListData
+    // plotListData:sketchState.plotListData
   };
 };
 
@@ -737,10 +739,79 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     onFetchPoi_NumClick:()=>{
-      dispatch({
-        type:'fetchPoi_NumClick'
+
+      ownProps.plotListData.map(n=>{
+        let Poi_Data = JSON.stringify({
+            	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
+              PointY: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesY,
+              strType: null,
+              strUserName: null
+          });
+
+        fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
+        {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : 'AWLRB0dwckiEfil-RQAEUBiS48Nd9vCuAA5Jfokr1XjyR98J3Ithu9BK-q-tWMbAVNFFdIBJEn3Gv-CLTtFOS6uSJvercgsMd85-MokzfJNWqlTprPWaWierX9NlLZSPuYdMzfIMxFITRvXr6QoTMv8ZNsV4F8YM2TM4JTC0lTJJVPvJEV5cd-N85YT0XZnWISUSNFb0E_-5HCybhciMi0-NFYJtCFMz9dgj-QmsA64pAHE3DTJ2T-DDx9ODah6HVzSffqzTbvcK4nL6eY7p4KOMuWL2Ws-IWI_yu1C4shvWLTcYO0vKgudnx5fHk7r7nXfVVupa24fx1LpJ4jvyj103sywufnPP4KbJ0fNZAK8slhgGTf6JxqWbBU0A32HYM10ihBuEMIsnXpyPjbckZ7eTFc6jCzQ-Ce3OZwmmmYqroEKvttfkepRBBFdqwh1q-gUcJ-C7wsLkf2cbiK7eCb9XFigF6aJydGevZH7paXjuZqok9q8T3CGbNbD85Bxax84qj4O8Ucid3SFxt05UE5h4xxwgm_1WYvhK4syB9G4wGwD0pgCZvyfP8IS3T2G3nedvcAtcCclwgp7681Mu8znaefYLeNbDqLXa8fZxXnPXXs3C0PE82zJij0Bz6EPyypARwgaxq1ViVQ8ZblRNunT0NZTzIk3hFPTqOFE3gbpaYlDfwkO6qCdDyNGXxmtNTf97Z7LKBMPUYMZFyyeIO6S25PESH45zeSKMy4iFtSvXzGS6YUUhoH5EUg42A8OfQ8xLO6QKTiPc3U1kCg3n0P16PXMFaXTzk96imvluuqDZ5-FU83kISapbCILWH_TYnPb_I0KPysV_Ro8C5j1vRqXzKb5HTqcbXpRFu7t9Mi6ovm6hyAxPzaE_caSJY8V6k-xsnX0NOEXJS00Fxzws65WrgVwmdgRqS4RlUm3-dZUIJKr5gM3660WN75KnL1nRyWIPso_KRrjxh2YzgR-Xz34Z5F9SHhLZ5Ii2kZURcs0AkpSWXJ5RLNg5_U_Bdn6bB59dHZ9EJQmviAO61RdwT1jwlmM8E9upox0MUDsIEEXgL4gQ2MuFYtKaZVEuypvj'
+          },
+          body: Poi_Data
+        })
+        .then(response => {
+          return response.json()
+            .then(json => {
+              if (response.ok) {
+                return json
+              } 
+              else {
+                return Promise.reject(json)
+              }
+            })
+        })
+      .then( json => {      
+        
+        let Id_Data_0 = []
+        Id_Data_0.push({BeforeId:n.id,AfterId:json.d}) 
+        let Id_Data =JSON.stringify(Id_Data_0);   
+        
+              fetch(appConfig.fileServiceRootPath + '//project/changeid',
+                {
+                  method: "POST",
+                  body: Id_Data
+                })
+              .then(response => {
+                return response.json()
+                  .then(json => {
+                    if (response.ok) {
+                      return json
+                    } 
+                    else {
+                      return Promise.reject(json)
+                    }
+                  })
+              })
+              .then( json => {
+                console.log(json)
+              })
+              .catch(err => {
+                console.log(err)
+              })  
+        
+        dispatch({
+              type: 'fetchPoi_NumClick',
+              payload1:json,
+              payload2:n
+        })
+        console.log(json)
       })
+      
+      .catch(err => {
+        console.log(err)
+      })  
+      })     
    },
+   
    onjzdXCZJClick:poi_id=>{
     dispatch({
       type:'jzdXCZJClick',
@@ -754,8 +825,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     dispatch({
         type: 'ProgressShow',
     });
-    // fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
-    fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
+    fetch(appConfig.fileServiceRootPath + '//project/photolist/'+poi_id )
+    // fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
     .then(response => response.json())
     .then( json => {
       dispatch({
@@ -773,8 +844,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       }) 
     })
-  },
-
+   }
   };
 };
 

@@ -702,6 +702,7 @@ const sketchReduce = (
   },
   action
 ) => {
+  let newState = JSON.parse(JSON.stringify(state))
   //用于计算标签的角度
   computeAngle =
     computeAngle ||
@@ -1114,6 +1115,13 @@ const sketchReduce = (
           .length
       };
       return Object.assign({}, state, { ...newNum });
+   
+    //取界址点号
+    case "fetchPoi_NumClick":
+        let i = action.payload2.id
+        newState.plotListData[i].afterId = action.payload1.d
+    return {...state,...newState}
+   
     //画点
     case "drawPointClick":
       const jzdData = map.getLayer("point").toJSON()
@@ -1123,7 +1131,8 @@ const sketchReduce = (
       for (let i = 0; i < jzdpoi.length; i++) {
         tableRow = {
           id: jzdpoi[i].feature.id,
-          coordinates: jzdpoi[i].coordinates
+          coordinates: jzdpoi[i].coordinates,
+          afterId: ''
         };
         tableData.push(tableRow);
       }
