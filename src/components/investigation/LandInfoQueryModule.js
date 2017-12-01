@@ -43,9 +43,8 @@ class LandInfoQueryModule extends Component {
       ParcelCode,
       TuDiZhengShuHao,
       TuDiZuoLuo,
-      landInfoQueryResultZD,
-      landInfoQueryResultQLR,
-      landInfoQueryNotification,
+      landInfoQueryResultZDList,
+      // landInfoQueryNotification,
       landInfoQueryDisplayState,
       handleChange,      
       handleLandInfoQuery,
@@ -117,56 +116,36 @@ class LandInfoQueryModule extends Component {
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <Grid container>
-                  <Grid item>
-                    <Table className={classes.table}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>宗地代码</TableCell>
-                          <TableCell>宗地特征码</TableCell>
-                          <TableCell>权利性质</TableCell>
-                          <TableCell>坐落</TableCell>
-                          <TableCell>用途</TableCell>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>宗地代码</TableCell>
+                      <TableCell>宗地特征码</TableCell>
+                      <TableCell>权利性质</TableCell>
+                      <TableCell>坐落</TableCell>
+                      <TableCell>用途</TableCell>
+                      <TableCell>权利人名称</TableCell>
+                      <TableCell>不动产权证号</TableCell>
+                      <TableCell>GLLX</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {landInfoQueryResultZDList.map(n => {
+                      return (
+                        <TableRow key={n._attrList.FEATUREGUID}>
+                          <TableCell>{n._attrList.ZDDM}</TableCell>
+                          <TableCell>{n._attrList.ZDTZMNAME}</TableCell>
+                          <TableCell>{n._attrList.QLXZNAME}</TableCell>
+                          <TableCell>{n._attrList.ZL}</TableCell>
+                          <TableCell>{n._attrList.YTNAME}</TableCell>
+                          <TableCell>{n._qlrList[0].QLRMC}</TableCell>
+                          <TableCell>{n._qlrList[0].BDCQZH}</TableCell>
+                          <TableCell>{n._qlrList[0].GLLX}</TableCell>
                         </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {landInfoQueryResultZD.map(n => {
-                          return (
-                            <TableRow>
-                              <TableCell>{n.ZDDM}</TableCell>
-                              <TableCell>{n.ZDTZMNAME}</TableCell>
-                              <TableCell>{n.QLXZNAME}</TableCell>
-                              <TableCell>{n.ZL}</TableCell>
-                              <TableCell>{n.YTNAME}</TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Grid>
-                  <Grid item>
-                    <Table className={classes.table}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell numeric>权利人名称</TableCell>
-                          <TableCell numeric>不动产权证号</TableCell>
-                          <TableCell numeric>时间</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {landInfoQueryResultQLR.map(n => {
-                          return (
-                            <TableRow>
-                              <TableCell numeric>{n.QLRMC}</TableCell>
-                              <TableCell numeric>{n.BDCQZH}</TableCell>
-                              <TableCell numeric>{n.SHUJRKSJ}</TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Grid>
-                </Grid>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
               </Grid>
             </Grid>
           </DialogContent>
@@ -186,15 +165,15 @@ class LandInfoQueryModule extends Component {
 }
 
 LandInfoQueryModule.propTypes = {
-  handleCloseIdentityVerificationModule: PropTypes.func.isRequired,
+  handleLandInfoQuery: PropTypes.func.isRequired,
+  handleCloseLandInfoQueryModule: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
   const investigationState = state.investigationReduce;
   return {
     landInfoQueryDisplayState: investigationState.landInfoQueryDisplayState,
-    landInfoQueryResultZD: investigationState.landInfoQueryResultZD,
-    landInfoQueryResultQLR: investigationState.landInfoQueryResultQLR,
+    landInfoQueryResultZDList: investigationState.landInfoQueryResultZDList,
     landInfoQueryNotification: investigationState.landInfoQueryNotification,
   }
 }
@@ -219,6 +198,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
       const QueryLandInfoRequestDetails = {
         'strQLR': ownProps.OwnPowerSide,
+        // 'strQLR': "雷秀珍",
         'strZDDM': ownProps.ParcelCode,
         // 'strZDDM': '450108001012GB00293',
         'strTDZSH': ownProps.TuDiZhengShuHao,
@@ -253,7 +233,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           const payloadJSON = JSON.parse(json.d)
           dispatch({
             type: "LAND_INFORMATION_QUERY_SUCCESS",
-            payload: payloadJSON.LandInfo
+            payload: payloadJSON._zdList
           });
           dispatch({
             type: "STATUS_BAR_NOTIFICATION",

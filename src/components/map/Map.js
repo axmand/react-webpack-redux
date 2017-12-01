@@ -973,7 +973,7 @@ const sketchReduce = (
           let oldPoi = map.getLayer("point").getGeometryById(num);
           let oldLabel = map.getLayer("label").getGeometryById(num);
           let fetched_id_JZD = map.getLayer("point").getGeometryById(modifyPointId).options.id_JZD;
-          let labelContent=fetched_id_JZD;
+          let labelContent=fetched_id_JZD || num;
           console.log(labelContent)
           //为界址点添加点号注记
           let label = new maptalks.Label(labelContent, e.coordinate, {
@@ -1122,6 +1122,36 @@ const sketchReduce = (
         
         let i = action.payload2.id - 1
         map.getLayer("point").getGeometryById(action.payload2.id).config("id_JZD",action.payload1.d);
+        
+        let num =action.payload2.id;          
+        let oldLabel = map.getLayer("label").getGeometryById(num);
+        let fetched_id_JZD = map.getLayer("point").getGeometryById(modifyPointId).options.id_JZD;
+        let labelContent=fetched_id_JZD;
+        console.log(labelContent)
+        //为界址点添加点号注记
+        let label = new maptalks.Label(labelContent, oldLabel._coordinates, {
+            id: num,
+            draggable: true,
+            box: false,
+            type: "Label",
+            symbol: {
+              textWeight: "200",
+              textFaceName: "宋体",
+              textSize: 12,
+              textFill: "#000000",
+              textDy: -10,
+              textAlign: "auto"
+            }
+        });
+        label.on("click", function(e) {
+            target = e.target;
+            console.log(target);
+            drawTool.disable();
+            label.startEditText();
+        });
+        oldLabel.remove();
+        map.getLayer("label").addGeometry(label);
+       
         newState.plotListData[i].id_JZD = action.payload1.d
       return {...state,...newState}
    

@@ -142,8 +142,7 @@ const investigationReduce = (
     TuDiZuoLuo: '',
     identityVerificationNotification: '',
     landInfoQueryNotification: '',
-    landInfoQueryResultZD: [],
-    landInfoQueryResultQLR: [],
+    landInfoQueryResultZDList: [],
     investigationMenuDisplayState: false,
     idVerificationDisplayState: false,
     landInfoQueryDisplayState: false,
@@ -182,13 +181,6 @@ const investigationReduce = (
       newState.landInfoQueryDisplayState = false
       return {...state, ...newState};
  
-    case 'CHANGE_INPUT_VALUE_IDENTITY_VERIFICATION':
-      if (action.payload.targetID === 'IDCardNumber')
-        newState.IDCardNumber = action.payload.targetValue; 
-      if (action.payload.targetID === 'IDCardName')
-        newState.IDCardName = action.payload.targetValue; 
-      return {...state, ...newState};
-      
     case 'CHANGE_INPUT_VALUE_LAND_INFORMATION_QUERY':
       // console.log("Trigger CHANGE_INPUT_VALUE_LAND_INFORMATION_QUERY redux ...")
       if (action.payload.targetID === 'OwnPowerSide')
@@ -203,8 +195,7 @@ const investigationReduce = (
  
     case 'LAND_INFORMATION_QUERY_SUCCESS':
       // console.log(action.payload)
-      newState.landInfoQueryResultZD = action.payload.ZD;
-      newState.landInfoQueryResultQLR = action.payload.QLR;
+      newState.landInfoQueryResultZDList = action.payload;
       return {...state, ...newState};
     
     default:
