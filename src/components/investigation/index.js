@@ -142,11 +142,10 @@ const investigationReduce = (
     TuDiZuoLuo: '',
     identityVerificationNotification: '',
     landInfoQueryNotification: '',
-    landInfoQueryResultZD: [],
-    landInfoQueryResultQLR: [],
+    landInfoQueryResultZDList: [],
     investigationMenuDisplayState: false,
     idVerificationDisplayState: false,
-    landInfoQueryDisplayState: false,
+    landInfoQueryDisplayState: true,
   }, action) => {
   let newState = JSON.parse(JSON.stringify(state))
 
@@ -196,8 +195,7 @@ const investigationReduce = (
  
     case 'LAND_INFORMATION_QUERY_SUCCESS':
       // console.log(action.payload)
-      newState.landInfoQueryResultZD = action.payload.ZD;
-      newState.landInfoQueryResultQLR = action.payload.QLR;
+      newState.landInfoQueryResultZDList = action.payload;
       return {...state, ...newState};
     
     default:
