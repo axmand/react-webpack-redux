@@ -197,8 +197,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       });
 
       const QueryLandInfoRequestDetails = {
-        // 'strQLR': ownProps.OwnPowerSide,
-        'strQLR': "雷秀珍",
+        'strQLR': ownProps.OwnPowerSide,
+        // 'strQLR': "雷秀珍",
         'strZDDM': ownProps.ParcelCode,
         // 'strZDDM': '450108001012GB00293',
         'strTDZSH': ownProps.TuDiZhengShuHao,
