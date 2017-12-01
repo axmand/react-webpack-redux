@@ -969,12 +969,14 @@ const sketchReduce = (
       modifyPointId = action.payload.command;
       if (!drawPoint) {
         drawPoint = function(e) {
-          let content = modifyPointId;
-          let num = modifyPointId;
+          let num = modifyPointId;          
           let oldPoi = map.getLayer("point").getGeometryById(num);
           let oldLabel = map.getLayer("label").getGeometryById(num);
+          let fetched_id_JZD = map.getLayer("point").getGeometryById(modifyPointId).options.id_JZD;
+          let labelContent=fetched_id_JZD;
+          console.log(labelContent)
           //为界址点添加点号注记
-          let label = new maptalks.Label(content, e.coordinate, {
+          let label = new maptalks.Label(labelContent, e.coordinate, {
             id: num,
             draggable: true,
             box: false,
@@ -996,6 +998,7 @@ const sketchReduce = (
           });
           let point = new maptalks.Circle(e.coordinate, 0.5, {
             id: num,
+            id_JZD:fetched_id_JZD,
             labels: label._id,
             picture: oldPoi.options.picture,
             isClicked: false,
@@ -1006,8 +1009,6 @@ const sketchReduce = (
             }
           });
           
-          point.config('id_JZD',num);
-
           oldPoi.remove();
           oldLabel.remove();
           map.getLayer("label").addGeometry(label);
@@ -1122,8 +1123,7 @@ const sketchReduce = (
         let i = action.payload2.id - 1
         map.getLayer("point").getGeometryById(action.payload2.id).config("id_JZD",action.payload1.d);
         newState.plotListData[i].id_JZD = action.payload1.d
-
-    return {...state,...newState}
+      return {...state,...newState}
    
     //画点
     case "drawPointClick":
