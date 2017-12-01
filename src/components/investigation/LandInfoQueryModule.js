@@ -45,7 +45,7 @@ class LandInfoQueryModule extends Component {
       TuDiZuoLuo,
       landInfoQueryResultZD,
       landInfoQueryResultQLR,
-      landInfoQueryNotification,
+      // landInfoQueryNotification,
       landInfoQueryDisplayState,
       handleChange,      
       handleLandInfoQuery,
@@ -186,7 +186,8 @@ class LandInfoQueryModule extends Component {
 }
 
 LandInfoQueryModule.propTypes = {
-  handleCloseIdentityVerificationModule: PropTypes.func.isRequired,
+  handleLandInfoQuery: PropTypes.func.isRequired,
+  handleCloseLandInfoQueryModule: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {

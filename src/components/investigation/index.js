@@ -182,13 +182,6 @@ const investigationReduce = (
       newState.landInfoQueryDisplayState = false
       return {...state, ...newState};
  
-    case 'CHANGE_INPUT_VALUE_IDENTITY_VERIFICATION':
-      if (action.payload.targetID === 'IDCardNumber')
-        newState.IDCardNumber = action.payload.targetValue; 
-      if (action.payload.targetID === 'IDCardName')
-        newState.IDCardName = action.payload.targetValue; 
-      return {...state, ...newState};
-      
     case 'CHANGE_INPUT_VALUE_LAND_INFORMATION_QUERY':
       // console.log("Trigger CHANGE_INPUT_VALUE_LAND_INFORMATION_QUERY redux ...")
       if (action.payload.targetID === 'OwnPowerSide')
