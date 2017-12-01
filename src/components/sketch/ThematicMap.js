@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
 import RootReducer from "./../../redux/RootReducer";
 import PropTypes from "prop-types";
@@ -184,7 +185,7 @@ const styles = theme => ({
  * @type {maptalks.Map}
  * 全局的专题图地图对象和方法
  */
-let thematicMap,test;
+let thematicMap,thematicMapDOM;
 
 /**
  * 专题图组件
@@ -192,7 +193,6 @@ let thematicMap,test;
  */
 class ThematicMap extends Component {
   componentDidMount() {
-    test=document.body;
 
     const {
       saveIsChecked,
@@ -247,7 +247,12 @@ class ThematicMap extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.thematicMap}>
+        <Paper
+          ref={div => {
+            thematicMapDOM = div
+          }}
+          className={classes.thematicMap}
+        >
           <Dialog 
             open={alertSave} 
             onRequestClose={onSaveAlertClose}
@@ -386,9 +391,32 @@ const mapDispatchToProps = dispatch => {
         type: "SAVE_THEMATICMAP_CLICK"
       });
 
-      console.log(test)
-      html2canvas(test).then(function(canvas) {
+      console.log(findDOMNode(thematicMapDOM))
+      html2canvas(findDOMNode(thematicMapDOM)).then(function(canvas) {
         console.log(canvas.toDataURL())
+        const ThematicMapDataURL = canvas.toDataURL();
+        const ThematicMapDataLoad = ThematicMapDataURL.slice(
+          ThematicMapDataURL.indexOf(",") + 1
+        );
+        fetch(appConfig.fileServiceRootPath + "/project/savepicture", {
+          method: "POST",
+          body: ThematicMapDataLoad
+        })
+          .then(response => response.json())
+          .then(json => {
+            dispatch({
+              type: "SUCCESS_SAVE_THEMATICMAP_CLICK"
+            });
+            setTimeout(() => {
+              dispatch({
+                type: "RESTARE_SUCCESS_SAVE_THEMATICMAP_CLICK"
+              });
+            }, 1000);
+            console.log(json);
+          })
+          .catch(err => {
+            console.log(err);
+          });
       })
 
       // const ThematicMapDataURL = thematicMap.toDataURL();
