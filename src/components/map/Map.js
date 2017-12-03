@@ -129,6 +129,7 @@ let areaTool = new maptalks.AreaTool({
   ],
   language: ""
 });
+//添加画图工具
 let drawTool = new maptalks.DrawTool({
   mode: "Polygon",
   symbol: {
@@ -136,8 +137,11 @@ let drawTool = new maptalks.DrawTool({
     lineWidth: 3
   }
 });
-
-let snap;
+ //为界址点图层添加snapto工具
+let snap = new SnapTool({
+  tolerance: 5,
+  mode: "point"
+});
 let target,
   clickedObj = [],
   linePoiArr = [];
@@ -312,34 +316,44 @@ class Map extends Component {
     //将项目草图数据导入至地图
     let jzd = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.jzdJSONData)
-    );
+    ) ||new maptalks.VectorLayer('point');
     let sz = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.szJSONData)
-    );
+    ) ||new maptalks.VectorLayer('SZ');
     let jzx = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.jzxJSONData)
-    );
+    ) ||new maptalks.VectorLayer('JZX');
     let zd = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.zdJSONData)
-    );
+    )||new maptalks.VectorLayer('polygon');
     let zj = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.zjJSONData)
-    );
+    )||new maptalks.VectorLayer('label');
     //为地图对象添加点击绑定事件
-    for (let i = 0; i < jzd._geoList.length; i++) {
-      jzd._geoList[i].on("click", clickObj);
+    if(jzd._geoList){
+      for (let i = 0; i < jzd._geoList.length; i++) {
+        jzd._geoList[i].on("click", clickObj);
+      }
     }
-    for (let i = 0; i < sz._geoList.length; i++) {
-      sz._geoList[i].on("click", clickObj);
+    if(sz._geoList){
+      for (let i = 0; i < sz._geoList.length; i++) {
+        sz._geoList[i].on("click", clickObj);
+      }
     }
-    for (let i = 0; i < jzx._geoList.length; i++) {
-      jzx._geoList[i].on("click", clickObj);
+    if(jzx._geoList){
+      for (let i = 0; i < jzx._geoList.length; i++) {
+        jzx._geoList[i].on("click", clickObj);
+      }
     }
-    for (let i = 0; i < zd._geoList.length; i++) {
-      zd._geoList[i].on("click", clickObj);
+    if( zd._geoList){
+      for (let i = 0; i < zd._geoList.length; i++) {
+        zd._geoList[i].on("click", clickObj);
+      }
     }
-    for (let i = 0; i < zj._geoList.length; i++) {
-      zj._geoList[i].on("click", clickObj);
+    if(zj._geoList){
+      for (let i = 0; i < zj._geoList.length; i++) {
+        zj._geoList[i].on("click", clickObj);
+      }
     }
     jzd.addTo(map);
     sz.addTo(map);
@@ -360,14 +374,11 @@ class Map extends Component {
       generate: geometry => geometry
     });
 
-    //为界址点图层添加snapto工具
-    snap = new SnapTool({
-      tolerance: 5,
-      mode: "point"
-    });
     snap.addTo(map);
     snap.setLayer(map.getLayer("point"));
+    snap.bindDrawTool(drawTool);
     snap.disable();
+
     //将测距工具添加至地图
     distanceTool = new maptalks.DistanceTool({
       symbol: {
@@ -1040,7 +1051,7 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      //snap.disable();
+      snap.disable();
       let plotData = [];
       plotData = JSON.parse(action.payload.data);
       console.log(plotData);
@@ -1125,7 +1136,7 @@ const sketchReduce = (
         
         let num =action.payload2.id;          
         let oldLabel = map.getLayer("label").getGeometryById(num);
-        let fetched_id_JZD = map.getLayer("point").getGeometryById(modifyPointId).options.id_JZD;
+        let fetched_id_JZD = map.getLayer("point").getGeometryById(num).options.id_JZD;
         let labelContent=fetched_id_JZD;
         console.log(labelContent)
         //为界址点添加点号注记
@@ -1221,13 +1232,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        // snap.enable();
+        snap.enable();
         //开始画线
         drawLine();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState2 = {
@@ -1303,13 +1314,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始画线
         drawJZX();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const JZXState = {
@@ -1370,13 +1381,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始画线
         drawCurve();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const CurveState = {
@@ -1412,13 +1423,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始构面
         drawPolygon();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState3 = {
@@ -1453,13 +1464,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始构面
         drawBalcony();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState4 = {
@@ -1487,7 +1498,7 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      //snap.disable();
+      snap.disable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("dblclick", drawToolOn);
@@ -1615,7 +1626,7 @@ const sketchReduce = (
       map.off("click", addLabel);
       map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
-      //snap.disable();
+      snap.disable();
       if (target) {
         const newState6 = {
           deleteIsChecked: !state.deleteIsChecked,
