@@ -61,9 +61,12 @@ const styles = theme => ({
     border:'solid 1px #000'
   },
   headtext:{
+    background:'#fff',
+    width:'95%',
     fontSize: "1em",
     fontFamily: "宋体",
     fontWeight: "400",
+    textAlign:'center',
     padding:0,
     border:0,
   },
@@ -76,42 +79,35 @@ const styles = theme => ({
     width: "100%",
     height: "100%"
   },
-  bottom1: {    
+
+  bottomtable:{
     position:'absolute',
-    top: "89%",
+    top: "91%",
     left:'40%',
-    width:'60%',
-    height: `${window.innerHeight * 0.03}px`,
-    padding: 0,
-    fontSize: "1em",
-    fontFamily: "宋体",
-    fontWeight: "400",
-  },
-  bottom2: {    
-    position: "absolute",
-    top: "93%",
-    left:'40%',
-    width:'60%',
-    height: `${window.innerHeight * 0.03}px`,
-    padding: 0,
-    fontSize: "1em",
-    fontFamily: "宋体",
-    fontWeight: "400",
-  },
-  btm_fill1:{
-    width:'20%',
-    height:`${window.innerHeight * 0.0375}px`,
+    width: `${window.innerHeight * 0.35}px`,
     padding:0,
     border:0,
     fontSize: "1em",
     fontFamily: "宋体",
     fontWeight: "400",
   },
-  btm_fill2:{
-    width:'30%',
-    height:`${window.innerHeight * 0.0375}px`,
+  btmtr:{
+    height: `${window.innerHeight * 0.03}px`,
+    width:'100%',
     padding:0,
     border:0,
+  },
+  btmtd:{
+    padding:0,
+    border:0,
+    fontSize: "1em",
+    fontFamily: "宋体",
+    fontWeight: "400",
+  },
+  btminput:{
+    padding:0,
+    border:0,
+    width:'100%',
     fontSize: "1em",
     fontFamily: "宋体",
     fontWeight: "400",
@@ -300,32 +296,30 @@ class ThematicMap extends Component {
               </tr>
             </tbody>
           </table>
-          <Toolbar className={classes.bottom1}>
-            调查者：
-            <input
-            className={classes.btm_fill1}
-            required
-            id="investigator"/>
-            调查日期：
-            <input
-            className={classes.btm_fill2}
-            required
-            defaultValue={date}
-            id="invest_time"/>
-          </Toolbar>
-          <Toolbar className={classes.bottom2}>
-            审核者：
-            <input
-            className={classes.btm_fill1}
-            required
-            id="auditor"/>
-            审核日期：         
-            <input
-            className={classes.btm_fill2}
-            required
-            defaultValue={date}
-            id="audit_time"/>
-          </Toolbar>
+          <table className={classes.bottomtable}>
+            <tbody>
+              <tr className={classes.btmtr}>
+                <td className={classes.btmtd} style={{width:'18%'}}>调查者：</td>
+                <td className={classes.btmtd} style={{width:'18%'}}>
+                <input className={classes.btminput} required id="investigator"/>
+                </td> 
+                <td className={classes.btmtd} style={{width:'24%'}}>调查日期：</td>   
+                <td className={classes.btmtd} style={{width:'40%'}}>
+                <input className={classes.btminput} required defaultValue={date} id="invest_time"/>
+                </td>                  
+              </tr>
+              <tr className={classes.btmtr}>
+                <td className={classes.btmtd} style={{width:'18%'}}>审核者：</td>
+                <td className={classes.btmtd} style={{width:'18%'}}>
+                <input className={classes.btminput} required id="auditor"/>
+                </td> 
+                <td className={classes.btmtd} style={{width:'24%'}}>审核日期：</td>   
+                <td className={classes.btmtd} style={{width:'40%'}}>
+                <input className={classes.btminput} required defaultValue={date} id="audit_time"/>
+                </td>                  
+              </tr>
+            </tbody>
+          </table>
           <div className={classes.right}>南宁市不动产权籍调查机构绘制</div>
         </Paper>
         <div className={classes.wrapper}>
