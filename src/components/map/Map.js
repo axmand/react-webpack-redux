@@ -1125,7 +1125,7 @@ const sketchReduce = (
         
         let num =action.payload2.id;          
         let oldLabel = map.getLayer("label").getGeometryById(num);
-        let fetched_id_JZD = map.getLayer("point").getGeometryById(modifyPointId).options.id_JZD;
+        let fetched_id_JZD = map.getLayer("point").getGeometryById(num).options.id_JZD;
         let labelContent=fetched_id_JZD;
         console.log(labelContent)
         //为界址点添加点号注记
