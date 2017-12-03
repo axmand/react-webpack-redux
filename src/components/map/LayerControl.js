@@ -43,6 +43,7 @@ const styles = {
     paddingTop: "5%",
     paddingBottom: "5%",
     justifyContent: 'center ',
+    background: "rgba(69, 90, 100, .6)",
   },
   checkbox: {
     height: '30%',
