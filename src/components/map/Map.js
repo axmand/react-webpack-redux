@@ -129,6 +129,7 @@ let areaTool = new maptalks.AreaTool({
   ],
   language: ""
 });
+//添加画图工具
 let drawTool = new maptalks.DrawTool({
   mode: "Polygon",
   symbol: {
@@ -136,8 +137,11 @@ let drawTool = new maptalks.DrawTool({
     lineWidth: 3
   }
 });
-
-let snap;
+ //为界址点图层添加snapto工具
+let snap = new SnapTool({
+  tolerance: 5,
+  mode: "point"
+});
 let target,
   clickedObj = [],
   linePoiArr = [];
@@ -225,7 +229,14 @@ addLabel =
   addLabel ||
   function(e) {
     recoverObj();
-    let labelId=map.getLayer("label")._geoList.length+1;
+    let label_Id=map.getLayer("label")._geoList.length;
+    let labelId;
+    if(label_Id>0){
+      labelId=map.getLayer("label")._geoList[label_Id-1]._id;
+    }else{
+      labelId=0;
+    }
+    labelId++;
     let label = new maptalks.Label("label", e.coordinate, {
       id:labelId,      
       draggable: true,
@@ -312,34 +323,44 @@ class Map extends Component {
     //将项目草图数据导入至地图
     let jzd = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.jzdJSONData)
-    );
+    ) ||new maptalks.VectorLayer('point');
     let sz = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.szJSONData)
-    );
+    ) ||new maptalks.VectorLayer('SZ');
     let jzx = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.jzxJSONData)
-    );
+    ) ||new maptalks.VectorLayer('JZX');
     let zd = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.zdJSONData)
-    );
+    )||new maptalks.VectorLayer('polygon');
     let zj = maptalks.Layer.fromJSON(
       JSON.parse(projectData.ProjectItem.L.zjJSONData)
-    );
+    )||new maptalks.VectorLayer('label');
     //为地图对象添加点击绑定事件
-    for (let i = 0; i < jzd._geoList.length; i++) {
-      jzd._geoList[i].on("click", clickObj);
+    if(jzd._geoList){
+      for (let i = 0; i < jzd._geoList.length; i++) {
+        jzd._geoList[i].on("click", clickObj);
+      }
     }
-    for (let i = 0; i < sz._geoList.length; i++) {
-      sz._geoList[i].on("click", clickObj);
+    if(sz._geoList){
+      for (let i = 0; i < sz._geoList.length; i++) {
+        sz._geoList[i].on("click", clickObj);
+      }
     }
-    for (let i = 0; i < jzx._geoList.length; i++) {
-      jzx._geoList[i].on("click", clickObj);
+    if(jzx._geoList){
+      for (let i = 0; i < jzx._geoList.length; i++) {
+        jzx._geoList[i].on("click", clickObj);
+      }
     }
-    for (let i = 0; i < zd._geoList.length; i++) {
-      zd._geoList[i].on("click", clickObj);
+    if( zd._geoList){
+      for (let i = 0; i < zd._geoList.length; i++) {
+        zd._geoList[i].on("click", clickObj);
+      }
     }
-    for (let i = 0; i < zj._geoList.length; i++) {
-      zj._geoList[i].on("click", clickObj);
+    if(zj._geoList){
+      for (let i = 0; i < zj._geoList.length; i++) {
+        zj._geoList[i].on("click", clickObj);
+      }
     }
     jzd.addTo(map);
     sz.addTo(map);
@@ -360,14 +381,11 @@ class Map extends Component {
       generate: geometry => geometry
     });
 
-    //为界址点图层添加snapto工具
-    snap = new SnapTool({
-      tolerance: 5,
-      mode: "point"
-    });
-    snap.addTo(map);
+    snap.addTo(map).disable();
     snap.setLayer(map.getLayer("point"));
-    snap.disable();
+    snap.setGeometries(map.getLayer("point")._geoList);
+    snap.bindDrawTool(drawTool);
+
     //将测距工具添加至地图
     distanceTool = new maptalks.DistanceTool({
       symbol: {
@@ -743,8 +761,15 @@ const sketchReduce = (
       ) {
         rotation += 180;
       }
-      let labelId=map.getLayer("label")._geoList.length+1;
-
+      let label_Id=map.getLayer("label")._geoList.length;
+      let labelId;
+      if( label_Id>0){
+        labelId=map.getLayer("label")._geoList[label_Id-1]._id;
+      }else{
+        labelId=0;
+      }
+      console.log(labelId)
+      labelId++;
       let objLabel = new maptalks.Label(content, coord, {
         id:labelId,
         draggable: true,
@@ -785,7 +810,13 @@ const sketchReduce = (
     plot ||
     function(poi) {
       recoverObj();
-      let jzdnum = map.getLayer("point")._geoList.length;
+      let jzd_Id=map.getLayer("point")._geoList.length;
+      let jzdnum;
+      if(jzd_Id>0){
+        jzdnum=map.getLayer("point")._geoList[jzd_Id-1]._id;
+      }else{
+        jzdnum=0;
+      }
       jzdnum++;
       let content = jzdnum;
       //为界址点添加点号注记
@@ -833,7 +864,13 @@ const sketchReduce = (
     drawLineEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
-      let sznum = map.getLayer("SZ")._geoList.length
+      let sz_Id=map.getLayer("SZ")._geoList.length;
+      let sznum;
+      if(sz_Id>0){
+        sznum=map.getLayer("SZ")._geoList[sz_Id-1]._id;
+      }else{
+        sznum=0;
+      }
       sznum++;
       //为折线的每条线段添加长度标注
       for (let i = 0; i < coorArr.length - 1; i++) {
@@ -868,7 +905,13 @@ const sketchReduce = (
     drawPolygonEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
-      let zdnum = map.getLayer("polygon")._geoList.length
+      let zd_Id=map.getLayer("polygon")._geoList.length;
+      let zdnum;
+      if(zd_Id>0){
+        zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
+      }else{
+        zdnum=0;
+      }
       zdnum++;
       console.log(zdnum);
       let startPoi = [],
@@ -914,7 +957,13 @@ const sketchReduce = (
   drawBalconyEnd =
     drawBalconyEnd ||
     function(param) {
-      let zdnum = map.getLayer("ZD")._geoList.length
+      let zd_Id=map.getLayer("polygon")._geoList.length;
+      let zdnum;
+      if(zd_Id>0){
+        zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
+      }else{
+        zdnum=0;
+      }
       zdnum++;
       param.geometry.config("isClicked", false);
       param.geometry.config("polygonType", "YT");      
@@ -1221,7 +1270,7 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        // snap.enable();
+        //snap.enable();
         //开始画线
         drawLine();
         map.on("dblclick", drawToolOn);
@@ -1257,7 +1306,13 @@ const sketchReduce = (
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
-          let jzxnum = map.getLayer("JZX")._geoList.length
+          let jzx_Id=map.getLayer("JZX")._geoList.length;
+          let jzxnum;
+          if(jzx_Id>0){
+            jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
+          }else{
+            jzxnum=0;
+          }
           jzxnum++;
           let coorArr = param.geometry._coordinates;
           //为折线的每条线段添加长度标注
@@ -1338,7 +1393,13 @@ const sketchReduce = (
       drawCurveEnd =
         drawCurveEnd ||
         function(param) {
-          let jzxnum = map.getLayer("JZX")._geoList.length
+          let jzx_Id=map.getLayer("JZX")._geoList.length;
+          let jzxnum;
+          if(jzx_Id>0){
+            jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
+          }else{
+            jzxnum=0;
+          }
           jzxnum++;
           param.geometry.config("isClicked", false);
           param.geometry.config("poiArr", linePoiArr);
@@ -1402,6 +1463,8 @@ const sketchReduce = (
       return { ...state, ...CurveState };
     //构面
     case "drawPolygonClick":
+    
+      console.log(map.getLayer("polygon"))
       if (!state.drawPolygonIsChecked) {
         map.off("click", drawPoint);
         distanceTool.disable();
