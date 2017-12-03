@@ -230,7 +230,12 @@ addLabel =
   function(e) {
     recoverObj();
     let label_Id=map.getLayer("label")._geoList.length;
-    let labelId=map.getLayer("label")._geoList[label_Id-1]._id;
+    let labelId;
+    if(label_Id>0){
+      labelId=map.getLayer("label")._geoList[label_Id-1]._id;
+    }else{
+      labelId=0;
+    }
     labelId++;
     let label = new maptalks.Label("label", e.coordinate, {
       id:labelId,      
@@ -757,7 +762,12 @@ const sketchReduce = (
         rotation += 180;
       }
       let label_Id=map.getLayer("label")._geoList.length;
-      let labelId=map.getLayer("label")._geoList[label_Id-1]._id;
+      let labelId;
+      if( label_Id>0){
+        labelId=map.getLayer("label")._geoList[label_Id-1]._id;
+      }else{
+        labelId=0;
+      }
       console.log(labelId)
       labelId++;
       let objLabel = new maptalks.Label(content, coord, {
@@ -801,7 +811,12 @@ const sketchReduce = (
     function(poi) {
       recoverObj();
       let jzd_Id=map.getLayer("point")._geoList.length;
-      let jzdnum=map.getLayer("point")._geoList[jzd_Id-1]._id;
+      let jzdnum;
+      if(jzd_Id>0){
+        jzdnum=map.getLayer("point")._geoList[jzd_Id-1]._id;
+      }else{
+        jzdnum=0;
+      }
       jzdnum++;
       let content = jzdnum;
       //为界址点添加点号注记
@@ -850,7 +865,12 @@ const sketchReduce = (
     function(param) {
       let coorArr = param.geometry._coordinates;
       let sz_Id=map.getLayer("SZ")._geoList.length;
-      let sznum=map.getLayer("SZ")._geoList[sz_Id-1]._id;
+      let sznum;
+      if(sz_Id>0){
+        sznum=map.getLayer("SZ")._geoList[sz_Id-1]._id;
+      }else{
+        sznum=0;
+      }
       sznum++;
       //为折线的每条线段添加长度标注
       for (let i = 0; i < coorArr.length - 1; i++) {
@@ -886,7 +906,12 @@ const sketchReduce = (
     function(param) {
       let coorArr = param.geometry._coordinates;
       let zd_Id=map.getLayer("polygon")._geoList.length;
-      let zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
+      let zdnum;
+      if(zd_Id>0){
+        zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
+      }else{
+        zdnum=0;
+      }
       zdnum++;
       console.log(zdnum);
       let startPoi = [],
@@ -932,9 +957,13 @@ const sketchReduce = (
   drawBalconyEnd =
     drawBalconyEnd ||
     function(param) {
-      let zdnum;
       let zd_Id=map.getLayer("polygon")._geoList.length;
-      zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
+      let zdnum;
+      if(zd_Id>0){
+        zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
+      }else{
+        zdnum=0;
+      }
       zdnum++;
       param.geometry.config("isClicked", false);
       param.geometry.config("polygonType", "YT");      
@@ -1278,7 +1307,12 @@ const sketchReduce = (
         drawJZXEnd ||
         function(param) {
           let jzx_Id=map.getLayer("JZX")._geoList.length;
-          let jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
+          let jzxnum;
+          if(jzx_Id>0){
+            jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
+          }else{
+            jzxnum=0;
+          }
           jzxnum++;
           let coorArr = param.geometry._coordinates;
           //为折线的每条线段添加长度标注
@@ -1360,7 +1394,12 @@ const sketchReduce = (
         drawCurveEnd ||
         function(param) {
           let jzx_Id=map.getLayer("JZX")._geoList.length;
-          let jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
+          let jzxnum;
+          if(jzx_Id>0){
+            jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
+          }else{
+            jzxnum=0;
+          }
           jzxnum++;
           param.geometry.config("isClicked", false);
           param.geometry.config("poiArr", linePoiArr);
