@@ -229,7 +229,9 @@ addLabel =
   addLabel ||
   function(e) {
     recoverObj();
-    let labelId=map.getLayer("label")._geoList.length+1;
+    let label_Id=map.getLayer("label")._geoList.length;
+    let labelId=map.getLayer("label")._geoList[label_Id-1]._id;
+    labelId++;
     let label = new maptalks.Label("label", e.coordinate, {
       id:labelId,      
       draggable: true,
@@ -374,10 +376,10 @@ class Map extends Component {
       generate: geometry => geometry
     });
 
-    snap.addTo(map);
+    snap.addTo(map).disable();
     snap.setLayer(map.getLayer("point"));
+    snap.setGeometries(map.getLayer("point")._geoList);
     snap.bindDrawTool(drawTool);
-    snap.disable();
 
     //将测距工具添加至地图
     distanceTool = new maptalks.DistanceTool({
@@ -754,8 +756,10 @@ const sketchReduce = (
       ) {
         rotation += 180;
       }
-      let labelId=map.getLayer("label")._geoList.length+1;
-
+      let label_Id=map.getLayer("label")._geoList.length;
+      let labelId=map.getLayer("label")._geoList[label_Id-1]._id;
+      console.log(labelId)
+      labelId++;
       let objLabel = new maptalks.Label(content, coord, {
         id:labelId,
         draggable: true,
@@ -796,7 +800,8 @@ const sketchReduce = (
     plot ||
     function(poi) {
       recoverObj();
-      let jzdnum = map.getLayer("point")._geoList.length;
+      let jzd_Id=map.getLayer("point")._geoList.length;
+      let jzdnum=map.getLayer("point")._geoList[jzd_Id-1]._id;
       jzdnum++;
       let content = jzdnum;
       //为界址点添加点号注记
@@ -844,7 +849,8 @@ const sketchReduce = (
     drawLineEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
-      let sznum = map.getLayer("SZ")._geoList.length
+      let sz_Id=map.getLayer("SZ")._geoList.length;
+      let sznum=map.getLayer("SZ")._geoList[sz_Id-1]._id;
       sznum++;
       //为折线的每条线段添加长度标注
       for (let i = 0; i < coorArr.length - 1; i++) {
@@ -879,7 +885,8 @@ const sketchReduce = (
     drawPolygonEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
-      let zdnum = map.getLayer("polygon")._geoList.length
+      let zd_Id=map.getLayer("polygon")._geoList.length;
+      let zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
       zdnum++;
       console.log(zdnum);
       let startPoi = [],
@@ -925,7 +932,9 @@ const sketchReduce = (
   drawBalconyEnd =
     drawBalconyEnd ||
     function(param) {
-      let zdnum = map.getLayer("ZD")._geoList.length
+      let zdnum;
+      let zd_Id=map.getLayer("polygon")._geoList.length;
+      zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
       zdnum++;
       param.geometry.config("isClicked", false);
       param.geometry.config("polygonType", "YT");      
@@ -1051,7 +1060,7 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      snap.disable();
+      //snap.disable();
       let plotData = [];
       plotData = JSON.parse(action.payload.data);
       console.log(plotData);
@@ -1232,13 +1241,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        snap.enable();
+        //snap.enable();
         //开始画线
         drawLine();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
+        //snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState2 = {
@@ -1268,7 +1277,8 @@ const sketchReduce = (
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
-          let jzxnum = map.getLayer("JZX")._geoList.length
+          let jzx_Id=map.getLayer("JZX")._geoList.length;
+          let jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
           jzxnum++;
           let coorArr = param.geometry._coordinates;
           //为折线的每条线段添加长度标注
@@ -1314,13 +1324,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        snap.enable();
+        //snap.enable();
         //开始画线
         drawJZX();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
+        //snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const JZXState = {
@@ -1349,7 +1359,8 @@ const sketchReduce = (
       drawCurveEnd =
         drawCurveEnd ||
         function(param) {
-          let jzxnum = map.getLayer("JZX")._geoList.length
+          let jzx_Id=map.getLayer("JZX")._geoList.length;
+          let jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
           jzxnum++;
           param.geometry.config("isClicked", false);
           param.geometry.config("poiArr", linePoiArr);
@@ -1381,13 +1392,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        snap.enable();
+        //snap.enable();
         //开始画线
         drawCurve();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
+        //snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const CurveState = {
@@ -1413,6 +1424,8 @@ const sketchReduce = (
       return { ...state, ...CurveState };
     //构面
     case "drawPolygonClick":
+    
+      console.log(map.getLayer("polygon"))
       if (!state.drawPolygonIsChecked) {
         map.off("click", drawPoint);
         distanceTool.disable();
@@ -1423,13 +1436,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        snap.enable();
+        //snap.enable();
         //开始构面
         drawPolygon();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
+        //snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState3 = {
@@ -1464,13 +1477,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        snap.enable();
+        //snap.enable();
         //开始构面
         drawBalcony();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
+        //snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState4 = {
@@ -1498,7 +1511,7 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      snap.disable();
+      //snap.disable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("dblclick", drawToolOn);
@@ -1626,7 +1639,7 @@ const sketchReduce = (
       map.off("click", addLabel);
       map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
-      snap.disable();
+      //snap.disable();
       if (target) {
         const newState6 = {
           deleteIsChecked: !state.deleteIsChecked,
