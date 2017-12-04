@@ -202,7 +202,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       })
       .catch(e =>{        
         console.log("Oops, error", e)
+        
         dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: e,
+            }
+          });
+        
+          dispatch({
           type: 'handleProjectProgress',
         }) 
         dispatch({
