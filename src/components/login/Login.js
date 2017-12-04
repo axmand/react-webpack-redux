@@ -162,7 +162,9 @@ class Login extends Component {
  * 限定组件的一些属性
  */
 Login.propTypes = {
-  onChange: PropTypes.func.isRequired
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -309,7 +311,7 @@ const loginReduce = (state = {
       for (let key in authenticationInfo) {
         localStorage.setItem(key, authenticationInfo[key])        
       }
-      if (localStorage.getItem('latestLoginTime') != localStorage.getItem('currentLoginTime'))
+      if (localStorage.getItem('latestLoginTime') !== localStorage.getItem('currentLoginTime'))
         localStorage.setItem('latestLoginTime', localStorage.getItem('currentLoginTime'))
       localStorage.setItem('currentLoginTime', time.getNowFormatDate())
       

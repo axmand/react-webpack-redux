@@ -47,8 +47,6 @@ import Devices from "material-ui-icons/Devices";
 import Photo from "material-ui-icons/Photo";
 
 //import page
-import LoginView from "../../views/LoginView";
-
 import appConfig from "../../redux/Config"
 import BluetoothConnect from "./BluetoothConnect";
 

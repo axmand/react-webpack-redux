@@ -113,7 +113,7 @@ class PrintModule extends Component {
         </DialogContent>
       </Dialog>
 
-      <Dialog
+       <Dialog
         open={ PrintFalse }
         onRequestClose={ handlePrintFalse } 
       >
@@ -122,7 +122,7 @@ class PrintModule extends Component {
              打印失败！
           </DialogContentText>
         </DialogContent>
-      </Dialog>
+      </Dialog> 
       
       <Dialog
         open={ PrintProgress }
@@ -193,7 +193,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
 
-      fetch(appConfig.fileServiceRootPath + '/project/print/1')
+      fetch(appConfig.fileServiceRootPath + '/project/printforms')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -207,11 +207,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: 'ProgressShow',
           });
          
-          setTimeout(() => {
-            dispatch({
-                type:'handlePrintTrue2'
-            }
-          )}, 500);
+          // setTimeout(() => {
+          //   dispatch({
+          //       type:'handlePrintTrue2'
+          //   }
+          // )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
