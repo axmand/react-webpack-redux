@@ -181,10 +181,17 @@ clickObj =
         target.updateSymbol({ lineColor: "#000000" });
       }
     }
-    if (target.options.type === "Label") {
-      target.startEditText();
-      map.off("click", addLabel);
+
+    if (target._jsonType === "Label") {
+      target.options.isClicked = !target.options.isClicked;
+      if (target.options.isClicked) {
+        console.log(target.getBoxStyle());
+        
+        target.startEditText();
+        map.on('dblclick',labelEditEnd)
+      }
     }
+
     if (target._jsonType === "CubicBezierCurve") {
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
@@ -230,7 +237,8 @@ addLabel =
     recoverObj();
     let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
     let label = new maptalks.Label("label", e.coordinate, {
-      id:labelId,      
+      id:labelId, 
+      isClicked:false,     
       draggable: true,
       box: false,
       type: "Label",
@@ -250,8 +258,8 @@ addLabel =
 labelEditEnd =
   labelEditEnd ||
   function() {
-    map.on("click", addLabel);
-    console.log("label on");
+    target.endEditText();
+    target.options.isClicked = false;
   };
 
 // //用于删除对象
@@ -511,6 +519,7 @@ const mapReduce = (state = 0, action) => {
         }
       });
       const label = new maptalks.Label("当前定位", center, {
+        isClicked:false,
         box: false,
         type: "Label",
         symbol: {
@@ -538,6 +547,7 @@ const mapReduce = (state = 0, action) => {
     const center = new maptalks.Coordinate([coords[1], coords[0]]);
     map.setCenter(center);
     const circle = new maptalks.Circle(center, 1, {
+      id:'locationcircle',
       symbol: {
         lineColor: "#000000",
         lineWidth: 1.5,
@@ -546,6 +556,7 @@ const mapReduce = (state = 0, action) => {
       }
     });
     const label = new maptalks.Label("当前定位", center, {
+      id:'locationlabel',
       box: false,
       type: "Label",
       symbol: {
@@ -759,6 +770,7 @@ const sketchReduce = (
       let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let objLabel = new maptalks.Label(content, coord, {
         id:labelId,
+        isClicked:false,
         draggable: true,
         box: false,
         type: "Label",
@@ -802,6 +814,7 @@ const sketchReduce = (
       //为界址点添加点号注记
       let label = new maptalks.Label(content, poi, {
         id: jzdnum,
+        isClicked:false,
         draggable: true,
         box: false,
         type: "Label",
@@ -984,6 +997,7 @@ const sketchReduce = (
           //为界址点添加点号注记
           let label = new maptalks.Label(labelContent, e.coordinate, {
             id: num,
+            isClicked:false,
             draggable: true,
             box: false,
             type: "Label",
@@ -1128,6 +1142,7 @@ const sketchReduce = (
         //为界址点添加点号注记
         let label = new maptalks.Label(labelContent, oldLabel._coordinates, {
             id: num,
+            isClicked:false,
             draggable: true,
             box: false,
             type: "Label",
