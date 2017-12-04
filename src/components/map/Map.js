@@ -830,7 +830,6 @@ const sketchReduce = (
           polygonFill: "#FFFFFF"
         }
       });
-      point.config('id_JZD',jzdnum);
       map.getLayer("label").addGeometry(label);
       map.getLayer("point").addGeometry(point);
       map.setCenter(poi);
@@ -979,8 +978,7 @@ const sketchReduce = (
           let num = modifyPointId;          
           let oldPoi = map.getLayer("point").getGeometryById(num);
           let oldLabel = map.getLayer("label").getGeometryById(num);
-          let fetched_id_JZD = map.getLayer("point").getGeometryById(modifyPointId).options.id_JZD;
-          let labelContent=fetched_id_JZD || num;
+          let labelContent= num;
           console.log(labelContent)
           //为界址点添加点号注记
           let label = new maptalks.Label(labelContent, e.coordinate, {
@@ -1005,7 +1003,6 @@ const sketchReduce = (
           });
           let point = new maptalks.Circle(e.coordinate, 0.5, {
             id: num,
-            id_JZD:fetched_id_JZD,
             labels: label._id,
             picture: oldPoi.options.picture,
             isClicked: false,
@@ -1032,7 +1029,6 @@ const sketchReduce = (
         new_tableRow = {
           id: new_jzdpoi[i].feature.id,
           coordinates: new_jzdpoi[i].coordinates,
-          id_JZD:new_jzdpoi[i].options.id_JZD,
         };
         new_tableData.push(new_tableRow);
       }
@@ -1127,13 +1123,14 @@ const sketchReduce = (
     //取界址点号
     case "fetchPoi_NumClick":
         
-        let i = action.payload2.id - 1
-        map.getLayer("point").getGeometryById(action.payload2.id).config("id_JZD",action.payload1.d);
-        
-        let num =action.payload2.id;          
-        let oldLabel = map.getLayer("label").getGeometryById(num);
-        let fetched_id_JZD = map.getLayer("point").getGeometryById(num).options.id_JZD;
-        let labelContent=fetched_id_JZD;
+        let i = action.payload2.id - 1;//旧id
+        let old_id=action.payload2.id;
+        let new_id=action.payload1.d;
+
+        map.getLayer("point").getGeometryById(old_id).setId(new_id);
+        let num =new_id;          
+        let oldLabel = map.getLayer("label").getGeometryById(old_id);
+        let labelContent=num;
         console.log(labelContent)
         //为界址点添加点号注记
         let label = new maptalks.Label(labelContent, oldLabel._coordinates, {
@@ -1159,7 +1156,7 @@ const sketchReduce = (
         oldLabel.remove();
         map.getLayer("label").addGeometry(label);
        
-        newState.plotListData[i].id_JZD = action.payload1.d
+        newState.plotListData[i].id = new_id;
       return {...state,...newState}
    
     //画点
@@ -1172,8 +1169,7 @@ const sketchReduce = (
       for (let i = 0; i < jzdpoi.length; i++) {
         tableRow = {
           id: jzdpoi[i].feature.id,
-          coordinates: jzdpoi[i].coordinates,
-          id_JZD: jzdpoi[i].options.id_JZD || jzdpoi[i].feature.id
+          coordinates: jzdpoi[i].coordinates
         };
         tableData.push(tableRow);
       }
