@@ -139,7 +139,7 @@ let drawTool = new maptalks.DrawTool({
 });
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
-  tolerance: 5,
+  tolerance: 20,
   mode: "point"
 });
 let target,
@@ -181,11 +181,17 @@ clickObj =
         target.updateSymbol({ lineColor: "#000000" });
       }
     }
-    if (target.options.type === "Label") {
-      target.startEditText();
-      map.off("click", addLabel);
-      map.on("dblclick", labelEditEnd);
+
+    if (target._jsonType === "Label") {
+      target.options.isClicked = !target.options.isClicked;
+      if (target.options.isClicked) {
+        console.log(target.getBoxStyle());
+        
+        target.startEditText();
+        map.on('dblclick',labelEditEnd)
+      }
     }
+
     if (target._jsonType === "CubicBezierCurve") {
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
@@ -229,9 +235,10 @@ addLabel =
   addLabel ||
   function(e) {
     recoverObj();
-    let labelId=Date.now();
+    let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
     let label = new maptalks.Label("label", e.coordinate, {
-      id:labelId,      
+      id:labelId, 
+      isClicked:false,     
       draggable: true,
       box: false,
       type: "Label",
@@ -251,8 +258,8 @@ addLabel =
 labelEditEnd =
   labelEditEnd ||
   function() {
-    map.on("click", addLabel);
-    console.log("label on");
+    target.endEditText();
+    target.options.isClicked = false;
   };
 
 // //用于删除对象
@@ -365,7 +372,7 @@ class Map extends Component {
     areaTool.addTo(map).disable();
     //将画图工具添加至地图
     drawTool.addTo(map).disable();
-    drawTool.registerMode("CubicBezierCurve", {
+    maptalks.DrawTool.registerMode("CubicBezierCurve", {
       action: "clickDblclick",
       create: path => new maptalks.CubicBezierCurve(path),
       update: (path, geometry) => {
@@ -374,7 +381,10 @@ class Map extends Component {
       generate: geometry => geometry
     });
 
-    snap.addTo(map).disable();
+    // snap.addTo(map).disable();
+    // console.log("Trigger this line ...")
+    // console.log(snap)
+    snap.addTo(map);
     snap.setLayer(map.getLayer("point"));
     snap.setGeometries(map.getLayer("point")._geoList);
     snap.bindDrawTool(drawTool);
@@ -509,6 +519,7 @@ const mapReduce = (state = 0, action) => {
         }
       });
       const label = new maptalks.Label("当前定位", center, {
+        isClicked:false,
         box: false,
         type: "Label",
         symbol: {
@@ -536,6 +547,7 @@ const mapReduce = (state = 0, action) => {
     const center = new maptalks.Coordinate([coords[1], coords[0]]);
     map.setCenter(center);
     const circle = new maptalks.Circle(center, 1, {
+      id:'locationcircle',
       symbol: {
         lineColor: "#000000",
         lineWidth: 1.5,
@@ -544,6 +556,7 @@ const mapReduce = (state = 0, action) => {
       }
     });
     const label = new maptalks.Label("当前定位", center, {
+      id:'locationlabel',
       box: false,
       type: "Label",
       symbol: {
@@ -754,10 +767,10 @@ const sketchReduce = (
       ) {
         rotation += 180;
       }
-      let labelId=Date.now();
-      console.log(labelId)
+      let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let objLabel = new maptalks.Label(content, coord, {
         id:labelId,
+        isClicked:false,
         draggable: true,
         box: false,
         type: "Label",
@@ -796,11 +809,12 @@ const sketchReduce = (
     plot ||
     function(poi) {
       recoverObj();
-      let jzdnum=Date.now();
+      let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let content = jzdnum;
       //为界址点添加点号注记
       let label = new maptalks.Label(content, poi, {
         id: jzdnum,
+        isClicked:false,
         draggable: true,
         box: false,
         type: "Label",
@@ -842,7 +856,7 @@ const sketchReduce = (
     drawLineEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
-      let sznum=Date.now();
+      let sznum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       //为折线的每条线段添加长度标注
       for (let i = 0; i < coorArr.length - 1; i++) {
         //每条线段的起点和终点坐标
@@ -876,7 +890,7 @@ const sketchReduce = (
     drawPolygonEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
-      let zdnum=Date.now();
+      let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       console.log(zdnum);
       let startPoi = [],
         endPoi = [];
@@ -921,7 +935,7 @@ const sketchReduce = (
   drawBalconyEnd =
     drawBalconyEnd ||
     function(param) {
-      let zdnum = Date.now();
+      let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       param.geometry.config("isClicked", false);
       param.geometry.config("polygonType", "YT");      
       param.geometry.setId(zdnum);
@@ -983,6 +997,7 @@ const sketchReduce = (
           //为界址点添加点号注记
           let label = new maptalks.Label(labelContent, e.coordinate, {
             id: num,
+            isClicked:false,
             draggable: true,
             box: false,
             type: "Label",
@@ -1050,7 +1065,6 @@ const sketchReduce = (
       let poi = new maptalks.Coordinate([plotData[1], plotData[0]]);
       plot(poi);
       const plotSuccessState = {
-        pointNum: map.getLayer("point")._geoList.length,
         plotIsChecked: true,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1075,7 +1089,6 @@ const sketchReduce = (
       console.log(error);
 
       const plotFailState = {
-        pointNum: map.getLayer("point")._geoList.length,
         plotIsChecked: true,
         alertPlotFail: true,
         errorMessage: error,
@@ -1112,13 +1125,7 @@ const sketchReduce = (
       }
 
     case "handleChooseItem":
-      const newNum = {
-        pointNum: JSON.parse(projectData.ProjectItem.L.jzdJSONData).geometries
-          .length,
-        lineNum: JSON.parse(projectData.ProjectItem.L.jzxJSONData).geometries
-          .length
-      };
-      return Object.assign({}, state, { ...newNum });
+      return {...state};
    
     //取界址点号
     case "fetchPoi_NumClick":
@@ -1135,6 +1142,7 @@ const sketchReduce = (
         //为界址点添加点号注记
         let label = new maptalks.Label(labelContent, oldLabel._coordinates, {
             id: num,
+            isClicked:false,
             draggable: true,
             box: false,
             type: "Label",
@@ -1260,7 +1268,7 @@ const sketchReduce = (
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
-          let jzxnum = Date.now();
+          let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
           let coorArr = param.geometry._coordinates;
           //为折线的每条线段添加长度标注
           for (let i = 0; i < coorArr.length - 1; i++) {
@@ -1340,7 +1348,7 @@ const sketchReduce = (
       drawCurveEnd =
         drawCurveEnd ||
         function(param) {
-          let jzxnum = Date.now();
+          let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
           param.geometry.config("isClicked", false);
           param.geometry.config("poiArr", linePoiArr);
           param.geometry.setId(jzxnum);

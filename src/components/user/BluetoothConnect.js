@@ -158,7 +158,7 @@ class BluetoothConnect extends React.Component {
                 >
                   <option value="" />
                   {portLists.map(portList => (
-                    <option value={portList} className={classes.option}>
+                    <option key={portList} value={portList} className={classes.option}>
                       {portList}
                     </option>
                   ))}

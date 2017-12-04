@@ -23,7 +23,7 @@ import MainView from "./views/MainView";
 //import store, { history } from 'STORE'
 //3.引入assets文件夹下的 icon，css等资源文件
 import RootReducer from "./redux/RootReducer";
-import history from "./redux/history"
+// import history from "./redux/history"
 //4.引入reducer
 
 // const initialState = Object.assign({},{
