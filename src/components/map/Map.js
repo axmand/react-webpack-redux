@@ -184,7 +184,6 @@ clickObj =
     if (target.options.type === "Label") {
       target.startEditText();
       map.off("click", addLabel);
-      map.on("dblclick", labelEditEnd);
     }
     if (target._jsonType === "CubicBezierCurve") {
       target.options.isClicked = !target.options.isClicked;
@@ -229,14 +228,7 @@ addLabel =
   addLabel ||
   function(e) {
     recoverObj();
-    let label_Id=map.getLayer("label")._geoList.length;
-    let labelId;
-    if(label_Id>0){
-      labelId=map.getLayer("label")._geoList[label_Id-1]._id;
-    }else{
-      labelId=0;
-    }
-    labelId++;
+    let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
     let label = new maptalks.Label("label", e.coordinate, {
       id:labelId,      
       draggable: true,
@@ -761,15 +753,7 @@ const sketchReduce = (
       ) {
         rotation += 180;
       }
-      let label_Id=map.getLayer("label")._geoList.length;
-      let labelId;
-      if( label_Id>0){
-        labelId=map.getLayer("label")._geoList[label_Id-1]._id;
-      }else{
-        labelId=0;
-      }
-      console.log(labelId)
-      labelId++;
+      let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let objLabel = new maptalks.Label(content, coord, {
         id:labelId,
         draggable: true,
@@ -810,14 +794,7 @@ const sketchReduce = (
     plot ||
     function(poi) {
       recoverObj();
-      let jzd_Id=map.getLayer("point")._geoList.length;
-      let jzdnum;
-      if(jzd_Id>0){
-        jzdnum=map.getLayer("point")._geoList[jzd_Id-1]._id;
-      }else{
-        jzdnum=0;
-      }
-      jzdnum++;
+      let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let content = jzdnum;
       //为界址点添加点号注记
       let label = new maptalks.Label(content, poi, {
@@ -864,14 +841,7 @@ const sketchReduce = (
     drawLineEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
-      let sz_Id=map.getLayer("SZ")._geoList.length;
-      let sznum;
-      if(sz_Id>0){
-        sznum=map.getLayer("SZ")._geoList[sz_Id-1]._id;
-      }else{
-        sznum=0;
-      }
-      sznum++;
+      let sznum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       //为折线的每条线段添加长度标注
       for (let i = 0; i < coorArr.length - 1; i++) {
         //每条线段的起点和终点坐标
@@ -905,14 +875,7 @@ const sketchReduce = (
     drawPolygonEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
-      let zd_Id=map.getLayer("polygon")._geoList.length;
-      let zdnum;
-      if(zd_Id>0){
-        zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
-      }else{
-        zdnum=0;
-      }
-      zdnum++;
+      let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       console.log(zdnum);
       let startPoi = [],
         endPoi = [];
@@ -957,14 +920,7 @@ const sketchReduce = (
   drawBalconyEnd =
     drawBalconyEnd ||
     function(param) {
-      let zd_Id=map.getLayer("polygon")._geoList.length;
-      let zdnum;
-      if(zd_Id>0){
-        zdnum=map.getLayer("polygon")._geoList[zd_Id-1]._id;
-      }else{
-        zdnum=0;
-      }
-      zdnum++;
+      let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       param.geometry.config("isClicked", false);
       param.geometry.config("polygonType", "YT");      
       param.geometry.setId(zdnum);
@@ -1096,7 +1052,6 @@ const sketchReduce = (
       let poi = new maptalks.Coordinate([plotData[1], plotData[0]]);
       plot(poi);
       const plotSuccessState = {
-        pointNum: map.getLayer("point")._geoList.length,
         plotIsChecked: true,
         drawPointIsChecked: false,
         drawLineIsChecked: false,
@@ -1121,7 +1076,6 @@ const sketchReduce = (
       console.log(error);
 
       const plotFailState = {
-        pointNum: map.getLayer("point")._geoList.length,
         plotIsChecked: true,
         alertPlotFail: true,
         errorMessage: error,
@@ -1158,13 +1112,7 @@ const sketchReduce = (
       }
 
     case "handleChooseItem":
-      const newNum = {
-        pointNum: JSON.parse(projectData.ProjectItem.L.jzdJSONData).geometries
-          .length,
-        lineNum: JSON.parse(projectData.ProjectItem.L.jzxJSONData).geometries
-          .length
-      };
-      return Object.assign({}, state, { ...newNum });
+      return {...state};
    
     //取界址点号
     case "fetchPoi_NumClick":
@@ -1306,14 +1254,7 @@ const sketchReduce = (
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
-          let jzx_Id=map.getLayer("JZX")._geoList.length;
-          let jzxnum;
-          if(jzx_Id>0){
-            jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
-          }else{
-            jzxnum=0;
-          }
-          jzxnum++;
+          let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
           let coorArr = param.geometry._coordinates;
           //为折线的每条线段添加长度标注
           for (let i = 0; i < coorArr.length - 1; i++) {
@@ -1393,14 +1334,7 @@ const sketchReduce = (
       drawCurveEnd =
         drawCurveEnd ||
         function(param) {
-          let jzx_Id=map.getLayer("JZX")._geoList.length;
-          let jzxnum;
-          if(jzx_Id>0){
-            jzxnum=map.getLayer("JZX")._geoList[jzx_Id-1]._id;
-          }else{
-            jzxnum=0;
-          }
-          jzxnum++;
+          let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
           param.geometry.config("isClicked", false);
           param.geometry.config("poiArr", linePoiArr);
           param.geometry.setId(jzxnum);
