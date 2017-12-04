@@ -25,7 +25,8 @@ class LoginView extends Component {
 }
 
 LoginView.propTypes = {
-  classes: PropTypes.object.isRequired,
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => {

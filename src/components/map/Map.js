@@ -139,7 +139,7 @@ let drawTool = new maptalks.DrawTool({
 });
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
-  tolerance: 5,
+  tolerance: 20,
   mode: "point"
 });
 let target,
@@ -365,7 +365,7 @@ class Map extends Component {
     areaTool.addTo(map).disable();
     //将画图工具添加至地图
     drawTool.addTo(map).disable();
-    drawTool.registerMode("CubicBezierCurve", {
+    maptalks.DrawTool.registerMode("CubicBezierCurve", {
       action: "clickDblclick",
       create: path => new maptalks.CubicBezierCurve(path),
       update: (path, geometry) => {
@@ -374,7 +374,10 @@ class Map extends Component {
       generate: geometry => geometry
     });
 
-    snap.addTo(map).disable();
+    // snap.addTo(map).disable();
+    // console.log("Trigger this line ...")
+    // console.log(snap)
+    snap.addTo(map);
     snap.setLayer(map.getLayer("point"));
     snap.setGeometries(map.getLayer("point")._geoList);
     snap.bindDrawTool(drawTool);
