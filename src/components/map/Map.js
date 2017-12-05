@@ -381,69 +381,11 @@ class Map extends Component {
       generate: geometry => geometry
     });
 
-    // snap.addTo(map).disable();
-    // console.log("Trigger this line ...")
-    // console.log(snap)
+
     snap.addTo(map);
     snap.setLayer(map.getLayer("point"));
     snap.setGeometries(map.getLayer("point")._geoList);
     snap.bindDrawTool(drawTool);
-
-    //将测距工具添加至地图
-    distanceTool = new maptalks.DistanceTool({
-      symbol: {
-        lineColor: "#34495e",
-        lineWidth: 2
-      },
-      vertexSymbol: {
-        markerType: "ellipse",
-        markerFill: "#1bbc9b",
-        markerLineColor: "#000",
-        markerLineWidth: 3,
-        markerWidth: 10,
-        markerHeight: 10
-      },
-
-      labelOptions: {
-        textSymbol: {
-          textFaceName: "monospace",
-          textFill: "#fff",
-          textLineSpacing: 1,
-          textHorizontalAlignment: "right",
-          textDx: 15,
-          markerLineColor: "#b4b3b3",
-          markerFill: "#000"
-        },
-        boxStyle: {
-          padding: [6, 2],
-          symbol: {
-            markerType: "square",
-            markerFill: "#000",
-            markerFillOpacity: 0.9,
-            markerLineColor: "#b4b3b3"
-          }
-        }
-      },
-      clearButtonSymbol: [
-        {
-          markerType: "square",
-          markerFill: "#000",
-          markerLineColor: "#b4b3b3",
-          markerLineWidth: 2,
-          markerWidth: 15,
-          markerHeight: 15,
-          markerDx: 20
-        },
-        {
-          markerType: "x",
-          markerWidth: 10,
-          markerHeight: 10,
-          markerLineColor: "#fff",
-          markerDx: 20
-        }
-      ],
-      language: "en-US"
-    }).addTo(map);
   }
 
   render() {
@@ -1058,7 +1000,7 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      //snap.disable();
+      snap.disable();
       let plotData = [];
       plotData = JSON.parse(action.payload.data);
       console.log(plotData);
@@ -1185,7 +1127,7 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      //snap.disable();
+      snap.disable();
       map.off("dblclick", drawToolOn);
       if (!state.drawPointIsChecked) {
         drawTool.off("drawend", drawPolygonEnd);
@@ -1232,13 +1174,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始画线
         drawLine();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState2 = {
@@ -1313,13 +1255,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始画线
         drawJZX();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const JZXState = {
@@ -1379,13 +1321,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始画线
         drawCurve();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const CurveState = {
@@ -1423,13 +1365,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始构面
         drawPolygon();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState3 = {
@@ -1464,13 +1406,13 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
         map.off("dblclick", labelEditEnd);
-        //snap.enable();
+        snap.enable();
         //开始构面
         drawBalcony();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        //snap.disable();
+        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState4 = {
@@ -1670,6 +1612,7 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
+      snap.enable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
