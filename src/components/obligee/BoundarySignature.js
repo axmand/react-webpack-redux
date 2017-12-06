@@ -37,8 +37,10 @@ console.log(jzx);
     }
   }
 
-
- 
+  projectData.ProjectItem.F3.StartPointCodeList=startPoints;
+  projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
+  projectData.ProjectItem.F3.EndPointCodeList=endPoints;
+  
   return {
     startPoint:startPoints,
     innerPoint:innerPoints,
