@@ -1,19 +1,22 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
-import { Provider, connect } from 'react-redux'
+// import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
 import Dialog, {
   DialogActions,
   DialogContent,
-  DialogContentText,
+  // DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
-import Input from 'material-ui/Input';
-import List, { ListItem, ListItemText } from 'material-ui/List'
-import Tabs, { Tab } from 'material-ui/Tabs';
+// import Input from 'material-ui/Input';
+import { ListItem } from 'material-ui/List'
+// import Tabs, { Tab } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { 
+  // FormControl, 
+  FormHelperText 
+} from 'material-ui/Form';
 
 // Map Redux state to component props
 function mapStateToProps(state,ownProps) {
@@ -70,7 +73,15 @@ class InputCellUI extends React.PureComponent {
   }
 
   render() {
-    const { onCompleteInput, dialogShow, key2, name,title,tips,tableIndex } = this.props;
+    const { 
+      // onCompleteInput, 
+      // dialogShow, 
+      key2, 
+      name,
+      title,
+      tips,
+      // tableIndex 
+    } = this.props;
     let value ="";
     if(name ===key2){
       value =this.props[key2]||"";

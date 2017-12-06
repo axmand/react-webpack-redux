@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import InputCell from './InputCell'
+// import InputCell from './InputCell'
 import PropTypes from 'prop-types'
 import ListInputCell from './ListInputCell'
 
 
-import { Provider, connect } from 'react-redux'
+import { connect } from 'react-redux'
 
 // Map Redux state to component props
 const mapStateToProps=(state,ownProps)=> {
@@ -47,7 +47,14 @@ class CommonAreaMessage extends Component {
 
    
   render() {
-    const { FixedCount,FixedCode,LandOwnUseArea,LandUniqueArea,CommonArea,tableIndex } = this.props;
+    const { 
+      // FixedCount,
+      FixedCode,
+      // LandOwnUseArea,
+      // LandUniqueArea,
+      // CommonArea,
+      tableIndex 
+    } = this.props;
 
     var tableContent=[];
 

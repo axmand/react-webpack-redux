@@ -1,24 +1,24 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
-import { Provider, connect } from 'react-redux'
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
+import React from 'react'
+// import PropTypes from 'prop-types'
+// import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
+// import Dialog, {
+//     DialogActions,
+//     DialogContent,
+//     DialogContentText,
+//     DialogTitle,
+// } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
-import Input from 'material-ui/Input';
-import List, { ListItem, ListItemText } from 'material-ui/List'
-import Tabs, { Tab } from 'material-ui/Tabs';
-import TextField from 'material-ui/TextField';
+// import Input from 'material-ui/Input';
+// import List, { ListItem, ListItemText } from 'material-ui/List'
+// import Tabs, { Tab } from 'material-ui/Tabs';
+// import TextField from 'material-ui/TextField';
 
 
 // Map Redux state to component props
 const mapStateToProps = (state, ownProps) => {
 
-    var ttt = state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row];
+    // var ttt = state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row];
     return {
 
         value: state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row]
@@ -61,7 +61,13 @@ class PointNameCellUI extends React.PureComponent {
 
 
     render() {
-        const { name, type, row, tableIndex,id } = this.props;
+        // const { 
+        //     name, 
+        //     type, 
+        //     row, 
+        //     tableIndex,
+        //     id
+        // } = this.props;
 
 
 

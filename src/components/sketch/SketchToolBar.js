@@ -16,7 +16,7 @@ import Typography from 'material-ui/Typography';
 import Button from "material-ui/Button";
 import List from "material-ui/List"
 import Typograghy from "material-ui/Typography";
-import IconButton from 'material-ui/IconButton';
+// import IconButton from 'material-ui/IconButton';
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 
 //import icon
@@ -38,10 +38,10 @@ import Redo from "material-ui-icons/Redo"; //重做
 import Save from "material-ui-icons/Save"; //保存
 import CreateIcon from "material-ui-icons/Create"; //签章
 import DragHandle from "material-ui-icons/DragHandle"; //拖动
-import CloseIcon from "material-ui-icons/Close";
-import Snackbar from "material-ui/Snackbar";
+// import CloseIcon from "material-ui-icons/Close";
+// import Snackbar from "material-ui/Snackbar";
 import SecondDialog from '../obligee/SecondDialog'
-import projectData from "./../../redux/RootData";
+// import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
 
 import coordinate from "../../utils/coordinate"
@@ -151,7 +151,7 @@ class SkechToolBar extends Component {
       onSignatureClick,
       onDelAlerClose,
       onSignatureAlerClose,
-      onJzdTableClick,
+      // onJzdTableClick,
       onjzdPlotClick,
     } = this.props;
     const {
@@ -737,7 +737,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
     onFetchPoi_NumClick:()=>{
 
-      ownProps.plotListData.map(n=>{
+      ownProps.plotListData.forEach(n=>{
         let Poi_Data = JSON.stringify({
             	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
               PointY: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesY,
@@ -805,7 +805,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       .catch(err => {
         console.log(err)
       })  
-      })     
+      });
+      dispatch({
+        type: "STATUS_BAR_NOTIFICATION",
+        payload: {
+          notification: "数据库取点中。。。。。。",
+        }
+      });
    },
    
    onjzdXCZJClick:poi_id=>{

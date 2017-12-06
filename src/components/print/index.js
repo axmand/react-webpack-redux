@@ -54,7 +54,13 @@ class PrintModule extends Component {
   render() {
     const { 
       handlePrintShow,handlePrintClose,
-      handlePrint1,handlePrint2,handlePrint3,handlePrint4,handlePrint5,handlePrint6,handlePrint7,
+      handlePrint1,
+      // handlePrint2,
+      // handlePrint3,
+      handlePrint4,
+      // handlePrint5,
+      // handlePrint6,
+      // handlePrint7,
       handlePrintTrue,handlePrintFalse,
       PrintTrue,
       PrintFalse,

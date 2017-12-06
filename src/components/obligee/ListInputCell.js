@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
-import { Provider, connect } from 'react-redux'
+import React from 'react'
+// import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import Dialog, {
   DialogActions,
   DialogContent,
-  DialogContentText,
+  // DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
-import Input from 'material-ui/Input';
-import List, { ListItem, ListItemText } from 'material-ui/List'
-import Tabs, { Tab } from 'material-ui/Tabs';
+import { ListItem } from 'material-ui/List'
+// import Input from 'material-ui/Input';
+// import List, { ListItem, ListItemText } from 'material-ui/List'
+// import Tabs, { Tab } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
 
 
@@ -65,7 +65,17 @@ class ListInputCellUI extends React.PureComponent {
       
     
       render() {
-        const { row,onclick,onCompleteInput,title,tips,name,key2,value,tableIndex } = this.props;
+        const { 
+          // row,
+          // onclick,
+          // onCompleteInput,
+          title,
+          tips,
+          // name,
+          // key2,
+          value,
+          // tableIndex 
+        } = this.props;
        // let value ="";
         // if(name ===key2){
         //   value =this.props[key2]||"";

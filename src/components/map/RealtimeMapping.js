@@ -6,16 +6,6 @@ import { withStyles } from 'material-ui/styles'
 import {ListItem} from 'material-ui/List';
 import Switch from 'material-ui/Switch';
 import Typograghy from 'material-ui/Typography';
-import List from 'material-ui/List';
-import IconButton from 'material-ui/IconButton';
-import Toolbar from 'material-ui/Toolbar';
-import Button from "material-ui/Button";
-import { MenuItem } from 'material-ui/Menu';
-import TextField from 'material-ui/TextField';
-import Typography from 'material-ui/Typography';
-import Divider from 'material-ui/Divider';
-import CloseIcon from "material-ui-icons/Close";
-import Adjust from "material-ui-icons/Adjust";
 
 
 const styles =theme=>({
@@ -47,9 +37,10 @@ class RealtimeMapping extends Component {
     const { 
       classes, 
       isRealtimeOn, 
-      plotListData,
+      // plotListData,
       handleRealtimeMapping,
-      onjzdPlotClick}=this.props;
+      // onjzdPlotClick
+    } = this.props;
 
     return (
       <div>
