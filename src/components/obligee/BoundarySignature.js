@@ -16,7 +16,7 @@ console.log(jzx);
   var jzxID=[];
   for(var i=0;i<jzx.geometries.length;i++)
   {
-    jzxID.push(jzx.geometries[i].options.id) ;
+    jzxID.push(jzx.geometries[i].feature.id) ;
     var jzxPoints=jzx.geometries[i].options.poiArr;
     startPoints.push(jzxPoints[0]);
     endPoints.push(jzxPoints[jzxPoints.length-1]);
@@ -37,8 +37,10 @@ console.log(jzx);
     }
   }
 
-
- 
+  projectData.ProjectItem.F3.StartPointCodeList=startPoints;
+  projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
+  projectData.ProjectItem.F3.EndPointCodeList=endPoints;
+  
   return {
     startPoint:startPoints,
     innerPoint:innerPoints,
