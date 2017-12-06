@@ -290,8 +290,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 //加入reducer
 const loginReduce = (state = {
-  username: '',
-  password: '',
+  username: '侯祥意',
+  password: '123456',
   loginNotificaion: '',
 }, action) => {
 

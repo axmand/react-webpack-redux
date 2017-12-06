@@ -6,7 +6,6 @@ import { withStyles } from "material-ui/styles";
 import Dialog, {
   DialogTitle,
   DialogContent,
-  DialogContentText
 } from "material-ui/Dialog";
 import Input, { InputLabel } from "material-ui/Input";
 import List, { ListItem } from "material-ui/List";
@@ -18,10 +17,6 @@ import Select from "material-ui/Select";
 import Button from "material-ui/Button";
 
 import RootReducer from "./../../redux/RootReducer";
-
-import Snackbar from "material-ui/Snackbar";
-import IconButton from "material-ui/IconButton";
-import CloseIcon from "material-ui-icons/Close";
 
 import appConfig from "../../redux/Config"
 
@@ -122,13 +117,13 @@ class BluetoothConnect extends React.Component {
       classes,
       portLists,
       bluetoothSwitch,
-      handleRequestCloseBluetooth,
+      // handleRequestCloseBluetooth,
       handleCOMPortConnect,
       handleCOMPortDisconnect,
-      portConnectStateShow,
+      // portConnectStateShow,
       handleRequestCloseBluetoothSwitch,
       // bluetoothConnectAlertShow,
-      handleClickBluetoothConnectAlert,
+      // handleClickBluetoothConnectAlert,
       // handleRequestCloseBluetoothConnectAlert,
       bluetoothConnectNotification,
     } = this.props;
@@ -269,6 +264,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 notification: "RTK同平板蓝牙连接信号受阻，无法获取COM端口！！！",
               }
             });
+            // 在状态栏显示调试信息
+            dispatch({
+              type: "STATUS_BAR_NOTIFICATION",
+              payload: {
+                notification: json,
+              }
+            });
+            dispatch({
+              type: "CLOSE_WAITING_MODULE",
+            });
           };
 
           if (json.status === 200)
@@ -279,7 +284,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 notification: "RTK蓝牙已连接！",
               }
             });
-
             console.log(appConfig.fileServiceRootPath + appConfig.CORSConnectionInterface)
             fetch(appConfig.fileServiceRootPath + appConfig.CORSConnectionInterface, {
               method: "GET"
@@ -341,16 +345,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               });
             });
           };
-          // 在状态栏显示调试信息
-          dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
-            payload: {
-              notification: json,
-            }
-          });
-          // dispatch({
-          //   type: "CLOSE_WAITING_MODULE",
-          // });
         })
         .catch(err => {
           console.log(err);
@@ -501,7 +495,7 @@ const BluetoothReducer = (
 
     // case "COM_BLUETOOTH_CONNECT_ALERT_SWITCH":
     //   newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
-      return { ...state, ...newState };
+    //   return { ...state, ...newState };
 
     default:
       return { ...state, ...newState };

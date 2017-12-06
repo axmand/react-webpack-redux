@@ -523,6 +523,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         });
 
         console.log("Fetching latitude and longtitude from the satellite ...");
+        console.log(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea");
         fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea")
           .then(response => {
           if (response.ok) {
