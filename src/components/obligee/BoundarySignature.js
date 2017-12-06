@@ -16,7 +16,7 @@ console.log(jzx);
   var jzxID=[];
   for(var i=0;i<jzx.geometries.length;i++)
   {
-    jzxID.push(jzx.geometries[i].options.id) ;
+    jzxID.push(jzx.geometries[i].feature.id) ;
     var jzxPoints=jzx.geometries[i].options.poiArr;
     startPoints.push(jzxPoints[0]);
     endPoints.push(jzxPoints[jzxPoints.length-1]);
