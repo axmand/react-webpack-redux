@@ -145,7 +145,7 @@ let snap = new SnapTool({
 let target,
   clickedObj = [],
   linePoiArr = [];
-let clickObj, deleteObj, recoverObj, addLabel, labelEditEnd;
+let clickObj, deleteObj, recoverObj, addLabel;
 //用于获取点线面对象
 clickObj =
   clickObj ||
@@ -185,10 +185,7 @@ clickObj =
     if (target._jsonType === "Label") {
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
-        console.log(target.getBoxStyle());
-        
         target.startEditText();
-        map.on('dblclick',labelEditEnd)
       }
     }
 
@@ -228,6 +225,11 @@ recoverObj =
         clickedObj[i].options.isClicked = false;
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
+      if (clickedObj[i]._jsonType === "Label") {
+        clickedObj[i].options.isClicked = false;
+        clickedObj[i].endEditText();
+        clickedObj[i].updateSymbol({ lineColor: "#000000" });
+      }
     }
   };
 //添加自定义标注
@@ -254,12 +256,6 @@ addLabel =
     });
     map.getLayer("label").addGeometry(label);
     label.on("click", clickObj);
-  };
-labelEditEnd =
-  labelEditEnd ||
-  function() {
-    target.endEditText();
-    target.options.isClicked = false;
   };
 
 // //用于删除对象
@@ -321,52 +317,76 @@ class Map extends Component {
     });
     map.setZoom(18);
     //将项目草图数据导入至地图
-    let jzd = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.jzdJSONData)
-    ) ||new maptalks.VectorLayer('point');
-    let sz = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.szJSONData)
-    ) ||new maptalks.VectorLayer('SZ');
-    let jzx = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.jzxJSONData)
-    ) ||new maptalks.VectorLayer('JZX');
-    let zd = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.zdJSONData)
-    )||new maptalks.VectorLayer('polygon');
-    let zj = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.zjJSONData)
-    )||new maptalks.VectorLayer('label');
-    //为地图对象添加点击绑定事件
-    if(jzd._geoList){
-      for (let i = 0; i < jzd._geoList.length; i++) {
-        jzd._geoList[i].on("click", clickObj);
+    let jzd,sz,jzx,zd,zj;
+    //判断地图数据是否为空，若为空则新建地图图层
+    console.log(projectData.ProjectItem.L)
+    if(projectData.ProjectItem.L.jzdJSONData){
+      jzd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
+      //为地图对象添加点击绑定事件
+      if(jzd._geoList){
+        for (let i = 0; i < jzd._geoList.length; i++) {
+          jzd._geoList[i].on("click", clickObj);
+        }
       }
-    }
-    if(sz._geoList){
-      for (let i = 0; i < sz._geoList.length; i++) {
-        sz._geoList[i].on("click", clickObj);
+    }else{
+      jzd = new maptalks.VectorLayer('point');
+    }    
+    console.log(jzd)
+    if(projectData.ProjectItem.L.szJSONData){
+       sz = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.szJSONData));
+      //为地图对象添加点击绑定事件
+      if(sz._geoList){
+        for (let i = 0; i < sz._geoList.length; i++) {
+          sz._geoList[i].on("click", clickObj);
+        }
       }
+    }else{
+       sz = new maptalks.VectorLayer('SZ');
     }
-    if(jzx._geoList){
-      for (let i = 0; i < jzx._geoList.length; i++) {
-        jzx._geoList[i].on("click", clickObj);
+    console.log(sz)
+    if(projectData.ProjectItem.L.jzxJSONData){
+       jzx = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData));
+      //为地图对象添加点击绑定事件
+      if(jzx._geoList){
+        for (let i = 0; i < jzx._geoList.length; i++) {
+          jzx._geoList[i].on("click", clickObj);
+        }
       }
+    }else{
+       jzx = new maptalks.VectorLayer('JZX');
     }
-    if( zd._geoList){
-      for (let i = 0; i < zd._geoList.length; i++) {
-        zd._geoList[i].on("click", clickObj);
-      }
+    console.log(jzx)
+    if(projectData.ProjectItem.L.zdJSONData){
+       zd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zdJSONData));
+        //为地图对象添加点击绑定事件
+        if( zd._geoList){
+          for (let i = 0; i < zd._geoList.length; i++) {
+            zd._geoList[i].on("click", clickObj);
+          }
+        }
+      }else{
+       zd = new maptalks.VectorLayer('polygon');
     }
-    if(zj._geoList){
-      for (let i = 0; i < zj._geoList.length; i++) {
-        zj._geoList[i].on("click", clickObj);
-      }
+    console.log(zd)
+    if(projectData.ProjectItem.L.zjJSONData){
+       zj = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zjJSONData));
+        //为地图对象添加点击绑定事件
+        if(zj._geoList){
+          for (let i = 0; i < zj._geoList.length; i++) {
+            zj._geoList[i].on("click", clickObj);
+          }
+        }  
+      }else{
+       zj = new maptalks.VectorLayer('label');
     }
+    console.log(zj)
+
     jzd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
     zd.addTo(map);
     zj.addTo(map);
+    console.log(map)
     //将测距测面积工具添加至地图
     distanceTool.addTo(map).disable();
     areaTool.addTo(map).disable();
@@ -1136,7 +1156,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         drawTool.off("drawend", drawCurveEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
       } else {
         map.off("click", drawPoint);
       }
@@ -1173,7 +1192,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始画线
         drawLine();
@@ -1254,7 +1272,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始画线
         drawJZX();
@@ -1320,7 +1337,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始画线
         drawCurve();
@@ -1364,7 +1380,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始构面
         drawPolygon();
@@ -1405,7 +1420,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始构面
         drawBalcony();
@@ -1454,7 +1468,6 @@ const sketchReduce = (
         map.on("click", addLabel);
       } else {
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
       }
 
       const newState5 = {
@@ -1487,7 +1500,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         map.off("click", addLabel);
         map.off("click", drawPoint);
-        map.off("dblclick", labelEditEnd);
         map.off("dblclick", drawToolOn);
         drawTool.disable();
         areaTool.disable();
@@ -1527,7 +1539,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         map.off("click", addLabel);
         map.off("click", drawPoint);
-        map.off("dblclick", labelEditEnd);
         map.off("dblclick", drawToolOn);
         drawTool.disable();
         distanceTool.disable();
@@ -1566,7 +1577,6 @@ const sketchReduce = (
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
-      map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
       //snap.disable();
       if (target) {
@@ -1616,7 +1626,6 @@ const sketchReduce = (
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
-      map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
       const newState7 = {
         plotIsChecked: false,
@@ -1659,7 +1668,6 @@ const sketchReduce = (
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
-      map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
       const saveData = {
         plotIsChecked: false,
