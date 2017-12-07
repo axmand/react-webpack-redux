@@ -136,7 +136,7 @@ const investigationReduce = (
   state = {
     IDCardNumber: '',
     IDCardName: '',
-    OwnPowerSide: '',
+    OwnPowerSide: '雷秀珍',
     ParcelCode: '',
     TuDiZhengShuHao: '',
     TuDiZuoLuo: '',

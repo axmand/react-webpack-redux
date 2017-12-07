@@ -249,6 +249,7 @@ class UserModule extends Component {
     this.handleClickImage = this.handleClickImage.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
     this.handleRequestCloseImage = this.handleRequestCloseImage.bind(this);
+    this.handleClickExitProgram = this.handleClickExitProgram.bind(this);
   }
 
   handleClick = event => {
@@ -263,6 +264,11 @@ class UserModule extends Component {
   };
   handleRequestCloseImage = () => {
     this.setState({ openImage: false });
+  };
+
+  handleClickExitProgram = () => {
+    window.location.href="about:blank";
+    window.close();
   };
 
   render() {
@@ -460,6 +466,22 @@ class UserModule extends Component {
                     退 出 登 录
                   </Button>
                 </NavLink>
+                <Button
+                  flat
+                  style={{
+                    background: '#455A64',
+                    border: 0,
+                    padding: "15px 25px",
+                    marginLeft: "20px",
+                    borderRadius: "8px",
+                    fontWeight: "bold",
+                    fontSize: "1.5em",
+                    color: '#C1C6C9',
+                  }}
+                  onClick={this.handleClickExitProgram}
+                >
+                    退 出 程 序
+                  </Button>
               </ListItem>
             </List>
           </DialogContent>
