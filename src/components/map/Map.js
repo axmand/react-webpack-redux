@@ -321,52 +321,76 @@ class Map extends Component {
     });
     map.setZoom(18);
     //将项目草图数据导入至地图
-    let jzd = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.jzdJSONData)
-    ) ||new maptalks.VectorLayer('point');
-    let sz = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.szJSONData)
-    ) ||new maptalks.VectorLayer('SZ');
-    let jzx = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.jzxJSONData)
-    ) ||new maptalks.VectorLayer('JZX');
-    let zd = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.zdJSONData)
-    )||new maptalks.VectorLayer('polygon');
-    let zj = maptalks.Layer.fromJSON(
-      JSON.parse(projectData.ProjectItem.L.zjJSONData)
-    )||new maptalks.VectorLayer('label');
-    //为地图对象添加点击绑定事件
-    if(jzd._geoList){
-      for (let i = 0; i < jzd._geoList.length; i++) {
-        jzd._geoList[i].on("click", clickObj);
+    let jzd,sz,jzx,zd,zj;
+    //判断地图数据是否为空，若为空则新建地图图层
+    console.log(projectData.ProjectItem.L)
+    if(projectData.ProjectItem.L.jzdJSONData){
+      jzd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
+      //为地图对象添加点击绑定事件
+      if(jzd._geoList){
+        for (let i = 0; i < jzd._geoList.length; i++) {
+          jzd._geoList[i].on("click", clickObj);
+        }
       }
-    }
-    if(sz._geoList){
-      for (let i = 0; i < sz._geoList.length; i++) {
-        sz._geoList[i].on("click", clickObj);
+    }else{
+      jzd = new maptalks.VectorLayer('point');
+    }    
+    console.log(jzd)
+    if(projectData.ProjectItem.L.szJSONData){
+       sz = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.szJSONData));
+      //为地图对象添加点击绑定事件
+      if(sz._geoList){
+        for (let i = 0; i < sz._geoList.length; i++) {
+          sz._geoList[i].on("click", clickObj);
+        }
       }
+    }else{
+       sz = new maptalks.VectorLayer('SZ');
     }
-    if(jzx._geoList){
-      for (let i = 0; i < jzx._geoList.length; i++) {
-        jzx._geoList[i].on("click", clickObj);
+    console.log(sz)
+    if(projectData.ProjectItem.L.jzxJSONData){
+       jzx = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData));
+      //为地图对象添加点击绑定事件
+      if(jzx._geoList){
+        for (let i = 0; i < jzx._geoList.length; i++) {
+          jzx._geoList[i].on("click", clickObj);
+        }
       }
+    }else{
+       jzx = new maptalks.VectorLayer('JZX');
     }
-    if( zd._geoList){
-      for (let i = 0; i < zd._geoList.length; i++) {
-        zd._geoList[i].on("click", clickObj);
-      }
+    console.log(jzx)
+    if(projectData.ProjectItem.L.zdJSONData){
+       zd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zdJSONData));
+        //为地图对象添加点击绑定事件
+        if( zd._geoList){
+          for (let i = 0; i < zd._geoList.length; i++) {
+            zd._geoList[i].on("click", clickObj);
+          }
+        }
+      }else{
+       zd = new maptalks.VectorLayer('polygon');
     }
-    if(zj._geoList){
-      for (let i = 0; i < zj._geoList.length; i++) {
-        zj._geoList[i].on("click", clickObj);
-      }
+    console.log(zd)
+    if(projectData.ProjectItem.L.zjJSONData){
+       zj = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zjJSONData));
+        //为地图对象添加点击绑定事件
+        if(zj._geoList){
+          for (let i = 0; i < zj._geoList.length; i++) {
+            zj._geoList[i].on("click", clickObj);
+          }
+        }  
+      }else{
+       zj = new maptalks.VectorLayer('label');
     }
+    console.log(zj)
+    
     jzd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
     zd.addTo(map);
     zj.addTo(map);
+    console.log(map)
     //将测距测面积工具添加至地图
     distanceTool.addTo(map).disable();
     areaTool.addTo(map).disable();
