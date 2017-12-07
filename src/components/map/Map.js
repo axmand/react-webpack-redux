@@ -145,7 +145,7 @@ let snap = new SnapTool({
 let target,
   clickedObj = [],
   linePoiArr = [];
-let clickObj, deleteObj, recoverObj, addLabel, labelEditEnd;
+let clickObj, deleteObj, recoverObj, addLabel;
 //用于获取点线面对象
 clickObj =
   clickObj ||
@@ -185,10 +185,7 @@ clickObj =
     if (target._jsonType === "Label") {
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
-        console.log(target.getBoxStyle());
-        
         target.startEditText();
-        map.on('dblclick',labelEditEnd)
       }
     }
 
@@ -228,6 +225,11 @@ recoverObj =
         clickedObj[i].options.isClicked = false;
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
+      if (clickedObj[i]._jsonType === "Label") {
+        clickedObj[i].options.isClicked = false;
+        clickedObj[i].endEditText();
+        clickedObj[i].updateSymbol({ lineColor: "#000000" });
+      }
     }
   };
 //添加自定义标注
@@ -254,12 +256,6 @@ addLabel =
     });
     map.getLayer("label").addGeometry(label);
     label.on("click", clickObj);
-  };
-labelEditEnd =
-  labelEditEnd ||
-  function() {
-    target.endEditText();
-    target.options.isClicked = false;
   };
 
 // //用于删除对象
@@ -384,7 +380,7 @@ class Map extends Component {
        zj = new maptalks.VectorLayer('label');
     }
     console.log(zj)
-    
+
     jzd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
@@ -1160,7 +1156,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawBalconyEnd);
         drawTool.off("drawend", drawCurveEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
       } else {
         map.off("click", drawPoint);
       }
@@ -1197,7 +1192,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始画线
         drawLine();
@@ -1278,7 +1272,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始画线
         drawJZX();
@@ -1344,7 +1337,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始画线
         drawCurve();
@@ -1388,7 +1380,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始构面
         drawPolygon();
@@ -1429,7 +1420,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
         snap.enable();
         //开始构面
         drawBalcony();
@@ -1478,7 +1468,6 @@ const sketchReduce = (
         map.on("click", addLabel);
       } else {
         map.off("click", addLabel);
-        map.off("dblclick", labelEditEnd);
       }
 
       const newState5 = {
@@ -1511,7 +1500,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         map.off("click", addLabel);
         map.off("click", drawPoint);
-        map.off("dblclick", labelEditEnd);
         map.off("dblclick", drawToolOn);
         drawTool.disable();
         areaTool.disable();
@@ -1551,7 +1539,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         map.off("click", addLabel);
         map.off("click", drawPoint);
-        map.off("dblclick", labelEditEnd);
         map.off("dblclick", drawToolOn);
         drawTool.disable();
         distanceTool.disable();
@@ -1590,7 +1577,6 @@ const sketchReduce = (
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
-      map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
       //snap.disable();
       if (target) {
@@ -1640,7 +1626,6 @@ const sketchReduce = (
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
-      map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
       const newState7 = {
         plotIsChecked: false,
@@ -1683,7 +1668,6 @@ const sketchReduce = (
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", addLabel);
-      map.off("dblclick", labelEditEnd);
       map.off("dblclick", drawToolOn);
       const saveData = {
         plotIsChecked: false,
