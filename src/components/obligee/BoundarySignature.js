@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Provider, connect } from 'react-redux'
+import { connect } from 'react-redux'
 import PointNameCell from './PointNameCell'
 import projectData from "./../../redux/RootData";
 // Map Redux state to component props
 function mapStateToProps(state ,ownProps) {
-  const tableIndex =ownProps.tableIndex;
+  // const tableIndex =ownProps.tableIndex;
 
   var jzxData=projectData.ProjectItem.L.jzxJSONData;
   var jzx = eval('(' + jzxData + ')');
@@ -70,7 +70,13 @@ function mapDispatchToProps(dispatch) {
 
 class BoundarySignature extends Component {  
   render() {
-     const { startPoint,innerPoint,endPoint,tableIndex,jzxID } = this.props;
+     const { 
+       startPoint,
+       innerPoint,
+       endPoint,
+      //  tableIndex,
+       jzxID 
+      } = this.props;
 
 
 var tableContent=[];

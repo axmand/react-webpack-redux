@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
-import { Provider, connect } from 'react-redux'
+// import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
 import Dialog, {
   DialogActions,
   DialogContent,
-  DialogContentText,
+  // DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import Input from 'material-ui/Input';
 import List, { ListItem, ListItemText } from 'material-ui/List'
-import { withStyles } from 'material-ui/styles';
+// import { withStyles } from 'material-ui/styles';
 import Menu, { MenuItem } from 'material-ui/Menu';
 
 // Map Redux state to component props
@@ -97,7 +97,14 @@ class SelectCellUI extends React.PureComponent {
   }
 
   render() {
-    const { onCompleteInput, dialogShow, key2, name,title,tips } = this.props;
+    const { 
+      // onCompleteInput, 
+      // dialogShow, 
+      key2, 
+      name,
+      title,
+      tips 
+    } = this.props;
     let value ="未填";
     if(name ===key2){
       value =this.props[key2]||"未填";

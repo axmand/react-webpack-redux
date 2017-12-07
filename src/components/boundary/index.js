@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles';
 import Dialog,{DialogContent,DialogTitle,DialogActions} from 'material-ui/Dialog'
-import Slide from 'material-ui/transitions/Slide';
+// import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -64,15 +64,15 @@ class BoundaryModule extends Component {
   render() {
     const {
       handleCameraClose,
-      handleCameraShow,
+      // handleCameraShow,
       handlePhotoDeleteShow,
       handlePhotoDelete,
       CameraShow,
       DeleteShow,
       PrintProgress,
-      XCZJclick,
-      PhotoItemTest,
-      DeleteId,
+      // XCZJclick,
+      // PhotoItemTest,
+      // DeleteId,
       classes
     } = this.props;
   
@@ -306,7 +306,7 @@ const BoundaryReduce = (
         return todo;
       })
       newState.DeleteId = [];
-      Photoitems.map(todo =>{
+      Photoitems.foreach(todo =>{
         if(todo.checked === true){
           let data=todo.key.replace('.png','')
           newState.DeleteId.push(data)

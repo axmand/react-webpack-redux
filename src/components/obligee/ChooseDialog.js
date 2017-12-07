@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
-import Avatar from 'material-ui/Avatar';
+// import Avatar from 'material-ui/Avatar';
 import RootReducer from './../../redux/RootReducer';
 
-import Dialog, { DialogTitle } from 'material-ui/Dialog';
+import Dialog from 'material-ui/Dialog';
 // import FontAwesome from 'react-fontawesome'
 import LibraryBooksIcon from 'material-ui-icons/LibraryBooks';
-import AddIcon from 'material-ui-icons/Add';
-import Typography from 'material-ui/Typography';
+// import AddIcon from 'material-ui-icons/Add';
+// import Typography from 'material-ui/Typography';
 import blue from 'material-ui/colors/blue';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-import { Provider, connect } from 'react-redux'
+import { connect } from 'react-redux'
 import Paper from 'material-ui/Paper';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-import PeopleIcon from 'material-ui-icons/People'
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
+// import PeopleIcon from 'material-ui-icons/People'
 import projectData from './../../redux/RootData';
 
 const styles = {
@@ -55,7 +55,11 @@ class ChooseTableDialog extends Component {
 
   render() {
     
-    const{open,close,search, choose1,choose2,choose3,choose4,choose5,choose6,projectName,classes,clickIcon}=this.props;
+    const{open,close,search, choose1,choose2,choose3,choose4,choose5,choose6,
+      // projectName,
+      classes,
+      clickIcon
+    }=this.props;
     return (
       <div>
       <ListItem button className={classes.listitem} disableGutters={true} onClick={clickIcon}>

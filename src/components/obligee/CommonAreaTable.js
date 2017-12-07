@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import InputCell from './InputCell';
 import CommonAreaMessage from './CommonAreaMessage'
-import { Provider, connect } from 'react-redux'
+// import { Provider, connect } from 'react-redux'
 
 class CommonAreaTable extends Component {  
   render() {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CheckCell from './CheckCell'
-import { Provider, connect } from 'react-redux'
-import  PointNameCell from './PointNameCell'
+import { connect } from 'react-redux'
+// import  PointNameCell from './PointNameCell'
 import projectData from "./../../redux/RootData";
 
 // Map Redux state to component props
@@ -14,13 +14,13 @@ var LandPointDistance=[];
   var jzx = eval('(' + jzxData + ')');
 
 
-  for(var i=0;i<jzx.geometries.length;i++)
+  for(let i=0;i<jzx.geometries.length;i++)
   {
-for(var j=0;j<jzx.geometries[i].options.poiArr.length;j++)
+for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
 {
   LandPointCodeList.push(jzx.geometries[i].options.poiArr[j]);
 }
-for(var j=0;j<jzx.geometries[i].options.poiArr.length-1;j++)
+for(let j=0;j<jzx.geometries[i].options.poiArr.length-1;j++)
 {
   LandPointDistance.push(jzx.geometries[i].options.labels[j].content);
 }   
@@ -67,7 +67,15 @@ class BoundaryList extends Component {
   render() {
     
    
-    const { LandPointCodeList,LandPointTypeList,LandPointDistance,LandBoundaryType,LandBoundaryLocation,LandBoundaryExplain,tableIndex } = this.props;
+    const { 
+      LandPointCodeList,
+      // LandPointTypeList,
+      LandPointDistance,
+      // LandBoundaryType,
+      // LandBoundaryLocation,
+      LandBoundaryExplain,
+      // tableIndex 
+    } = this.props;
     
     
 

@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 //UI
 
 import Dialog from 'material-ui/Dialog';
-import Slide from 'material-ui/transitions/Slide';
+// import Slide from 'material-ui/transitions/Slide';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -17,7 +17,7 @@ import AddPhoto from './AddPhoto';
 import CameraWrapper from './CameraWrapper.js'
 //Redux
 import {connect} from 'react-redux'
-import projectData from './../../redux/RootData';
+// import projectData from './../../redux/RootData';
 
 const styles = {
   box:{

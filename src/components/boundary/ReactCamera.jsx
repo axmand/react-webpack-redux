@@ -14,8 +14,8 @@ export class Camera extends Component {
     
     //provide mirror effect for preview video
     this.style = {
-      WebkitTransition: 'scaleX(-1)',
-      transform: 'scaleX(-1)',
+      // WebkitTransition: 'scaleX(-1)',
+      // transform: 'scaleX(-1)',
       marginLeft: '200px'
     }
 

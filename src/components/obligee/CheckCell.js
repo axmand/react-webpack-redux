@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
-import { Provider, connect } from 'react-redux'
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from 'material-ui/Dialog';
-import Button from 'material-ui/Button';
-import Input from 'material-ui/Input';
-import List, { ListItem, ListItemText } from 'material-ui/List'
-import Tabs, { Tab } from 'material-ui/Tabs';
-import TextField from 'material-ui/TextField';
+import React from 'react'
+// import PropTypes from 'prop-types'
+// import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
+// import Dialog, {
+//   DialogActions,
+//   DialogContent,
+//   DialogContentText,
+//   DialogTitle,
+// } from 'material-ui/Dialog';
+// import Button from 'material-ui/Button';
+// import Input from 'material-ui/Input';
+// import List, { ListItem, ListItemText } from 'material-ui/List'
+// import Tabs, { Tab } from 'material-ui/Tabs';
+// import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import Checkbox from 'material-ui/Checkbox';
 
@@ -59,7 +59,7 @@ class CheckCellUI extends React.PureComponent {
 };
 
     valueShow = (value) => {
-       return  value==this.props.col;
+       return  value === this.props.col;
        
 
       //  if(value==this.props.col)
@@ -70,7 +70,14 @@ class CheckCellUI extends React.PureComponent {
 
  
   render() {
-    const { row,col,onclick,value,type,tableIndex } = this.props;
+    const { 
+      // row,
+      // col,
+      // onclick,
+      value,
+      // type,
+      // tableIndex 
+    } = this.props;
     const classes = this.props.classes;
 
   

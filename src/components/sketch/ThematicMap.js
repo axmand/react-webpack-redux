@@ -8,8 +8,8 @@ import * as maptalks from "maptalks";
 import { withStyles } from "material-ui/styles";
 import Paper from "material-ui/Paper";
 import Button from "material-ui/Button";
-import TextField from 'material-ui/TextField';
-import Toolbar from 'material-ui/Toolbar';
+// import TextField from 'material-ui/TextField';
+// import Toolbar from 'material-ui/Toolbar';
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import green from "material-ui/colors/green";
@@ -17,7 +17,7 @@ import { CircularProgress } from "material-ui/Progress";
 import CheckIcon from "material-ui-icons/Check";
 import SaveIcon from "material-ui-icons/Save"; //保存
 import Typography from "material-ui/Typography";
-import Divider from "material-ui/Divider";
+// import Divider from "material-ui/Divider";
 import Dialog, {DialogContent} from "material-ui/Dialog";
 
 import appConfig from "../../redux/Config";
@@ -229,7 +229,7 @@ class ThematicMap extends Component {
       TuDiQuanLiRen,
       ZuoLuo,
       alertSave,
-      saveIsChecked,
+      // saveIsChecked,
       onSaveAlertClose,
       onSaveThematicMapClick,
       thematicMapSaveSuccess,

@@ -212,7 +212,6 @@ const styles = theme => ({
   },
   tableCellBody: {
     width: "40%",
-    padding: 0,
     textAlign: "center",
     padding: "0",
     fontSize: "1.5em",

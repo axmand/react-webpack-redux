@@ -21,7 +21,7 @@ class AddPhoto extends Component {
   render(){
     const {  
       handleChoosePhoto,
-      classes
+      // classes
     } = this.props
     
     let item = this.props.entries;

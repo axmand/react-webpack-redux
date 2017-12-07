@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import InputCell from './InputCell'
-import { Provider, connect } from 'react-redux'
+// import { Provider, connect } from 'react-redux'
 
 
 
