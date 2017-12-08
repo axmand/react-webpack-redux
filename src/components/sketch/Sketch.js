@@ -14,7 +14,7 @@ import ThematicMap from "./ThematicMap";
 const styles = {
   root: {
     position: "absolute",
-    zIndex: "999990",
+    zIndex: "5",
     width: "91.6%"
   },
   tabs: {

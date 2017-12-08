@@ -526,56 +526,57 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         console.log(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea");
         fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea")
           .then(response => {
-          if (response.ok) {
-            return response.json()
-          } 
-          else {
-            return Promise.reject({
-              status: response.status,
-              statusText: response.statusText
-            })
-          }
-        })
-        .then(json => {
-          console.log(json);
-          // 处理不同HTTP状态码下的对应操作
-          if (json.status === 500)
-          {
+            console.log(response)
+            if (response.ok) {
+              return response.json()
+            } 
+            else {
+              return Promise.reject({
+                status: response.status,
+                statusText: response.statusText
+              })
+            }
+          })
+          .then(json => {
+            console.log(json);
+            // 处理不同HTTP状态码下的对应操作
+            if (json.status === 500)
+            {
+              dispatch({
+                  type:"plotFail",
+                  payload: "尚未获取到差分后的测量点坐标数据"
+              })           
+            };
+            if (json.status === 200)
+            {
+              dispatch({
+                type: "plotRTK",
+                payload: json
+              });
+            };
+            // 在状态栏显示调试信息
             dispatch({
-                type:"plotFail",
-                payload: "尚未获取到差分后的测量点坐标数据"
-            })           
-          };
-          if (json.status === 200)
-          {
-            dispatch({
-              type: "plotRTK",
-              payload: json
+              type: "STATUS_BAR_NOTIFICATION",
+              payload: {
+                notification: json,
+              }
             });
-          };
-          // 在状态栏显示调试信息
-          dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
-            payload: {
-              notification: json,
-            }
+            dispatch({
+              type: "CLOSE_WAITING_MODULE",
+            });
+          })
+          .catch(err => {
+            console.log(err);
+            dispatch({
+              type: "STATUS_BAR_NOTIFICATION",
+              payload: {
+                notification: err,
+              }
+            });
+            dispatch({
+              type: "CLOSE_WAITING_MODULE",
+            });
           });
-          dispatch({
-            type: "CLOSE_WAITING_MODULE",
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
-            payload: {
-              notification: err,
-            }
-          });
-          dispatch({
-            type: "CLOSE_WAITING_MODULE",
-          });
-        });
       } else {
         console.log("Importing surveying data from the files ...");
         dispatch({
