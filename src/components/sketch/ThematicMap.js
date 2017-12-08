@@ -58,7 +58,7 @@ const styles = theme => ({
   },
   headcell:{
     padding:0,
-    border:'solid 1px #000'
+    border:'solid 1px #000',
   },
   headtext:{
     background:'#fff',
@@ -271,16 +271,17 @@ class ThematicMap extends Component {
                   <Typography className={classes.headtext} >土地权利人</Typography>      
                 </td>
                 <td className={classes.headcell} style={{width:'30%'}}>
-                  <input 
+                  <textarea 
                   className={classes.headtext} 
                   defaultValue={TuDiQuanLiRen}
+                  style={{height:'50%'}}
                   required/>
                 </td>
                 <td className={classes.headcell} style={{width:'15%'}}>
                   <Typography className={classes.headtext} >坐落</Typography>  
                 </td>
                 <td className={classes.headcell} style={{width:'35%'}}>
-                  <input 
+                  <textarea 
                   className={classes.headtext} 
                   defaultValue={ZuoLuo}
                   required/>
