@@ -10,10 +10,10 @@ const mapStateToProps=(state,ownProps)=> {
   const tableIndex =ownProps.tableIndex;
  var LandPointCodeList=[];
 var LandPointDistance=[];
-  var jzxData=projectData.ProjectItem.L.jzxJSONData;
-  var jzx = eval('(' + jzxData + ')');
-
-
+  // var jzxData=projectData.ProjectItem.L.jzxJSONData;
+  // var jzx = eval('(' + jzxData + ')');
+  var jzx =JSON.parse(projectData.ProjectItem.L.jzxJSONData);
+console.log(jzx);
   for(let i=0;i<jzx.geometries.length;i++)
   {
 for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
@@ -116,7 +116,8 @@ class BoundaryList extends Component {
     
        tableContent.push(tableHead1);
        tableContent.push(tableHead2);
-
+if(LandPointCodeList.length>0)
+{
 var firstLine=(
   <tr>
            <td width="67"><p >{LandPointCodeList[0]}</p></td>
@@ -142,6 +143,10 @@ var firstLine=(
     </tr>);
 
     tableContent.push(firstLine);
+}
+
+if(LandPointCodeList.length>1)
+{
        for(var i=1;i<LandPointCodeList.length-1;i++)
        {
 
@@ -155,7 +160,8 @@ var tr1=(
     <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={4} type="LandPointTypeList"/></p></td>
   </tr>);
  var tr2=( <tr>
-    <td width="60" rowSpan="2"><p >{LandPointDistance[i]}</p></td>
+    <td width="60" rowSpan="2"></td>
+    {/* <td width="60" rowSpan="2"><p >{LandPointDistance[i]}</p></td> */}
     <td width="25" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={0} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={1} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={2} type="LandBoundaryType"/></p></td>
@@ -183,6 +189,8 @@ var tr1=(
 <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={LandPointCodeList.length-1} col={4} type="LandPointTypeList"/></p></td>
 </tr>);
 tableContent.push(trlist);
+
+       }
        var table=(  
         
              <table className="mytable">
