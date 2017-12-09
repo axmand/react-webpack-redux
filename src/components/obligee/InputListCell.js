@@ -19,29 +19,47 @@ import {
 } from 'material-ui/Form';
 
 // Map Redux state to component props
-function mapStateToProps(state,ownProps) {
-  const key =ownProps.name;
-  const tableIndex =ownProps.tableIndex;
-  let obj = {};
-  obj['key2'] = key;
-  // obj[key] = state.value[key];
-  var ttt=state.ObContentReducer[tableIndex][key];
-  obj[key] =ttt;// state.ObContentReducer[tableIndex][key];
+// function mapStateToProps(state,ownProps) {
+//   const key =ownProps.name;
+//   const index=ownProps.index;
+//   let obj = {};
+//   obj['key2'] = key;
+//   // obj[key] = state.value[key];
+//   var ttt=state.ObContentReducer[tableIndex][key][index];
+//   obj[key][index] =ttt;
   
-  return obj;
-}
+//   return obj;
+// }
+const mapStateToProps=(state,ownProps)=> {
 
+  
+  
+  var valueData="test";
+
+ // console.log(state.ObContentReducer[ownProps.tableIndex]);
+  // if(state.ObContentReducer[ownProps.tableIndex][ownProps.name]!=undefined)
+  // if(state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.index]!=undefined)
+
+ valueData=state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.index];
+ 
+  return {
+    
+
+      value:valueData
+  }
+  }
 // Map Redux actions to component props
 function mapDispatchToProps(dispatch) {
   return {
 //修改命令 修改的字段名 修改字段的值
-    onCompleteInput: (inputData,name,tableID) => {
+    onCompleteInput: (inputData,name,tableID,index) => {
 
       dispatch({
-        type: "change", 
+        type: "CHANGE_INPUTLIST", 
         payload: {
           inputValue: inputData,
           inputName: name,
+          index:index,
 tableID:tableID
         }
       });
@@ -50,7 +68,7 @@ tableID:tableID
 }
 
 
-class InputCellUI extends React.PureComponent {
+class InputListCellUI extends React.PureComponent {
 
   state = {
     cellShow: false,
@@ -64,7 +82,7 @@ class InputCellUI extends React.PureComponent {
     
     var inputData = this.state.inputValue;
     if(inputData!="")
-    this.props.onCompleteInput(inputData,this.props.name,this.props.tableIndex);
+    this.props.onCompleteInput(inputData,this.props.name,this.props.tableIndex,this.props.index);
     this.setState({ cellShow: false });
   }
   
@@ -75,20 +93,10 @@ class InputCellUI extends React.PureComponent {
 
   render() {
     const { 
-      // onCompleteInput, 
-      // dialogShow, 
-      key2, 
-      name,
-      title,
-      tips,
-      // tableIndex 
+      name,index,defaultValue,title,tips,value
     } = this.props;
-    let value ="";
-    if(name ===key2){
-      value =this.props[key2]||"";
-    }
-
-  
+    
+    
     return (
       <div width="100%" height="100%">
 
@@ -98,7 +106,7 @@ class InputCellUI extends React.PureComponent {
           id="placeholder"
           style={{ fontSize: '15px',color: '#000000',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}
           fullWidth
-          multiline
+          
           margin="normal"
           value={value}
         />
@@ -124,10 +132,6 @@ class InputCellUI extends React.PureComponent {
 
         <FormHelperText>{tips}</FormHelperText>
 
-            {/* <br/>
-            提示
-            <br />
-{tips} */}
           </DialogContent>
           <DialogActions>
             <Button color="primary" onClick={this.closeInputCell}>
@@ -142,8 +146,7 @@ class InputCellUI extends React.PureComponent {
   }
 }
 
-InputCellUI.propTypes = {
-  //value: PropTypes.string.isRequired,
+InputListCellUI.propTypes = {
   onCompleteInput: PropTypes.func.isRequired,
 }
 
@@ -151,5 +154,5 @@ InputCellUI.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(InputCellUI)
+)(InputListCellUI)
 

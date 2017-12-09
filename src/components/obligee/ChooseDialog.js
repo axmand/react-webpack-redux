@@ -262,14 +262,53 @@ loaded:false
       //console.log(projectData.ProjectItem)
       return returnState;
 
-     case 'changetest':
+
+      case 'CHANGE_INPUTLIST':
+      var inputName=action.payload.inputName;
+      var tableID=action.payload.tableID;
+      var index= action.payload.index;
+ 
+       var statenew=state;
+
+
+       if(state[tableID][inputName].length==0)
+          statenew[tableID][inputName]=["","","","","","","","","","","","","","","",""];
+
+
+       statenew[tableID][inputName][index]=action.payload.inputValue;
+      console.log(statenew[tableID][inputName][index]);
+       var returnState=Object.assign({}, state, statenew);
+ 
+       projectData.ProjectItem=returnState;
+   
+       console.log(returnState);
+       return returnState;
+ 
+//        projectData.ProjectItem=statenew;
+//  console.log(projectData.ProjectItem);
+//  console.log(statenew);
+
+
+
+//        return statenew;
+
+
+
+
+
+
+     case 'CHANGE_CHECKBOX':
   
     var newState=state;
+    if(state[action.payload.tableID][action.payload.type].length==0)
+        newState[action.payload.tableID][action.payload.type]=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
     newState[action.payload.tableID][action.payload.type][action.payload.row]=action.payload.col;
 
 
     var returnState=Object.assign({}, state, newState);
     projectData.ProjectItem=returnState;
+
+    console.log(returnState);
     return returnState;
    
 
