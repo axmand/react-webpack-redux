@@ -37,7 +37,7 @@ const mapDispatchToProps=(dispatch)=> {
     onclick: (row,col,type,tableID) => {
 
       dispatch({
-        type: "changetest", 
+        type: "CHANGE_CHECKBOX", 
         payload: {
             type:type,
           row:row,
