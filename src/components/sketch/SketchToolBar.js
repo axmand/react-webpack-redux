@@ -158,7 +158,8 @@ class SkechToolBar extends Component {
       onPlotAlerClose,
       handleDelete,
       showDelDialog,
-      handleCloseDelDialog
+      handleCloseDelDialog,
+      onDrawAlerClose
     } = this.props;
     const {
       alertPlotFail,
@@ -175,6 +176,7 @@ class SkechToolBar extends Component {
       measureAreaIsChecked,
       chooseObjIsChecked,
       haveObjToDel,
+      drawAlert,
       onFetchPoi_NumClick,
       onjzdXCZJClick
     } = this.props;
@@ -385,6 +387,16 @@ class SkechToolBar extends Component {
           </Dialog>
 
           <Dialog 
+            open={drawAlert} 
+            onRequestClose={onDrawAlerClose}>
+              <DialogContent className={classes.alert} onClick={onDrawAlerClose}>
+                <Typograghy className={classes.message}>
+                  您未处于绘制过程中，操作无效！                
+                </Typograghy>
+              </DialogContent>
+          </Dialog>
+
+          <Dialog 
             open={alertSignature} 
             onRequestClose={onSignatureAlerClose}>
               <DialogContent className={classes.alert} onClick={onSignatureAlerClose}>
@@ -492,6 +504,7 @@ const mapStateToProps = state => {
   return {
     showDelDialog: sketchState.showDelDialog,
     haveObjToDel: sketchState.haveObjToDel,
+    drawAlert:sketchState.drawAlert,
     drawPointIsChecked: sketchState.drawPointIsChecked,
     drawLineIsChecked: sketchState.drawLineIsChecked,
     drawJZXIsChecked:sketchState.drawJZXIsChecked,
@@ -728,6 +741,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch({
             type:"signatureAlerClose"
         })
+    },
+    onDrawAlerClose:()=>{
+      dispatch({
+        type:"drawAlerClose"
+      })
     },
     onjzdPlotClick:poi_id=>{
       dispatch({

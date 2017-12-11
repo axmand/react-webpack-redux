@@ -727,6 +727,7 @@ let modifyPointId;
 const sketchReduce = (
   state = {
     isRealtimeOn: false,
+    drawAlert:false,
     plotIsChecked: false,
     drawPointIsChecked: false,
     drawLineIsChecked: false,
@@ -1807,13 +1808,30 @@ const sketchReduce = (
       return Object.assign({}, state, { ...newState7 });
     //撤销
     case "undoClick":
+
+    if(drawTool.getCurrentGeometry()){
       drawUndo();
-      return { ...state };
+      const new_drawAlert={ drawAlert:false}
+      return Object.assign({}, state, { ...new_drawAlert });
+    }else{
+      const new_drawAlert={ drawAlert:true}
+      return Object.assign({}, state, { ...new_drawAlert });
+    }
     //重做
     case "redoClick":
       console.log("重做");
-      drawRedo();
-      return { ...state };
+      if(drawTool.getCurrentGeometry()){
+        drawRedo();
+        const new_drawAlert={ drawAlert:false}
+        return Object.assign({}, state, { ...new_drawAlert });
+      }else{
+        const new_drawAlert={ drawAlert:true}
+        return Object.assign({}, state, { ...new_drawAlert });
+      }
+    //关闭错误使用撤销重做提示
+    case "drawAlerClose":
+    const drawAlerClose = { drawAlert: false };
+    return Object.assign({}, state, { ...drawAlerClose });
     //保存
     case "saveClick":
       //console.log("保存");
