@@ -189,7 +189,7 @@ clickObj =
       }
     }
 
-    if (target._jsonType === "CubicBezierCurve") {
+    if (target._jsonType === "QuadBezierCurve") {
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
@@ -221,7 +221,7 @@ recoverObj =
         clickedObj[i].options.isClicked = false;
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
-      if (clickedObj[i]._jsonType === "CubicBezierCurve") {
+      if (clickedObj[i]._jsonType === "QuadBezierCurve") {
         clickedObj[i].options.isClicked = false;
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
@@ -278,7 +278,7 @@ deleteObj =
         .remove();
       }
     }
-    if (target._jsonType === "CubicBezierCurve") {
+    if (target._jsonType === "QuadBezierCurve") {
       target.remove();
     }
     if (target._jsonType === "Polygon") {
@@ -304,8 +304,20 @@ deleteObj =
 class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
+    let center;
+    if(projectData.ProjectItem.L.jzdJSONData){
+      let poi_data= maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
+      console.log(poi_data._geoList)
+      let poi_arr=poi_data._geoList;
+      if(poi_arr){
+        center=poi_arr[poi_arr.length-1]._coordinates;
+      }
+    }else{
+      center= [108.37, 22.82];
+
+    }
     map = new maptalks.Map(mapDiv, {
-      center: [114.360734, 30.541093],
+      center:center,
       zoom: 16,
       baseLayer: new maptalks.TileLayer("base", {
         crossOrigin: "anonymous",
@@ -383,21 +395,23 @@ class Map extends Component {
        zj = new maptalks.VectorLayer('label');
     }
     console.log(zj)
+    let location=new maptalks.VectorLayer("location");
 
-    jzd.addTo(map);
+    jzd.addTo(map).bringToFront();
     sz.addTo(map);
     jzx.addTo(map);
     zd.addTo(map);
     zj.addTo(map);
+    location.addTo(map);
     console.log(map)
     //将测距测面积工具添加至地图
     distanceTool.addTo(map).disable();
     areaTool.addTo(map).disable();
     //将画图工具添加至地图
     drawTool.addTo(map).disable();
-    maptalks.DrawTool.registerMode("CubicBezierCurve", {
+    maptalks.DrawTool.registerMode("QuadBezierCurve", {
       action: "clickDblclick",
-      create: path => new maptalks.CubicBezierCurve(path),
+      create: path => new maptalks.QuadBezierCurve(path),
       update: (path, geometry) => {
         geometry.setCoordinates(path);
       },
@@ -409,6 +423,7 @@ class Map extends Component {
     snap.setLayer(map.getLayer("point"));
     snap.setGeometries(map.getLayer("point")._geoList);
     snap.bindDrawTool(drawTool);
+    snap.disable();
   }
 
   render() {
@@ -447,7 +462,7 @@ const mapReduce = (state = 0, action) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {
         enableHighAccuracy: true,
-        timeout: 5000
+        timeout: 3000
       });
     } else {
       alert("浏览器不支持定位！");
@@ -820,25 +835,43 @@ const sketchReduce = (
   drawLineEnd =
     drawLineEnd ||
     function(param) {
+      //由于手指双击平板识别率低，通过drawtool拾取点坐标后新建对象添加至地图
       let coorArr = param.geometry._coordinates;
+      coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+      //随机数加当前时间构成id
       let sznum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+      let  sz_line = new maptalks.LineString(coorArr, {
+        id:sznum,
+        isClicked:false,
+        arrowStyle : null, 
+        arrowPlacement : 'vertex-last',
+        visible : true,
+        editable : true,
+        cursor : null,
+        draggable : false,
+        dragShadow : false, 
+        drawOnAxis : null,
+        symbol: {
+          'lineColor' : '#000000',
+          'lineWidth' : 1.5
+        }
+      });
       //为折线的每条线段添加长度标注
       for (let i = 0; i < coorArr.length - 1; i++) {
         //每条线段的起点和终点坐标
         let startPoi = coorArr[i],
-          endPoi = coorArr[i + 1];
+          endPoi = coorArr[i+1];
         //计算每条线段的长度
         length = map.computeLength(startPoi, endPoi);
-        param.geometry.config("length", length);
-        let content = param.geometry.options.length.toFixed(2);
+        sz_line.config("length", length);
+        let content = sz_line.options.length.toFixed(2);
         addObjLabel(content, startPoi, endPoi);
       }
-      param.geometry.config("labels", labels);
+      sz_line.config("labels", labels);
+
       labels = [];
-      param.geometry.config("isClicked", false);
-      param.geometry.setId(sznum)
-      map.getLayer("SZ").addGeometry(param.geometry);
-      param.geometry.on("click", clickObj);
+      map.getLayer("SZ").addGeometry(sz_line);
+      sz_line.on("click", clickObj);
       recoverObj();
     };
   //用于画线
@@ -855,8 +888,25 @@ const sketchReduce = (
     drawPolygonEnd ||
     function(param) {
       let coorArr = param.geometry._coordinates;
+      coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+      //随机数加当前时间构成id
       let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-      console.log(zdnum);
+      let zd_obj=new maptalks.Polygon(coorArr, {
+        id:zdnum,
+        isClicked:false,
+        polygonType:"ZD",
+        visible : true,
+        editable : true,
+        cursor : 'pointer',
+        draggable : false,
+        drawOnAxis : null, 
+        symbol: {
+          lineColor: "#000000",
+          lineWidth: 2,
+          polygonFill: "#FFFFFF",
+          polygonOpacity: 0.4
+        }
+      });
       let startPoi = [],
         endPoi = [];
       //为地块添加每段边长的注记
@@ -873,13 +923,10 @@ const sketchReduce = (
         let content = length.toFixed(2);
         addObjLabel(content, startPoi, endPoi);
       }
-      param.geometry.config("labels", labels);
+      zd_obj.config("labels", labels);
       labels = [];
-      param.geometry.config("isClicked", false);
-      param.geometry.config("polygonType", "ZD");
-      param.geometry.setId(zdnum);
-      map.getLayer("polygon").addGeometry(param.geometry);
-      param.geometry.on("click", clickObj);
+      map.getLayer("polygon").addGeometry(zd_obj);
+      zd_obj.on("click", clickObj);
       recoverObj();
     };
   //用于构面
@@ -900,13 +947,47 @@ const sketchReduce = (
   drawBalconyEnd =
     drawBalconyEnd ||
     function(param) {
+      let coorArr = param.geometry._coordinates;
+      coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+      //随机数加当前时间构成id
       let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-      param.geometry.config("isClicked", false);
-      param.geometry.config("polygonType", "YT");      
-      param.geometry.setId(zdnum);
-      map.getLayer("polygon").addGeometry(param.geometry);
-      param.geometry.on("click", clickObj);
-
+      let zd_obj=new maptalks.Polygon(coorArr, {
+        id:zdnum,
+        isClicked:false,
+        polygonType:"YT",
+        visible : true,
+        editable : true,
+        cursor : 'pointer',
+        draggable : false,
+        drawOnAxis : null, 
+        symbol: {
+          lineColor: "#000000",
+          lineWidth: 2,
+          lineDasharray: [10, 5, 10, 5],
+          polygonFill: "#FFFFFF",
+          polygonOpacity: 0.6
+        }
+      });
+      let startPoi = [],
+      endPoi = [];
+      //为地块添加每段边长的注记
+      for (let i = 0; i < coorArr.length; i++) {
+        //每条线段的起点和终点坐标
+        if (i < coorArr.length - 1) {
+          startPoi = coorArr[i];
+          endPoi = coorArr[i + 1];
+        } else {
+          startPoi = coorArr[i];
+          endPoi = coorArr[0];
+        }
+        length = map.computeLength(startPoi, endPoi);
+        let content = length.toFixed(2);
+        addObjLabel(content, startPoi, endPoi);
+      }
+      zd_obj.config("labels", labels);
+      labels = [];
+      map.getLayer("polygon").addGeometry(zd_obj);
+      zd_obj.on("click", clickObj);
       recoverObj();
     };
   drawBalcony =
@@ -1231,8 +1312,26 @@ const sketchReduce = (
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
-          let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
           let coorArr = param.geometry._coordinates;
+          coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+          //随机数加当前时间构成id
+          let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+          let  jzx_line = new maptalks.LineString(coorArr, {
+            id:jzxnum,
+            isClicked:false,
+            arrowStyle : null, 
+            arrowPlacement : 'vertex-last',
+            visible : true,
+            editable : true,
+            cursor : null,
+            draggable : false,
+            dragShadow : false, 
+            drawOnAxis : null,
+            symbol: {
+              'lineColor' : '#000000',
+              'lineWidth' : 1.5
+            }
+          });
           //为折线的每条线段添加长度标注
           for (let i = 0; i < coorArr.length - 1; i++) {
             //每条线段的起点和终点坐标
@@ -1240,20 +1339,17 @@ const sketchReduce = (
               endPoi = coorArr[i + 1];
             //计算每条线段的长度
             length = map.computeLength(startPoi, endPoi);
-            param.geometry.config("length", length);
-            let content = param.geometry.options.length.toFixed(2);
+            jzx_line.config("length", length);
+            let content = jzx_line.options.length.toFixed(2);
             addObjLabel(content, startPoi, endPoi);
           }
-          param.geometry.config("labels", labels);
+          jzx_line.config("labels", labels);
           labels = [];
-          param.geometry.config("isClicked", false);
-          param.geometry.config("poiArr", linePoiArr);
-          param.geometry.setId(jzxnum);
-          map.getLayer("JZX").addGeometry(param.geometry);
-          param.geometry.on("click", clickObj);
+          jzx_line.config("poiArr", linePoiArr);
+          map.getLayer("JZX").addGeometry(jzx_line);
+          jzx_line.on("click", clickObj);
           recoverObj();
           linePoiArr = [];
-          console.log(param);
         };
       //用于画线
       drawJZX =
@@ -1310,15 +1406,23 @@ const sketchReduce = (
       drawCurveEnd =
         drawCurveEnd ||
         function(param) {
+          let coorArr = param.geometry._coordinates;
+          coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+          //随机数加当前时间构成id
           let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-          param.geometry.config("isClicked", false);
-          param.geometry.config("poiArr", linePoiArr);
-          param.geometry.setId(jzxnum);
-          map.getLayer("JZX").addGeometry(param.geometry);
-          param.geometry.on("click", clickObj);
+          let jzx_arc = new maptalks.QuadBezierCurve(coorArr, {
+            id:jzxnum,
+            isClicked:false,
+            symbol :{
+              lineColor: "#000000",
+               lineWidth: 1.5 
+            }
+          });
+          jzx_arc.config("poiArr", linePoiArr);
+          map.getLayer("JZX").addGeometry(jzx_arc);
+          jzx_arc.on("click", clickObj);
           recoverObj();
           linePoiArr = [];
-          console.log(param.geometry);
         };
       //用于画线
       drawCurve =
@@ -1326,7 +1430,7 @@ const sketchReduce = (
         function() {
           recoverObj();
           linePoiArr = [];
-          drawTool.setMode("CubicBezierCurve").enable();
+          drawTool.setMode("QuadBezierCurve").enable();
           drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
           drawTool.on("drawend", drawCurveEnd);
         };
