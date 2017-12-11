@@ -151,41 +151,73 @@ clickObj =
   clickObj ||
   function(e) {
     target = e.target;
-    clickedObj.push(target);
     console.log(target);
+    //判断点击是首次点击还是第二次点击取消选中
     if (target._jsonType === "Circle") {
       target.options.isClicked = !target.options.isClicked;
+      //首次点击高亮显示选中对象，并添加至存储选中对象的数组
       if (target.options.isClicked) {
         target.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
         linePoiArr.push(target._id);
+        clickedObj.push(target);
       }
+      //第二次点击取消高亮效果，并从存储选中对象的数组中移除
       if (!target.options.isClicked) {
+        for(let i=0;i<clickedObj.length;i++){
+          if(clickedObj[i]._id=target._id){
+            clickedObj.splice(i, 1);
+            break;
+          }
+        }
         target.updateSymbol({ lineColor: "#000000", polygonFill: "#FFFFFF" });
-      }
+      }   
     }
     if (target._jsonType === "LineString") {
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
+        clickedObj.push(target);
       }
       if (!target.options.isClicked) {
-        target.updateSymbol({ lineColor: "#000000" });
-      }
+        for(let i=0;i<clickedObj.length;i++){
+          if(clickedObj[i]._id=target._id){
+            clickedObj.splice(i, 1);
+            break;
+          }
+        }
+      target.updateSymbol({ lineColor: "#000000" });
     }
+  }
     if (target._jsonType === "Polygon") {
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
+        clickedObj.push(target);
       }
       if (!target.options.isClicked) {
-        target.updateSymbol({ lineColor: "#000000" });
-      }
+        for(let i=0;i<clickedObj.length;i++){
+          if(clickedObj[i]._id=target._id){
+            clickedObj.splice(i, 1);
+            break;
+            }
+          }
+        target.updateSymbol({ lineColor: "#000000" });           
+        }
     }
 
     if (target._jsonType === "Label") {
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
         target.startEditText();
+        clickedObj.push(target);
+      }
+     if (!target.options.isClicked) {
+       for(let i=0;i<clickedObj.length;i++){
+         if(clickedObj[i]._id=target._id){
+           clickedObj.splice(i, 1);
+           break;
+          }
+        }
       }
     }
 
@@ -193,11 +225,19 @@ clickObj =
       target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
+        clickedObj.push(target);
       }
       if (!target.options.isClicked) {
+        for(let i=0;i<clickedObj.length;i++){
+          if(clickedObj[i]._id=target._id){
+            clickedObj.splice(i, 1);
+            break;
+          }
+        }
         target.updateSymbol({ lineColor: "#000000" });
       }
     }
+    console.log(clickedObj)
   };
 //用于清除对象被选中的高亮效果
 recoverObj =
@@ -231,6 +271,8 @@ recoverObj =
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
     }
+    console.log(clickedObj)
+    clickedObj=[];
   };
 //添加自定义标注
 addLabel =
@@ -262,39 +304,47 @@ addLabel =
 deleteObj =
   deleteObj ||
   function() {
-    if (target._jsonType === "Circle") {
-      target.remove();
-      let point_labels = target.options.labels;
-      map.getLayer("label")
-      .getGeometryById(point_labels)
-      .remove();
-    }
-    if (target._jsonType === "LineString") {
-      target.remove();
-      let line_labels = target.options.labels;
-      for (let i = 0; i < line_labels.length; i++) {
-        map.getLayer("label")
-        .getGeometryById(line_labels[i])
-        .remove();
+    //批量删除存储在选中数组中的所有地图对象
+    let num = clickedObj.length;
+    for(let i=0;i<num;i++){
+      let target=clickedObj[i];
+      if (target._jsonType === "Circle") {
+        target.remove();
+        let point_labels =  map.getLayer("label").getGeometryById(target.options.labels);
+        if(point_labels){
+          point_labels.remove();
+        }
+      }
+      if (target._jsonType === "LineString") {
+            target.remove();
+            let line_labels = target.options.labels;
+            for (let i = 0; i < line_labels.length; i++) {
+             if( map.getLayer("label").getGeometryById(line_labels[i])){
+              map.getLayer("label")
+              .getGeometryById(line_labels[i])
+              .remove();
+              }
+            }
+          }
+      if (target._jsonType === "QuadBezierCurve") {
+        target.remove();
+      }
+      if (target._jsonType === "Polygon") {
+        target.remove();
+        let polygon_labels = target.options.labels;
+        for (let i = 0; i < polygon_labels.length; i++) {
+          if(map.getLayer("label").getGeometryById(polygon_labels[i])){
+            map.getLayer("label")
+            .getGeometryById(polygon_labels[i])
+            .remove();
+          }
+        }
+      }
+      if (target.options.type === "Label") {
+        target.endEditText();
+        target.remove();
       }
     }
-    if (target._jsonType === "QuadBezierCurve") {
-      target.remove();
-    }
-    if (target._jsonType === "Polygon") {
-      target.remove();
-      let polygon_labels = target.options.labels;
-      for (let i = 0; i < polygon_labels.length; i++) {
-        map.getLayer("label")
-        .getGeometryById(polygon_labels[i])
-        .remove();
-      }
-    }
-    if (target.options.type === "Label") {
-      target.endEditText();
-      target.remove();
-    }
-    target = null;
   };
 
 /**
@@ -404,6 +454,8 @@ class Map extends Component {
     zj.addTo(map);
     location.addTo(map);
     console.log(map)
+    map.on('dblclick',recoverObj);
+
     //将测距测面积工具添加至地图
     distanceTool.addTo(map).disable();
     areaTool.addTo(map).disable();
@@ -527,6 +579,7 @@ const mapReduce = (state = 0, action) => {
     const center = new maptalks.Coordinate([coords[1], coords[0]]);
     map.setCenter(center);
     const circle = new maptalks.Circle(center, 1, {
+      labels:"locationlabel",
       id:'locationcircle',
       symbol: {
         lineColor: "#000000",
@@ -738,8 +791,8 @@ const sketchReduce = (
       });
 
       const rotation_rad = rotation / 180 * Math.PI;
-      const dx = 12 * Math.sin(rotation_rad);
-      const dy = -12 * Math.cos(rotation_rad);
+      const dx = 16 * Math.sin(rotation_rad);
+      const dy = -16 * Math.cos(rotation_rad);
 
       if (
         (rotation > 90 && rotation < 180) ||
@@ -768,12 +821,7 @@ const sketchReduce = (
         }
       });
       map.getLayer("label").addGeometry(objLabel);
-      objLabel.on("click", function(e) {
-        target = e.target;
-        console.log(target)
-        objLabel.startEditText();
-        drawTool.disable();
-      });
+      objLabel.on("click", clickObj);
       labels.push(objLabel._id);
     };
 
@@ -1179,15 +1227,15 @@ const sketchReduce = (
         let i = action.payload2.id - 1;//旧id
         let old_id=action.payload2.id;
         let new_id=action.payload1.d;
-
-        map.getLayer("point").getGeometryById(old_id).setId(new_id);
-        let num =new_id;          
+        console.log(new_id)
+        map.getLayer("point").getGeometryById(old_id).setId(new_id); 
+        console.log(map.getLayer("point").getGeometryById(new_id) )
         let oldLabel = map.getLayer("label").getGeometryById(old_id);
-        let labelContent=num;
+        let labelContent=new_id;
         console.log(labelContent)
         //为界址点添加点号注记
         let label = new maptalks.Label(labelContent, oldLabel._coordinates, {
-            id: num,
+            id: new_id,
             isClicked:false,
             draggable: true,
             box: false,
@@ -1207,10 +1255,12 @@ const sketchReduce = (
             drawTool.disable();
             label.startEditText();
         });
+
         oldLabel.remove();
+        map.getLayer("point").getGeometryById(new_id).config('labels',new_id)
         map.getLayer("label").addGeometry(label);
-       
         newState.plotListData[i].id = new_id;
+        console.log(newState)
       return {...state,...newState}
    
     //画点
@@ -1685,8 +1735,8 @@ const sketchReduce = (
       map.off("click", drawPoint);
       map.off("click", addLabel);
       map.off("dblclick", drawToolOn);
-      //snap.disable();
-      if (target) {
+      console.log(clickedObj.length)
+      if (clickedObj.length>0) {
         const newState6 = {
           deleteIsChecked: !state.deleteIsChecked,
           showDelDialog: true,
@@ -1718,6 +1768,7 @@ const sketchReduce = (
 
     case "handleDelete":
       deleteObj();
+      clickedObj=[];
       const showDelDialog2 = { showDelDialog: false };
       return Object.assign({}, state, { ...showDelDialog2 });
     case "delAlerClose":
