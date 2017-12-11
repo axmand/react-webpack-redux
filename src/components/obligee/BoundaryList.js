@@ -3,31 +3,45 @@ import CheckCell from './CheckCell'
 import { connect } from 'react-redux'
 // import  PointNameCell from './PointNameCell'
 import projectData from "./../../redux/RootData";
-
+import InputListCell from "./InputListCell"
 // Map Redux state to component props
 const mapStateToProps=(state,ownProps)=> {
   
   const tableIndex =ownProps.tableIndex;
  var LandPointCodeList=[];
 var LandPointDistance=[];
-  var jzxData=projectData.ProjectItem.L.jzxJSONData;
-  var jzx = eval('(' + jzxData + ')');
+ 
+  var jzx =JSON.parse(projectData.ProjectItem.L.jzxJSONData);
 
-
+  console.log(jzx);
   for(let i=0;i<jzx.geometries.length;i++)
   {
 for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
 {
-  LandPointCodeList.push(jzx.geometries[i].options.poiArr[j]);
+  var newValue=jzx.geometries[i].options.poiArr[j];
+  if(LandPointCodeList.indexOf(newValue)<0)
+    LandPointCodeList.push(newValue);
 }
 for(let j=0;j<jzx.geometries[i].options.poiArr.length-1;j++)
-{
-  LandPointDistance.push(jzx.geometries[i].options.labels[j].content);
+{ 
+  var newValue=jzx.geometries[i].options.labels[j].content;
+
+
+  //if(LandPointDistance.indexOf(newValue)>0)
+  if(newValue!=undefined)
+  LandPointDistance.push(newValue);
+else
+LandPointDistance.push(0);
+
+ 
 }   
 
    
   }
-
+  projectData.ProjectItem.F2.LandPointCodeList  =LandPointCodeList;
+  //projectData.ProjectItem.F2.LandPointDistance   =LandPointDistance; 
+  //console.log(LandPointDistance);
+  
 
     return {
       LandPointCodeList:LandPointCodeList,
@@ -87,7 +101,7 @@ class BoundaryList extends Component {
       <tr>
     <td width="67" rowSpan="2"><p >界址点号 </p></td>
     <td width="145" colSpan="5"><p >界标种类 </p></td>
-    <td width="60" rowSpan="2"><p >界址 <br />
+    <td width="100" rowSpan="2"><p >界址 <br />
       间距（m） </p></td>
     <td width="223" colSpan="8"><p >界址线类别 </p></td>
     <td width="85" colSpan="3"><p >界址线位置 </p></td>
@@ -116,7 +130,8 @@ class BoundaryList extends Component {
     
        tableContent.push(tableHead1);
        tableContent.push(tableHead2);
-
+if(LandPointCodeList.length>0)
+{
 var firstLine=(
   <tr>
            <td width="67"><p >{LandPointCodeList[0]}</p></td>
@@ -126,7 +141,7 @@ var firstLine=(
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={2} type="LandPointTypeList"/></p></td>
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={3} type="LandPointTypeList"/></p></td>
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={4} type="LandPointTypeList"/></p></td>
-    <td width="60" rowSpan="2"><p >{LandPointDistance[0]}</p></td>
+    <td width="100" rowSpan="2"><InputListCell name="LandPointDistance" tableIndex="F2" index={0} defaultValue="test"  title="距离" tips="请填写距离"/></td>
     <td width="25" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={0} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={1} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={2} type="LandBoundaryType"/></p></td>
@@ -142,6 +157,10 @@ var firstLine=(
     </tr>);
 
     tableContent.push(firstLine);
+}
+
+if(LandPointCodeList.length>1)
+{
        for(var i=1;i<LandPointCodeList.length-1;i++)
        {
 
@@ -155,7 +174,8 @@ var tr1=(
     <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={4} type="LandPointTypeList"/></p></td>
   </tr>);
  var tr2=( <tr>
-    <td width="60" rowSpan="2"><p >{LandPointDistance[i]}</p></td>
+    {/* <td width="60" rowSpan="2"></td> */}
+    <td width="100" rowSpan="2"><InputListCell tableIndex="F2" name="LandPointDistance"  index={i} defaultValue="test" title="距离" tips="请填写距离"/></td>
     <td width="25" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={0} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={1} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={2} type="LandBoundaryType"/></p></td>
@@ -183,6 +203,8 @@ var tr1=(
 <td width="29" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={LandPointCodeList.length-1} col={4} type="LandPointTypeList"/></p></td>
 </tr>);
 tableContent.push(trlist);
+
+       }
        var table=(  
         
              <table className="mytable">
