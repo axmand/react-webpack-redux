@@ -49,7 +49,7 @@ import coordinate from "../../utils/coordinate"
 const styles = theme => ({
   root: {
     height: `${window.innerHeight * 0.075}px`,
-    width:  `${window.innerHeight * 1.35}px`,
+    width:  `${window.innerHeight * 1.275}px`,
     position: "absolute", 
     top: `${window.innerHeight * 0.1}px`,
     left: "1%",
@@ -260,7 +260,7 @@ class SkechToolBar extends Component {
                 <ViewCarousel className={classes.icon} />
                 <Typograghy className={classes.text}>阳台</Typograghy>
             </Button>
-            <Button
+            {/* <Button
                 className={classes.button}
                 style={{
                 backgroundColor: balconyIsChecked
@@ -271,7 +271,7 @@ class SkechToolBar extends Component {
             >
                 <PictureInPicture className={classes.icon} />
                 <Typograghy className={classes.text}>异型地</Typograghy>
-            </Button>
+            </Button> */}
             <Button
                 className={classes.button}
                 style={{

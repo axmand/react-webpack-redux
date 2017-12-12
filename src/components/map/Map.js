@@ -152,17 +152,16 @@ clickObj =
   function(e) {
     target = e.target;
     console.log(target);
-    //判断点击是首次点击还是第二次点击取消选中
+    target.config('isClicked',!target.options.isClicked)
+    //判断是首次点击高亮还是第二次点击取消选中
     if (target._jsonType === "Circle") {
-      target.options.isClicked = !target.options.isClicked;
+      //target.options.isClicked = !target.options.isClicked;
       //首次点击高亮显示选中对象，并添加至存储选中对象的数组
       if (target.options.isClicked) {
         target.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
         linePoiArr.push(target._id);
         clickedObj.push(target);
-      }
-      //第二次点击取消高亮效果，并从存储选中对象的数组中移除
-      if (!target.options.isClicked) {
+      }else {//第二次点击取消高亮效果，并从存储选中对象的数组中移除
         for(let i=0;i<clickedObj.length;i++){
           if(clickedObj[i]._id=target._id){
             clickedObj.splice(i, 1);
@@ -173,12 +172,11 @@ clickObj =
       }   
     }
     if (target._jsonType === "LineString") {
-      target.options.isClicked = !target.options.isClicked;
+     // target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
         clickedObj.push(target);
-      }
-      if (!target.options.isClicked) {
+      }else {
         for(let i=0;i<clickedObj.length;i++){
           if(clickedObj[i]._id=target._id){
             clickedObj.splice(i, 1);
@@ -189,12 +187,11 @@ clickObj =
     }
   }
     if (target._jsonType === "Polygon") {
-      target.options.isClicked = !target.options.isClicked;
+     // target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
         clickedObj.push(target);
-      }
-      if (!target.options.isClicked) {
+      }else {
         for(let i=0;i<clickedObj.length;i++){
           if(clickedObj[i]._id=target._id){
             clickedObj.splice(i, 1);
@@ -210,8 +207,7 @@ clickObj =
       if (target.options.isClicked) {
         target.startEditText();
         clickedObj.push(target);
-      }
-     if (!target.options.isClicked) {
+      }else {
        for(let i=0;i<clickedObj.length;i++){
          if(clickedObj[i]._id=target._id){
            clickedObj.splice(i, 1);
@@ -222,12 +218,11 @@ clickObj =
     }
 
     if (target._jsonType === "QuadBezierCurve") {
-      target.options.isClicked = !target.options.isClicked;
+      //target.options.isClicked = !target.options.isClicked;
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
         clickedObj.push(target);
-      }
-      if (!target.options.isClicked) {
+      }else {
         for(let i=0;i<clickedObj.length;i++){
           if(clickedObj[i]._id=target._id){
             clickedObj.splice(i, 1);
@@ -247,26 +242,26 @@ recoverObj =
     target = null;
     for (let i = 0; i < num; i++) {
       if (clickedObj[i]._jsonType === "Circle") {
-        clickedObj[i].options.isClicked = false;
+        clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({
           lineColor: "#000000",
           polygonFill: "#FFFFFF"
         });
       }
       if (clickedObj[i]._jsonType === "LineString") {
-        clickedObj[i].options.isClicked = false;
+        clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
       if (clickedObj[i]._jsonType === "Polygon") {
-        clickedObj[i].options.isClicked = false;
+        clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
       if (clickedObj[i]._jsonType === "QuadBezierCurve") {
-        clickedObj[i].options.isClicked = false;
+        clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
       if (clickedObj[i]._jsonType === "Label") {
-        clickedObj[i].options.isClicked = false;
+        clickedObj[i].config('isClicked',false);
         clickedObj[i].endEditText();
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
@@ -391,6 +386,7 @@ class Map extends Component {
       if(jzd._geoList){
         for (let i = 0; i < jzd._geoList.length; i++) {
           jzd._geoList[i].on("click", clickObj);
+          jzd._geoList[i].setRadius(4);
         }
       }
     }else{
@@ -792,8 +788,8 @@ const sketchReduce = (
       });
 
       const rotation_rad = rotation / 180 * Math.PI;
-      const dx = 16 * Math.sin(rotation_rad);
-      const dy = -16 * Math.cos(rotation_rad);
+      const dx = 10 * Math.sin(rotation_rad);
+      const dy = -10 * Math.cos(rotation_rad);
 
       if (
         (rotation > 90 && rotation < 180) ||
@@ -917,8 +913,15 @@ const sketchReduce = (
         addObjLabel(content, startPoi, endPoi);
       }
       sz_line.config("labels", labels);
-
       labels = [];
+      //清除点选高亮的点样式
+      for(let i=0;i<linePoiArr.length;i++){
+        console.log(linePoiArr)
+        map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+          lineColor: "#000000",
+          polygonFill: "#FFFFFF"
+        });
+      }
       map.getLayer("SZ").addGeometry(sz_line);
       sz_line.on("click", clickObj);
       recoverObj();
@@ -927,7 +930,6 @@ const sketchReduce = (
   drawLine =
     drawLine ||
     function() {
-      recoverObj();
       drawTool.setMode("LineString").enable();
       drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
       drawTool.on("drawend", drawLineEnd);
@@ -974,6 +976,14 @@ const sketchReduce = (
       }
       zd_obj.config("labels", labels);
       labels = [];
+      //清除点选高亮的点样式
+      for(let i=0;i<linePoiArr.length;i++){
+        console.log(linePoiArr)
+        map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+          lineColor: "#000000",
+          polygonFill: "#FFFFFF"
+        });
+      }
       map.getLayer("polygon").addGeometry(zd_obj);
       zd_obj.on("click", clickObj);
       recoverObj();
@@ -982,7 +992,7 @@ const sketchReduce = (
   drawPolygon =
     drawPolygon ||
     function() {
-      recoverObj();
+      
       drawTool.setMode("Polygon").enable();
       drawTool.setSymbol({
         lineColor: "#000000",
@@ -1035,6 +1045,14 @@ const sketchReduce = (
       }
       zd_obj.config("labels", labels);
       labels = [];
+      //清除点选高亮的点样式
+      for(let i=0;i<linePoiArr.length;i++){
+        console.log(linePoiArr)
+        map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+          lineColor: "#000000",
+          polygonFill: "#FFFFFF"
+        });
+      }
       map.getLayer("polygon").addGeometry(zd_obj);
       zd_obj.on("click", clickObj);
       recoverObj();
@@ -1042,7 +1060,6 @@ const sketchReduce = (
   drawBalcony =
     drawBalcony ||
     function() {
-      recoverObj();
       drawTool.setMode("Polygon").enable();
       drawTool.setSymbol({
         lineColor: "#000000",
@@ -1150,6 +1167,7 @@ const sketchReduce = (
     //展点
     case "plotRTK":
       console.log("展点");
+      recoverObj();
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
@@ -1318,6 +1336,7 @@ const sketchReduce = (
 
     //画四至线
     case "drawLineClick":
+      recoverObj();
       if (!state.drawLineIsChecked) {
         map.off("click", drawPoint);
         distanceTool.disable();
@@ -1358,11 +1377,13 @@ const sketchReduce = (
       return { ...state, ...newState2 };
     //画界址线
     case "drawJZXClick":
+      recoverObj();
       console.log(state);
       //画线时drawTool的绑定事件
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
+          recoverObj();
           let coorArr = param.geometry._coordinates;
           coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
           //随机数加当前时间构成id
@@ -1397,16 +1418,22 @@ const sketchReduce = (
           jzx_line.config("labels", labels);
           labels = [];
           jzx_line.config("poiArr", linePoiArr);
+          //清除点选高亮的点样式
+          for(let i=0;i<linePoiArr.length;i++){
+            console.log(linePoiArr)
+            map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+              lineColor: "#000000",
+              polygonFill: "#FFFFFF"
+            });
+          }
           map.getLayer("JZX").addGeometry(jzx_line);
           jzx_line.on("click", clickObj);
-          recoverObj();
           linePoiArr = [];
         };
       //用于画线
       drawJZX =
         drawJZX ||
         function() {
-          recoverObj();
           linePoiArr = [];
           drawTool.setMode("LineString").enable();
           drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
@@ -1470,6 +1497,14 @@ const sketchReduce = (
             }
           });
           jzx_arc.config("poiArr", linePoiArr);
+          //清除点选高亮的点样式
+          for(let i=0;i<linePoiArr.length;i++){
+            console.log(linePoiArr)
+            map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+              lineColor: "#000000",
+              polygonFill: "#FFFFFF"
+            });
+          }
           map.getLayer("JZX").addGeometry(jzx_arc);
           jzx_arc.on("click", clickObj);
           recoverObj();
@@ -1845,6 +1880,13 @@ const sketchReduce = (
       map.off("click", drawPoint);
       map.off("click", addLabel);
       map.off("dblclick", drawToolOn);
+      //设置界址点半径成图美观
+      if(map.getLayer("point")._geoList){
+        for (let i = 0; i <map.getLayer("point")._geoList.length; i++) {
+          map.getLayer("point")._geoList[i].setRadius(1);
+        }
+      }
+      console.log(map.getLayer("point")._geoList)
       const saveData = {
         plotIsChecked: false,
         drawPointIsChecked: false,
