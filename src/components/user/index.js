@@ -417,7 +417,7 @@ class UserModule extends Component {
                   {bluetoothConnectModuleLoading && <CircularProgress size={48} className={classes.buttonProgress} />}
                 </div>
 
-                <div className={classes.wrapperWithProgress}>
+                {/* <div className={classes.wrapperWithProgress}>
                   <Button className={classes.buttonAttach}>
                     <Devices className={classes.icon} />
                     <Typography className={classes.typography} bold>
@@ -436,7 +436,7 @@ class UserModule extends Component {
                       影像下载
                     </Typography>
                   </Button>
-                </div>
+                </div> */}
                 
               </ListItem>
 

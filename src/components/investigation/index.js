@@ -59,6 +59,7 @@ class InvestigationModule extends Component {
       TuDiZhengShuHao,
       TuDiZuoLuo,
       handleOpenIdentityVerificationModule,
+      handleOpenLandInfoQueryModule,
     } = this.props
   
     return (
@@ -86,11 +87,8 @@ class InvestigationModule extends Component {
             horizontal: 'left',
           }}
         >
-          <MenuItem onClick={this.handleRequestClose}>照片</MenuItem>
-          <MenuItem onClick={this.handleRequestClose}>音频</MenuItem>
-          <MenuItem onClick={this.handleRequestClose}>指纹</MenuItem>
           <MenuItem onClick={handleOpenIdentityVerificationModule}>身份证</MenuItem>
-          <MenuItem onClick={this.handleRequestClose}>其他证明文件</MenuItem>
+          <MenuItem onClick={handleOpenLandInfoQueryModule}>地藉信息查询</MenuItem>
         </Menu>
         <IdentityVerificationModule
           IDCardNumber={IDCardNumber}
@@ -126,7 +124,17 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({
         type: "OPEN_IDENTITY_VERIFICATION_MODULE"
       })
-    }
+    },
+
+    handleOpenLandInfoQueryModule: () => {
+      dispatch({
+        type: "menuClick",
+        payload: {
+          command: "LAND_INFORMATION_QUERY"
+        }
+      })
+    },
+
 	} 
 }  	
 
