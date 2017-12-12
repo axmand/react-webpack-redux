@@ -30,7 +30,7 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
     "maptalks": "^0.35.1",
-    "maptalks.snapto": "^0.1.6",
+    "maptalks.snapto": "^0.1.7",
     "material-ui": "^1.0.0-beta.21",
     "material-ui-icons": "^1.0.0-beta.5",
     "prop-types": "^15.5.10",
