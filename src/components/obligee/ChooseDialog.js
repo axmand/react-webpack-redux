@@ -242,7 +242,117 @@ loaded:false
   
    projectData.Loaded=true;
    return state;
+
+
+
+   case "choose":
+   if(action.payload.choice==2)
+     {
+      var statenew=state;
+      
+var LandPointInMap=[];
+      var jzx =JSON.parse(projectData.ProjectItem.L.jzxJSONData);
+      
+        for(let i=0;i<jzx.geometries.length;i++)
+        {
+      for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
+      {
+        var newValue=jzx.geometries[i].options.poiArr[j];
+        if(LandPointInMap.indexOf(newValue)<0)
+        LandPointInMap.push(newValue);
+      }
+        }
+    
+        var LandPointInMapCount=LandPointInMap.length;
+
+
+      var LandPointCount =projectData.ProjectItem.F2.LandPointCodeList.length;
+
+      var LandPointTypeCount =projectData.ProjectItem.F2.LandPointTypeList.length;
+
+      var LandPointDistanceCount =projectData.ProjectItem.F2.LandPointDistance.length;
+
+      var LandBoundaryTypeCount =projectData.ProjectItem.F2.LandBoundaryType.length;
+
+      var LandBoundaryLocationCount =projectData.ProjectItem.F2.LandBoundaryLocation.length ;
+
+      console.log(LandPointInMapCount);
+      console.log(LandPointCount);
+
+      console.log(LandPointTypeCount);
+
+      console.log(LandPointDistanceCount);
+
+      console.log(LandBoundaryTypeCount);
+
+      console.log(LandBoundaryLocationCount);
+
+
+
+      if(LandPointInMapCount>LandPointCount)
+      {
+        if(LandPointCount==0)
+        {
+          statenew.F2.LandPointCodeList=new Array(LandPointInMapCount);
+           statenew.F2.LandPointTypeList =new Array(LandPointInMapCount);
+
+          statenew.F2.LandPointDistance  =new Array(LandPointInMapCount-1);
+        statenew.F2.LandBoundaryType  =new Array(LandPointInMapCount-1);
+        statenew.F2.LandBoundaryLocation  =new Array(LandPointInMapCount-1);
+        statenew.F2.LandBoundaryExplain  =new Array(LandPointInMapCount-1);
+  
+
+        for(let i=0;i<LandPointInMapCount;i++)
+        {
+            statenew.F2.LandPointCodeList[i]="";
+            statenew.F2.LandPointTypeList[i]=-1;
+    
+        }
+        for(let i=0;i<LandPointInMapCount-1;i++)
+        {
+            statenew.F2.LandPointDistance[i]=0;
+            statenew.F2.LandBoundaryType[i]=-1;
+            statenew.F2.LandBoundaryLocation[i]=-1;
+            statenew.F2.LandBoundaryExplain[i] ="";
+         }
+        }
+
+      else
+      {
+         for(let i=LandPointCount;i<LandPointInMapCount;i++)
+        {
+          statenew.F2.LandPointCodeList[i]="";
+          statenew.F2.LandPointTypeList[i]=-1;
+    
+        }
+        for(let i=LandPointCount;i<LandPointInMapCount-1;i++)
+        {
+            statenew.F2.LandPointDistance[i]=0;
+            statenew.F2.LandBoundaryType[i]=-1;
+           statenew.F2.LandBoundaryLocation[i]=-1;
+            statenew.F2.LandBoundaryExplain[i] ="";
+    
+        }
+      }
+      }
+      if(LandPointInMapCount<LandPointCount)
+      {
+        statenew.F2.LandPointCodeList.length=LandPointInMapCount;
+        statenew.F2.LandPointTypeList.length=LandPointInMapCount;
+
+       statenew.F2.LandPointDistance.length=LandPointInMapCount-1;
+     statenew.F2.LandBoundaryType.length=LandPointInMapCount-1;
+     statenew.F2.LandBoundaryLocation.length=LandPointInMapCount-1;
+     statenew.F2.LandBoundaryExplain.length=LandPointInMapCount-1;
+      }
+
+     }
+      
+       var returnState=Object.assign({}, state, statenew);
+ 
+       projectData.ProjectItem=returnState;
    
+       return returnState;
 
   
     case 'change':
@@ -271,9 +381,16 @@ loaded:false
        var statenew=state;
 
 
-       if(state[tableID][inputName].length==0)
-          statenew[tableID][inputName]=["","","","","","","","","","","","","","","",""];
+      //  if(state[tableID][inputName].length==0)
+      //  {
+      //  var distanceListLength= projectData.ProjectItem.F2.LandPointCodeList.length;
+      //     statenew[tableID][inputName]=new Array(distanceListLength-1);
 
+      //     for(var i=0;i<distanceListLength;i++)
+      //     {
+      //       statenew[tableID][inputName][i]="";
+      //     }
+      //  }
 
        statenew[tableID][inputName][index]=action.payload.inputValue;
       console.log(statenew[tableID][inputName][index]);
@@ -300,8 +417,20 @@ loaded:false
      case 'CHANGE_CHECKBOX':
   
     var newState=state;
-    if(state[action.payload.tableID][action.payload.type].length==0)
-        newState[action.payload.tableID][action.payload.type]=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+    // if(state[action.payload.tableID][action.payload.type].length==0)
+    // {
+    //   var checkListLength= projectData.ProjectItem.F2.LandPointCodeList.length-1;
+
+    //   if(action.payload.type=='LandPointTypeList')
+    //     checkListLength+=1;
+    //   newState[action.payload.tableID][action.payload.type]=new Array(checkListLength);
+
+    //   for(var i=0;i<checkListLength;i++)
+    //   {
+    //     newState[action.payload.tableID][action.payload.type][i]=-1;
+    //   }
+    // }
+        
     newState[action.payload.tableID][action.payload.type][action.payload.row]=action.payload.col;
 
 

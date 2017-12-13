@@ -100,16 +100,16 @@ class InputListCellUI extends React.PureComponent {
     return (
       <div width="100%" height="100%">
 
-         <ListItem button  onClick={this.showInputCell} > 
+         <ListItem button  onClick={this.showInputCell} > {value}
        
-        <TextField
+        {/* <TextField
           id="placeholder"
           style={{ fontSize: '15px',color: '#000000',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}
           fullWidth
           
           margin="normal"
           value={value}
-        />
+        /> */}
       
         </ListItem>
 
