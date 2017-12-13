@@ -758,6 +758,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
       ownProps.plotListData.forEach(n=>{
         let Poi_Data = JSON.stringify({
+          
             	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
               PointY: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesY,
               strType: null,
