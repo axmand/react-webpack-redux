@@ -440,11 +440,12 @@ class Map extends Component {
     console.log(zj)
     let location=new maptalks.VectorLayer("location");
 
-    jzd.addTo(map).bringToFront();
+  
     sz.addTo(map);
     jzx.addTo(map);
     zd.addTo(map);
-    zj.addTo(map);
+    zj.addTo(map).bringToFront();  
+    jzd.addTo(map).bringToFront();
     location.addTo(map);
     console.log(map)
     map.on('dblclick',recoverObj);
@@ -1888,12 +1889,7 @@ const sketchReduce = (
         map.off("click", drawPoint);
         map.off("click", addLabel);
         map.off("dblclick", drawToolOn);
-        //设置界址点半径成图美观
-        if(map.getLayer("point").getGeometries()){
-          for (let i = 0; i <map.getLayer("point").getGeometries().length; i++) {
-            map.getLayer("point").getGeometries()[i].setRadius(1);
-          }
-        }
+        
         const saveData = {
           plotIsChecked: false,
           drawPointIsChecked: false,
