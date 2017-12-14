@@ -698,8 +698,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onSaveClick: () => {
       dispatch({
         type: "saveClick",
-        payload: dispatch
       });
+      dispatch({
+        type: "saveClick",
+      }); 
     },
     //签章
     onSignatureClick:()=>{
