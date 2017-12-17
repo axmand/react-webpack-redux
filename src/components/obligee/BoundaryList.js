@@ -31,7 +31,7 @@ for(let j=0;j<jzx.geometries[i].options.poiArr.length-1;j++)
   if(newValue!=undefined)
   LandPointDistance.push(newValue);
 else
-LandPointDistance.push(0);
+  LandPointDistance.push(0);
 
  
 }   

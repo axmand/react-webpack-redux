@@ -199,6 +199,19 @@ class ThematicMap extends Component {
       zdJSONData,
       zjJSONData
     } = this.props;
+
+    let jzd=maptalks.Layer.fromJSON(jzdJSONData);
+    let sz= maptalks.Layer.fromJSON(szJSONData);
+    let jzx= maptalks.Layer.fromJSON(jzxJSONData);
+    let zd= maptalks.Layer.fromJSON(zdJSONData);
+    let zj=maptalks.Layer.fromJSON(zjJSONData);
+      //设置界址点半径成图美观
+      if(jzd.getGeometries()){
+        for (let i = 0; i <jzd.getGeometries().length; i++) {
+          jzd.getGeometries()[i].setRadius(1);
+        }
+      }
+
     if (saveIsChecked) {
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
@@ -207,17 +220,16 @@ class ThematicMap extends Component {
         baseLayer: new maptalks.TileLayer("base", {
           crossOrigin: "anonymous",
           // 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
-          urlTemplate:
-            "http://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
-          subdomains: ["01", "02", "03", "04"],
-          attribution: '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
+          urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
+          subdomains  : ['1','2','3','4','5'],
+          attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
         })
       });
-      maptalks.Layer.fromJSON(jzdJSONData).addTo(thematicMap);
-      maptalks.Layer.fromJSON(szJSONData).addTo(thematicMap);
-      maptalks.Layer.fromJSON(jzxJSONData).addTo(thematicMap);
-      maptalks.Layer.fromJSON(zdJSONData).addTo(thematicMap);
-      maptalks.Layer.fromJSON(zjJSONData).addTo(thematicMap);
+      jzd.addTo(thematicMap);
+      sz.addTo(thematicMap);
+      jzx.addTo(thematicMap);
+      zd.addTo(thematicMap);
+      zj.addTo(thematicMap);
     }
   }
 

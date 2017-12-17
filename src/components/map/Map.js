@@ -154,16 +154,15 @@ clickObj =
     console.log(target);
     target.config('isClicked',!target.options.isClicked)
     //判断是首次点击高亮还是第二次点击取消选中
-    if (target._jsonType === "Circle") {
-      //target.options.isClicked = !target.options.isClicked;
+    if (target.getJSONType() === "Circle") {
       //首次点击高亮显示选中对象，并添加至存储选中对象的数组
       if (target.options.isClicked) {
         target.updateSymbol({ polygonFill: "#00FFFF", lineColor: "#00FFFF" });
-        linePoiArr.push(target._id);
+        linePoiArr.push(target.getId());
         clickedObj.push(target);
       }else {//第二次点击取消高亮效果，并从存储选中对象的数组中移除
         for(let i=0;i<clickedObj.length;i++){
-          if(clickedObj[i]._id=target._id){
+          if(clickedObj[i].getId() === target.getId()){
             clickedObj.splice(i, 1);
             break;
           }
@@ -171,14 +170,13 @@ clickObj =
         target.updateSymbol({ lineColor: "#000000", polygonFill: "#FFFFFF" });
       }   
     }
-    if (target._jsonType === "LineString") {
-     // target.options.isClicked = !target.options.isClicked;
+    if (target.getJSONType() === "LineString") {
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
         clickedObj.push(target);
       }else {
         for(let i=0;i<clickedObj.length;i++){
-          if(clickedObj[i]._id=target._id){
+          if(clickedObj[i].getId() === target.getId()){
             clickedObj.splice(i, 1);
             break;
           }
@@ -186,14 +184,13 @@ clickObj =
       target.updateSymbol({ lineColor: "#000000" });
     }
   }
-    if (target._jsonType === "Polygon") {
-     // target.options.isClicked = !target.options.isClicked;
+    if (target.getJSONType() === "Polygon") {
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
         clickedObj.push(target);
       }else {
         for(let i=0;i<clickedObj.length;i++){
-          if(clickedObj[i]._id=target._id){
+          if(clickedObj[i].getId() === target.getId()){
             clickedObj.splice(i, 1);
             break;
             }
@@ -202,14 +199,13 @@ clickObj =
         }
     }
 
-    if (target._jsonType === "Label") {
-      target.options.isClicked = !target.options.isClicked;
+    if (target.getJSONType() === "Label") {
       if (target.options.isClicked) {
         target.startEditText();
         clickedObj.push(target);
       }else {
        for(let i=0;i<clickedObj.length;i++){
-         if(clickedObj[i]._id=target._id){
+         if(clickedObj[i].getId() === target.getId()){
            clickedObj.splice(i, 1);
            break;
           }
@@ -217,14 +213,13 @@ clickObj =
       }
     }
 
-    if (target._jsonType === "QuadBezierCurve") {
-      //target.options.isClicked = !target.options.isClicked;
+    if (target.getJSONType() === "QuadBezierCurve") {
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
         clickedObj.push(target);
       }else {
         for(let i=0;i<clickedObj.length;i++){
-          if(clickedObj[i]._id=target._id){
+          if(clickedObj[i].getId() === target.getId()){
             clickedObj.splice(i, 1);
             break;
           }
@@ -241,26 +236,26 @@ recoverObj =
     let num = clickedObj.length;
     target = null;
     for (let i = 0; i < num; i++) {
-      if (clickedObj[i]._jsonType === "Circle") {
+      if (clickedObj[i].getJSONType() === "Circle") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({
           lineColor: "#000000",
           polygonFill: "#FFFFFF"
         });
       }
-      if (clickedObj[i]._jsonType === "LineString") {
+      if (clickedObj[i].getJSONType()  === "LineString") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
-      if (clickedObj[i]._jsonType === "Polygon") {
+      if (clickedObj[i].getJSONType() === "Polygon") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
-      if (clickedObj[i]._jsonType === "QuadBezierCurve") {
+      if (clickedObj[i].getJSONType() === "QuadBezierCurve") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
-      if (clickedObj[i]._jsonType === "Label") {
+      if (clickedObj[i].getJSONType() === "Label") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].endEditText();
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
@@ -303,14 +298,14 @@ deleteObj =
     let num = clickedObj.length;
     for(let i=0;i<num;i++){
       let target=clickedObj[i];
-      if (target._jsonType === "Circle") {
+      if (target.getJSONType() === "Circle") {
         target.remove();
         let point_labels =  map.getLayer("label").getGeometryById(target.options.labels);
         if(point_labels){
           point_labels.remove();
         }
       }
-      if (target._jsonType === "LineString") {
+      if (target.getJSONType() === "LineString") {
             target.remove();
             let line_labels = target.options.labels;
             for (let i = 0; i < line_labels.length; i++) {
@@ -321,10 +316,10 @@ deleteObj =
               }
             }
           }
-      if (target._jsonType === "QuadBezierCurve") {
+      if (target.getJSONType() === "QuadBezierCurve") {
         target.remove();
       }
-      if (target._jsonType === "Polygon") {
+      if (target.getJSONType() === "Polygon") {
         target.remove();
         let polygon_labels = target.options.labels;
         for (let i = 0; i < polygon_labels.length; i++) {
@@ -350,16 +345,17 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     let center;
+    console.log(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
+    console.log(projectData.ProjectItem.L.jzdJSONData);
     if(projectData.ProjectItem.L.jzdJSONData){
       let poi_data= maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
-      console.log(poi_data._geoList)
-      let poi_arr=poi_data._geoList;
+      console.log(poi_data.getGeometries())
+      let poi_arr=poi_data.getGeometries();
       if(poi_arr){
-        center=poi_arr[poi_arr.length-1]._coordinates;
+        center=poi_arr[poi_arr.length-1].getCoordinates();
       }
     }else{
       center= [108.37, 22.82];
-
     }
     map = new maptalks.Map(mapDiv, {
       center:center,
@@ -381,12 +377,13 @@ class Map extends Component {
     //判断地图数据是否为空，若为空则新建地图图层
     console.log(projectData.ProjectItem.L)
     if(projectData.ProjectItem.L.jzdJSONData){
+
       jzd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
       //为地图对象添加点击绑定事件
-      if(jzd._geoList){
-        for (let i = 0; i < jzd._geoList.length; i++) {
-          jzd._geoList[i].on("click", clickObj);
-          jzd._geoList[i].setRadius(4);
+      if(jzd.getGeometries()){
+        for (let i = 0; i < jzd.getGeometries().length; i++) {
+          jzd.getGeometries()[i].on("click", clickObj);
+          jzd.getGeometries()[i].setRadius(4);
         }
       }
     }else{
@@ -396,9 +393,9 @@ class Map extends Component {
     if(projectData.ProjectItem.L.szJSONData){
        sz = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.szJSONData));
       //为地图对象添加点击绑定事件
-      if(sz._geoList){
-        for (let i = 0; i < sz._geoList.length; i++) {
-          sz._geoList[i].on("click", clickObj);
+      if(sz.getGeometries()){
+        for (let i = 0; i < sz.getGeometries().length; i++) {
+          sz.getGeometries()[i].on("click", clickObj);
         }
       }
     }else{
@@ -408,9 +405,9 @@ class Map extends Component {
     if(projectData.ProjectItem.L.jzxJSONData){
        jzx = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData));
       //为地图对象添加点击绑定事件
-      if(jzx._geoList){
-        for (let i = 0; i < jzx._geoList.length; i++) {
-          jzx._geoList[i].on("click", clickObj);
+      if(jzx.getGeometries()){
+        for (let i = 0; i < jzx.getGeometries().length; i++) {
+          jzx.getGeometries()[i].on("click", clickObj);
         }
       }
     }else{
@@ -420,9 +417,9 @@ class Map extends Component {
     if(projectData.ProjectItem.L.zdJSONData){
        zd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zdJSONData));
         //为地图对象添加点击绑定事件
-        if( zd._geoList){
-          for (let i = 0; i < zd._geoList.length; i++) {
-            zd._geoList[i].on("click", clickObj);
+        if( zd.getGeometries()){
+          for (let i = 0; i < zd.getGeometries().length; i++) {
+            zd.getGeometries()[i].on("click", clickObj);
           }
         }
       }else{
@@ -432,9 +429,9 @@ class Map extends Component {
     if(projectData.ProjectItem.L.zjJSONData){
        zj = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zjJSONData));
         //为地图对象添加点击绑定事件
-        if(zj._geoList){
-          for (let i = 0; i < zj._geoList.length; i++) {
-            zj._geoList[i].on("click", clickObj);
+        if(zj.getGeometries()){
+          for (let i = 0; i < zj.getGeometries().length; i++) {
+            zj.getGeometries()[i].on("click", clickObj);
           }
         }  
       }else{
@@ -443,11 +440,12 @@ class Map extends Component {
     console.log(zj)
     let location=new maptalks.VectorLayer("location");
 
-    jzd.addTo(map).bringToFront();
+  
     sz.addTo(map);
     jzx.addTo(map);
     zd.addTo(map);
-    zj.addTo(map);
+    zj.addTo(map).bringToFront();  
+    jzd.addTo(map).bringToFront();
     location.addTo(map);
     console.log(map)
     map.on('dblclick',recoverObj);
@@ -469,7 +467,7 @@ class Map extends Component {
 
     snap.addTo(map);
     snap.setLayer(map.getLayer("point"));
-    snap.setGeometries(map.getLayer("point")._geoList);
+    snap.setGeometries(map.getLayer("point").getGeometries());
     snap.bindDrawTool(drawTool);
     snap.disable();
   }
@@ -819,7 +817,7 @@ const sketchReduce = (
       });
       map.getLayer("label").addGeometry(objLabel);
       objLabel.on("click", clickObj);
-      labels.push(objLabel._id);
+      labels.push(objLabel.getId());
     };
 
   //打开画图工具
@@ -853,14 +851,10 @@ const sketchReduce = (
           textAlign: "auto"
         }
       });
-      label.on("click", function(e) {
-        target = e.target;
-        drawTool.disable();
-        label.startEditText();
-      });
-      let point = new maptalks.Circle(poi, 0.5, {
+      label.on("click", clickObj);
+      let point = new maptalks.Circle(poi, 1, {
         id: jzdnum,
-        labels: label._id,
+        labels: label.getId(),
         picture: "",
         isClicked: false,
         symbol: {
@@ -881,8 +875,11 @@ const sketchReduce = (
     drawLineEnd ||
     function(param) {
       //由于手指双击平板识别率低，通过drawtool拾取点坐标后新建对象添加至地图
-      let coorArr = param.geometry._coordinates;
+      recoverObj();
+      let coorArr = param.geometry.getCoordinates();
+      console.log(coorArr)
       coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+      console.log(coorArr)
       //随机数加当前时间构成id
       let sznum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let  sz_line = new maptalks.LineString(coorArr, {
@@ -938,8 +935,10 @@ const sketchReduce = (
   drawPolygonEnd =
     drawPolygonEnd ||
     function(param) {
-      let coorArr = param.geometry._coordinates;
-      coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+      let coorArr = param.geometry.getCoordinates()[0];
+      //删除由于缓慢双击产生的最后一个坐标
+     coorArr.pop();
+      console.log(coorArr);
       //随机数加当前时间构成id
       let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let zd_obj=new maptalks.Polygon(coorArr, {
@@ -987,6 +986,8 @@ const sketchReduce = (
       map.getLayer("polygon").addGeometry(zd_obj);
       zd_obj.on("click", clickObj);
       recoverObj();
+      console.log(zd_obj)
+      console.log(map)
     };
   //用于构面
   drawPolygon =
@@ -1006,7 +1007,7 @@ const sketchReduce = (
   drawBalconyEnd =
     drawBalconyEnd ||
     function(param) {
-      let coorArr = param.geometry._coordinates;
+      let coorArr = param.geometry.getCoordinates()[0];
       coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
       //随机数加当前时间构成id
       let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
@@ -1101,6 +1102,7 @@ const sketchReduce = (
       modifyPointId = action.payload.command;
       if (!drawPoint) {
         drawPoint = function(e) {
+          console.log("纠正点位")
           let num = modifyPointId;          
           let oldPoi = map.getLayer("point").getGeometryById(num);
           let oldLabel = map.getLayer("label").getGeometryById(num);
@@ -1122,15 +1124,10 @@ const sketchReduce = (
               textAlign: "auto"
             }
           });
-          label.on("click", function(e) {
-            target = e.target;
-            console.log(target);
-            drawTool.disable();
-            label.startEditText();
-          });
-          let point = new maptalks.Circle(e.coordinate, 0.5, {
+          label.on("click", clickObj);
+          let point = new maptalks.Circle(e.coordinate, 4, {
             id: num,
-            labels: label._id,
+            labels: label.getId(),
             picture: oldPoi.options.picture,
             isClicked: false,
             symbol: {
@@ -1168,6 +1165,7 @@ const sketchReduce = (
     case "plotRTK":
       console.log("展点");
       recoverObj();
+      map.off("click", drawPoint);
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
@@ -1242,18 +1240,18 @@ const sketchReduce = (
    
     //取界址点号
     case "fetchPoi_NumClick":
-        
-        let i = action.payload2.id - 1;//旧id
-        let old_id=action.payload2.id;
+        map.off("click", drawPoint);
+        let i = action.payload2.id - 1;
+        let old_id=action.payload2.id;//旧id
         let new_id=action.payload1.d;
-        console.log(new_id)
+
         map.getLayer("point").getGeometryById(old_id).setId(new_id); 
-        console.log(map.getLayer("point").getGeometryById(new_id) )
+
         let oldLabel = map.getLayer("label").getGeometryById(old_id);
         let labelContent=new_id;
         console.log(labelContent)
         //为界址点添加点号注记
-        let label = new maptalks.Label(labelContent, oldLabel._coordinates, {
+        let label = new maptalks.Label(labelContent, oldLabel.getCoordinates(), {
             id: new_id,
             isClicked:false,
             draggable: true,
@@ -1268,19 +1266,26 @@ const sketchReduce = (
               textAlign: "auto"
             }
         });
-        label.on("click", function(e) {
-            target = e.target;
-            console.log(target);
-            drawTool.disable();
-            label.startEditText();
-        });
-
+        label.on("click", clickObj);
         oldLabel.remove();
-        map.getLayer("point").getGeometryById(new_id).config('labels',new_id)
         map.getLayer("label").addGeometry(label);
-        newState.plotListData[i].id = new_id;
-        console.log(newState)
-      return {...state,...newState}
+        map.getLayer("point").getGeometryById(new_id).config('labels',new_id)
+        //更新实时成图点列表数据
+        const new_jzdData2 = map.getLayer("point").toJSON()
+        let new_jzdpoi2 = new_jzdData2.geometries;
+        let new_tableRow2;
+        let new_tableData2 = [];
+        for (let i = 0; i < new_jzdpoi2.length; i++) {
+          new_tableRow2 = {
+            id: new_jzdpoi2[i].feature.id,
+            coordinates: new_jzdpoi2[i].coordinates,
+          };
+          new_tableData2.push(new_tableRow2);
+        }
+        const updateTableData2={
+          plotListData: new_tableData2
+        }
+        return Object.assign({}, state, { ...updateTableData2 });   
    
     //画点
     case "drawPointClick":
@@ -1302,6 +1307,7 @@ const sketchReduce = (
       areaTool.disable();
       snap.disable();
       map.off("dblclick", drawToolOn);
+      map.off("click", drawPoint);
       if (!state.drawPointIsChecked) {
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawLineEnd);
@@ -1337,6 +1343,7 @@ const sketchReduce = (
     //画四至线
     case "drawLineClick":
       recoverObj();
+      map.off("click", drawPoint);
       if (!state.drawLineIsChecked) {
         map.off("click", drawPoint);
         distanceTool.disable();
@@ -1378,13 +1385,13 @@ const sketchReduce = (
     //画界址线
     case "drawJZXClick":
       recoverObj();
-      console.log(state);
+      map.off("click", drawPoint);
       //画线时drawTool的绑定事件
       drawJZXEnd =
         drawJZXEnd ||
         function(param) {
           recoverObj();
-          let coorArr = param.geometry._coordinates;
+          let coorArr = param.geometry.getCoordinates();
           coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
           //随机数加当前时间构成id
           let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
@@ -1484,7 +1491,7 @@ const sketchReduce = (
       drawCurveEnd =
         drawCurveEnd ||
         function(param) {
-          let coorArr = param.geometry._coordinates;
+          let coorArr = param.geometry.getCoordinates();
           coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
           //随机数加当前时间构成id
           let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
@@ -1530,6 +1537,7 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawBalconyEnd);
         map.off("click", addLabel);
+        map.off("click", drawPoint);
         snap.enable();
         //开始画线
         drawCurve();
@@ -1577,6 +1585,7 @@ const sketchReduce = (
         //开始构面
         drawPolygon();
         map.on("dblclick", drawToolOn);
+        map.off("click", drawPoint);
       } else {
         drawTool.disable();
         snap.disable();
@@ -1647,7 +1656,6 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      //snap.disable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("dblclick", drawToolOn);
@@ -1843,7 +1851,7 @@ const sketchReduce = (
       return Object.assign({}, state, { ...newState7 });
     //撤销
     case "undoClick":
-
+    map.off("click", drawPoint);
     if(drawTool.getCurrentGeometry()){
       drawUndo();
       const new_drawAlert={ drawAlert:false}
@@ -1855,6 +1863,7 @@ const sketchReduce = (
     //重做
     case "redoClick":
       console.log("重做");
+      map.off("click", drawPoint);
       if(drawTool.getCurrentGeometry()){
         drawRedo();
         const new_drawAlert={ drawAlert:false}
@@ -1869,68 +1878,66 @@ const sketchReduce = (
     return Object.assign({}, state, { ...drawAlerClose });
     //保存
     case "saveClick":
-      //console.log("保存");
-      // console.log(projectData);
-      if (map === undefined) return { ...state };
-      let mapCenter = map.getCenter();
-      drawTool.disable();
-      distanceTool.disable();
-      areaTool.disable();
-      map.off("click", drawToolOn);
-      map.off("click", drawPoint);
-      map.off("click", addLabel);
-      map.off("dblclick", drawToolOn);
-      //设置界址点半径成图美观
-      if(map.getLayer("point")._geoList){
-        for (let i = 0; i <map.getLayer("point")._geoList.length; i++) {
-          map.getLayer("point")._geoList[i].setRadius(1);
-        }
+      if (map === undefined){
+        return { ...state };
+      } else{
+        let mapCenter = map.getCenter();
+        drawTool.disable();
+        distanceTool.disable();
+        areaTool.disable();
+        map.off("click", drawToolOn);
+        map.off("click", drawPoint);
+        map.off("click", addLabel);
+        map.off("dblclick", drawToolOn);
+        
+        const saveData = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          addLabelIsChecked: false,
+          measureAreaIsChecked: false,
+          measureDistanceIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: true,
+          signatureIsChecked: false,
+          alertSave: false,
+          mapCenter: mapCenter,
+          jzdJSONData: map.getLayer("point").toJSON(),
+          szJSONData: map.getLayer("SZ").toJSON(),
+          jzxJSONData: map.getLayer("JZX").toJSON(),
+          zdJSONData: map.getLayer("polygon").toJSON(),
+          zjJSONData: map.getLayer("label").toJSON()
+        };
+        //将图层数据存储至项目变量中
+        projectData.ProjectItem.L.jzdJSONData = JSON.stringify(
+          saveData.jzdJSONData
+        );
+        projectData.ProjectItem.L.szJSONData = JSON.stringify(
+          saveData.szJSONData
+        );
+        projectData.ProjectItem.L.jzxJSONData = JSON.stringify(
+          saveData.jzxJSONData
+        );
+        projectData.ProjectItem.L.zdJSONData = JSON.stringify(
+          saveData.zdJSONData
+        );
+        projectData.ProjectItem.L.zjJSONData = JSON.stringify(
+          saveData.zjJSONData
+        );
+  
+        console.log(saveData.jzxJSONData)
+        console.log(projectData.ProjectItem.L.jzxJSONData)
+  
+        return Object.assign({}, state, { ...saveData });
       }
-      console.log(map.getLayer("point")._geoList)
-      const saveData = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        addLabelIsChecked: false,
-        measureAreaIsChecked: false,
-        measureDistanceIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: true,
-        signatureIsChecked: false,
-        alertSave: false,
-        mapCenter: mapCenter,
-        jzdJSONData: map.getLayer("point").toJSON(),
-        szJSONData: map.getLayer("SZ").toJSON(),
-        jzxJSONData: map.getLayer("JZX").toJSON(),
-        zdJSONData: map.getLayer("polygon").toJSON(),
-        zjJSONData: map.getLayer("label").toJSON()
-      };
-      //将图层数据存储至项目变量中
-      projectData.ProjectItem.L.jzdJSONData = JSON.stringify(
-        saveData.jzdJSONData
-      );
-      projectData.ProjectItem.L.szJSONData = JSON.stringify(
-        saveData.szJSONData
-      );
-      projectData.ProjectItem.L.jzxJSONData = JSON.stringify(
-        saveData.jzxJSONData
-      );
-      projectData.ProjectItem.L.zdJSONData = JSON.stringify(
-        saveData.zdJSONData
-      );
-      projectData.ProjectItem.L.zjJSONData = JSON.stringify(
-        saveData.zjJSONData
-      );
-      //console.log( projectData.ProjectItem.L);
-
-      return Object.assign({}, state, { ...saveData });
+     
     case "saveAlertClose":
       const saveAlertClose = { alertSave: false };
       return Object.assign({}, state, { ...saveAlertClose });
