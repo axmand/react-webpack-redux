@@ -210,6 +210,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         body: LoginRequestBodyPost
       })
         .then(response => {
+          console.log(response)
           return response.json()
             .then(json => {
               if (response.ok) {
@@ -307,7 +308,7 @@ const loginReduce = (state = {
       return {...state, ...newState}
     case 'LOGIN_SUCCESS':
       newState.loginNotificaion = "登陆成功！";
-      const authenticationInfo = action.payload.data
+      const authenticationInfo = action.payload.data;
       for (let key in authenticationInfo) {
         localStorage.setItem(key, authenticationInfo[key])        
       }
@@ -317,7 +318,14 @@ const loginReduce = (state = {
       
       return {...state, ...newState}
     case 'LOGIN_FAILURE':
-      newState.loginNotificaion = action.payload.data.error_description;
+      console.log(action.payload.data);
+      const loginFailureNoticification = JSON.stringify(action.payload.data);
+      console.log(action.payload.data.error_description);
+      console.log(loginFailureNoticification);
+      if (loginFailureNoticification === "{}")
+        newState.loginNotificaion = "网络连接被拒绝。。。登录失败";
+      else
+        newState.loginNotificaion = action.payload.data.error_description || loginFailureNoticification;
       return {...state, ...newState}
     
     default:

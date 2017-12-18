@@ -11,6 +11,7 @@ import Menu, { MenuItem } from 'material-ui/Menu'
 import IdentityVerificationModule from './IdentityVerificationModule'
 import LandInfoQueryModule from './LandInfoQueryModule'
 import RootReducer from '../../redux/RootReducer';
+import projectData from "./../../redux/RootData";
 
 const styles = {
   listitem: {
@@ -142,8 +143,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles,{n
 
 const investigationReduce = (
   state = {
-    IDCardNumber: '',
-    IDCardName: '',
+    IDCardNumber: '450821198707135810',
+    IDCardName: '吕俊宏',
     OwnPowerSide: '雷秀珍',
     ParcelCode: '',
     TuDiZhengShuHao: '',
@@ -154,6 +155,8 @@ const investigationReduce = (
     investigationMenuDisplayState: false,
     idVerificationDisplayState: false,
     landInfoQueryDisplayState: false,
+    AdjoinName: [],
+    AdjoinId: [],
   }, action) => {
   let newState = JSON.parse(JSON.stringify(state))
 
@@ -174,10 +177,31 @@ const investigationReduce = (
       return {...state, ...newState}
 
     case 'IDENTITY_VERIFICATION_QUERY_SUCCESS':
+      console.log(action.payload);
       if (action.payload.identityVerificationQueryResult === true)
         newState.identityVerificationNotification = "验证成功！"
+        if (projectData !== "undefined")
+        {
+          let AdjoinIdTemp = projectData.ProjectItem.F3.AdjoinId;
+          console.log(AdjoinIdTemp)
+          let isAddAdjoinInfo = false;
+          for (let i = 0; i < AdjoinIdTemp.length; i++)
+          {
+            if(action.payload.data.personid === AdjoinIdTemp[i])
+            {
+              isAddAdjoinInfo = true;
+            }
+          }
+          if (!isAddAdjoinInfo)
+          {
+            projectData.ProjectItem.F3.AdjoinName.push(action.payload.data.personname)
+            projectData.ProjectItem.F3.AdjoinId.push(action.payload.data.personid)
+            newState.identityVerificationNotification += "该权利人信息已经存储！"
+          }
+        }
       if (action.payload.identityVerificationQueryResult === false)
         newState.identityVerificationNotification = "公民身份证号码和姓名与数据库记录不符！"
+      console.log(newState)
       return {...state, ...newState}
 
     case 'menuClick':
