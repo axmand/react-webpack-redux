@@ -81,7 +81,7 @@ class InputListCellUI extends React.PureComponent {
   closeInputCell = (e) => {
     
     var inputData = this.state.inputValue;
-    if(inputData!="")
+    if(inputData!=="")
     this.props.onCompleteInput(inputData,this.props.name,this.props.tableIndex,this.props.index);
     this.setState({ cellShow: false });
   }
@@ -93,7 +93,7 @@ class InputListCellUI extends React.PureComponent {
 
   render() {
     const { 
-      name,index,defaultValue,title,tips,value
+      title,tips,value
     } = this.props;
     
     

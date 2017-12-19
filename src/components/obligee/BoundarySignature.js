@@ -7,7 +7,7 @@ function mapStateToProps(state ,ownProps) {
   // const tableIndex =ownProps.tableIndex;
 
   var jzxData=projectData.ProjectItem.L.jzxJSONData;
-  var jzx = eval('(' + jzxData + ')');
+  var jzx =JSON.parse(jzxData);// eval('(' + jzxData + ')');
 
 console.log(jzx);
   var startPoints=[];

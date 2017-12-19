@@ -24,11 +24,11 @@ for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
 }
 for(let j=0;j<jzx.geometries[i].options.poiArr.length-1;j++)
 { 
-  var newValue=jzx.geometries[i].options.labels[j].content;
+  newValue=jzx.geometries[i].options.labels[j].content;
 
 
   //if(LandPointDistance.indexOf(newValue)>0)
-  if(newValue!=undefined)
+  if(newValue!==undefined)
   LandPointDistance.push(newValue);
 else
   LandPointDistance.push(0);

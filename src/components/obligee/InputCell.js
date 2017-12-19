@@ -63,7 +63,7 @@ class InputCellUI extends React.PureComponent {
   closeInputCell = (e) => {
     
     var inputData = this.state.inputValue;
-    if(inputData!="")
+    if(inputData!=="")
     this.props.onCompleteInput(inputData,this.props.name,this.props.tableIndex);
     this.setState({ cellShow: false });
   }

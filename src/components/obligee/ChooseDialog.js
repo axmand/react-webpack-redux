@@ -243,17 +243,20 @@ loaded:false
   
    projectData.Loaded=true;
    return state;
-
+break;
 
 
    case "choose":
-   if(action.payload.choice==2)
+   if(action.payload.choice===2)
      {
       var statenew=state;
       
 var LandPointInMap=[];
       var jzx =JSON.parse(projectData.ProjectItem.L.jzxJSONData);
       
+
+      if(jzx.geometries.length!==0)
+      {
         for(let i=0;i<jzx.geometries.length;i++)
         {
       for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
@@ -263,7 +266,7 @@ var LandPointInMap=[];
         LandPointInMap.push(newValue);
       }
         }
-    
+   
         var LandPointInMapCount=LandPointInMap.length;
 
 
@@ -292,7 +295,7 @@ var LandPointInMap=[];
 
       if(LandPointInMapCount>LandPointCount)
       {
-        if(LandPointCount==0)
+        if(LandPointCount===0)
         {
           statenew.F2.LandPointCodeList=new Array(LandPointInMapCount);
            statenew.F2.LandPointTypeList =new Array(LandPointInMapCount);
@@ -348,14 +351,15 @@ var LandPointInMap=[];
       }
 
      }
-      
+    }
        var returnState=Object.assign({}, state, statenew);
  
        projectData.ProjectItem=returnState;
    
        return returnState;
 
-  
+       break;
+       
     case 'change':
      var inputName=action.payload.inputName;
      var tableID=action.payload.tableID;
@@ -401,15 +405,8 @@ var LandPointInMap=[];
    
        console.log(returnState);
        return returnState;
- 
-//        projectData.ProjectItem=statenew;
-//  console.log(projectData.ProjectItem);
-//  console.log(statenew);
-
-
-
-//        return statenew;
-
+       break;
+       
 
 
 
@@ -418,19 +415,7 @@ var LandPointInMap=[];
      case 'CHANGE_CHECKBOX':
   
     var newState=state;
-    // if(state[action.payload.tableID][action.payload.type].length==0)
-    // {
-    //   var checkListLength= projectData.ProjectItem.F2.LandPointCodeList.length-1;
-
-    //   if(action.payload.type=='LandPointTypeList')
-    //     checkListLength+=1;
-    //   newState[action.payload.tableID][action.payload.type]=new Array(checkListLength);
-
-    //   for(var i=0;i<checkListLength;i++)
-    //   {
-    //     newState[action.payload.tableID][action.payload.type][i]=-1;
-    //   }
-    // }
+   
         
     newState[action.payload.tableID][action.payload.type][action.payload.row]=action.payload.col;
 
@@ -444,8 +429,7 @@ var LandPointInMap=[];
 
     case 'signatureClick':
     var jzxData=projectData.ProjectItem.L.jzxJSONData;
-    var jzx = eval('(' + jzxData + ')');
-  
+    var jzx =JSON.parse(jzxData);
   
     var startPoints=[];
     var endPoints=[];
