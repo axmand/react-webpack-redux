@@ -385,18 +385,6 @@ var LandPointInMap=[];
  
        var statenew=state;
 
-
-      //  if(state[tableID][inputName].length==0)
-      //  {
-      //  var distanceListLength= projectData.ProjectItem.F2.LandPointCodeList.length;
-      //     statenew[tableID][inputName]=new Array(distanceListLength-1);
-
-      //     for(var i=0;i<distanceListLength;i++)
-      //     {
-      //       statenew[tableID][inputName][i]="";
-      //     }
-      //  }
-
        statenew[tableID][inputName][index]=action.payload.inputValue;
       console.log(statenew[tableID][inputName][index]);
        var returnState=Object.assign({}, state, statenew);
@@ -407,7 +395,22 @@ var LandPointInMap=[];
        return returnState;
        break;
        
-
+       case 'Muti_CHANGE_CHECKBOX':
+       
+         var newState=state;
+        
+        for(var i=0;i<newState[action.payload.tableID][action.payload.type].length;i++)
+        {
+          newState[action.payload.tableID][action.payload.type][i]=action.payload.col;
+        }
+       
+     
+     
+          var returnState=Object.assign({}, state, newState);
+          projectData.ProjectItem=returnState;
+     
+         console.log(returnState);
+         return returnState;
 
 
 
