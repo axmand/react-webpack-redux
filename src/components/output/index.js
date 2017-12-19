@@ -16,12 +16,13 @@ const styles = {
   listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
+    height:`${window.innerHeight*0.1}px`,
     // paddingTop: "15%",
     // paddingBottom: "15%",
 	},
 	listItemIcon: {
-		width: "40%",
-    height: "40%",
+		width: "60%",
+    height: "60%",
 		margin: 0,
 		color: '#C1C6C9',
 	},

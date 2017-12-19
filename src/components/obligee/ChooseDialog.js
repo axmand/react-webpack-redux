@@ -31,13 +31,14 @@ const styles = {
    listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
-    paddingTop: "15%",
-    paddingBottom: "15%",
+    // paddingTop: "15%",
+    // paddingBottom: "15%",
+    height:`${window.innerHeight*0.1}px`,
    
   },
   listItemIcon: {
-    width: "40%",
-    height: "40%",
+    width: "60%",
+    height: "60%",
     margin: 0,
     color: "#C1C6C9"
   },

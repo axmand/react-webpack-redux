@@ -30,26 +30,26 @@ const styles = theme => ({
     height: `${window.innerHeight - 48}px`,
     background: "white",
     display: "flex",
-    justifyContent: "center"
   },
   thematicMap: {
+    justifyContent: "center",
     position: "absolute",
-    top: "7.8125%",
-    width: `${window.innerHeight * 0.61875}px`,
-    height: `${window.innerHeight * 0.875}px`
+    width: `${window.innerHeight * 0.61875*3}px`,
+    height: `${window.innerHeight * 0.875*3}px`,
+   // transform:"scale(0.3,0.3)"
   },
   title: {
-    padding: "2% 0 0 0",
-    fontSize: "1.5em",
+    padding: "2% 0 2% 0",
+    fontSize: "4em",
     fontFamily: "宋体",
     fontWeight: "800",
-    height: "5%"
+    height: "3%"
   },
   table:{    
     position:'absolute',
     left:'7.5%',
-    width:`${window.innerHeight * 0.61875*0.85}px`,
-    height: `${window.innerHeight * 0.875*0.85}px`,
+    width:`${window.innerHeight * 0.61875*0.85*3}px`,
+    height: `${window.innerHeight * 0.875*0.85*3}px`,
     borderCollapse:'collapse',
     border:'solid 2px #000'
   },
@@ -63,7 +63,7 @@ const styles = theme => ({
   headtext:{
     background:'#fff',
     width:'95%',
-    fontSize: "1em",
+    fontSize: "2em",
     fontFamily: "宋体",
     fontWeight: "400",
     textAlign:'center',
@@ -82,17 +82,15 @@ const styles = theme => ({
 
   bottomtable:{
     position:'absolute',
-    top: "91%",
-    left:'40%',
-    width: `${window.innerHeight * 0.35}px`,
+    top: "92%",
+    left:'54%',
+    width: `${window.innerHeight * 0.24*3}px`,
+    height:`${window.innerHeight * 0.875* 0.06*3}px`,
     padding:0,
     border:0,
-    fontSize: "1em",
-    fontFamily: "宋体",
-    fontWeight: "400",
   },
   btmtr:{
-    height: `${window.innerHeight * 0.03}px`,
+    height: `${window.innerHeight * 0.875* 0.03*3}px`,
     width:'100%',
     padding:0,
     border:0,
@@ -100,7 +98,7 @@ const styles = theme => ({
   btmtd:{
     padding:0,
     border:0,
-    fontSize: "1em",
+    fontSize: "2em",
     fontFamily: "宋体",
     fontWeight: "400",
   },
@@ -114,13 +112,13 @@ const styles = theme => ({
   },
   right: {
     position: "absolute",
-    top: "62%",
+    top: "72%",
     left:"92.5%",
-    fontSize: "1em",
+    fontSize: "2em",
     fontFamily: "宋体",
     letterSpacing: "20px",
     width: "2%",
-    height: "40%",
+    height: "20%",
     padding: "0 1% 0 1%"
   },
   alert: { 
@@ -405,6 +403,7 @@ const mapDispatchToProps = dispatch => {
         const ThematicMapDataLoad = ThematicMapDataURL.slice(
           ThematicMapDataURL.indexOf(",") + 1
         );
+        
         fetch(appConfig.fileServiceRootPath + "/project/savepicture", {
           method: "POST",
           body: ThematicMapDataLoad
