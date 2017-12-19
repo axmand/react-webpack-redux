@@ -749,6 +749,7 @@ const sketchReduce = (
     zjJSONData: JSON,
     poiTableData: [],
     mapCenter: [],
+    mapZoom:16,
     plotListData: []
   },
   action
@@ -1907,6 +1908,7 @@ const sketchReduce = (
           saveIsChecked: true,
           signatureIsChecked: false,
           alertSave: false,
+          mapZoom:map.getZoom(),
           mapCenter: mapCenter,
           jzdJSONData: map.getLayer("point").toJSON(),
           szJSONData: map.getLayer("SZ").toJSON(),
@@ -1991,6 +1993,8 @@ const sketchReduce = (
       let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
       console.log(jzxPoi);
       jzxPoi.updateSymbol({ lineColor: "#00FFFF" });
+      //将地图中心设置为当前选中的界址线端点
+      map.setCenter(jzxPoi.getCoordinates()[0]);
       const jzxTable = {
         signatureIsChecked: false
       };

@@ -198,6 +198,7 @@ class ThematicMap extends Component {
     const {
       saveIsChecked,
       mapCenter,
+      mapZoom,
       jzdJSONData,
       szJSONData,
       jzxJSONData,
@@ -232,7 +233,7 @@ class ThematicMap extends Component {
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
         center: mapCenter,
-        zoom: 16,
+        zoom:mapZoom,
         baseLayer: new maptalks.TileLayer("base", {
           crossOrigin: "anonymous",
           // 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
@@ -434,6 +435,7 @@ const mapStateToProps = state => {
     previewPrintIsChecked:canvasSeduce.previewPrintIsChecked,
     unclosePreviewAlert:canvasSeduce.unclosePreviewAlert,
     mapCenter: sketchState.mapCenter,
+    mapZoom:sketchState.mapZoom,
     jzdJSONData: sketchState.jzdJSONData,
     szJSONData: sketchState.szJSONData,
     jzxJSONData:sketchState.jzxJSONData,
@@ -551,6 +553,17 @@ const CanvasReduce = (
     case "PREVIEW_PRINT_CLICK":
       newState.previewPrintIsChecked =!state.previewPrintIsChecked;
       newState.appBarLonger = state.previewPrintIsChecked;
+      return{...state, ...newState }
+    
+    //关闭打印预览
+    case "closePrintPreview":
+      newState.previewPrintIsChecked =false;
+      newState.appBarLonger = true;
+      return{...state, ...newState }
+    //打开打印预览还原页面大小
+    case "openPrintPreview":
+      newState.previewPrintIsChecked =true;
+      newState.appBarLonger = false;
       return{...state, ...newState }
     //拉长顶部tab条
     case "Tab_Bar_Longer":

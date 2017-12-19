@@ -44,7 +44,7 @@ class Sketch extends Component {
   };
 
   render() {
-    const { classes, onClick, onResetSketchState, onTabThematicClick,isRealtimeOn, saveIsChecked, plotListData,appBarLonger } = this.props;
+    const { classes, onClick, onTabSketchClick, onTabThematicClick,isRealtimeOn, saveIsChecked, plotListData,appBarLonger } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -64,7 +64,7 @@ class Sketch extends Component {
             className={classes.tab}
               classes={{ label: this.props.classes.label }}
               label="草图编辑"
-              onClick={onResetSketchState}
+              onClick={onTabSketchClick}
             />
             <Tab 
             classes={{ label: this.props.classes.label }} 
@@ -95,7 +95,6 @@ class Sketch extends Component {
 Sketch.propTypes = {
   classes: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
-  onResetSketchState: PropTypes.func.isRequired
 };
 
 /**
@@ -121,15 +120,22 @@ const mapDispatchToProps = dispatch => {
         type: "MAP_SKETCH_VIEW_SWITCH"
       });
     },
-    onResetSketchState: () => {
+    onTabSketchClick: () => {
+      dispatch({
+        type: "openPrintPreview"
+      });  
       dispatch({
         type: "resetSketchState"
       });
+    
     },
     onTabThematicClick:()=>{     
       dispatch({
         type:"Tab_Bar_Longer"
-      })
+      });
+      dispatch({
+        type: "closePrintPreview"
+      }); 
     }
   };
 };
