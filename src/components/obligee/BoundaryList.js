@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 // import  PointNameCell from './PointNameCell'
 import projectData from "./../../redux/RootData";
 import InputListCell from "./InputListCell"
+import MutiCheckButton from "./MutiCheckButton"
 // Map Redux state to component props
 const mapStateToProps=(state,ownProps)=> {
   
@@ -22,9 +23,9 @@ for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
   if(LandPointCodeList.indexOf(newValue)<0)
     LandPointCodeList.push(newValue);
 }
-for(let j=0;j<jzx.geometries[i].options.poiArr.length-1;j++)
+for(let j=0;j<jzx.geometries.length;j++)
 { 
-  newValue=jzx.geometries[i].options.labels[j].content;
+  newValue=jzx.geometries[j].options.length;
 
 
   //if(LandPointDistance.indexOf(newValue)>0)
@@ -39,7 +40,7 @@ else
    
   }
   projectData.ProjectItem.F2.LandPointCodeList  =LandPointCodeList;
-  //projectData.ProjectItem.F2.LandPointDistance   =LandPointDistance; 
+  projectData.ProjectItem.F2.LandPointDistance   =LandPointDistance; 
   //console.log(LandPointDistance);
   
 
@@ -95,12 +96,12 @@ class BoundaryList extends Component {
 
     var tableContent=[];
     
-    
+    //<MutiCheckButton tableIndex="F2" value={""}  type="LandPointTypeList"/>
     
     var tableHead1=(
       <tr>
     <td width="67" rowSpan="2"><p >界址点号 </p></td>
-    <td width="145" colSpan="5"><p >界标种类 </p></td>
+    <td width="145" colSpan="5"><p>界址点种类</p></td>
     <td width="100" rowSpan="2"><p >界址 <br />
       间距（m） </p></td>
     <td width="223" colSpan="8"><p >界址线类别 </p></td>
@@ -108,26 +109,45 @@ class BoundaryList extends Component {
     <td width="64"><p >说明 </p></td>
   </tr>);
     var tableHead2=(<tr>
-    <td width="30"><p >钢钉 </p></td>
-    <td width="30"><p >水泥桩 </p></td>
-    <td width="30"><p >喷涂 </p></td>
-    <td width="27"><p >无标志 </p></td>
-    <td width="28"><p >其他 </p></td>
-    <td width="25"><p >两点连线 </p></td>
-    <td width="28"><p >道路 </p></td>
-    <td width="28"><p >沟渠 </p></td>
-    <td width="28"><p >围墙 </p></td>
-    <td width="28"><p >围栏 </p></td>
-    <td width="28"><p >田埂 </p></td>
-    <td width="28"><p >墙壁 </p></td>
-    <td width="28"><p >其他 </p></td>
-    <td width="28"><p >内 </p></td>
-    <td width="28"><p >中 </p></td>
-    <td width="28"><p >外 </p></td>
+    <td width="30"><MutiCheckButton tableIndex="F2" value={"钢钉"} col={0} type="LandPointTypeList"/></td>
+    <td width="30"><MutiCheckButton tableIndex="F2" value={"水泥桩"} col={1} type="LandPointTypeList"/></td>
+    <td width="30"><MutiCheckButton tableIndex="F2" value={"喷涂"} col={2} type="LandPointTypeList"/></td>
+    <td width="27"><MutiCheckButton tableIndex="F2" value={"无标志"} col={3} type="LandPointTypeList"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"其他"} col={4} type="LandPointTypeList"/></td>
+
+    <td width="25"><MutiCheckButton tableIndex="F2" value={"两点连线"} col={0} type="LandBoundaryType"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"道路"} col={1} type="LandBoundaryType"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"沟渠"} col={2} type="LandBoundaryType"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"围墙"} col={3} type="LandBoundaryType"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"围栏"} col={4} type="LandBoundaryType"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"田埂"} col={5} type="LandBoundaryType"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"墙壁"} col={6} type="LandBoundaryType"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"其他"} col={7} type="LandBoundaryType"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"内"} col={0} type="LandBoundaryLocation"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"中"} col={1} type="LandBoundaryLocation"/></td>
+    <td width="28"><MutiCheckButton tableIndex="F2" value={"外"} col={2} type="LandBoundaryLocation"/></td>
     <td width="64"><p ></p></td>
   </tr>);
     
-    
+    // var tableHead2=(<tr>
+    //   <td width="30"><p >钢钉 </p></td>
+    //   <td width="30"><p >水泥桩 </p></td>
+    //   <td width="30"><p >喷涂 </p></td>
+    //   <td width="27"><p >无标志 </p></td>
+    //   <td width="28"><p >其他 </p></td>
+    //   <td width="25"><p >两点连线 </p></td>
+    //   <td width="28"><p >道路 </p></td>
+    //   <td width="28"><p >沟渠 </p></td>
+    //   <td width="28"><p >围墙 </p></td>
+    //   <td width="28"><p >围栏 </p></td>
+    //   <td width="28"><p >田埂 </p></td>
+    //   <td width="28"><p >墙壁 </p></td>
+    //   <td width="28"><p >其他 </p></td>
+    //   <td width="28"><p >内 </p></td>
+    //   <td width="28"><p >中 </p></td>
+    //   <td width="28"><p >外 </p></td>
+    //   <td width="64"><p ></p></td>
+    // </tr>);
        tableContent.push(tableHead1);
        tableContent.push(tableHead2);
 if(LandPointCodeList.length>0)
@@ -153,7 +173,8 @@ var firstLine=(
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={0} type="LandBoundaryLocation"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={1} type="LandBoundaryLocation"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={2} type="LandBoundaryLocation"/></p></td>
-    <td width="64" rowSpan="2"><p >{LandBoundaryExplain[0]}</p></td>
+    <td width="64" rowSpan="2"><InputListCell name="LandBoundaryExplain" tableIndex="F2" index={0} defaultValue="test"  title="说明" tips="请填写说明信息"/></td>
+    {/* <td width="64" rowSpan="2"><p >{LandBoundaryExplain[0]}</p></td> */}
     </tr>);
 
     tableContent.push(firstLine);
@@ -187,7 +208,7 @@ var tr1=(
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={0} type="LandBoundaryLocation"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={1} type="LandBoundaryLocation"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={2} type="LandBoundaryLocation"/></p></td>
-    <td width="64" rowSpan="2"><p >{LandBoundaryExplain[i]}</p></td>
+    <td width="64" rowSpan="2"><p ><InputListCell name="LandBoundaryExplain" tableIndex="F2" index={i} defaultValue="test"  title="说明" tips="请填写说明信息"/></p></td>
   </tr>);
   tableContent.push(tr1);
   tableContent.push(tr2);
