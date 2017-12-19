@@ -345,7 +345,6 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     let center;
-    console.log(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
     console.log(projectData.ProjectItem.L.jzdJSONData);
     if(projectData.ProjectItem.L.jzdJSONData){
       let poi_data= maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));

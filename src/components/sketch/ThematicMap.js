@@ -15,7 +15,9 @@ import Button from "material-ui/Button";
 import green from "material-ui/colors/green";
 import { CircularProgress } from "material-ui/Progress";
 import CheckIcon from "material-ui-icons/Check";
+import FindInPage from "material-ui-icons/FindInPage"//打印预览
 import SaveIcon from "material-ui-icons/Save"; //保存
+import Close from "material-ui-icons/Close"; //保存
 import Typography from "material-ui/Typography";
 // import Divider from "material-ui/Divider";
 import Dialog, {DialogContent} from "material-ui/Dialog";
@@ -23,6 +25,7 @@ import Dialog, {DialogContent} from "material-ui/Dialog";
 import appConfig from "../../redux/Config";
 import html2canvas from "html2canvas";
 import projectData from "./../../redux/RootData";
+import { read } from "fs";
 
 const styles = theme => ({
   root: {
@@ -32,11 +35,9 @@ const styles = theme => ({
     display: "flex",
   },
   thematicMap: {
-    justifyContent: "center",
     position: "absolute",
     width: `${window.innerHeight * 0.61875*3}px`,
     height: `${window.innerHeight * 0.875*3}px`,
-   // transform:"scale(0.3,0.3)"
   },
   title: {
     padding: "2% 0 2% 0",
@@ -132,13 +133,20 @@ const styles = theme => ({
     textAlign: "center",
     lineHeight: "150%",
   },
-  wrapper: {
+  wrapper_save: {
     // position: "relative",
     position: "absolute",
-    top: "90%",
-    left: "75%",
+    top: "10%",
+    left: "5%",
     height: "6%",
-    width: "6%"
+    width: "6%",
+  },
+  wrapper_preview: {
+    position: "absolute",
+    top: "10%",
+    left: "13%",
+    height: "6%",
+    width: "6%",
   },
   successSaveButtonClass: {
     backgroundColor: green[500],
@@ -159,8 +167,8 @@ const styles = theme => ({
     boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.2)"
   },
   icon: {
-    height: "35%",
-    width: "35%",
+    height: "64%",
+    width: "64%",
     color: "#fff"
   },
   bt_text: {
@@ -187,7 +195,6 @@ let thematicMap,thematicMapDOM;
  */
 class ThematicMap extends Component {
   componentDidMount() {
-
     const {
       saveIsChecked,
       mapCenter,
@@ -197,20 +204,31 @@ class ThematicMap extends Component {
       zdJSONData,
       zjJSONData
     } = this.props;
-
-    let jzd=maptalks.Layer.fromJSON(jzdJSONData);
-    let sz= maptalks.Layer.fromJSON(szJSONData);
-    let jzx= maptalks.Layer.fromJSON(jzxJSONData);
-    let zd= maptalks.Layer.fromJSON(zdJSONData);
-    let zj=maptalks.Layer.fromJSON(zjJSONData);
-      //设置界址点半径成图美观
-      if(jzd.getGeometries()){
-        for (let i = 0; i <jzd.getGeometries().length; i++) {
-          jzd.getGeometries()[i].setRadius(1);
+    if (saveIsChecked) {   
+      let jzd,sz,jzx,zd,zj;
+      if(jzdJSONData){
+        jzd=maptalks.Layer.fromJSON(jzdJSONData);
+        //设置界址点半径成图美观
+        if(jzd.getGeometries()){
+          for (let i = 0; i <jzd.getGeometries().length; i++) {
+            jzd.getGeometries()[i].setRadius(1);
+          }
         }
       }
+      if(szJSONData){
+        sz= maptalks.Layer.fromJSON(szJSONData);
+      }
+      if(jzxJSONData){
+        jzx= maptalks.Layer.fromJSON(jzxJSONData);
+      }
+      if(zdJSONData){
+        zd= maptalks.Layer.fromJSON(zdJSONData);
+      }
+      if(zjJSONData){
+        zj=maptalks.Layer.fromJSON(zjJSONData);
+      }
 
-    if (saveIsChecked) {
+
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
         center: mapCenter,
@@ -244,12 +262,17 @@ class ThematicMap extends Component {
       onSaveThematicMapClick,
       thematicMapSaveSuccess,
       thematicMapSaveLoading,
+      onPreviewPrintClick,
+      previewPrintIsChecked,
+      unclosePreviewAlert,
+      previewAlerClose
     } = this.props;
 
     let saveButtonClass = "";
     if (thematicMapSaveSuccess) {
       saveButtonClass = classes.successSaveButtonClass;
     }
+
 
     return (
       <div className={classes.root}>
@@ -258,6 +281,17 @@ class ThematicMap extends Component {
             thematicMapDOM = div
           }}
           className={classes.thematicMap}
+          style={{
+            transform:previewPrintIsChecked
+            ?"scale(0.33,0.33)"
+            :"",
+            top:previewPrintIsChecked
+            ?"-77%"
+            :"",
+            left:previewPrintIsChecked
+            ?"-15%"
+            :""
+          }}
         >
           <Dialog 
             open={alertSave} 
@@ -266,6 +300,15 @@ class ThematicMap extends Component {
               <DialogContent className={classes.alert} onClick={onSaveAlertClose}>
                 <Typography className={classes.message}>
                   无法获取草图绘制成果图！<br />请返回草图编辑界面绘制并点击保存！                
+                </Typography>
+              </DialogContent>
+          </Dialog>
+          <Dialog 
+            open={unclosePreviewAlert} 
+            onRequestClose={previewAlerClose}>
+              <DialogContent className={classes.alert} onClick={previewAlerClose}>
+                <Typography className={classes.message}>
+                  保存失败！请关闭预览后再保存！                
                 </Typography>
               </DialogContent>
           </Dialog>
@@ -333,7 +376,21 @@ class ThematicMap extends Component {
           </table>
           <div className={classes.right}>南宁市不动产权籍调查机构绘制</div>
         </Paper>
-        <div className={classes.wrapper}>
+        <div className={classes.wrapper_preview}>
+          <Button
+            fab
+            color="primary"
+            onClick={onPreviewPrintClick}
+          >
+          {previewPrintIsChecked ? (
+            <Close className={classes.icon} />
+          ) : (
+            <FindInPage className={classes.icon} />
+          )}
+            
+          </Button>
+        </div>
+        <div className={classes.wrapper_save}>
           <Button
             fab
             color="primary"
@@ -374,6 +431,8 @@ const mapStateToProps = state => {
     saveIsChecked: sketchState.saveIsChecked,
     thematicMapSaveSuccess: canvasSeduce.thematicMapSaveSuccess,
     thematicMapSaveLoading: canvasSeduce.thematicMapSaveLoading,
+    previewPrintIsChecked:canvasSeduce.previewPrintIsChecked,
+    unclosePreviewAlert:canvasSeduce.unclosePreviewAlert,
     mapCenter: sketchState.mapCenter,
     jzdJSONData: sketchState.jzdJSONData,
     szJSONData: sketchState.szJSONData,
@@ -385,17 +444,32 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    //未保存时错误提示
     onSaveAlertClose: () => {
       dispatch({
         type: "saveAlertClose"
       });
     },
-
+    //打印预览
+    onPreviewPrintClick:() =>{
+      dispatch({
+        type: "PREVIEW_PRINT_CLICK"
+      });
+    },
+    //关闭打印预览提示
+    previewAlerClose:()=>{
+      dispatch({
+        type:"CLOSE_PREVIEW_ALERT"
+      })
+    },
+    //保存
     onSaveThematicMapClick: () => {
+      dispatch({
+        type:"UNCLOSE_PREVIEW_ALERT"
+      })
       dispatch({
         type: "SAVE_THEMATICMAP_CLICK"
       });
-
       console.log(findDOMNode(thematicMapDOM))
       html2canvas(findDOMNode(thematicMapDOM)).then(function(canvas) {
         console.log(canvas.toDataURL())
@@ -463,21 +537,45 @@ const CanvasReduce = (
   state = {
     thematicMapImg: ImageData,
     thematicMapSaveSuccess: false,
-    thematicMapSaveLoading: false
+    thematicMapSaveLoading: false,
+    previewPrintIsChecked:false,
+    appBarLonger:false,
+    unclosePreviewAlert:false
   },
   action
 ) => {
   let newState = JSON.parse(JSON.stringify(state));
 
   switch (action.type) {
+    //打印预览
+    case "PREVIEW_PRINT_CLICK":
+      newState.previewPrintIsChecked =!state.previewPrintIsChecked;
+      newState.appBarLonger = state.previewPrintIsChecked;
+      return{...state, ...newState }
+    //拉长顶部tab条
+    case "Tab_Bar_Longer":
+      newState.appBarLonger = true;
+      return{...state, ...newState }
+    //保存不动产单元草图
     case "SAVE_THEMATICMAP_CLICK":
-      if (!state.thematicMapSaveLoading) {
+      if (!state.thematicMapSaveLoading&&!state.previewPrintIsChecked) {
         newState.thematicMapSaveLoading = true;
       }
       return { ...state, ...newState };
+    //未关闭打印预览弹出提示框
+    case "UNCLOSE_PREVIEW_ALERT":
+      if(state.previewPrintIsChecked){
+        newState.unclosePreviewAlert = true;
+      }
+      return { ...state, ...newState };
+    case "CLOSE_PREVIEW_ALERT":
+      newState.unclosePreviewAlert = false;
+      return { ...state, ...newState };
     case "SUCCESS_SAVE_THEMATICMAP_CLICK":
-      newState.thematicMapSaveLoading = false;
-      newState.thematicMapSaveSuccess = true;
+      if(state.thematicMapSaveLoading){
+        newState.thematicMapSaveLoading = false;
+        newState.thematicMapSaveSuccess = true;
+      }
       return { ...state, ...newState };
     case "RESTARE_SUCCESS_SAVE_THEMATICMAP_CLICK":
       newState.thematicMapSaveSuccess = false;

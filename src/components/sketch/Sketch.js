@@ -44,7 +44,7 @@ class Sketch extends Component {
   };
 
   render() {
-    const { classes, onClick, onResetSketchState, isRealtimeOn, saveIsChecked, plotListData } = this.props;
+    const { classes, onClick, onResetSketchState, onTabThematicClick,isRealtimeOn, saveIsChecked, plotListData,appBarLonger } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -54,6 +54,11 @@ class Sketch extends Component {
             onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
+            style={{
+              width:appBarLonger
+              ?`${window.innerHeight * 0.61875*3}px`
+              :"",
+            }}
           >
             <Tab
             className={classes.tab}
@@ -63,7 +68,8 @@ class Sketch extends Component {
             />
             <Tab 
             classes={{ label: this.props.classes.label }} 
-            label="专题图编辑" />
+            label="专题图编辑" 
+            onClick={onTabThematicClick}/>
           </Tabs>
           <IconButton
             className={classes.button}
@@ -99,10 +105,12 @@ Sketch.propTypes = {
  */
 const mapStateToProps = state => {
   const sketchState = state.sketchReduce;
+  const canvasSeduce = state.CanvasReduce;
   return {
     saveIsChecked: sketchState.saveIsChecked,
     isRealtimeOn: sketchState.isRealtimeOn,
     plotListData:sketchState.plotListData,
+    appBarLonger:canvasSeduce.appBarLonger,
   };
 };
 
@@ -117,6 +125,11 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: "resetSketchState"
       });
+    },
+    onTabThematicClick:()=>{     
+      dispatch({
+        type:"Tab_Bar_Longer"
+      })
     }
   };
 };
