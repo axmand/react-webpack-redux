@@ -228,8 +228,6 @@ class ThematicMap extends Component {
       if(zjJSONData){
         zj=maptalks.Layer.fromJSON(zjJSONData);
       }
-
-
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
         center: mapCenter,
@@ -247,6 +245,38 @@ class ThematicMap extends Component {
       jzx.addTo(thematicMap);
       zd.addTo(thematicMap);
       zj.addTo(thematicMap);
+      let szcontent=[];
+      let eastcontent="东至："+projectData.ProjectItem.F1.ParcelRangeEast;
+      let westcontent="西至："+projectData.ProjectItem.F1.ParcelRangeWest;
+      let southcontent="南至："+projectData.ProjectItem.F1.ParcelRangeSouth;
+      let northcontent="北至："+projectData.ProjectItem.F1.ParcelRangeNorth;
+      szcontent.push(eastcontent);
+      szcontent.push(westcontent);
+      szcontent.push(southcontent);
+      szcontent.push(northcontent);
+      for(let i=0;i<szcontent.length;i++){
+        let coor=new maptalks.Coordinate(mapCenter.x+3*Math.pow(10,-4), mapCenter.y+(i+2)*Math.pow(10,-4));
+        console.log(coor)
+        let objLabel = new maptalks.Label(szcontent[i], coor, {
+          id:Number(Math.random().toString().substr(3,3) + Date.now()).toString(36),
+          isClicked:false,
+          draggable: true,
+          box: false,
+          type: "Label",
+          symbol: {
+            textWeight: "200",
+            textFaceName: "宋体",
+            textFill: "#000000",
+            textSize: 12,
+            textHorizontalAlignment: "middle",
+            textVerticalAlignment: "middle",
+            textAlign: "center"
+          }
+        });      
+        thematicMap.getLayer("label").addGeometry(objLabel);
+      }
+     
+
     }
   }
 

@@ -151,6 +151,8 @@ class SkechToolBar extends Component {
       onSignatureClick,
       onDelAlerClose,
       onSignatureAlerClose,
+      openFetchPoiNum,
+      closeFetchPoiNum,
       // onJzdTableClick,
       onjzdPlotClick,
     } = this.props;
@@ -178,7 +180,8 @@ class SkechToolBar extends Component {
       haveObjToDel,
       drawAlert,
       onFetchPoi_NumClick,
-      onjzdXCZJClick
+      onjzdXCZJClick,
+      fetchPoiNumIsChecked
     } = this.props;
     return (
     <div>
@@ -405,6 +408,19 @@ class SkechToolBar extends Component {
                 </Typograghy>
               </DialogContent>
           </Dialog>
+          <Dialog open={fetchPoiNumIsChecked} onRequestClose={closeFetchPoiNum}>
+            <DialogContent>
+              <DialogContentText  style={{color:"#455A64"}}>确认取号？</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeFetchPoiNum} color="default">
+                取消
+              </Button>
+              <Button onClick={onFetchPoi_NumClick} style={{color:"#455A64"}}>
+                确认
+              </Button>
+            </DialogActions>
+          </Dialog>
       <Drawer
         type="persistent"
         classes={{
@@ -417,7 +433,7 @@ class SkechToolBar extends Component {
           <Typography className={classes.title}>
               实时成图点列表
           </Typography>
-          <Button className={classes.fetchpoibut} onClick={onFetchPoi_NumClick} >
+          <Button className={classes.fetchpoibut} onClick={openFetchPoiNum} >
           <Typography style={{fontSize:'0.875rem', color:'#fff'}}>
             取号
             </Typography>
@@ -520,6 +536,7 @@ const mapStateToProps = state => {
     saveIsChecked: sketchState.saveIsChecked,
     alertPlotFail: sketchState.alertPlotFail,
     alertSignature:sketchState.alertSignature,
+    fetchPoiNumIsChecked:sketchState.fetchPoiNumIsChecked,
     // plotListData:sketchState.plotListData
   };
 };
@@ -755,9 +772,21 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         payload:{command:poi_id}
       });
     },
+    closeFetchPoiNum:()=>{
+      dispatch({
+        type:'closeFetchPoiNum',
+      });
+    },
+    openFetchPoiNum:()=>{
+      dispatch({
+        type:'openFetchPoiNum',
+      });
+    },
 
     onFetchPoi_NumClick:()=>{
-
+      dispatch({
+        type:'closeFetchPoiNum',
+      });
       ownProps.plotListData.forEach(n=>{
         let Poi_Data = JSON.stringify({
           
