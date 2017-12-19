@@ -250,7 +250,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch({
             type: "STATUS_BAR_NOTIFICATION",
             payload: {
-              notification: err,
+              // notification: err,
+              notification: "网络连接被拒绝。。。查询土地信息失败"
             }
           });
 

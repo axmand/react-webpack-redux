@@ -145,6 +145,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
       })
         .then(response => {
+          console.log(response);
+
           return response.json()
             .then(json => {
               if (response.ok) {
@@ -155,9 +157,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               }
             })
         })
-        .then(json => {
-          
-          // console.log(json);
+        .then(json => {         
+          console.log(json);
 
           dispatch({
             type: "CLOSE_WAITING_MODULE",
