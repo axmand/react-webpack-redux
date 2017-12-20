@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import Draggable from "react-draggable";
 //ui
@@ -14,7 +15,8 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from "material-ui/Button";
-import List from "material-ui/List"
+import Popover from "material-ui/Popover";
+import List, { ListItem } from "material-ui/List";
 import Typograghy from "material-ui/Typography";
 // import IconButton from 'material-ui/IconButton';
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
@@ -28,10 +30,11 @@ import BorderStyle from "material-ui-icons/BorderStyle"; //界址线
 import CheckBoxOutlineBlank from "material-ui-icons/CheckBoxOutlineBlank"; //构面
 import ViewCarousel from "material-ui-icons/ViewCarousel"; //阳台
 import Looks from "material-ui-icons/Looks"; //弧线
-import PictureInPicture from "material-ui-icons/PictureInPicture"; //中空地块
+//import PictureInPicture from "material-ui-icons/PictureInPicture"; //中空地块
 import BookmarkBorder from "material-ui-icons/BookmarkBorder"; //标注
 import Straighten from "material-ui-icons/Straighten"; //测距
 import FlipToFront from "material-ui-icons/FlipToFront"; //测面
+import TouchApp from "material-ui-icons/TouchApp"; //捕捉
 import NearMe from "material-ui-icons/NearMe"; //选中
 import Delete from "material-ui-icons/Delete"; //删除
 import Undo from "material-ui-icons/Undo"; //撤销
@@ -83,12 +86,27 @@ const styles = theme => ({
     padding:'0 10px 0 10px'
   }, 
   message:{
-     fontSize: "1.5em",
+    fontSize: "1.5em",
     fontFamily:'微软雅黑',
     color:"#455A64",
     textAlign: "center",
   }, 
-  drawerPaper: {
+  snapList:{
+    background: "rgba(69, 90, 100, .6)",
+    height:`${window.innerHeight * 0.1}px`,
+    width:`${window.innerHeight * 0.075}px`,
+  },
+  snapitem:{
+    height:`${window.innerHeight * 0.025}px`,
+    width:`${window.innerHeight * 0.075}px`,
+    justifyContent: 'center ',
+    background: "rgba(69, 90, 100, .6)",
+    textAlign:'center',
+    color:'#fff',
+    fontSize: "1em",
+    fontFamily:'微软雅黑',
+  },
+  rectifydrawerPaper: {
     left:`${window.innerWidth * 0.083}px`,
     top:`${window.innerHeight * 0.2}px`,
     height: '75%',
@@ -146,6 +164,7 @@ class SkechToolBar extends Component {
       onMeasureDistanceClick,
       onMeasureAreaClick,
       onChooseObjClick,
+      onSnapListClick,
       onDeleteClick,
       onUndoClick,
       onRedoClick,
@@ -157,6 +176,8 @@ class SkechToolBar extends Component {
       closeFetchPoiNum,
       // onJzdTableClick,
       onjzdPlotClick,
+      onSnapClick,//捕捉
+      SnapListClose,
     } = this.props;
     const {
       onPlotAlerClose,
@@ -180,6 +201,7 @@ class SkechToolBar extends Component {
       measureDistanceIsChecked,
       measureAreaIsChecked,
       chooseObjIsChecked,
+      snapIsChecked,
       haveObjToDel,
       drawAlert,
       onFetchPoi_NumClick,
@@ -327,6 +349,21 @@ class SkechToolBar extends Component {
                 <Typograghy className={classes.text}>测面</Typograghy>
             </Button>
             <Button
+              ref={node => {
+                this.button = node;
+              }}
+              className={classes.button}
+              style={{
+              backgroundColor: snapIsChecked
+                  ? "rgba(69, 90, 100, .8)"
+                  : "transparent"
+              }}
+              onClick={onSnapClick}
+            >
+                <TouchApp className={classes.icon} />
+                <Typograghy className={classes.text}>捕捉</Typograghy>
+            </Button>
+            <Button
                 className={classes.button}
                 style={{
                 backgroundColor: chooseObjIsChecked
@@ -436,10 +473,41 @@ class SkechToolBar extends Component {
               </Button>
             </DialogActions>
           </Dialog>
+      <Popover
+          anchorEl={findDOMNode(this.button)}
+          open={snapIsChecked}
+          onRequestClose={SnapListClose}
+          anchorOrigin={{
+            vertical:"bottom",
+            horizontal: "center"
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center"
+          }}
+          className={classes.snapList}
+        >
+          <ListItem
+            button
+            className={classes.snapitem}
+            disableGutters={true}
+            onClick={() => onSnapListClick("point")}
+          >
+            界址点
+          </ListItem>
+          <ListItem
+            button
+            className={classes.snapitem}
+            disableGutters={true}
+            onClick={() => onSnapListClick("DX")}
+          >
+            地形图
+          </ListItem>
+      </Popover>
       <Drawer
         type="persistent"
         classes={{
-          paper: classes.drawerPaper,
+          paper: classes.rectifydrawerPaper,
         }}
         anchor= 'left'
         open={rectifyPoiIsChecked}
@@ -547,6 +615,7 @@ const mapStateToProps = state => {
     measureDistanceIsChecked: sketchState.measureDistanceIsChecked,
     measureAreaIsChecked: sketchState.measureAreaIsChecked,
     chooseObjIsChecked: sketchState.chooseObjIsChecked,
+    snapIsChecked:sketchState.snapIsChecked,
     undoIsChecked: sketchState.undoIsChecked,
     redoIsChecked: sketchState.redoIsChecked,
     saveIsChecked: sketchState.saveIsChecked,
@@ -712,6 +781,30 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         payload: dispatch
       });
     },
+    //打开捕捉列表
+    onSnapClick:()=>{
+      dispatch({
+        type: "snapClick",
+      });
+    },
+    SnapListClose:()=>{
+      dispatch({
+        type: "snapListClose",
+      });
+    },
+    onSnapListClick:chosedLayer=>{
+      dispatch({
+        type: "snapListClick",
+        payload:{
+          command:chosedLayer
+        }
+      });
+      dispatch({
+        type: "snapListClose",
+      });
+
+    },
+
     //删除
     onDeleteClick: () => {
       dispatch({

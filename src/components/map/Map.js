@@ -443,24 +443,20 @@ class Map extends Component {
     console.log(zj)
     let location=new maptalks.VectorLayer("location");
     //新建地形图层显示底图数据
-    dx = new maptalks.VectorLayer('dx');
 
-    let poiGeometries=maptalks.GeoJSON.toGeometry(poiData)
-    let poilayer=new maptalks.VectorLayer('vector1', poiGeometries).setStyle({
+    let poiGeometries=maptalks.GeoJSON.toGeometry(poiData);
+    let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
+    let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
+    let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
       'symbol':{ 
         markerType:'ellipse',
         markerFill: '#aaa',
         markerLineColor:'#000',
         markerWidth : 5,
         markerHeight : 5}}).addTo(map);
-
-
-    let lineGeometries=maptalks.GeoJSON.toGeometry(lineData)
-    let linelayer=new maptalks.VectorLayer('vector2', lineGeometries).addTo(map);
+    let dx2=new maptalks.VectorLayer('DX', lineGeometries).addTo(map);
+    let dx3=new maptalks.VectorLayer('DX3', lineGeometries).addTo(map);
     console.log(lineGeometries)
-
-    let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData)
-    new maptalks.VectorLayer('vector3', polygonGeometries).addTo(map);
     console.log(polygonGeometries) 
 
     sz.addTo(map);
@@ -493,10 +489,8 @@ class Map extends Component {
     // snap.setLayer(map.getLayer("point"));
     //snap.setGeometries(linelayer.getGeometries());
 
-    snap.setLayer(map.getLayer("point"));
+    //snap.setLayer(map.getLayer("point"));
     snap.bindDrawTool(drawTool);
-
-    snap.disable();
   }
 
   render() {
@@ -763,6 +757,7 @@ const sketchReduce = (
     measureAreaIsChecked: false,
     deleteIsChecked: false,
     chooseObjIsChecked: false,
+    snapIsChecked:false,
     undoIsChecked: false,
     redoIsChecked: false,
     saveIsChecked: false,
@@ -1990,6 +1985,28 @@ const sketchReduce = (
         alertSave: true
       };
       return Object.assign({}, state, { ...newState7 });
+    //打开捕捉选择列表
+    case "snapClick":
+      const snapOpen={snapIsChecked:!state.snapIsChecked}
+      return Object.assign({}, state, { ...snapOpen });
+    //关闭捕捉列表
+    case "snapListClose":
+      const snapClose={snapIsChecked:false}
+      return Object.assign({}, state, { ...snapClose });
+    //选择捕捉图层
+    case "snapListClick":
+      let layerChoice = action.payload.command;
+      snap.setLayer(map.getLayer(layerChoice));
+      if(layerChoice==="point"){
+        
+
+      }
+      if(layerChoice==="DX"){
+      
+
+      }
+      console.log(layerChoice)
+      return {...state}
     //撤销
     case "undoClick":
     map.off("click", drawPoint);
