@@ -22,6 +22,7 @@ import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 //import icon
 import LocationSearching from "material-ui-icons/LocationSearching"; //展点
 import Adjust from "material-ui-icons/Adjust"; //画点
+import HdrWeak from "material-ui-icons/Adjust"; //纠点拍照
 import Timeline from "material-ui-icons/Timeline"; //连线
 import BorderStyle from "material-ui-icons/BorderStyle"; //界址线
 import CheckBoxOutlineBlank from "material-ui-icons/CheckBoxOutlineBlank"; //构面
@@ -49,7 +50,7 @@ import coordinate from "../../utils/coordinate"
 const styles = theme => ({
   root: {
     height: `${window.innerHeight * 0.075}px`,
-    width:  `${window.innerHeight * 1.275}px`,
+    width:  `${window.innerHeight * 1.35}px`,
     position: "absolute", 
     top: `${window.innerHeight * 0.1}px`,
     left: "1%",
@@ -135,6 +136,7 @@ class SkechToolBar extends Component {
     const {
       onPlotClick,
       onDrawPointClick,
+      onRectifyPoiClick,
       onDrawLineClick,
       onDrawJZXClick,
       onDrawArcClick,
@@ -168,6 +170,7 @@ class SkechToolBar extends Component {
       plotListData,
       alertSignature,
       drawPointIsChecked,
+      rectifyPoiIsChecked,
       drawLineIsChecked,
       drawJZXIsChecked,
       drawArcIsChecked,
@@ -200,7 +203,19 @@ class SkechToolBar extends Component {
                 }}
                 onClick={onDrawPointClick}
             >
-                <Adjust className={classes.icon} />
+                <HdrWeak className={classes.icon} />
+                <Typograghy className={classes.text}>画点</Typograghy>
+            </Button>
+            <Button
+                className={classes.button}
+                style={{
+                backgroundColor: rectifyPoiIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onRectifyPoiClick}
+            >
+                <HdrWeak className={classes.icon} />
                 <Typograghy className={classes.text}>纠点拍照</Typograghy>
             </Button>
             <Button
@@ -427,7 +442,7 @@ class SkechToolBar extends Component {
           paper: classes.drawerPaper,
         }}
         anchor= 'left'
-        open={drawPointIsChecked}
+        open={rectifyPoiIsChecked}
       >
         <Toolbar className={classes.toolBar}>
           <Typography className={classes.title}>
@@ -522,6 +537,7 @@ const mapStateToProps = state => {
     haveObjToDel: sketchState.haveObjToDel,
     drawAlert:sketchState.drawAlert,
     drawPointIsChecked: sketchState.drawPointIsChecked,
+    rectifyPoiIsChecked:sketchState.rectifyPoiIsChecked,
     drawLineIsChecked: sketchState.drawLineIsChecked,
     drawJZXIsChecked:sketchState.drawJZXIsChecked,
     drawArcIsChecked:sketchState.drawArcIsChecked,
@@ -624,6 +640,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onDrawPointClick: () => {
       dispatch({
         type: "drawPointClick",
+        payload: dispatch
+      });
+    },
+    //纠点拍照
+    onRectifyPoiClick: () => {
+      dispatch({
+        type: "rectifyPoiClick",
         payload: dispatch
       });
     },
