@@ -149,8 +149,13 @@ const styles = theme => ({
   }
 });
 class SkechToolBar extends Component {
+  state = {
+    anchorEl: findDOMNode(this.button),
+  };
+
   render() {
     const classes = this.props.classes;
+    const {anchorEl}=this.state;
     const {
       onPlotClick,
       onDrawPointClick,
@@ -206,7 +211,7 @@ class SkechToolBar extends Component {
       drawAlert,
       onFetchPoi_NumClick,
       onjzdXCZJClick,
-      fetchPoiNumIsChecked
+      fetchPoiNumIsChecked,
     } = this.props;
     return (
     <div>
