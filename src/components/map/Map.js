@@ -288,6 +288,7 @@ addLabel =
     });
     map.getLayer("label").addGeometry(label);
     label.on("click", clickObj);
+    recoverObj();
   };
 
 // //用于删除对象
@@ -820,6 +821,7 @@ const sketchReduce = (
       map.getLayer("label").addGeometry(objLabel);
       objLabel.on("click", clickObj);
       labels.push(objLabel.getId());
+      
     };
 
   //打开画图工具
@@ -911,6 +913,7 @@ const sketchReduce = (
       map.getLayer("point").addGeometry(point);
       point.on("click", clickObj);
       console.log(point);
+      recoverObj();
     };
 
   //画线时drawTool的绑定事件
@@ -1141,11 +1144,13 @@ const sketchReduce = (
       return Object.assign({}, state, { ...isRealtimeOn });
     //修正点坐标
     case "jzdPlotClick":
+      //recoverObj();
       map.off("click", rectifyPoint);
       modifyPointId = action.payload.command;
       if (!rectifyPoint) {
         rectifyPoint = function(e) {
           console.log("纠正点位")
+          
           let num = modifyPointId;          
           let oldPoi = map.getLayer("point").getGeometryById(num);
           let oldLabel = map.getLayer("label").getGeometryById(num);
@@ -1185,6 +1190,7 @@ const sketchReduce = (
           map.getLayer("label").addGeometry(label);
           map.getLayer("point").addGeometry(point);
           point.on("click", clickObj);
+          recoverObj();
         };
       }
       map.on("click", rectifyPoint);
@@ -1412,6 +1418,7 @@ const sketchReduce = (
       map.off("click", drawPoint);
       const rectifyPoiState = {
         plotIsChecked: false,
+        drawPointIsChecked:false,
         plotListData: tableData,
         rectifyPoiIsChecked: !state.rectifyPoiIsChecked,
         drawLineIsChecked: false,

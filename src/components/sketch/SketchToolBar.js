@@ -22,7 +22,7 @@ import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 //import icon
 import LocationSearching from "material-ui-icons/LocationSearching"; //展点
 import Adjust from "material-ui-icons/Adjust"; //画点
-import HdrWeak from "material-ui-icons/Adjust"; //纠点拍照
+import HdrWeak from "material-ui-icons/HdrWeak"; //纠点拍照
 import Timeline from "material-ui-icons/Timeline"; //连线
 import BorderStyle from "material-ui-icons/BorderStyle"; //界址线
 import CheckBoxOutlineBlank from "material-ui-icons/CheckBoxOutlineBlank"; //构面
@@ -203,7 +203,7 @@ class SkechToolBar extends Component {
                 }}
                 onClick={onDrawPointClick}
             >
-                <HdrWeak className={classes.icon} />
+                <Adjust className={classes.icon} />
                 <Typograghy className={classes.text}>画点</Typograghy>
             </Button>
             <Button
