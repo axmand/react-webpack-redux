@@ -345,7 +345,6 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     let center;
-
     if(projectData.ProjectItem.L.jzdJSONData){
       let poi_data= maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
       console.log(poi_data.getGeometries())
