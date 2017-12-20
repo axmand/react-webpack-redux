@@ -70,7 +70,7 @@ class BoundaryModule extends Component {
       CameraShow,
       DeleteShow,
       PrintProgress,
-      // XCZJclick,
+      //XCZJclick,
       // PhotoItemTest,
       // DeleteId,
       classes
@@ -79,7 +79,7 @@ class BoundaryModule extends Component {
     return (
     <div>
        {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }>  */}
-       <ListItem button className={classes.listitem} disableGutters={true}> 
+       {/* <ListItem button className={classes.listitem} disableGutters={true}> 
         <ListItemIcon>
           <PhotoCameraIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
@@ -88,7 +88,7 @@ class BoundaryModule extends Component {
           className={classes.listItemText}
           primary="现场指界"
         />
-      </ListItem>
+      </ListItem> */}
        <JZDList /> 
         <Dialog
           fullScreen
@@ -150,11 +150,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     XCZJclick:()=>{
       dispatch({
-        type:'XCZJclick',
-      });
+        type: 'MAP_SKETCH_VIEW_SWITCH',
+      }),
       dispatch({
-        type: 'MAP_SKETCH_VIEW_HIDE',
-      });
+        type: "drawPointClick",
+      })
     },
 
     handleCameraClose: () => {

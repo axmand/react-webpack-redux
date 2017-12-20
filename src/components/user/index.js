@@ -73,12 +73,13 @@ const styles = theme => ({
     flexDirection: "column",
     justify: "space-between",
     padding: 0,
-    paddingLeft: "0px",
-    paddingRight: "40%"
+    width: `${window.innerHeight*0.08}px`,
+    height:`${window.innerHeight*0.08}px`,
   },
   listItemIcon: {
-    width: "60%",
-    height: "60%",
+    width: "64%",
+    height:'64%',
+    padding:'10% 0 0 0',
     margin: 0,
     color: "#C1C6C9"
   },

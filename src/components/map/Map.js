@@ -213,7 +213,7 @@ clickObj =
       }
     }
 
-    if (target.getJSONType() === "QuadBezierCurve") {
+    if (target.getJSONType() === "ArcCurve") {
       if (target.options.isClicked) {
         target.updateSymbol({ lineColor: "#00FFFF" });
         clickedObj.push(target);
@@ -251,7 +251,7 @@ recoverObj =
         clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
-      if (clickedObj[i].getJSONType() === "QuadBezierCurve") {
+      if (clickedObj[i].getJSONType() === "ArcCurve") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].updateSymbol({ lineColor: "#000000" });
       }
@@ -316,7 +316,7 @@ deleteObj =
               }
             }
           }
-      if (target.getJSONType() === "QuadBezierCurve") {
+      if (target.getJSONType() === "ArcCurve") {
         target.remove();
       }
       if (target.getJSONType() === "Polygon") {
@@ -345,8 +345,6 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     let center;
-    console.log(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
-    console.log(projectData.ProjectItem.L.jzdJSONData);
     if(projectData.ProjectItem.L.jzdJSONData){
       let poi_data= maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
       console.log(poi_data.getGeometries())
@@ -355,7 +353,7 @@ class Map extends Component {
         center=poi_arr[poi_arr.length-1].getCoordinates();
       }
     }else{
-      center= [108.37, 22.82];
+      center= new maptalks.Coordinate(108.37, 22.82);
     }
     map = new maptalks.Map(mapDiv, {
       center:center,
@@ -455,9 +453,9 @@ class Map extends Component {
     areaTool.addTo(map).disable();
     //将画图工具添加至地图
     drawTool.addTo(map).disable();
-    maptalks.DrawTool.registerMode("QuadBezierCurve", {
+    maptalks.DrawTool.registerMode("ArcCurve", {
       action: "clickDblclick",
-      create: path => new maptalks.QuadBezierCurve(path),
+      create: path => new maptalks.ArcCurve(path,{arcDegree:45}),
       update: (path, geometry) => {
         geometry.setCoordinates(path);
       },
@@ -744,12 +742,14 @@ const sketchReduce = (
     showDelDialog: false,
     haveObjToDel: false,
     signatureIsChecked: false,
+    fetchPoiNumIsChecked:false,
     jzdJSONData: JSON,
     szJSONData: JSON,
     zdJSONData: JSON,
     zjJSONData: JSON,
     poiTableData: [],
     mapCenter: [],
+    mapZoom:16,
     plotListData: []
   },
   action
@@ -1237,7 +1237,14 @@ const sketchReduce = (
 
     case "handleChooseItem":
       return {...state};
-   
+    //弹出取号确认框
+    case "openFetchPoiNum":
+      const FetchPoiNum_Y={fetchPoiNumIsChecked:true}
+      return Object.assign({}, state, { ...FetchPoiNum_Y });
+    //关闭取号确认框
+    case "closeFetchPoiNum":
+    const FetchPoiNum_N={fetchPoiNumIsChecked:false}
+    return Object.assign({}, state, { ...FetchPoiNum_N });
     //取界址点号
     case "fetchPoi_NumClick":
         map.off("click", drawPoint);
@@ -1495,9 +1502,10 @@ const sketchReduce = (
           coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
           //随机数加当前时间构成id
           let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-          let jzx_arc = new maptalks.QuadBezierCurve(coorArr, {
+          let jzx_arc = new maptalks.ArcCurve(coorArr, {
             id:jzxnum,
             isClicked:false,
+            arcDegree:45,
             symbol :{
               lineColor: "#000000",
                lineWidth: 1.5 
@@ -1523,7 +1531,7 @@ const sketchReduce = (
         function() {
           recoverObj();
           linePoiArr = [];
-          drawTool.setMode("QuadBezierCurve").enable();
+          drawTool.setMode("ArcCurve").enable();
           drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
           drawTool.on("drawend", drawCurveEnd);
         };
@@ -1908,6 +1916,7 @@ const sketchReduce = (
           saveIsChecked: true,
           signatureIsChecked: false,
           alertSave: false,
+          mapZoom:map.getZoom(),
           mapCenter: mapCenter,
           jzdJSONData: map.getLayer("point").toJSON(),
           szJSONData: map.getLayer("SZ").toJSON(),
@@ -1992,6 +2001,8 @@ const sketchReduce = (
       let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
       console.log(jzxPoi);
       jzxPoi.updateSymbol({ lineColor: "#00FFFF" });
+      //将地图中心设置为当前选中的界址线端点
+      map.setCenter(jzxPoi.getCoordinates()[0]);
       const jzxTable = {
         signatureIsChecked: false
       };

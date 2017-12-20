@@ -16,10 +16,15 @@ import Divider from 'material-ui/Divider';
 const styles = {
   root: {
     width: '100%',
-    height: '100%',
+    height:`${window.innerHeight}px`,
     backgroundColor: '#455A64',
     opacity: '0.95',
   },
+  divider:{
+    height:`${window.innerHeight*0.02}px`,
+    backgroundColor: '#455A64',
+    opacity: '0.95',
+  }
 }
 
 class NavigationPanel extends Component {
@@ -31,7 +36,7 @@ class NavigationPanel extends Component {
       <div className={classes.root}>
         <List>
           <UserModule />
-          <Divider light />
+          <Divider className={classes.divider} />
             <ProjectModule />
             <InvestigationModule />
             <BoundaryModule />

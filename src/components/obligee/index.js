@@ -1,19 +1,14 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles'
-import Dialog, { DialogTitle } from 'material-ui/Dialog';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import projectData from './../../redux/RootData';
 
 
 import ChooseDialog from './ChooseDialog'
-import Menu, { MenuItem } from 'material-ui/Menu'
 import FirstDialog from './FirstDialog'
 import SecondDialog from './SecondDialog'
 import ThirdDialog from './ThirdDialog'
 import ForthDialog from './ForthDialog'
-import { Provider, connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
-import { createStore } from 'redux'
 const styles = {
  
 }
@@ -31,7 +26,7 @@ class ObligeeModule extends Component {
 
 
   render() {
-    const classes = this.props.classes
+   
   
     return (
 
@@ -113,7 +108,7 @@ const obligeeReducer=(state = DialogState, action)=> {
         	forthDialogOpen:true
       });
     }
-   
+   break;
      case 'close':
   
    switch(action.payload.choice)
@@ -143,6 +138,7 @@ const obligeeReducer=(state = DialogState, action)=> {
       });
   
     }
+    break;
     default:
       return state
   }

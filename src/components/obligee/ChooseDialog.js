@@ -31,13 +31,14 @@ const styles = {
    listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
-    paddingTop: "15%",
-    paddingBottom: "15%",
+    // paddingTop: "15%",
+    // paddingBottom: "15%",
+    height:`${window.innerHeight*0.1}px`,
    
   },
   listItemIcon: {
-    width: "40%",
-    height: "40%",
+    width: "60%",
+    height: "60%",
     margin: 0,
     color: "#C1C6C9"
   },
@@ -242,17 +243,20 @@ loaded:false
   
    projectData.Loaded=true;
    return state;
-
+break;
 
 
    case "choose":
-   if(action.payload.choice==2)
+   if(action.payload.choice===2)
      {
       var statenew=state;
       
 var LandPointInMap=[];
       var jzx =JSON.parse(projectData.ProjectItem.L.jzxJSONData);
       
+
+      if(jzx.geometries.length!==0)
+      {
         for(let i=0;i<jzx.geometries.length;i++)
         {
       for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
@@ -262,7 +266,7 @@ var LandPointInMap=[];
         LandPointInMap.push(newValue);
       }
         }
-    
+   
         var LandPointInMapCount=LandPointInMap.length;
 
 
@@ -291,7 +295,7 @@ var LandPointInMap=[];
 
       if(LandPointInMapCount>LandPointCount)
       {
-        if(LandPointCount==0)
+        if(LandPointCount===0)
         {
           statenew.F2.LandPointCodeList=new Array(LandPointInMapCount);
            statenew.F2.LandPointTypeList =new Array(LandPointInMapCount);
@@ -347,14 +351,15 @@ var LandPointInMap=[];
       }
 
      }
-      
+    }
        var returnState=Object.assign({}, state, statenew);
  
        projectData.ProjectItem=returnState;
    
        return returnState;
 
-  
+       break;
+       
     case 'change':
      var inputName=action.payload.inputName;
      var tableID=action.payload.tableID;
@@ -380,18 +385,6 @@ var LandPointInMap=[];
  
        var statenew=state;
 
-
-      //  if(state[tableID][inputName].length==0)
-      //  {
-      //  var distanceListLength= projectData.ProjectItem.F2.LandPointCodeList.length;
-      //     statenew[tableID][inputName]=new Array(distanceListLength-1);
-
-      //     for(var i=0;i<distanceListLength;i++)
-      //     {
-      //       statenew[tableID][inputName][i]="";
-      //     }
-      //  }
-
        statenew[tableID][inputName][index]=action.payload.inputValue;
       console.log(statenew[tableID][inputName][index]);
        var returnState=Object.assign({}, state, statenew);
@@ -400,16 +393,24 @@ var LandPointInMap=[];
    
        console.log(returnState);
        return returnState;
- 
-//        projectData.ProjectItem=statenew;
-//  console.log(projectData.ProjectItem);
-//  console.log(statenew);
-
-
-
-//        return statenew;
-
-
+       break;
+       
+       case 'Muti_CHANGE_CHECKBOX':
+       
+         var newState=state;
+        
+        for(var i=0;i<newState[action.payload.tableID][action.payload.type].length;i++)
+        {
+          newState[action.payload.tableID][action.payload.type][i]=action.payload.col;
+        }
+       
+     
+     
+          var returnState=Object.assign({}, state, newState);
+          projectData.ProjectItem=returnState;
+     
+         console.log(returnState);
+         return returnState;
 
 
 
@@ -417,19 +418,7 @@ var LandPointInMap=[];
      case 'CHANGE_CHECKBOX':
   
     var newState=state;
-    // if(state[action.payload.tableID][action.payload.type].length==0)
-    // {
-    //   var checkListLength= projectData.ProjectItem.F2.LandPointCodeList.length-1;
-
-    //   if(action.payload.type=='LandPointTypeList')
-    //     checkListLength+=1;
-    //   newState[action.payload.tableID][action.payload.type]=new Array(checkListLength);
-
-    //   for(var i=0;i<checkListLength;i++)
-    //   {
-    //     newState[action.payload.tableID][action.payload.type][i]=-1;
-    //   }
-    // }
+   
         
     newState[action.payload.tableID][action.payload.type][action.payload.row]=action.payload.col;
 
@@ -443,8 +432,7 @@ var LandPointInMap=[];
 
     case 'signatureClick':
     var jzxData=projectData.ProjectItem.L.jzxJSONData;
-    var jzx = eval('(' + jzxData + ')');
-  
+    var jzx =JSON.parse(jzxData);
   
     var startPoints=[];
     var endPoints=[];
