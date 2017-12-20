@@ -26,11 +26,11 @@ class ShowCard extends Component {
 
     return(
       <div style={{padding:'20px'}}>
-      <Card key={ item.key } style={{width:150,height:220,}}>
+      <Card key={ item.key } style={{height:220,maxWidth:200}}>
         <img src={ reptileImage } alt="Contemplative Reptile" onClick={ handleChooseItem } style={{justifyContent:'center'}}/>
          <CardContent>
-          <Typography type="headline" component="h2">
-            {item.text}
+          <Typography type="headline" component="h2" >
+            {item.text.slice(0,12)}
           </Typography>
         </CardContent>
       </Card>
