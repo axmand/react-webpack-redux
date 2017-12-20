@@ -126,7 +126,7 @@ class PrintModule extends Component {
       >
         <DialogContent>
           <DialogContentText>
-             打印失败！
+             打印失败！,请检查是否有尚未填写完的表格
           </DialogContentText>
         </DialogContent>
       </Dialog> 

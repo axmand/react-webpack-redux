@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import Draggable from "react-draggable";
 //ui
@@ -14,7 +15,8 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from "material-ui/Button";
-import List from "material-ui/List"
+import Popover from "material-ui/Popover";
+import List, { ListItem } from "material-ui/List";
 import Typograghy from "material-ui/Typography";
 // import IconButton from 'material-ui/IconButton';
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
@@ -22,15 +24,17 @@ import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 //import icon
 import LocationSearching from "material-ui-icons/LocationSearching"; //展点
 import Adjust from "material-ui-icons/Adjust"; //画点
+import HdrWeak from "material-ui-icons/HdrWeak"; //纠点拍照
 import Timeline from "material-ui-icons/Timeline"; //连线
 import BorderStyle from "material-ui-icons/BorderStyle"; //界址线
 import CheckBoxOutlineBlank from "material-ui-icons/CheckBoxOutlineBlank"; //构面
 import ViewCarousel from "material-ui-icons/ViewCarousel"; //阳台
 import Looks from "material-ui-icons/Looks"; //弧线
-import PictureInPicture from "material-ui-icons/PictureInPicture"; //中空地块
+//import PictureInPicture from "material-ui-icons/PictureInPicture"; //中空地块
 import BookmarkBorder from "material-ui-icons/BookmarkBorder"; //标注
 import Straighten from "material-ui-icons/Straighten"; //测距
 import FlipToFront from "material-ui-icons/FlipToFront"; //测面
+import TouchApp from "material-ui-icons/TouchApp"; //捕捉
 import NearMe from "material-ui-icons/NearMe"; //选中
 import Delete from "material-ui-icons/Delete"; //删除
 import Undo from "material-ui-icons/Undo"; //撤销
@@ -49,7 +53,7 @@ import coordinate from "../../utils/coordinate"
 const styles = theme => ({
   root: {
     height: `${window.innerHeight * 0.075}px`,
-    width:  `${window.innerHeight * 1.275}px`,
+    width:  `${window.innerHeight * 1.35}px`,
     position: "absolute", 
     top: `${window.innerHeight * 0.1}px`,
     left: "1%",
@@ -82,12 +86,27 @@ const styles = theme => ({
     padding:'0 10px 0 10px'
   }, 
   message:{
-     fontSize: "1.5em",
+    fontSize: "1.5em",
     fontFamily:'微软雅黑',
     color:"#455A64",
     textAlign: "center",
   }, 
-  drawerPaper: {
+  snapList:{
+    background: "rgba(69, 90, 100, .6)",
+    height:`${window.innerHeight * 0.1}px`,
+    width:`${window.innerHeight * 0.075}px`,
+  },
+  snapitem:{
+    height:`${window.innerHeight * 0.025}px`,
+    width:`${window.innerHeight * 0.075}px`,
+    justifyContent: 'center ',
+    background: "rgba(69, 90, 100, .6)",
+    textAlign:'center',
+    color:'#fff',
+    fontSize: "1em",
+    fontFamily:'微软雅黑',
+  },
+  rectifydrawerPaper: {
     left:`${window.innerWidth * 0.083}px`,
     top:`${window.innerHeight * 0.2}px`,
     height: '75%',
@@ -130,11 +149,17 @@ const styles = theme => ({
   }
 });
 class SkechToolBar extends Component {
+  state = {
+    anchorEl: findDOMNode(this.button),
+  };
+
   render() {
     const classes = this.props.classes;
+    const {anchorEl}=this.state;
     const {
       onPlotClick,
       onDrawPointClick,
+      onRectifyPoiClick,
       onDrawLineClick,
       onDrawJZXClick,
       onDrawArcClick,
@@ -144,6 +169,7 @@ class SkechToolBar extends Component {
       onMeasureDistanceClick,
       onMeasureAreaClick,
       onChooseObjClick,
+      onSnapListClick,
       onDeleteClick,
       onUndoClick,
       onRedoClick,
@@ -155,6 +181,8 @@ class SkechToolBar extends Component {
       closeFetchPoiNum,
       // onJzdTableClick,
       onjzdPlotClick,
+      onSnapClick,//捕捉
+      SnapListClose,
     } = this.props;
     const {
       onPlotAlerClose,
@@ -168,6 +196,7 @@ class SkechToolBar extends Component {
       plotListData,
       alertSignature,
       drawPointIsChecked,
+      rectifyPoiIsChecked,
       drawLineIsChecked,
       drawJZXIsChecked,
       drawArcIsChecked,
@@ -177,11 +206,12 @@ class SkechToolBar extends Component {
       measureDistanceIsChecked,
       measureAreaIsChecked,
       chooseObjIsChecked,
+      snapIsChecked,
       haveObjToDel,
       drawAlert,
       onFetchPoi_NumClick,
       onjzdXCZJClick,
-      fetchPoiNumIsChecked
+      fetchPoiNumIsChecked,
     } = this.props;
     return (
     <div>
@@ -201,6 +231,18 @@ class SkechToolBar extends Component {
                 onClick={onDrawPointClick}
             >
                 <Adjust className={classes.icon} />
+                <Typograghy className={classes.text}>画点</Typograghy>
+            </Button>
+            <Button
+                className={classes.button}
+                style={{
+                backgroundColor: rectifyPoiIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onRectifyPoiClick}
+            >
+                <HdrWeak className={classes.icon} />
                 <Typograghy className={classes.text}>纠点拍照</Typograghy>
             </Button>
             <Button
@@ -312,6 +354,21 @@ class SkechToolBar extends Component {
                 <Typograghy className={classes.text}>测面</Typograghy>
             </Button>
             <Button
+              ref={node => {
+                this.button = node;
+              }}
+              className={classes.button}
+              style={{
+              backgroundColor: snapIsChecked
+                  ? "rgba(69, 90, 100, .8)"
+                  : "transparent"
+              }}
+              onClick={onSnapClick}
+            >
+                <TouchApp className={classes.icon} />
+                <Typograghy className={classes.text}>捕捉</Typograghy>
+            </Button>
+            <Button
                 className={classes.button}
                 style={{
                 backgroundColor: chooseObjIsChecked
@@ -421,13 +478,44 @@ class SkechToolBar extends Component {
               </Button>
             </DialogActions>
           </Dialog>
+      <Popover
+          anchorEl={findDOMNode(this.button)}
+          open={snapIsChecked}
+          onRequestClose={SnapListClose}
+          anchorOrigin={{
+            vertical:"bottom",
+            horizontal: "center"
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center"
+          }}
+          className={classes.snapList}
+        >
+          <ListItem
+            button
+            className={classes.snapitem}
+            disableGutters={true}
+            onClick={() => onSnapListClick("point")}
+          >
+            界址点
+          </ListItem>
+          <ListItem
+            button
+            className={classes.snapitem}
+            disableGutters={true}
+            onClick={() => onSnapListClick("DX")}
+          >
+            地形图
+          </ListItem>
+      </Popover>
       <Drawer
         type="persistent"
         classes={{
-          paper: classes.drawerPaper,
+          paper: classes.rectifydrawerPaper,
         }}
         anchor= 'left'
-        open={drawPointIsChecked}
+        open={rectifyPoiIsChecked}
       >
         <Toolbar className={classes.toolBar}>
           <Typography className={classes.title}>
@@ -522,6 +610,7 @@ const mapStateToProps = state => {
     haveObjToDel: sketchState.haveObjToDel,
     drawAlert:sketchState.drawAlert,
     drawPointIsChecked: sketchState.drawPointIsChecked,
+    rectifyPoiIsChecked:sketchState.rectifyPoiIsChecked,
     drawLineIsChecked: sketchState.drawLineIsChecked,
     drawJZXIsChecked:sketchState.drawJZXIsChecked,
     drawArcIsChecked:sketchState.drawArcIsChecked,
@@ -531,6 +620,7 @@ const mapStateToProps = state => {
     measureDistanceIsChecked: sketchState.measureDistanceIsChecked,
     measureAreaIsChecked: sketchState.measureAreaIsChecked,
     chooseObjIsChecked: sketchState.chooseObjIsChecked,
+    snapIsChecked:sketchState.snapIsChecked,
     undoIsChecked: sketchState.undoIsChecked,
     redoIsChecked: sketchState.redoIsChecked,
     saveIsChecked: sketchState.saveIsChecked,
@@ -627,6 +717,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         payload: dispatch
       });
     },
+    //纠点拍照
+    onRectifyPoiClick: () => {
+      dispatch({
+        type: "rectifyPoiClick",
+        payload: dispatch
+      });
+    },
     //连线
     onDrawLineClick: () => {
       dispatch({
@@ -689,6 +786,30 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         payload: dispatch
       });
     },
+    //打开捕捉列表
+    onSnapClick:()=>{
+      dispatch({
+        type: "snapClick",
+      });
+    },
+    SnapListClose:()=>{
+      dispatch({
+        type: "snapListClose",
+      });
+    },
+    onSnapListClick:chosedLayer=>{
+      dispatch({
+        type: "snapListClick",
+        payload:{
+          command:chosedLayer
+        }
+      });
+      dispatch({
+        type: "snapListClose",
+      });
+
+    },
+
     //删除
     onDeleteClick: () => {
       dispatch({
