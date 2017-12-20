@@ -837,23 +837,24 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: "saveClick",
       });
-      dispatch({
-        type: "saveClick",
-      }); 
     },
     //签章
     onSignatureClick:()=>{
-      ownProps.saveIsChecked ?         
+      if(ownProps.saveIsChecked){
         dispatch({
           type: "choose",
-          payload: {
-            choice: 3
-          }
-        }) :
+           payload: {
+             choice: 3
+            }
+        });
         dispatch({
-          type:'signatureClick',
-          payload: dispatch
-      }) ;
+          type:'fillSignatureList'
+        });
+      }else{
+        dispatch({
+          type:'signatureAlertOpen'
+        });
+      }
     },
     
     handleDelete:()=>{

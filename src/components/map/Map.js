@@ -773,7 +773,6 @@ const sketchReduce = (
     alertSignature: false,
     showDelDialog: false,
     haveObjToDel: false,
-    signatureIsChecked: false,
     fetchPoiNumIsChecked:false,
     jzdJSONData: JSON,
     szJSONData: JSON,
@@ -1281,7 +1280,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...plotSuccessState };
     case "plotFail":
@@ -1308,7 +1306,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...plotFailState };
     //通过文件展点
@@ -1424,7 +1421,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...drawPointState };
     //纠点拍照
@@ -1472,7 +1468,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...rectifyPoiState };
 
@@ -1514,7 +1509,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...newState2 };
     //画界址线
@@ -1621,7 +1615,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...JZXState };
     //画弧线
@@ -1706,7 +1699,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       console.log(state);
       return { ...state, ...CurveState };
@@ -1747,7 +1739,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...newState3 };
     //阳台
@@ -1787,7 +1778,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...newState4 };
     //添加自定义注记
@@ -1830,7 +1820,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...newState5 };
     //测距
@@ -1871,7 +1860,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...measureDis };
     //测面积
@@ -1912,7 +1900,6 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
-        signatureIsChecked: false
       };
       return { ...state, ...measureArea };
     //删除
@@ -1935,7 +1922,6 @@ const sketchReduce = (
           undoIsChecked: false,
           redoIsChecked: false,
           saveIsChecked: false,
-          signatureIsChecked: false,
           alertSave: true
         };
         return Object.assign({}, state, { ...newState6 });
@@ -1947,7 +1933,6 @@ const sketchReduce = (
           undoIsChecked: false,
           redoIsChecked: false,
           saveIsChecked: false,
-          signatureIsChecked: false,
           alertSave: true
         };
         return Object.assign({}, state, { ...stateDelFail });
@@ -1993,7 +1978,6 @@ const sketchReduce = (
         undoIsChecked: false,
         redoIsChecked: false,
         saveIsChecked: false,
-        signatureIsChecked: false,
         alertSave: true
       };
       return Object.assign({}, state, { ...newState7 });
@@ -2051,6 +2035,7 @@ const sketchReduce = (
     //保存
     case "saveClick":
       if (map === undefined){
+        console.log(state)
         return { ...state };
       } else{
         let mapCenter = map.getCenter();
@@ -2062,7 +2047,6 @@ const sketchReduce = (
         map.off("click", rectifyPoint);
         map.off("click", addLabel);
         map.off("dblclick", drawToolOn);
-        
         const saveData = {
           plotIsChecked: false,
           drawPointIsChecked: false,
@@ -2080,7 +2064,6 @@ const sketchReduce = (
           undoIsChecked: false,
           redoIsChecked: false,
           saveIsChecked: true,
-          signatureIsChecked: false,
           alertSave: false,
           mapZoom:map.getZoom(),
           mapCenter: mapCenter,
@@ -2107,8 +2090,7 @@ const sketchReduce = (
           saveData.zjJSONData
         );
   
-        console.log(saveData.jzxJSONData)
-        console.log(projectData.ProjectItem.L.jzxJSONData)
+        console.log(JSON.parse(projectData.ProjectItem.L.jzxJSONData))
   
         return Object.assign({}, state, { ...saveData });
       }
@@ -2117,24 +2099,15 @@ const sketchReduce = (
       const saveAlertClose = { alertSave: false };
       return Object.assign({}, state, { ...saveAlertClose });
     //签章
-    case "signatureClick":
-      if (state.saveIsChecked) {
-        const signature = { signatureIsChecked: true };
-        return Object.assign({}, state, { ...signature });
-      } else {
-        const signatureState2 = {
-          alertSignature: true,
-          signatureIsChecked: false
-        };
-        return Object.assign({}, state, { ...signatureState2 });
-      }
+    case "signatureAlertOpen":
+      const signatureAlert = {
+        alertSignature: true,
+      };
+      return Object.assign({}, state, { ...signatureAlert });
 
     case "signatureAlerClose":
       const signatureAlertClose = { alertSignature: false };
       return Object.assign({}, state, { ...signatureAlertClose });
-    case "signatureClose":
-      const signatureClose = { signatureIsChecked: false };
-      return Object.assign({}, state, { ...signatureClose });
 
     //草图专题图切换时初始化数据
     case "resetSketchState":
@@ -2170,10 +2143,7 @@ const sketchReduce = (
       jzxPoi.updateSymbol({ lineColor: "#00FFFF" });
       //将地图中心设置为当前选中的界址线端点
       map.setCenter(jzxPoi.getCoordinates()[0]);
-      const jzxTable = {
-        signatureIsChecked: false
-      };
-      return Object.assign({}, state, { ...jzxTable });
+      return {...state};
     //点击拍照按钮后读取所选的界址点点号并打开摄像头进行拍照
     case 'jzdXCZJClick':
       projectData.PoiId =  action.payload.command;
