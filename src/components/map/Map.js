@@ -12,6 +12,9 @@ import * as maptalks from "maptalks";
 import { SnapTool } from "maptalks.snapto";
 import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
+import poiData from "./Point";
+import lineData from "./Line";
+import polygonData from "./Polygon";
 
 //引入地图组件
 import MapToolBar from "./MapToolBar";
@@ -139,7 +142,7 @@ let drawTool = new maptalks.DrawTool({
 });
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
-  tolerance: 20,
+  tolerance: 10,
   mode: "point"
 });
 let target,
@@ -371,8 +374,9 @@ class Map extends Component {
       })
     });
     map.setZoom(18);
+    map.setCenter([108.24953634836234, 22.852188079872413]);
     //将项目草图数据导入至地图
-    let jzd,sz,jzx,zd,zj;
+    let jzd,sz,jzx,zd,zj,dx;
     //判断地图数据是否为空，若为空则新建地图图层
     console.log(projectData.ProjectItem.L)
     if(projectData.ProjectItem.L.jzdJSONData){
@@ -438,8 +442,27 @@ class Map extends Component {
     }
     console.log(zj)
     let location=new maptalks.VectorLayer("location");
+    //新建地形图层显示底图数据
+    dx = new maptalks.VectorLayer('dx');
 
-  
+    let poiGeometries=maptalks.GeoJSON.toGeometry(poiData)
+    let poilayer=new maptalks.VectorLayer('vector1', poiGeometries).setStyle({
+      'symbol':{ 
+        markerType:'ellipse',
+        markerFill: '#aaa',
+        markerLineColor:'#000',
+        markerWidth : 5,
+        markerHeight : 5}}).addTo(map);
+
+
+    let lineGeometries=maptalks.GeoJSON.toGeometry(lineData)
+    let linelayer=new maptalks.VectorLayer('vector2', lineGeometries).addTo(map);
+    console.log(lineGeometries)
+
+    let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData)
+    new maptalks.VectorLayer('vector3', polygonGeometries).addTo(map);
+    console.log(polygonGeometries) 
+
     sz.addTo(map);
     jzx.addTo(map);
     zd.addTo(map);
@@ -464,10 +487,15 @@ class Map extends Component {
     });
 
 
-    snap.addTo(map);
+    snap.addTo(map);  
+    // snap.setMode('line')  
+    // snap.setLayer(linelayer);
+    // snap.setLayer(map.getLayer("point"));
+    //snap.setGeometries(linelayer.getGeometries());
+
     snap.setLayer(map.getLayer("point"));
-    snap.setGeometries(map.getLayer("point").getGeometries());
     snap.bindDrawTool(drawTool);
+
     snap.disable();
   }
 
