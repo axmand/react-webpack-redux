@@ -351,13 +351,13 @@ class Map extends Component {
     let center;
     if(projectData.ProjectItem.L.jzdJSONData){
       let poi_data= maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
-      console.log(poi_data.getGeometries())
+      console.log(poi_data);
       let poi_arr=poi_data.getGeometries();
-      if(poi_arr){
+      if(poi_arr.length>0){
         center=poi_arr[poi_arr.length-1].getCoordinates();
+      }else{
+        center= new maptalks.Coordinate([108.37, 22.82]);
       }
-    }else{
-      center= new maptalks.Coordinate(108.37, 22.82);
     }
     map = new maptalks.Map(mapDiv, {
       center:center,
@@ -443,24 +443,20 @@ class Map extends Component {
     console.log(zj)
     let location=new maptalks.VectorLayer("location");
     //新建地形图层显示底图数据
-    dx = new maptalks.VectorLayer('dx');
 
-    let poiGeometries=maptalks.GeoJSON.toGeometry(poiData)
-    let poilayer=new maptalks.VectorLayer('vector1', poiGeometries).setStyle({
+    let poiGeometries=maptalks.GeoJSON.toGeometry(poiData);
+    let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
+    let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
+    let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
       'symbol':{ 
         markerType:'ellipse',
         markerFill: '#aaa',
         markerLineColor:'#000',
         markerWidth : 5,
         markerHeight : 5}}).addTo(map);
-
-
-    let lineGeometries=maptalks.GeoJSON.toGeometry(lineData)
-    let linelayer=new maptalks.VectorLayer('vector2', lineGeometries).addTo(map);
+    let dx2=new maptalks.VectorLayer('DX', lineGeometries).addTo(map);
+    let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).addTo(map);
     console.log(lineGeometries)
-
-    let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData)
-    new maptalks.VectorLayer('vector3', polygonGeometries).addTo(map);
     console.log(polygonGeometries) 
 
     sz.addTo(map);
@@ -490,13 +486,11 @@ class Map extends Component {
     snap.addTo(map);  
     // snap.setMode('line')  
     // snap.setLayer(linelayer);
-    // snap.setLayer(map.getLayer("point"));
+     snap.setLayer(map.getLayer("point"));
     //snap.setGeometries(linelayer.getGeometries());
 
     snap.setLayer(map.getLayer("point"));
     snap.bindDrawTool(drawTool);
-
-    snap.disable();
   }
 
   render() {
@@ -763,6 +757,7 @@ const sketchReduce = (
     measureAreaIsChecked: false,
     deleteIsChecked: false,
     chooseObjIsChecked: false,
+    snapIsChecked:false,
     undoIsChecked: false,
     redoIsChecked: false,
     saveIsChecked: false,
@@ -884,7 +879,7 @@ const sketchReduce = (
         }
       });
       label.on("click", clickObj);
-      let point = new maptalks.Circle(poi, 1, {
+      let point = new maptalks.Circle(poi, 4, {
         id: jzdnum,
         labels: label.getId(),
         picture: "",
@@ -954,6 +949,9 @@ const sketchReduce = (
       console.log(coorArr)
       coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
       console.log(coorArr)
+      if(coorArr.length<2){
+        drawTool.disable();
+      }else{
       //随机数加当前时间构成id
       let sznum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let  sz_line = new maptalks.LineString(coorArr, {
@@ -995,6 +993,7 @@ const sketchReduce = (
       }
       map.getLayer("SZ").addGeometry(sz_line);
       sz_line.on("click", clickObj);
+      }
       recoverObj();
     };
   //用于画线
@@ -1012,7 +1011,10 @@ const sketchReduce = (
       let coorArr = param.geometry.getCoordinates()[0];
       //删除由于缓慢双击产生的最后一个坐标
      coorArr.pop();
-      console.log(coorArr);
+     console.log(coorArr);
+     if(coorArr.length<2){
+      drawTool.disable();
+    }else{      
       //随机数加当前时间构成id
       let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let zd_obj=new maptalks.Polygon(coorArr, {
@@ -1059,15 +1061,14 @@ const sketchReduce = (
       }
       map.getLayer("polygon").addGeometry(zd_obj);
       zd_obj.on("click", clickObj);
-      recoverObj();
       console.log(zd_obj)
-      console.log(map)
-    };
+    }
+    recoverObj();
+  };
   //用于构面
   drawPolygon =
     drawPolygon ||
     function() {
-      
       drawTool.setMode("Polygon").enable();
       drawTool.setSymbol({
         lineColor: "#000000",
@@ -1083,53 +1084,57 @@ const sketchReduce = (
     function(param) {
       let coorArr = param.geometry.getCoordinates()[0];
       coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
-      //随机数加当前时间构成id
-      let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-      let zd_obj=new maptalks.Polygon(coorArr, {
-        id:zdnum,
-        isClicked:false,
-        polygonType:"YT",
-        visible : true,
-        editable : true,
-        cursor : 'pointer',
-        draggable : false,
-        drawOnAxis : null, 
-        symbol: {
-          lineColor: "#000000",
-          lineWidth: 2,
-          lineDasharray: [10, 5, 10, 5],
-          polygonFill: "#FFFFFF",
-          polygonOpacity: 0.6
-        }
-      });
-      let startPoi = [],
-      endPoi = [];
-      //为地块添加每段边长的注记
-      for (let i = 0; i < coorArr.length; i++) {
-        //每条线段的起点和终点坐标
-        if (i < coorArr.length - 1) {
-          startPoi = coorArr[i];
-          endPoi = coorArr[i + 1];
-        } else {
-          startPoi = coorArr[i];
-          endPoi = coorArr[0];
-        }
-        length = map.computeLength(startPoi, endPoi);
-        let content = length.toFixed(2);
-        addObjLabel(content, startPoi, endPoi);
-      }
-      zd_obj.config("labels", labels);
-      labels = [];
-      //清除点选高亮的点样式
-      for(let i=0;i<linePoiArr.length;i++){
-        console.log(linePoiArr)
-        map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
-          lineColor: "#000000",
-          polygonFill: "#FFFFFF"
+      if(coorArr.length<2){
+        drawTool.disable();
+      }else{
+          //随机数加当前时间构成id
+        let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+        let zd_obj=new maptalks.Polygon(coorArr, {
+          id:zdnum,
+          isClicked:false,
+          polygonType:"YT",
+          visible : true,
+          editable : true,
+          cursor : 'pointer',
+          draggable : false,
+          drawOnAxis : null, 
+          symbol: {
+            lineColor: "#000000",
+            lineWidth: 2,
+            lineDasharray: [10, 5, 10, 5],
+            polygonFill: "#FFFFFF",
+            polygonOpacity: 0.6
+          }
         });
+        let startPoi = [],
+        endPoi = [];
+        //为地块添加每段边长的注记
+        for (let i = 0; i < coorArr.length; i++) {
+          //每条线段的起点和终点坐标
+          if (i < coorArr.length - 1) {
+            startPoi = coorArr[i];
+            endPoi = coorArr[i + 1];
+          } else {
+            startPoi = coorArr[i];
+            endPoi = coorArr[0];
+          }
+          length = map.computeLength(startPoi, endPoi);
+          let content = length.toFixed(2);
+          addObjLabel(content, startPoi, endPoi);
+        }
+        zd_obj.config("labels", labels);
+        labels = [];
+        //清除点选高亮的点样式
+        for(let i=0;i<linePoiArr.length;i++){
+          console.log(linePoiArr)
+          map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+            lineColor: "#000000",
+            polygonFill: "#FFFFFF"
+          });
+        }
+        map.getLayer("polygon").addGeometry(zd_obj);
+        zd_obj.on("click", clickObj);
       }
-      map.getLayer("polygon").addGeometry(zd_obj);
-      zd_obj.on("click", clickObj);
       recoverObj();
     };
   drawBalcony =
@@ -1247,7 +1252,6 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      snap.disable();
       let plotData = [];
       plotData = JSON.parse(action.payload.data);
       console.log(plotData);
@@ -1434,7 +1438,6 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      snap.disable();
       map.off("dblclick", drawToolOn);
       map.off("click", rectifyPoint);
       drawTool.off("drawend", drawPolygonEnd);
@@ -1480,13 +1483,11 @@ const sketchReduce = (
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
       if (!state.drawLineIsChecked) {
-        snap.enable();
         //开始画线
         drawLine();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState2 = {
@@ -1529,49 +1530,54 @@ const sketchReduce = (
           recoverObj();
           let coorArr = param.geometry.getCoordinates();
           coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
-          //随机数加当前时间构成id
-          let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-          let  jzx_line = new maptalks.LineString(coorArr, {
-            id:jzxnum,
-            isClicked:false,
-            arrowStyle : null, 
-            arrowPlacement : 'vertex-last',
-            visible : true,
-            editable : true,
-            cursor : null,
-            draggable : false,
-            dragShadow : false, 
-            drawOnAxis : null,
-            symbol: {
-              'lineColor' : '#000000',
-              'lineWidth' : 1.5
-            }
-          });
-          //为折线的每条线段添加长度标注
-          for (let i = 0; i < coorArr.length - 1; i++) {
-            //每条线段的起点和终点坐标
-            let startPoi = coorArr[i],
-              endPoi = coorArr[i + 1];
-            //计算每条线段的长度
-            length = map.computeLength(startPoi, endPoi);
-            jzx_line.config("length", length);
-            let content = jzx_line.options.length.toFixed(2);
-            addObjLabel(content, startPoi, endPoi);
-          }
-          jzx_line.config("labels", labels);
-          labels = [];
-          jzx_line.config("poiArr", linePoiArr);
-          //清除点选高亮的点样式
-          for(let i=0;i<linePoiArr.length;i++){
-            console.log(linePoiArr)
-            map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
-              lineColor: "#000000",
-              polygonFill: "#FFFFFF"
+          if(coorArr.length<2){
+            drawTool.disable();
+          }else{
+              //随机数加当前时间构成id
+            let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+            let  jzx_line = new maptalks.LineString(coorArr, {
+              id:jzxnum,
+              isClicked:false,
+              arrowStyle : null, 
+              arrowPlacement : 'vertex-last',
+              visible : true,
+              editable : true,
+              cursor : null,
+              draggable : false,
+              dragShadow : false, 
+              drawOnAxis : null,
+              symbol: {
+                'lineColor' : '#000000',
+                'lineWidth' : 1.5
+              }
             });
+            //为折线的每条线段添加长度标注
+            for (let i = 0; i < coorArr.length - 1; i++) {
+              //每条线段的起点和终点坐标
+              let startPoi = coorArr[i],
+                endPoi = coorArr[i + 1];
+              //计算每条线段的长度
+              length = map.computeLength(startPoi, endPoi);
+              jzx_line.config("length", length);
+              let content = jzx_line.options.length.toFixed(2);
+              addObjLabel(content, startPoi, endPoi);
+            }
+            jzx_line.config("labels", labels);
+            labels = [];
+            jzx_line.config("poiArr", linePoiArr);
+            //清除点选高亮的点样式
+            for(let i=0;i<linePoiArr.length;i++){
+              console.log(linePoiArr)
+              map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+                lineColor: "#000000",
+                polygonFill: "#FFFFFF"
+              });
+            }
+            map.getLayer("JZX").addGeometry(jzx_line);
+            jzx_line.on("click", clickObj);
+            linePoiArr = [];
           }
-          map.getLayer("JZX").addGeometry(jzx_line);
-          jzx_line.on("click", clickObj);
-          linePoiArr = [];
+         
         };
       //用于画线
       drawJZX =
@@ -1584,13 +1590,11 @@ const sketchReduce = (
         };
 
       if (!state.drawJZXIsChecked) {
-        snap.enable();
         //开始画线
         drawJZX();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const JZXState = {
@@ -1631,30 +1635,34 @@ const sketchReduce = (
         function(param) {
           let coorArr = param.geometry.getCoordinates();
           coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
-          //随机数加当前时间构成id
-          let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-          let jzx_arc = new maptalks.ArcCurve(coorArr, {
-            id:jzxnum,
-            isClicked:false,
-            arcDegree:45,
-            symbol :{
-              lineColor: "#000000",
-               lineWidth: 1.5 
-            }
-          });
-          jzx_arc.config("poiArr", linePoiArr);
-          //清除点选高亮的点样式
-          for(let i=0;i<linePoiArr.length;i++){
-            console.log(linePoiArr)
-            map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
-              lineColor: "#000000",
-              polygonFill: "#FFFFFF"
+          if(coorArr.length<2){
+            drawTool.disable();
+          }else{
+            //随机数加当前时间构成id
+            let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+            let jzx_arc = new maptalks.ArcCurve(coorArr, {
+              id:jzxnum,
+              isClicked:false,
+              arcDegree:45,
+              symbol :{
+                lineColor: "#000000",
+                lineWidth: 1.5 
+              }
             });
-          }
-          map.getLayer("JZX").addGeometry(jzx_arc);
-          jzx_arc.on("click", clickObj);
-          recoverObj();
-          linePoiArr = [];
+            jzx_arc.config("poiArr", linePoiArr);
+            //清除点选高亮的点样式
+            for(let i=0;i<linePoiArr.length;i++){
+              console.log(linePoiArr)
+              map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+                lineColor: "#000000",
+                polygonFill: "#FFFFFF"
+              });
+            }
+            map.getLayer("JZX").addGeometry(jzx_arc);
+            jzx_arc.on("click", clickObj);
+            recoverObj();
+            linePoiArr = [];
+          }     
         };
       //用于画线
       drawCurve =
@@ -1667,13 +1675,11 @@ const sketchReduce = (
           drawTool.on("drawend", drawCurveEnd);
         };
       if (!state.drawArcIsChecked) {
-        snap.enable();
         //开始画线
         drawCurve();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const CurveState = {
@@ -1710,13 +1716,11 @@ const sketchReduce = (
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
       if (!state.drawPolygonIsChecked) {
-        snap.enable();
         //开始构面
         drawPolygon();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState3 = {
@@ -1752,13 +1756,11 @@ const sketchReduce = (
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
       if (!state.balconyIsChecked) {
-        snap.enable();
         //开始构面
         drawBalcony();
         map.on("dblclick", drawToolOn);
       } else {
         drawTool.disable();
-        snap.disable();
         map.off("dblclick", drawToolOn);
       }
       const newState4 = {
@@ -1963,7 +1965,6 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      snap.enable();
       map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
@@ -1990,6 +1991,28 @@ const sketchReduce = (
         alertSave: true
       };
       return Object.assign({}, state, { ...newState7 });
+    //打开捕捉选择列表
+    case "snapClick":
+      const snapOpen={snapIsChecked:!state.snapIsChecked}
+      return Object.assign({}, state, { ...snapOpen });
+    //关闭捕捉列表
+    case "snapListClose":
+      const snapClose={snapIsChecked:false}
+      return Object.assign({}, state, { ...snapClose });
+    //选择捕捉图层
+    case "snapListClick":
+      let layerChoice = action.payload.command;
+      snap.setLayer(map.getLayer(layerChoice));
+      if(layerChoice==="point"){
+        
+
+      }
+      if(layerChoice==="DX"){
+      
+
+      }
+      console.log(layerChoice)
+      return {...state}
     //撤销
     case "undoClick":
     map.off("click", drawPoint);
