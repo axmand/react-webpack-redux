@@ -349,16 +349,22 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     let center;
-    if(projectData.ProjectItem.L.jzdJSONData){
+    if(projectData.ProjectItem.L.jzdJSONData)
+    {
       let poi_data= maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
       console.log(poi_data);
       let poi_arr=poi_data.getGeometries();
       if(poi_arr.length>0){
         center=poi_arr[poi_arr.length-1].getCoordinates();
-      }else{
+      }
+      else{
         center= new maptalks.Coordinate([108.37, 22.82]);
       }
     }
+    else{
+      center= new maptalks.Coordinate([108.37, 22.82]);
+    }
+    console.log(center)
     map = new maptalks.Map(mapDiv, {
       center:center,
       zoom: 16,
@@ -374,7 +380,7 @@ class Map extends Component {
       })
     });
     map.setZoom(18);
-    map.setCenter([108.24953634836234, 22.852188079872413]);
+    map.setCenter([108.397350, 22.887379]);
     //将项目草图数据导入至地图
     let jzd,sz,jzx,zd,zj,dx;
     //判断地图数据是否为空，若为空则新建地图图层
