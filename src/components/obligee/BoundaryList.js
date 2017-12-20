@@ -26,24 +26,25 @@ for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
 for(let j=0;j<jzx.geometries.length;j++)
 { 
   newValue=jzx.geometries[j].options.length;
-
-
+  if(LandPointDistance.indexOf(newValue)<0)
+    LandPointDistance.push(newValue);
   //if(LandPointDistance.indexOf(newValue)>0)
-  if(newValue!==undefined)
-  LandPointDistance.push(newValue);
-else
-  LandPointDistance.push(0);
+//   if(newValue!==undefined)
+//   LandPointDistance.push(newValue);
+// else
+//   LandPointDistance.push(0);
 
  
 }   
 
    
   }
+
+  LandPointDistance.length=LandPointCodeList.length-1;
   projectData.ProjectItem.F2.LandPointCodeList  =LandPointCodeList;
   projectData.ProjectItem.F2.LandPointDistance   =LandPointDistance; 
-  //console.log(LandPointDistance);
+  console.log(LandPointDistance);
   
-
     return {
       LandPointCodeList:LandPointCodeList,
       LandPointTypeList:state.ObContentReducer[tableIndex].LandPointTypeList,
