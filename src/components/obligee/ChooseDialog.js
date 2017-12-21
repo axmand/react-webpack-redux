@@ -429,44 +429,50 @@ var LandPointInMap=[];
 
     case 'fillSignatureList':
     let jzxData=projectData.ProjectItem.L.jzxJSONData;
-    let jzx =JSON.parse(jzxData);
-    console.log(jzx);
-
-    let startPoints=[];
-    let endPoints=[];
-    let innerPoints=[];
-    let jzxID=[];
-    for(let i=0;i<jzx.geometries.length;i++)
-    {
-      jzxID.push(jzx.geometries[i].options.id) ;
-      let jzxPoints=jzx.geometries[i].options.poiArr;
-      startPoints.push(jzxPoints[0]);
-      endPoints.push(jzxPoints[jzxPoints.length-1]);
-      if(jzxPoints.length>2)
+    console.log(jzxData)
+    let jzx ;
+    if(jzxData){
+      jzx =JSON.parse(jzxData);
+      console.log(jzx);
+      let startPoints=[];
+      let endPoints=[];
+      let innerPoints=[];
+      let jzxID=[];
+      for(let i=0;i<jzx.geometries.length;i++)
       {
-        let temp="";
-        for(let j=1;j<jzxPoints.length-2;j++)
-        { temp+=jzxPoints[j]+",";
-  
-        }   
-        temp+=jzxPoints[jzxPoints.length-2];
-        innerPoints.push(temp);
-            
+        jzxID.push(jzx.geometries[i].options.id) ;
+        let jzxPoints=jzx.geometries[i].options.poiArr;
+        startPoints.push(jzxPoints[0]);
+        endPoints.push(jzxPoints[jzxPoints.length-1]);
+        if(jzxPoints.length>2)
+        {
+          let temp="";
+          for(let j=1;j<jzxPoints.length-2;j++)
+          { temp+=jzxPoints[j]+",";
+    
+          }   
+          temp+=jzxPoints[jzxPoints.length-2];
+          innerPoints.push(temp);
+              
+        }
+        else
+        {
+          innerPoints.push("");
+        }
       }
-      else
-      {
-        innerPoints.push("");
-      }
+      console.log(state)
+      let newState=state;
+      newState.F3.StartPointCodeList=startPoints;
+      newState.F3.InnerPointCodeList=innerPoints;
+      newState.F3.EndPointCodeList=endPoints;
+      console.log(newState)
+      const returnState=Object.assign({}, state, newState);
+      projectData.ProjectItem=returnState;
+      return returnState;
+    }else{
+      return{...state}
     }
-    console.log(state)
-    let newState=state;
-    newState.F3.StartPointCodeList=startPoints;
-    newState.F3.InnerPointCodeList=innerPoints;
-    newState.F3.EndPointCodeList=endPoints;
-    console.log(newState)
-    const returnState=Object.assign({}, state, newState);
-    projectData.ProjectItem=returnState;
-    return returnState;
+
 
   case 'changelist':
   

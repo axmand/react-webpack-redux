@@ -5,38 +5,34 @@ import projectData from "./../../redux/RootData";
 // Map Redux state to component props
 function mapStateToProps(state ,ownProps) {
   // const tableIndex =ownProps.tableIndex;
-
-  var jzxData=projectData.ProjectItem.L.jzxJSONData;
-  var jzx =JSON.parse(jzxData);// eval('(' + jzxData + ')');
-
-console.log(jzx);
+  
   var startPoints=[];
   var endPoints=[];
   var innerPoints=[];
-  var jzxID=[];
-  for(var i=0;i<jzx.geometries.length;i++)
-  {
-    jzxID.push(jzx.geometries[i].feature.id) ;
-    var jzxPoints=jzx.geometries[i].options.poiArr;
-    startPoints.push(jzxPoints[0]);
-    endPoints.push(jzxPoints[jzxPoints.length-1]);
-    if(jzxPoints.length>2)
-    {
-      var temp="";
-      for(var j=1;j<jzxPoints.length-2;j++)
-      { temp+=jzxPoints[j]+",";
+  var jzxID=[];  
+  var jzxData=projectData.ProjectItem.L.jzxJSONData;
+  if(jzxData){
+    var jzx =JSON.parse(jzxData);// eval('(' + jzxData + ')');
+    console.log(jzx);
+    for(var i=0;i<jzx.geometries.length;i++){
+      jzxID.push(jzx.geometries[i].feature.id) ;
+      var jzxPoints=jzx.geometries[i].options.poiArr;
+      startPoints.push(jzxPoints[0]);
+      endPoints.push(jzxPoints[jzxPoints.length-1]);
+      if(jzxPoints.length>2){
+        var temp="";
+        for(var j=1;j<jzxPoints.length-2;j++){ 
+          temp+=jzxPoints[j]+",";
+        }   
+        temp+=jzxPoints[jzxPoints.length-2];
+        innerPoints.push(temp);       
+      }
+      else{
+        innerPoints.push("");
+      }
+    }
 
-      }   
-      temp+=jzxPoints[jzxPoints.length-2];
-      innerPoints.push(temp);
-          
-    }
-    else
-    {
-      innerPoints.push("");
-    }
   }
-
   projectData.ProjectItem.F3.StartPointCodeList=startPoints;
   projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
   projectData.ProjectItem.F3.EndPointCodeList=endPoints;

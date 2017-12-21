@@ -143,10 +143,11 @@ let drawTool = new maptalks.DrawTool({
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
   tolerance: 10,
-  mode: "point"
+  mode: "line"
 });
 let target,
   clickedObj = [],
+  editingLabel,
   linePoiArr = [];
 let clickObj, deleteObj, recoverObj, addLabel;
 //用于获取点线面对象
@@ -204,8 +205,14 @@ clickObj =
 
     if (target.getJSONType() === "Label") {
       if (target.options.isClicked) {
-        target.startEditText();
+        target.updateSymbol({
+          'textHaloFill' : '#00FFFF',
+          'textHaloRadius' : 3});
         clickedObj.push(target);
+        //点击对象进行内容编辑
+        //判断正在编辑的标签是否为空，若为空则赋值
+        //否则结束当前编辑，更新编辑对象开始编辑
+        
       }else {
        for(let i=0;i<clickedObj.length;i++){
          if(clickedObj[i].getId() === target.getId()){
@@ -213,6 +220,9 @@ clickObj =
            break;
           }
         }
+        target.updateSymbol({
+          'textHaloFill' : '#000000',
+          'textHaloRadius' : 0});
       }
     }
 
@@ -232,6 +242,16 @@ clickObj =
     }
     console.log(clickedObj)
   };
+
+// //用于结束label的编辑状态
+// let endLabelEdit=
+//   endLabelEdit||
+//   function(){
+//     if(editingLabel){
+//       //editingLabel.endEditText();
+//     }
+// }
+
 //用于清除对象被选中的高亮效果
 recoverObj =
   recoverObj ||
@@ -261,7 +281,7 @@ recoverObj =
       if (clickedObj[i].getJSONType() === "Label") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].endEditText();
-        clickedObj[i].updateSymbol({ lineColor: "#000000" });
+        //clickedObj[i].updateSymbol({ textFill: "#000000" });
       }
     }
     console.log(clickedObj)
@@ -272,21 +292,32 @@ addLabel =
   addLabel ||
   function(e) {
     recoverObj();
-    let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+ let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);   
     let label = new maptalks.Label("label", e.coordinate, {
-      id:labelId, 
-      isClicked:false,     
-      draggable: true,
-      box: false,
-      type: "Label",
-      symbol: {
-        textWeight: "200",
-        textFaceName: "宋体",
-        textFill: "#000000",
-        textSize: 12,
-        textHorizontalAlignment: "middle",
-        textVerticalAlignment: "middle",
-        textAlign: "center"
+      'id':labelId, 
+      'isClicked':false,     
+      'draggable': true,
+      'box': false,
+      'type': "Label",
+      'boxStyle' : {
+        'padding' : [12, 8],
+        'verticalAlignment' : 'top',
+        'horizontalAlignment' : 'right',
+        'minWidth' : 48,
+        'minHeight' : 24,
+        'symbol' : {
+          'textDy':-10,
+          'markerType' : 'square',
+          'markerFill' : 'rgb(255,255,255)',
+          'markerFillOpacity' : 0,
+          'markerLineWidth' : 0,
+        }
+      },
+      'textSymbol': {
+        'textFaceName' : '宋体',
+        'textFill' : '#000',
+        'textSize' : 18,
+        'textVerticalAlignment' : 'top'
       }
     });
     map.getLayer("label").addGeometry(label);
@@ -335,7 +366,6 @@ deleteObj =
         }
       }
       if (target.options.type === "Label") {
-        target.endEditText();
         target.remove();
       }
     }
@@ -472,7 +502,7 @@ class Map extends Component {
     jzd.addTo(map).bringToFront();
     location.addTo(map);
     console.log(map)
-    map.on('dblclick',recoverObj);
+    //map.on('click',endLabelEdit);
 
     //将测距测面积工具添加至地图
     distanceTool.addTo(map).disable();
@@ -487,16 +517,10 @@ class Map extends Component {
       },
       generate: geometry => geometry
     });
-
-
-    snap.addTo(map);  
-    // snap.setMode('line')  
-    // snap.setLayer(linelayer);
-     snap.setLayer(map.getLayer("point"));
-    //snap.setGeometries(linelayer.getGeometries());
-
-    snap.setLayer(map.getLayer("point"));
+    snap.addTo(map)
     snap.bindDrawTool(drawTool);
+    snap.disable();
+   ;
   }
 
   render() {
@@ -561,9 +585,9 @@ const mapReduce = (state = 0, action) => {
     function locationSuccess(position) {
       let coords = position.coords;
       console.log(coords);
-      const center = new maptalks.Coordinate(coords.longitude, coords.latitude);
+      let center = new maptalks.Coordinate(coords.longitude, coords.latitude);
       map.setCenter(center);
-      const circle = new maptalks.Circle(center, 1, {
+      let circle = new maptalks.Circle(center, 1, {
         symbol: {
           lineColor: "#000000",
           lineWidth: 1.5,
@@ -571,17 +595,31 @@ const mapReduce = (state = 0, action) => {
           polygonOpacity: 0.4
         }
       });
-      const label = new maptalks.Label("当前定位", center, {
-        isClicked:false,
-        box: false,
-        type: "Label",
-        symbol: {
-          textWeight: "200",
-          textFaceName: "宋体",
-          textSize: 12,
-          textFill: "#000000",
-          textDy: -10,
-          textAlign: "auto"
+      let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+      let label = new maptalks.Label("当前定位", center, {
+        'id':labelId,
+        'isClicked':false,
+        'box': false,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 18,
+          'textVerticalAlignment' : 'top'
         }
       });
       //将对象添加至图层
@@ -610,16 +648,28 @@ const mapReduce = (state = 0, action) => {
       }
     });
     const label = new maptalks.Label("当前定位", center, {
-      id:'locationlabel',
-      box: false,
-      type: "Label",
-      symbol: {
-        textWeight: "200",
-        textFaceName: "宋体",
-        textSize: 12,
-        textFill: "#000000",
-        textDy: -10,
-        textAlign: "auto"
+      'id':'locationlabel',
+      'box': false,
+      'type': "Label",
+      'boxStyle' : {
+        'padding' : [12, 8],
+        'verticalAlignment' : 'top',
+        'horizontalAlignment' : 'right',
+        'minWidth' : 48,
+        'minHeight' : 24,
+        'symbol' : {
+          'textDy':-10,
+          'markerType' : 'square',
+          'markerFill' : 'rgb(255,255,255)',
+          'markerFillOpacity' : 0,
+          'markerLineWidth' : 0
+        }
+      },
+      'textSymbol': {
+        'textFaceName' : '宋体',
+        'textFill' : '#000',
+        'textSize' : 18,
+        'textVerticalAlignment' : 'top'
       }
     });
     //将对象添加至图层
@@ -643,6 +693,7 @@ RootReducer.merge(mapReduce);
 //加入reducer(layerControlReduce)
 const layerControlReduce = (
   state = {
+    topographicMapIsChecked:true,
     pointIsChecked: true,
     lineIsChecked: true,
     jzxIsChecked: true,
@@ -651,6 +702,19 @@ const layerControlReduce = (
   },
   action
 ) => {
+  //点选地形图层控制其显示
+  if (action.type === "handleTopographicMapIsChecked") {
+    const checkedtopographicMap = {
+      topographicMapIsChecked: !state.topographicMapIsChecked
+    };
+    if (state.topographicMapIsChecked) {
+      map.getLayer("DX").hide();
+    } else {
+      map.getLayer("DX").show();
+    }
+    return Object.assign({}, state, { ...checkedtopographicMap });
+  }
+
   //点选point图层控制其显示
   if (action.type === "handlePointIsChecked") {
     const pointIsChecked = {
@@ -741,6 +805,7 @@ let plot,
   drawPolygon,
   drawBalconyEnd,
   drawBalcony,
+  editLabel,
   drawUndo,
   drawRedo;
 
@@ -758,12 +823,16 @@ const sketchReduce = (
     drawArcIsChecked: false,
     drawPolygonIsChecked: false,
     balconyIsChecked: false,
+    labelIsChecked:false,
     addLabelIsChecked: false,
+    editLabelIsChecked:false,
     measureDistanceIsChecked: false,
     measureAreaIsChecked: false,
     deleteIsChecked: false,
     chooseObjIsChecked: false,
     snapIsChecked:false,
+    snapJzdIsChecked:false,
+    snapDxIsChecked:false,
     undoIsChecked: false,
     redoIsChecked: false,
     saveIsChecked: false,
@@ -828,26 +897,33 @@ const sketchReduce = (
       }
       let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let objLabel = new maptalks.Label(content, coord, {
-        id:labelId,
-        isClicked:false,
-        draggable: true,
-        box: false,
-        type: "Label",
-        symbol: {
-          textWeight: "200",
-          textRotation: rotation,
-          textFaceName: "宋体",
-          textFill: "#000000",
-          textSize: 12,
-          textDx: dx,
-          textDy: dy,
-          textHorizontalAlignment: "middle",
-          textVerticalAlignment: "middle",
-          textAlign: "center"
+        'id':labelId,
+        'isClicked':false,
+        'draggable': true,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 18,
+          'textVerticalAlignment' : 'top'
         }
       });
-      map.getLayer("label").addGeometry(objLabel);
-      objLabel.on("click", clickObj);
+      //map.getLayer("label").addGeometry(objLabel);
+      //objLabel.on("click", clickObj);
       labels.push(objLabel.getId());
       
     };
@@ -868,19 +944,29 @@ const sketchReduce = (
       let content = jzdnum;
       //为界址点添加点号注记
       let label = new maptalks.Label(content, poi, {
-        id: jzdnum,
-        isClicked:false,
-        draggable: true,
-        box: false,
-        type: "Label",
-        symbol: {
-          color: "white",
-          textWeight: "200",
-          textFaceName: "宋体",
-          textSize: 12,
-          textFill: "#000000",
-          textDy: -10,
-          textAlign: "auto"
+        'id': jzdnum,
+        'isClicked':false,
+        'draggable': true,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 18,
+          'textVerticalAlignment' : 'top'
         }
       });
       label.on("click", clickObj);
@@ -910,19 +996,29 @@ const sketchReduce = (
       let content = jzdnum;
       //为界址点添加点号注记
       let label = new maptalks.Label(content, e.coordinate, {
-        id: jzdnum,
-        isClicked:false,
-        draggable: true,
-        box: false,
-        type: "Label",
-        symbol: {
-          color: "white",
-          textWeight: "200",
-          textFaceName: "宋体",
-          textSize: 12,
-          textFill: "#000000",
-          textDy: -10,
-          textAlign: "auto"
+        'id': jzdnum,
+        'isClicked':false,
+        'draggable': true,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 18,
+          'textVerticalAlignment' : 'top'
         }
       });
       label.on("click", clickObj);
@@ -1155,6 +1251,36 @@ const sketchReduce = (
       });
       drawTool.on("drawend", drawBalconyEnd);
     };
+  //编辑标注
+  editLabel=
+    editLabel||
+    function(){
+      if(target){
+        if (target.getJSONType() === "Label") {
+          //编辑状态下禁用选中
+          target.config('isClicked',false);
+          for(let i=0;i<clickedObj.length;i++){
+            if(clickedObj[i].getId() === target.getId()){
+              clickedObj.splice(i, 1);
+              break;
+              }
+            }
+          target.updateSymbol({
+            'textHaloFill' : '#000000',
+            'textHaloRadius' : 0});
+          //根据点击的对象进行开始和结束编辑操作
+          if(editingLabel){
+            editingLabel.endEditText();
+            editingLabel=target;
+            editingLabel.startEditText();
+          }else{
+            editingLabel=target;
+            editingLabel.startEditText();
+          }
+        }
+      }
+    recoverObj();  
+   }
 
   //撤销
   drawUndo =
@@ -1196,18 +1322,29 @@ const sketchReduce = (
           console.log(labelContent)
           //为界址点添加点号注记
           let label = new maptalks.Label(labelContent, e.coordinate, {
-            id: num,
-            isClicked:false,
-            draggable: true,
-            box: false,
-            type: "Label",
-            symbol: {
-              textWeight: "200",
-              textFaceName: "宋体",
-              textSize: 12,
-              textFill: "#000000",
-              textDy: -10,
-              textAlign: "auto"
+            'id': num,
+            'isClicked':false,
+            'draggable': true,
+            'type': "Label",
+            'boxStyle' : {
+              'padding' : [12, 8],
+              'verticalAlignment' : 'top',
+              'horizontalAlignment' : 'right',
+              'minWidth' : 48,
+              'minHeight' : 24,
+              'symbol' : {
+                'textDy':-10,
+                'markerType' : 'square',
+                'markerFill' : 'rgb(255,255,255)',
+                'markerFillOpacity' : 0,
+                'markerLineWidth' : 0
+              }
+            },
+            'textSymbol': {
+              'textFaceName' : '宋体',
+              'textFill' : '#000',
+              'textSize' : 18,
+              'textVerticalAlignment' : 'top'
             }
           });
           label.on("click", clickObj);
@@ -1254,6 +1391,7 @@ const sketchReduce = (
       recoverObj();
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
+      map.off("click", editLabel);
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
@@ -1346,18 +1484,29 @@ const sketchReduce = (
       console.log(labelContent)
       //为界址点添加点号注记
       let label = new maptalks.Label(labelContent, oldLabel.getCoordinates(), {
-          id: new_id,
-          isClicked:false,
-          draggable: true,
-          box: false,
-          type: "Label",
-          symbol: {
-            textWeight: "200",
-            textFaceName: "宋体",
-            textSize: 12,
-            textFill: "#000000",
-            textDy: -10,
-            textAlign: "auto"
+          'id': new_id,
+          'isClicked':false,
+          'draggable': true,
+          'type': "Label",
+          'boxStyle' : {
+            'padding' : [12, 8],
+            'verticalAlignment' : 'top',
+            'horizontalAlignment' : 'right',
+            'minWidth' : 48,
+            'minHeight' : 24,
+            'symbol' : {
+              'textDy':-10,
+              'markerType' : 'square',
+              'markerFill' : 'rgb(255,255,255)',
+              'markerFillOpacity' : 0,
+              'markerLineWidth' : 0
+            }
+          },
+          'textSymbol': {
+            'textFaceName' : '宋体',
+            'textFill' : '#000',
+            'textSize' : 18,
+            'textVerticalAlignment' : 'top'
           }
       });
       label.on("click", clickObj);
@@ -1390,14 +1539,9 @@ const sketchReduce = (
       areaTool.disable();
       map.off("click", drawToolOn);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
       map.off("click", rectifyPoint);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("dblclick", drawToolOn);
       if(!state.drawPointIsChecked){
         map.on('click',drawPoint);
       }else{
@@ -1442,11 +1586,7 @@ const sketchReduce = (
       areaTool.disable();
       map.off("dblclick", drawToolOn);
       map.off("click", rectifyPoint);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      drawTool.off("drawend", drawCurveEnd);
+      map.off("click", editLabel);
       map.off("click", addLabel);
       map.off("click", drawPoint);
       const rectifyPoiState = {
@@ -1483,6 +1623,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawPolygonEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       if (!state.drawLineIsChecked) {
         //开始画线
         drawLine();
@@ -1523,6 +1664,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawPolygonEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       //画线时drawTool的绑定事件
       drawJZXEnd =
         drawJZXEnd ||
@@ -1628,6 +1770,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawPolygonEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       //画线时drawTool的绑定事件
       drawCurveEnd =
         drawCurveEnd ||
@@ -1713,6 +1856,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawCurveEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       if (!state.drawPolygonIsChecked) {
         //开始构面
         drawPolygon();
@@ -1752,6 +1896,7 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
+        map.off("click", editLabel);
       if (!state.balconyIsChecked) {
         //开始构面
         drawBalcony();
@@ -1780,29 +1925,17 @@ const sketchReduce = (
         alertSave: true,
       };
       return { ...state, ...newState4 };
-    //添加自定义注记
-    case "addLabelClick":
-      recoverObj();
+    //打开捕捉选择列表
+    case "labelClick":
+      console.log("kai")
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
       map.off("dblclick", drawToolOn);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("dblclick", drawToolOn);
-      if (!state.addLabelIsChecked) {
-        map.on("click", addLabel);
-      } else {
-        map.off("click", addLabel);
-      }
-
-      const newState5 = {
+      const labelOpen={
+        labelIsChecked:!state.labelIsChecked,
         plotIsChecked: false,
         drawPointIsChecked: false,
         rectifyPoiIsChecked:false,
@@ -1811,7 +1944,6 @@ const sketchReduce = (
         drawArcIsChecked: false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
-        addLabelIsChecked: !state.addLabelIsChecked,
         measureDistanceIsChecked: false,
         measureAreaIsChecked: false,
         chooseObjIsChecked: false,
@@ -1820,8 +1952,42 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
+      }
+    return Object.assign({}, state, { ...labelOpen });
+    //关闭label下拉列表
+    case "labelListClose":
+      const labelClose={labelIsChecked:false}
+      return Object.assign({}, state, { ...labelClose});
+    //添加注记
+    case "addLabelClick":
+      recoverObj();
+      map.off("click", editLabel);
+      if (!state.addLabelIsChecked) {
+        map.on("click", addLabel);
+      } else {
+        map.off("click", addLabel);
+      }
+      const addLabelState = {
+        editLabelIsChecked:false,
+        addLabelIsChecked: !state.addLabelIsChecked,
       };
-      return { ...state, ...newState5 };
+      return { ...state, ...addLabelState };
+    //编辑标注
+    case "editLabel":
+      map.off("click", addLabel);
+      if (!state.editLabelIsChecked) {
+        map.on("click", editLabel);
+      } else {
+        if(editingLabel){
+          editingLabel.endEditText();
+        }
+        map.off("click", editLabel);
+      }
+      const editLabelState = {
+        addLabelIsChecked: false,
+        editLabelIsChecked:!state.editLabelIsChecked,
+      };
+      return { ...state, ...editLabelState };
     //测距
     case "measureDistanceClick":        
       drawTool.off("drawend", drawPolygonEnd);
@@ -1833,6 +1999,7 @@ const sketchReduce = (
       map.off("click", drawPoint);
       map.off("dblclick", drawToolOn);
       map.off("click", rectifyPoint);
+      map.off("click", editLabel);
       drawTool.disable();
       areaTool.disable();
       if (!state.measureDistanceIsChecked) {
@@ -1870,6 +2037,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawBalconyEnd);
       drawTool.off("drawend", drawCurveEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
       map.off("dblclick", drawToolOn);
@@ -1908,10 +2076,10 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
       console.log(clickedObj.length)
       if (clickedObj.length>0) {
@@ -1956,10 +2124,10 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
       const newState7 = {
         plotIsChecked: false,
@@ -1992,21 +2160,45 @@ const sketchReduce = (
     //选择捕捉图层
     case "snapListClick":
       let layerChoice = action.payload.command;
-      snap.setLayer(map.getLayer(layerChoice));
+      console.log(snap)
       if(layerChoice==="point"){
-        
-
+        //snap.setMode(point);
+        snap.setLayer(map.getLayer('point'));
+        if(!state.snapJzdIsChecked){
+          snap.enable();
+          snap.setMode('point');
+          (console.log('捕捉开启'))
+        }else{
+          snap.disable();
+          console.log('捕捉关闭')
+        }
+        const snapJzdState={
+          snapJzdIsChecked:!state.snapJzdIsChecked,
+          snapDxIsChecked:false
+        }
+        return Object.assign({}, state, { ...snapJzdState });
       }
       if(layerChoice==="DX"){
-      
-
+        snap.setLayer(map.getLayer('DX'));
+        if(!state.snapDxIsChecked){
+          snap.enable();
+          snap.setMode('point');
+          (console.log('捕捉开启'))
+        }else{
+          snap.disable();
+          console.log('捕捉关闭')
+        }
+        const snapDxState={
+          snapJzdIsChecked:false,
+          snapDxIsChecked:!state.snapDxIsChecked
+        }
+        return Object.assign({}, state, { ...snapDxState });
       }
-      console.log(layerChoice)
-      return {...state}
     //撤销
     case "undoClick":
     map.off("click", drawPoint);
     map.off("click", rectifyPoint);
+    map.off("click", editLabel);
     if(drawTool.getCurrentGeometry()){
       drawUndo();
       const new_drawAlert={ drawAlert:false}
@@ -2020,6 +2212,7 @@ const sketchReduce = (
       console.log("重做");
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
+      map.off("click", editLabel);
       if(drawTool.getCurrentGeometry()){
         drawRedo();
         const new_drawAlert={ drawAlert:false}
@@ -2046,6 +2239,7 @@ const sketchReduce = (
         map.off("click", drawPoint);
         map.off("click", rectifyPoint);
         map.off("click", addLabel);
+        map.off("click", editLabel);
         map.off("dblclick", drawToolOn);
         const saveData = {
           plotIsChecked: false,
