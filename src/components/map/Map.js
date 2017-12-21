@@ -143,7 +143,7 @@ let drawTool = new maptalks.DrawTool({
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
   tolerance: 10,
-  mode: "point"
+  mode: "line"
 });
 let target,
   clickedObj = [],
@@ -487,16 +487,10 @@ class Map extends Component {
       },
       generate: geometry => geometry
     });
-
-
-    snap.addTo(map);  
-    // snap.setMode('line')  
-    // snap.setLayer(linelayer);
-     snap.setLayer(map.getLayer("point"));
-    //snap.setGeometries(linelayer.getGeometries());
-
-    snap.setLayer(map.getLayer("point"));
+    snap.addTo(map)
     snap.bindDrawTool(drawTool);
+    snap.disable();
+   ;
   }
 
   render() {
@@ -764,6 +758,8 @@ const sketchReduce = (
     deleteIsChecked: false,
     chooseObjIsChecked: false,
     snapIsChecked:false,
+    snapJzdIsChecked:false,
+    snapDxIsChecked:false,
     undoIsChecked: false,
     redoIsChecked: false,
     saveIsChecked: false,
@@ -1992,17 +1988,40 @@ const sketchReduce = (
     //选择捕捉图层
     case "snapListClick":
       let layerChoice = action.payload.command;
-      snap.setLayer(map.getLayer(layerChoice));
+      console.log(snap)
       if(layerChoice==="point"){
-        
-
+        //snap.setMode(point);
+        snap.setLayer(map.getLayer('point'));
+        if(!state.snapJzdIsChecked){
+          snap.enable();
+          snap.setMode('point');
+          (console.log('捕捉开启'))
+        }else{
+          snap.disable();
+          console.log('捕捉关闭')
+        }
+        const snapJzdState={
+          snapJzdIsChecked:!state.snapJzdIsChecked,
+          snapDxIsChecked:false
+        }
+        return Object.assign({}, state, { ...snapJzdState });
       }
       if(layerChoice==="DX"){
-      
-
+        snap.setLayer(map.getLayer('DX'));
+        if(!state.snapDxIsChecked){
+          snap.enable();
+          snap.setMode('line');
+          (console.log('捕捉开启'))
+        }else{
+          snap.disable();
+          console.log('捕捉关闭')
+        }
+        const snapDxState={
+          snapJzdIsChecked:false,
+          snapDxIsChecked:!state.snapDxIsChecked
+        }
+        return Object.assign({}, state, { ...snapDxState });
       }
-      console.log(layerChoice)
-      return {...state}
     //撤销
     case "undoClick":
     map.off("click", drawPoint);

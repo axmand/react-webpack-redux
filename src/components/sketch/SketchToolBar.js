@@ -16,9 +16,9 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from "material-ui/Button";
 import Popover from "material-ui/Popover";
-import List, { ListItem } from "material-ui/List";
+import List, { ListItem} from "material-ui/List";
 import Typograghy from "material-ui/Typography";
-// import IconButton from 'material-ui/IconButton';
+import Checkbox from "material-ui/Checkbox";
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 
 //import icon
@@ -98,10 +98,21 @@ const styles = theme => ({
   },
   snapitem:{
     height:`${window.innerHeight * 0.025}px`,
-    width:`${window.innerHeight * 0.075}px`,
+    width:`${window.innerHeight * 0.1}px`,
     justifyContent: 'center ',
     background: "rgba(69, 90, 100, .6)",
-    textAlign:'center',
+    paddingLeft: '1%',
+    paddingRight: '1%',
+  },
+  checkbox: {
+    height:'30%',
+    width: '30%',
+    fontSize:'1rem'
+  },
+  checked: {
+    color: "#B3D9D9"
+  },
+  snaptext:{
     color:'#fff',
     fontSize: "1em",
     fontFamily:'微软雅黑',
@@ -207,6 +218,8 @@ class SkechToolBar extends Component {
       measureAreaIsChecked,
       chooseObjIsChecked,
       snapIsChecked,
+      snapJzdIsChecked,
+      snapDxIsChecked,
       haveObjToDel,
       drawAlert,
       onFetchPoi_NumClick,
@@ -498,15 +511,24 @@ class SkechToolBar extends Component {
             disableGutters={true}
             onClick={() => onSnapListClick("point")}
           >
-            界址点
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={snapJzdIsChecked}
+              className={classes.checkbox}
+            />
+            <span className={classes.snaptext}>界址点</span>
           </ListItem>
           <ListItem
             button
             className={classes.snapitem}
-            disableGutters={true}
             onClick={() => onSnapListClick("DX")}
           >
-            地形图
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={snapDxIsChecked}
+              className={classes.checkbox}
+            />
+            <span className={classes.snaptext}>地形图</span>
           </ListItem>
       </Popover>
       <Drawer
@@ -621,6 +643,8 @@ const mapStateToProps = state => {
     measureAreaIsChecked: sketchState.measureAreaIsChecked,
     chooseObjIsChecked: sketchState.chooseObjIsChecked,
     snapIsChecked:sketchState.snapIsChecked,
+    snapJzdIsChecked:sketchState.snapJzdIsChecked,
+    snapDxIsChecked:sketchState.snapDxIsChecked,
     undoIsChecked: sketchState.undoIsChecked,
     redoIsChecked: sketchState.redoIsChecked,
     saveIsChecked: sketchState.saveIsChecked,
