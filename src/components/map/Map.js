@@ -147,6 +147,7 @@ let snap = new SnapTool({
 });
 let target,
   clickedObj = [],
+  editingLabel,
   linePoiArr = [];
 let clickObj, deleteObj, recoverObj, addLabel;
 //用于获取点线面对象
@@ -204,8 +205,14 @@ clickObj =
 
     if (target.getJSONType() === "Label") {
       if (target.options.isClicked) {
-        target.startEditText();
+        target.updateSymbol({
+          'textHaloFill' : '#00FFFF',
+          'textHaloRadius' : 3});
         clickedObj.push(target);
+        //点击对象进行内容编辑
+        //判断正在编辑的标签是否为空，若为空则赋值
+        //否则结束当前编辑，更新编辑对象开始编辑
+        
       }else {
        for(let i=0;i<clickedObj.length;i++){
          if(clickedObj[i].getId() === target.getId()){
@@ -213,6 +220,9 @@ clickObj =
            break;
           }
         }
+        target.updateSymbol({
+          'textHaloFill' : '#000000',
+          'textHaloRadius' : 0});
       }
     }
 
@@ -232,6 +242,16 @@ clickObj =
     }
     console.log(clickedObj)
   };
+
+// //用于结束label的编辑状态
+// let endLabelEdit=
+//   endLabelEdit||
+//   function(){
+//     if(editingLabel){
+//       //editingLabel.endEditText();
+//     }
+// }
+
 //用于清除对象被选中的高亮效果
 recoverObj =
   recoverObj ||
@@ -261,7 +281,7 @@ recoverObj =
       if (clickedObj[i].getJSONType() === "Label") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].endEditText();
-        clickedObj[i].updateSymbol({ lineColor: "#000000" });
+        //clickedObj[i].updateSymbol({ textFill: "#000000" });
       }
     }
     console.log(clickedObj)
@@ -290,7 +310,7 @@ addLabel =
           'markerType' : 'square',
           'markerFill' : 'rgb(255,255,255)',
           'markerFillOpacity' : 0,
-          'markerLineWidth' : 0
+          'markerLineWidth' : 0,
         }
       },
       'textSymbol': {
@@ -346,7 +366,6 @@ deleteObj =
         }
       }
       if (target.options.type === "Label") {
-        target.endEditText();
         target.remove();
       }
     }
@@ -483,7 +502,7 @@ class Map extends Component {
     jzd.addTo(map).bringToFront();
     location.addTo(map);
     console.log(map)
-    map.on('dblclick',recoverObj);
+    //map.on('click',endLabelEdit);
 
     //将测距测面积工具添加至地图
     distanceTool.addTo(map).disable();
@@ -674,6 +693,7 @@ RootReducer.merge(mapReduce);
 //加入reducer(layerControlReduce)
 const layerControlReduce = (
   state = {
+    topographicMapIsChecked:true,
     pointIsChecked: true,
     lineIsChecked: true,
     jzxIsChecked: true,
@@ -682,6 +702,19 @@ const layerControlReduce = (
   },
   action
 ) => {
+  //点选地形图层控制其显示
+  if (action.type === "handleTopographicMapIsChecked") {
+    const checkedtopographicMap = {
+      topographicMapIsChecked: !state.topographicMapIsChecked
+    };
+    if (state.topographicMapIsChecked) {
+      map.getLayer("DX").hide();
+    } else {
+      map.getLayer("DX").show();
+    }
+    return Object.assign({}, state, { ...checkedtopographicMap });
+  }
+
   //点选point图层控制其显示
   if (action.type === "handlePointIsChecked") {
     const pointIsChecked = {
@@ -772,6 +805,7 @@ let plot,
   drawPolygon,
   drawBalconyEnd,
   drawBalcony,
+  editLabel,
   drawUndo,
   drawRedo;
 
@@ -789,7 +823,9 @@ const sketchReduce = (
     drawArcIsChecked: false,
     drawPolygonIsChecked: false,
     balconyIsChecked: false,
+    labelIsChecked:false,
     addLabelIsChecked: false,
+    editLabelIsChecked:false,
     measureDistanceIsChecked: false,
     measureAreaIsChecked: false,
     deleteIsChecked: false,
@@ -1215,6 +1251,36 @@ const sketchReduce = (
       });
       drawTool.on("drawend", drawBalconyEnd);
     };
+  //编辑标注
+  editLabel=
+    editLabel||
+    function(){
+      if(target){
+        if (target.getJSONType() === "Label") {
+          //编辑状态下禁用选中
+          target.config('isClicked',false);
+          for(let i=0;i<clickedObj.length;i++){
+            if(clickedObj[i].getId() === target.getId()){
+              clickedObj.splice(i, 1);
+              break;
+              }
+            }
+          target.updateSymbol({
+            'textHaloFill' : '#000000',
+            'textHaloRadius' : 0});
+          //根据点击的对象进行开始和结束编辑操作
+          if(editingLabel){
+            editingLabel.endEditText();
+            editingLabel=target;
+            editingLabel.startEditText();
+          }else{
+            editingLabel=target;
+            editingLabel.startEditText();
+          }
+        }
+      }
+    recoverObj();  
+   }
 
   //撤销
   drawUndo =
@@ -1325,6 +1391,7 @@ const sketchReduce = (
       recoverObj();
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
+      map.off("click", editLabel);
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
@@ -1472,14 +1539,9 @@ const sketchReduce = (
       areaTool.disable();
       map.off("click", drawToolOn);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
       map.off("click", rectifyPoint);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("dblclick", drawToolOn);
       if(!state.drawPointIsChecked){
         map.on('click',drawPoint);
       }else{
@@ -1524,11 +1586,7 @@ const sketchReduce = (
       areaTool.disable();
       map.off("dblclick", drawToolOn);
       map.off("click", rectifyPoint);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      drawTool.off("drawend", drawCurveEnd);
+      map.off("click", editLabel);
       map.off("click", addLabel);
       map.off("click", drawPoint);
       const rectifyPoiState = {
@@ -1565,6 +1623,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawPolygonEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       if (!state.drawLineIsChecked) {
         //开始画线
         drawLine();
@@ -1605,6 +1664,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawPolygonEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       //画线时drawTool的绑定事件
       drawJZXEnd =
         drawJZXEnd ||
@@ -1710,6 +1770,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawPolygonEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       //画线时drawTool的绑定事件
       drawCurveEnd =
         drawCurveEnd ||
@@ -1795,6 +1856,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawCurveEnd);
       drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       if (!state.drawPolygonIsChecked) {
         //开始构面
         drawPolygon();
@@ -1834,6 +1896,7 @@ const sketchReduce = (
         drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawPolygonEnd);
         map.off("click", addLabel);
+        map.off("click", editLabel);
       if (!state.balconyIsChecked) {
         //开始构面
         drawBalcony();
@@ -1862,29 +1925,17 @@ const sketchReduce = (
         alertSave: true,
       };
       return { ...state, ...newState4 };
-    //添加自定义注记
-    case "addLabelClick":
-      recoverObj();
+    //打开捕捉选择列表
+    case "labelClick":
+      console.log("kai")
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
       map.off("dblclick", drawToolOn);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("dblclick", drawToolOn);
-      if (!state.addLabelIsChecked) {
-        map.on("click", addLabel);
-      } else {
-        map.off("click", addLabel);
-      }
-
-      const newState5 = {
+      const labelOpen={
+        labelIsChecked:!state.labelIsChecked,
         plotIsChecked: false,
         drawPointIsChecked: false,
         rectifyPoiIsChecked:false,
@@ -1893,7 +1944,6 @@ const sketchReduce = (
         drawArcIsChecked: false,
         drawPolygonIsChecked: false,
         balconyIsChecked: false,
-        addLabelIsChecked: !state.addLabelIsChecked,
         measureDistanceIsChecked: false,
         measureAreaIsChecked: false,
         chooseObjIsChecked: false,
@@ -1902,8 +1952,42 @@ const sketchReduce = (
         redoIsChecked: false,
         saveIsChecked: false,
         alertSave: true,
+      }
+    return Object.assign({}, state, { ...labelOpen });
+    //关闭label下拉列表
+    case "labelListClose":
+      const labelClose={labelIsChecked:false}
+      return Object.assign({}, state, { ...labelClose});
+    //添加注记
+    case "addLabelClick":
+      recoverObj();
+      map.off("click", editLabel);
+      if (!state.addLabelIsChecked) {
+        map.on("click", addLabel);
+      } else {
+        map.off("click", addLabel);
+      }
+      const addLabelState = {
+        editLabelIsChecked:false,
+        addLabelIsChecked: !state.addLabelIsChecked,
       };
-      return { ...state, ...newState5 };
+      return { ...state, ...addLabelState };
+    //编辑标注
+    case "editLabel":
+      map.off("click", addLabel);
+      if (!state.editLabelIsChecked) {
+        map.on("click", editLabel);
+      } else {
+        if(editingLabel){
+          editingLabel.endEditText();
+        }
+        map.off("click", editLabel);
+      }
+      const editLabelState = {
+        addLabelIsChecked: false,
+        editLabelIsChecked:!state.editLabelIsChecked,
+      };
+      return { ...state, ...editLabelState };
     //测距
     case "measureDistanceClick":        
       drawTool.off("drawend", drawPolygonEnd);
@@ -1915,6 +1999,7 @@ const sketchReduce = (
       map.off("click", drawPoint);
       map.off("dblclick", drawToolOn);
       map.off("click", rectifyPoint);
+      map.off("click", editLabel);
       drawTool.disable();
       areaTool.disable();
       if (!state.measureDistanceIsChecked) {
@@ -1952,6 +2037,7 @@ const sketchReduce = (
       drawTool.off("drawend", drawBalconyEnd);
       drawTool.off("drawend", drawCurveEnd);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
       map.off("dblclick", drawToolOn);
@@ -1990,10 +2076,10 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
       console.log(clickedObj.length)
       if (clickedObj.length>0) {
@@ -2038,10 +2124,10 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawToolOn);
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
       map.off("click", addLabel);
+      map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
       const newState7 = {
         plotIsChecked: false,
@@ -2112,6 +2198,7 @@ const sketchReduce = (
     case "undoClick":
     map.off("click", drawPoint);
     map.off("click", rectifyPoint);
+    map.off("click", editLabel);
     if(drawTool.getCurrentGeometry()){
       drawUndo();
       const new_drawAlert={ drawAlert:false}
@@ -2125,6 +2212,7 @@ const sketchReduce = (
       console.log("重做");
       map.off("click", drawPoint);
       map.off("click", rectifyPoint);
+      map.off("click", editLabel);
       if(drawTool.getCurrentGeometry()){
         drawRedo();
         const new_drawAlert={ drawAlert:false}
@@ -2151,6 +2239,7 @@ const sketchReduce = (
         map.off("click", drawPoint);
         map.off("click", rectifyPoint);
         map.off("click", addLabel);
+        map.off("click", editLabel);
         map.off("dblclick", drawToolOn);
         const saveData = {
           plotIsChecked: false,

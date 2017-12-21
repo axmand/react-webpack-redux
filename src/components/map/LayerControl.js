@@ -302,6 +302,7 @@ const mapStateToProps = state => {
     handleTopographicMapIsChecked:
     layerControlState.handleTopographicMapIsChecked,
     tianDiTuIsChecked: layerControlState.tianDiTuIsChecked,
+    topographicMapIsChecked:layerControlState.topographicMapIsChecked,
     pointIsChecked: layerControlState.pointIsChecked,
     lineIsChecked: layerControlState.lineIsChecked,
     jzxIsChecked:layerControlState.jzxIsChecked,

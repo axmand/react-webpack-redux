@@ -176,7 +176,10 @@ class SkechToolBar extends Component {
       onDrawArcClick,
       onDrawPolygonClick,
       onBalconyClick,
+      onLabelClick,
       onaddLabelClick,
+      onEditLabel,
+      labelListClose,
       onMeasureDistanceClick,
       onMeasureAreaClick,
       onChooseObjClick,
@@ -213,7 +216,9 @@ class SkechToolBar extends Component {
       drawArcIsChecked,
       drawPolygonIsChecked,
       balconyIsChecked,
+      labelIsChecked,
       addLabelIsChecked,
+      editLabelIsChecked,
       measureDistanceIsChecked,
       measureAreaIsChecked,
       chooseObjIsChecked,
@@ -331,13 +336,16 @@ class SkechToolBar extends Component {
                 <Typograghy className={classes.text}>异型地</Typograghy>
             </Button> */}
             <Button
+                ref={node => {
+                  this.label = node;
+                }}
                 className={classes.button}
                 style={{
-                backgroundColor: addLabelIsChecked
+                backgroundColor: labelIsChecked
                     ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
-                onClick={onaddLabelClick}
+                onClick={onLabelClick}
             >
                 <BookmarkBorder className={classes.icon} />
                 <Typograghy className={classes.text}>标注</Typograghy>
@@ -368,7 +376,7 @@ class SkechToolBar extends Component {
             </Button>
             <Button
               ref={node => {
-                this.button = node;
+                this.snap = node;
               }}
               className={classes.button}
               style={{
@@ -492,7 +500,59 @@ class SkechToolBar extends Component {
             </DialogActions>
           </Dialog>
       <Popover
-          anchorEl={findDOMNode(this.button)}
+          anchorEl={findDOMNode(this.label)}
+          open={labelIsChecked}
+          onRequestClose={labelListClose}
+          anchorOrigin={{
+            vertical:"bottom",
+            horizontal: "center"
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center"
+          }}
+          className={classes.snapList}
+        >
+          <ListItem
+            button
+            className={classes.snapitem}
+            disableGutters={true}
+            onClick={onaddLabelClick}
+          >
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={addLabelIsChecked}
+              className={classes.checkbox}
+            />
+            <span className={classes.snaptext}>添加标注</span>
+          </ListItem>
+          <ListItem
+            button
+            className={classes.snapitem}
+            onClick={onEditLabel}
+          >
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={editLabelIsChecked}
+              className={classes.checkbox}
+            />
+            <span className={classes.snaptext}>开始修改</span>
+          </ListItem>
+          <ListItem
+            button
+            className={classes.snapitem}
+            onClick={onEditLabel}
+          >
+            <Checkbox
+              classes={{ checked: classes.checked }}
+              checked={!editLabelIsChecked}
+              className={classes.checkbox}
+            />
+            <span className={classes.snaptext}>完成修改</span>
+          </ListItem>
+      </Popover>
+      <Popover
+          anchorEl={findDOMNode(this.snap)}
           open={snapIsChecked}
           onRequestClose={SnapListClose}
           anchorOrigin={{
@@ -619,6 +679,7 @@ SkechToolBar.PropTypes = {
   drawPolygonIsChecked: PropTypes.bool.isRequired,
   balconyIsChecked: PropTypes.bool.isRequired,
   addLabelIsChecked: PropTypes.bool.isRequired,
+  labelIsChecked:PropTypes.bool.isRequired,
   chooseObjIsChecked: PropTypes.bool.isRequired,
   alertPlotFail: PropTypes.bool.isRequired,
   alertSignature: PropTypes.bool.isRequired,
@@ -638,7 +699,9 @@ const mapStateToProps = state => {
     drawArcIsChecked:sketchState.drawArcIsChecked,
     drawPolygonIsChecked: sketchState.drawPolygonIsChecked,
     balconyIsChecked: sketchState.balconyIsChecked,
+    labelIsChecked:sketchState.labelIsChecked,
     addLabelIsChecked: sketchState.addLabelIsChecked,
+    editLabelIsChecked:sketchState.editLabelIsChecked,
     measureDistanceIsChecked: sketchState.measureDistanceIsChecked,
     measureAreaIsChecked: sketchState.measureAreaIsChecked,
     chooseObjIsChecked: sketchState.chooseObjIsChecked,
@@ -781,15 +844,37 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onBalconyClick: () => {
       dispatch({
         type: "balconyClick",
-        payload: dispatch
       });
     },
-    //  添加标注
+    //打开标注下拉列表
+    onLabelClick:()=>{
+      dispatch({
+        type:'labelClick'
+      })
+    },
+    // 添加标注
     onaddLabelClick: () => {
       dispatch({
         type: "addLabelClick",
-        payload: dispatch
       });
+      dispatch({
+        type:"labelListClose"
+      })
+    },
+    //编辑标注
+    onEditLabel:()=>{
+      dispatch({
+        type:"editLabel"
+      });
+      dispatch({
+        type:"labelListClose"
+      })
+    },
+    //关闭标注列表
+    labelListClose:()=>{
+      dispatch({
+        type:"labelListClose"
+      })
     },
     //测距
     onMeasureDistanceClick:()=>{
