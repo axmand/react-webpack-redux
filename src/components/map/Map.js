@@ -272,21 +272,32 @@ addLabel =
   addLabel ||
   function(e) {
     recoverObj();
-    let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+ let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);   
     let label = new maptalks.Label("label", e.coordinate, {
-      id:labelId, 
-      isClicked:false,     
-      draggable: true,
-      box: false,
-      type: "Label",
-      symbol: {
-        textWeight: "200",
-        textFaceName: "宋体",
-        textFill: "#000000",
-        textSize: 12,
-        textHorizontalAlignment: "middle",
-        textVerticalAlignment: "middle",
-        textAlign: "center"
+      'id':labelId, 
+      'isClicked':false,     
+      'draggable': true,
+      'box': false,
+      'type': "Label",
+      'boxStyle' : {
+        'padding' : [12, 8],
+        'verticalAlignment' : 'top',
+        'horizontalAlignment' : 'right',
+        'minWidth' : 48,
+        'minHeight' : 24,
+        'symbol' : {
+          'textDy':-10,
+          'markerType' : 'square',
+          'markerFill' : 'rgb(255,255,255)',
+          'markerFillOpacity' : 0,
+          'markerLineWidth' : 0
+        }
+      },
+      'textSymbol': {
+        'textFaceName' : '宋体',
+        'textFill' : '#000',
+        'textSize' : 18,
+        'textVerticalAlignment' : 'top'
       }
     });
     map.getLayer("label").addGeometry(label);
@@ -555,9 +566,9 @@ const mapReduce = (state = 0, action) => {
     function locationSuccess(position) {
       let coords = position.coords;
       console.log(coords);
-      const center = new maptalks.Coordinate(coords.longitude, coords.latitude);
+      let center = new maptalks.Coordinate(coords.longitude, coords.latitude);
       map.setCenter(center);
-      const circle = new maptalks.Circle(center, 1, {
+      let circle = new maptalks.Circle(center, 1, {
         symbol: {
           lineColor: "#000000",
           lineWidth: 1.5,
@@ -565,17 +576,31 @@ const mapReduce = (state = 0, action) => {
           polygonOpacity: 0.4
         }
       });
-      const label = new maptalks.Label("当前定位", center, {
-        isClicked:false,
-        box: false,
-        type: "Label",
-        symbol: {
-          textWeight: "200",
-          textFaceName: "宋体",
-          textSize: 12,
-          textFill: "#000000",
-          textDy: -10,
-          textAlign: "auto"
+      let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+      let label = new maptalks.Label("当前定位", center, {
+        'id':labelId,
+        'isClicked':false,
+        'box': false,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 18,
+          'textVerticalAlignment' : 'top'
         }
       });
       //将对象添加至图层
@@ -604,16 +629,28 @@ const mapReduce = (state = 0, action) => {
       }
     });
     const label = new maptalks.Label("当前定位", center, {
-      id:'locationlabel',
-      box: false,
-      type: "Label",
-      symbol: {
-        textWeight: "200",
-        textFaceName: "宋体",
-        textSize: 12,
-        textFill: "#000000",
-        textDy: -10,
-        textAlign: "auto"
+      'id':'locationlabel',
+      'box': false,
+      'type': "Label",
+      'boxStyle' : {
+        'padding' : [12, 8],
+        'verticalAlignment' : 'top',
+        'horizontalAlignment' : 'right',
+        'minWidth' : 48,
+        'minHeight' : 24,
+        'symbol' : {
+          'textDy':-10,
+          'markerType' : 'square',
+          'markerFill' : 'rgb(255,255,255)',
+          'markerFillOpacity' : 0,
+          'markerLineWidth' : 0
+        }
+      },
+      'textSymbol': {
+        'textFaceName' : '宋体',
+        'textFill' : '#000',
+        'textSize' : 18,
+        'textVerticalAlignment' : 'top'
       }
     });
     //将对象添加至图层
@@ -824,26 +861,33 @@ const sketchReduce = (
       }
       let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let objLabel = new maptalks.Label(content, coord, {
-        id:labelId,
-        isClicked:false,
-        draggable: true,
-        box: false,
-        type: "Label",
-        symbol: {
-          textWeight: "200",
-          textRotation: rotation,
-          textFaceName: "宋体",
-          textFill: "#000000",
-          textSize: 12,
-          textDx: dx,
-          textDy: dy,
-          textHorizontalAlignment: "middle",
-          textVerticalAlignment: "middle",
-          textAlign: "center"
+        'id':labelId,
+        'isClicked':false,
+        'draggable': true,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 18,
+          'textVerticalAlignment' : 'top'
         }
       });
-      map.getLayer("label").addGeometry(objLabel);
-      objLabel.on("click", clickObj);
+      //map.getLayer("label").addGeometry(objLabel);
+      //objLabel.on("click", clickObj);
       labels.push(objLabel.getId());
       
     };
@@ -864,19 +908,29 @@ const sketchReduce = (
       let content = jzdnum;
       //为界址点添加点号注记
       let label = new maptalks.Label(content, poi, {
-        id: jzdnum,
-        isClicked:false,
-        draggable: true,
-        box: false,
-        type: "Label",
-        symbol: {
-          color: "white",
-          textWeight: "200",
-          textFaceName: "宋体",
-          textSize: 12,
-          textFill: "#000000",
-          textDy: -10,
-          textAlign: "auto"
+        'id': jzdnum,
+        'isClicked':false,
+        'draggable': true,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 18,
+          'textVerticalAlignment' : 'top'
         }
       });
       label.on("click", clickObj);
@@ -906,19 +960,29 @@ const sketchReduce = (
       let content = jzdnum;
       //为界址点添加点号注记
       let label = new maptalks.Label(content, e.coordinate, {
-        id: jzdnum,
-        isClicked:false,
-        draggable: true,
-        box: false,
-        type: "Label",
-        symbol: {
-          color: "white",
-          textWeight: "200",
-          textFaceName: "宋体",
-          textSize: 12,
-          textFill: "#000000",
-          textDy: -10,
-          textAlign: "auto"
+        'id': jzdnum,
+        'isClicked':false,
+        'draggable': true,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 18,
+          'textVerticalAlignment' : 'top'
         }
       });
       label.on("click", clickObj);
@@ -1192,18 +1256,29 @@ const sketchReduce = (
           console.log(labelContent)
           //为界址点添加点号注记
           let label = new maptalks.Label(labelContent, e.coordinate, {
-            id: num,
-            isClicked:false,
-            draggable: true,
-            box: false,
-            type: "Label",
-            symbol: {
-              textWeight: "200",
-              textFaceName: "宋体",
-              textSize: 12,
-              textFill: "#000000",
-              textDy: -10,
-              textAlign: "auto"
+            'id': num,
+            'isClicked':false,
+            'draggable': true,
+            'type': "Label",
+            'boxStyle' : {
+              'padding' : [12, 8],
+              'verticalAlignment' : 'top',
+              'horizontalAlignment' : 'right',
+              'minWidth' : 48,
+              'minHeight' : 24,
+              'symbol' : {
+                'textDy':-10,
+                'markerType' : 'square',
+                'markerFill' : 'rgb(255,255,255)',
+                'markerFillOpacity' : 0,
+                'markerLineWidth' : 0
+              }
+            },
+            'textSymbol': {
+              'textFaceName' : '宋体',
+              'textFill' : '#000',
+              'textSize' : 18,
+              'textVerticalAlignment' : 'top'
             }
           });
           label.on("click", clickObj);
@@ -1342,18 +1417,29 @@ const sketchReduce = (
       console.log(labelContent)
       //为界址点添加点号注记
       let label = new maptalks.Label(labelContent, oldLabel.getCoordinates(), {
-          id: new_id,
-          isClicked:false,
-          draggable: true,
-          box: false,
-          type: "Label",
-          symbol: {
-            textWeight: "200",
-            textFaceName: "宋体",
-            textSize: 12,
-            textFill: "#000000",
-            textDy: -10,
-            textAlign: "auto"
+          'id': new_id,
+          'isClicked':false,
+          'draggable': true,
+          'type': "Label",
+          'boxStyle' : {
+            'padding' : [12, 8],
+            'verticalAlignment' : 'top',
+            'horizontalAlignment' : 'right',
+            'minWidth' : 48,
+            'minHeight' : 24,
+            'symbol' : {
+              'textDy':-10,
+              'markerType' : 'square',
+              'markerFill' : 'rgb(255,255,255)',
+              'markerFillOpacity' : 0,
+              'markerLineWidth' : 0
+            }
+          },
+          'textSymbol': {
+            'textFaceName' : '宋体',
+            'textFill' : '#000',
+            'textSize' : 18,
+            'textVerticalAlignment' : 'top'
           }
       });
       label.on("click", clickObj);
@@ -2010,7 +2096,7 @@ const sketchReduce = (
         snap.setLayer(map.getLayer('DX'));
         if(!state.snapDxIsChecked){
           snap.enable();
-          snap.setMode('line');
+          snap.setMode('point');
           (console.log('捕捉开启'))
         }else{
           snap.disable();
