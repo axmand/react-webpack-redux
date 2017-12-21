@@ -358,7 +358,10 @@ class Map extends Component {
       }else{
         center= new maptalks.Coordinate([108.37, 22.82]);
       }
+    }else{
+      center= new maptalks.Coordinate([108.37, 22.82]);
     }
+
     map = new maptalks.Map(mapDiv, {
       center:center,
       zoom: 16,
