@@ -71,10 +71,15 @@ class PointNameCellUI extends React.PureComponent {
 
 
 
-        return ( <Button onClick = { this.onClicked } > { this.props.name }
+        return ( <div onClick = { this.onClicked } > { this.props.name }
 
-            </Button>
+            </div>
         )
+
+        // return ( <Button onClick = { this.onClicked } > { this.props.name }
+            
+        //                 </Button>
+        //             )
     }
 }
 

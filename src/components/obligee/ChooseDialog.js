@@ -249,6 +249,8 @@ break;
       var statenew=state;
       
 var LandPointInMap=[];
+if(projectData.ProjectItem.L.jzxJSONData=="")
+  return state;
       var jzx =JSON.parse(projectData.ProjectItem.L.jzxJSONData);
       
 
