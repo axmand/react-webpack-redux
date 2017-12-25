@@ -1024,16 +1024,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
       
       ownProps.plotListData.forEach(n=>{
-         fetch(appConfig.fileServiceRootPath+'//device/getmac')
-        .then(response => response.json())
-        .then( json => {
-                localStorage.setItem('Macinfo', json.data)  
-                // console.log(projectData.MacInfo)
-                // console.log(json)
-        })
-        .catch(err => {console.log(err)})
-
-        
         let Poi_Data = JSON.stringify({
             	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
               PointY: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesY,

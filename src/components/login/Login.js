@@ -246,6 +246,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               //console.log(json);
             })
             .catch(e => console.log("Oops, error", e));
+
+          fetch(appConfig.fileServiceRootPath+'//device/getmac')
+            .then(response => response.json())
+            .then( json => {
+                    let arr = json.data
+                    let Macinfo = arr.slice(1,-1)
+                    localStorage.setItem('Macinfo', Macinfo)  
+                    // console.log(projectData.MacInfo)
+                    // console.log(json)
+            })
+          .catch(err => {console.log(err)})
           
         })
         .catch(err => {
