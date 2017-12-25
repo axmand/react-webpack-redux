@@ -47,8 +47,10 @@ import DragHandle from "material-ui-icons/DragHandle"; //拖动
 import SecondDialog from '../obligee/SecondDialog'
 // import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
+import projectData from "../../redux/RootData";
 
 import coordinate from "../../utils/coordinate"
+import macinfo from "../../utils/macinfo"
 
 const styles = theme => ({
   root: {
@@ -1018,15 +1020,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type:'closeFetchPoiNum',
       });
+      
+
+      
       ownProps.plotListData.forEach(n=>{
+         fetch(appConfig.fileServiceRootPath+'//device/getmac')
+        .then(response => response.json())
+        .then( json => {
+                localStorage.setItem('Macinfo', json.data)  
+                // console.log(projectData.MacInfo)
+                // console.log(json)
+        })
+        .catch(err => {console.log(err)})
+
+        
         let Poi_Data = JSON.stringify({
-          
             	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
               PointY: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesY,
-              strType: null,
+              // strType: macinfo.macInfo,
+              strType: localStorage.getItem('Macinfo'),
               strUserName: null
         });
-
+        console.log(Poi_Data)
         fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
           method: "POST",
