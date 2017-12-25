@@ -316,7 +316,7 @@ addLabel =
       'textSymbol': {
         'textFaceName' : '宋体',
         'textFill' : '#000',
-        'textSize' : 18,
+        'textSize' : 15,
         'textVerticalAlignment' : 'top'
       }
     });
@@ -481,6 +481,7 @@ class Map extends Component {
     //新建地形图层显示底图数据
 
     let poiGeometries=maptalks.GeoJSON.toGeometry(poiData);
+    console.log(poiGeometries)
     let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
     let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
     let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
@@ -618,7 +619,7 @@ const mapReduce = (state = 0, action) => {
         'textSymbol': {
           'textFaceName' : '宋体',
           'textFill' : '#000',
-          'textSize' : 18,
+          'textSize' : 15,
           'textVerticalAlignment' : 'top'
         }
       });
@@ -668,7 +669,7 @@ const mapReduce = (state = 0, action) => {
       'textSymbol': {
         'textFaceName' : '宋体',
         'textFill' : '#000',
-        'textSize' : 18,
+        'textSize' : 15,
         'textVerticalAlignment' : 'top'
       }
     });
@@ -918,7 +919,7 @@ const sketchReduce = (
         'textSymbol': {
           'textFaceName' : '宋体',
           'textFill' : '#000',
-          'textSize' : 18,
+          'textSize' : 15,
           'textVerticalAlignment' : 'top'
         }
       });
@@ -965,7 +966,7 @@ const sketchReduce = (
         'textSymbol': {
           'textFaceName' : '宋体',
           'textFill' : '#000',
-          'textSize' : 18,
+          'textSize' : 15,
           'textVerticalAlignment' : 'top'
         }
       });
@@ -1017,7 +1018,7 @@ const sketchReduce = (
         'textSymbol': {
           'textFaceName' : '宋体',
           'textFill' : '#000',
-          'textSize' : 18,
+          'textSize' : 15,
           'textVerticalAlignment' : 'top'
         }
       });
@@ -1343,7 +1344,7 @@ const sketchReduce = (
             'textSymbol': {
               'textFaceName' : '宋体',
               'textFill' : '#000',
-              'textSize' : 18,
+              'textSize' : 15,
               'textVerticalAlignment' : 'top'
             }
           });
@@ -1505,7 +1506,7 @@ const sketchReduce = (
           'textSymbol': {
             'textFaceName' : '宋体',
             'textFill' : '#000',
-            'textSize' : 18,
+            'textSize' : 15,
             'textVerticalAlignment' : 'top'
           }
       });
