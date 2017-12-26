@@ -126,7 +126,7 @@ class PrintModule extends Component {
       >
         <DialogContent>
           <DialogContentText>
-             打印失败！,请检查是否有尚未填写完的表格
+             Error_print_001:打印失败！,请检查是否有尚未填写完的表格
           </DialogContentText>
         </DialogContent>
       </Dialog> 
@@ -411,7 +411,7 @@ const PrintReduce = (
   
   if (action.type === "handlePrintShow") {
     if(projectData.Loaded === false)
-      alert("请选择项目！");
+      alert("Error_import_002:请选择项目！");
     else
       { newState.PrintShow =  !state.PrintShow }
     return { ...state, ...newState }; 

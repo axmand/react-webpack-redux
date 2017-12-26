@@ -137,7 +137,7 @@ class ProjectModule extends Component {
         >
           <DialogContent>
             <DialogContentText>
-              数据导入失败！
+              Error_import_001:数据导入失败！
             </DialogContentText>
           </DialogContent>
         </Dialog>

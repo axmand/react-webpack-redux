@@ -298,7 +298,7 @@ class ThematicMap extends Component {
             style={{ zIndex: "999999"}}>
               <DialogContent className={classes.alert} onClick={onSaveAlertClose}>
                 <Typography className={classes.message}>
-                  无法获取草图绘制成果图！<br />请返回草图编辑界面绘制并点击保存！                
+                Error_thematicMap_001:无法获取草图绘制成果图！<br />请返回草图编辑界面绘制并点击保存！                
                 </Typography>
               </DialogContent>
           </Dialog>
@@ -307,7 +307,7 @@ class ThematicMap extends Component {
             onRequestClose={previewAlerClose}>
               <DialogContent className={classes.alert} onClick={previewAlerClose}>
                 <Typography className={classes.message}>
-                  保存失败！请关闭预览后再保存！                
+                Error_thematicMap_002：保存失败！请关闭预览后再保存！                
                 </Typography>
               </DialogContent>
           </Dialog>
