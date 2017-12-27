@@ -159,7 +159,7 @@ const OutputReduce = (
 
   if (action.type === "handleOutputShow") {
     if(projectData.Loaded === false)
-      alert("请选择项目！");
+      alert("Error_import_002:请选择项目！");
     else
       { newState.OutputShow =  !state.OutputShow }
     return { ...state, ...newState }; 

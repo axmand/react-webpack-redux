@@ -47,8 +47,10 @@ import DragHandle from "material-ui-icons/DragHandle"; //拖动
 import SecondDialog from '../obligee/SecondDialog'
 // import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
+import projectData from "../../redux/RootData";
 
 import coordinate from "../../utils/coordinate"
+import macinfo from "../../utils/macinfo"
 
 const styles = theme => ({
   root: {
@@ -452,7 +454,7 @@ class SkechToolBar extends Component {
             onRequestClose={onDelAlerClose}>
               <DialogContent className={classes.alert} onClick={onDelAlerClose}>
                 <Typograghy className={classes.message}>
-                  未选中需要删除的对象！                
+                  Error_map_001:未选中需要删除的对象！                
                 </Typograghy>
               </DialogContent>
           </Dialog>
@@ -462,7 +464,7 @@ class SkechToolBar extends Component {
             onRequestClose={onPlotAlerClose}>
               <DialogContent className={classes.alert} onClick={onPlotAlerClose}>
                 <Typograghy className={classes.message}>
-                    请求RTK数据失败！                
+                Error_map_002:请求RTK数据失败！                
                 </Typograghy>
               </DialogContent>
           </Dialog>
@@ -472,7 +474,7 @@ class SkechToolBar extends Component {
             onRequestClose={onDrawAlerClose}>
               <DialogContent className={classes.alert} onClick={onDrawAlerClose}>
                 <Typograghy className={classes.message}>
-                  您未处于绘制过程中，操作无效！                
+                Error_map_003:您未处于绘制过程中，操作无效！                
                 </Typograghy>
               </DialogContent>
           </Dialog>
@@ -482,7 +484,7 @@ class SkechToolBar extends Component {
             onRequestClose={onSignatureAlerClose}>
               <DialogContent className={classes.alert} onClick={onSignatureAlerClose}>
                 <Typograghy className={classes.message}>
-                  您还未点击保存！                
+                Error_map_004:您还未点击保存！                
                 </Typograghy>
               </DialogContent>
           </Dialog>
@@ -1018,15 +1020,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type:'closeFetchPoiNum',
       });
+      
+
+      
       ownProps.plotListData.forEach(n=>{
         let Poi_Data = JSON.stringify({
-          
             	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
               PointY: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesY,
-              strType: null,
+              // strType: macinfo.macInfo,
+              strType: localStorage.getItem('Macinfo'),
               strUserName: null
         });
-
+        console.log(Poi_Data)
         fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
           method: "POST",

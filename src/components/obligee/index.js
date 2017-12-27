@@ -65,7 +65,7 @@ const obligeeReducer=(state = DialogState, action)=> {
       });}
       else
       {
-      alert("请选择项目！");
+      alert("Error_import_002:请选择项目！");
       return state
       }
   case 'closeChoose':
