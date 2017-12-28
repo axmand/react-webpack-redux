@@ -68,7 +68,7 @@ class Sketch extends Component {
             />
             <Tab 
             classes={{ label: this.props.classes.label }} 
-            label="专题图编辑" 
+            label="草图整饰" 
             onClick={onTabThematicClick}/>
           </Tabs>
           <IconButton

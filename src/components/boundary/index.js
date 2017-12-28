@@ -199,7 +199,7 @@ const BoundaryReduce = (
   if (action.type === "handleCameraShow") {
     let sta = JSON.parse(action.payload.status)
     if(projectData.Loaded === false||sta !== 200)
-      alert("请选择项目！或检查数据是否成功导入！");
+      alert("Error_import_002:请选择项目或检查数据是否成功导入！");
     else
       { 
         let list = [];

@@ -4,6 +4,7 @@ let projectData = {
     PhotoItem:[],
     Loaded:false,   
     PoiId:0,
+    MacInfo:''
 };
 
 

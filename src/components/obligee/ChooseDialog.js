@@ -129,7 +129,7 @@ class ChooseTableDialog extends Component {
       </Table>
       
 </Paper>
-<Button onClick={search } height="150px"  width="100%">属性查询</Button>
+{/* <Button onClick={search } height="150px"  width="100%">属性查询</Button> */}
        </Dialog>
       </div>
     );

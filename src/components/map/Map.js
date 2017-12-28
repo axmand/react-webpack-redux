@@ -407,7 +407,21 @@ class Map extends Component {
         urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
         subdomains  : ['1','2','3','4','5'],
         attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
-      })
+      }),
+      // layers : [
+      //   new maptalks.TileLayer('vectorPoint',{
+      //     'urlTemplate': 'http://localhost:1338/point/point/{z}/{x}/{y}',
+      //     renderer: 'canvas'
+      //   }),
+      //   new maptalks.TileLayer('vectorLine',{
+      //     'urlTemplate': 'http://localhost:1338/layer/line/{z}/{x}/{y}',
+      //     renderer: 'canvas'
+      //   }),
+      //   new maptalks.TileLayer('vectorPolygon',{
+      //     'urlTemplate': 'http://localhost:1338/layer/polygon/{z}/{x}/{y}',
+      //     renderer: 'canvas'
+      //   })
+      // ]
     });
     map.setZoom(18);
     map.setCenter([108.397350, 22.887379]);

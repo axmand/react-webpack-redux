@@ -56,7 +56,7 @@ class PrintModule extends Component {
     const { 
       handlePrintShow,handlePrintClose,
       handlePrint1,
-      // handlePrint2,
+      handlePrint2,
       // handlePrint3,
       handlePrint4,
       // handlePrint5,
@@ -101,6 +101,10 @@ class PrintModule extends Component {
             <TableCell><Button onClick = { handlePrint1 }>打印</Button></TableCell>
           </TableRow> 
           <TableRow >
+            <TableCell >界址标示表留白</TableCell>
+            <TableCell><Button onClick = { handlePrint2 }>打印</Button></TableCell>
+          </TableRow> 
+          <TableRow >
             <TableCell >不动产单元草图</TableCell>
             <TableCell><Button onClick = { handlePrint4 }>打印</Button></TableCell>
           </TableRow>
@@ -126,7 +130,7 @@ class PrintModule extends Component {
       >
         <DialogContent>
           <DialogContentText>
-             打印失败！,请检查是否有尚未填写完的表格
+             Error_print_001:打印失败！,请检查是否有尚未填写完的表格
           </DialogContentText>
         </DialogContent>
       </Dialog> 
@@ -213,12 +217,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch({
             type: 'ProgressShow',
           });
-         
-          // setTimeout(() => {
-          //   dispatch({
-          //       type:'handlePrintTrue2'
-          //   }
-          // )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -228,7 +226,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch(appConfig.fileServiceRootPath + '/project/print/2')
+      fetch(appConfig.fileServiceRootPath + '/project/printforms2')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -240,12 +238,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch({
             type: 'ProgressShow',
           });
-
-          setTimeout(() => {
-            dispatch({
-                type:'handlePrintTrue2'
-            }
-          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -411,7 +403,7 @@ const PrintReduce = (
   
   if (action.type === "handlePrintShow") {
     if(projectData.Loaded === false)
-      alert("请选择项目！");
+      alert("Error_import_002:请选择项目！");
     else
       { newState.PrintShow =  !state.PrintShow }
     return { ...state, ...newState }; 
