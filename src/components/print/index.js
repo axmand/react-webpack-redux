@@ -56,7 +56,7 @@ class PrintModule extends Component {
     const { 
       handlePrintShow,handlePrintClose,
       handlePrint1,
-      // handlePrint2,
+      handlePrint2,
       // handlePrint3,
       handlePrint4,
       // handlePrint5,
@@ -99,6 +99,10 @@ class PrintModule extends Component {
           <TableRow >
             <TableCell >不动产权籍调查表</TableCell>
             <TableCell><Button onClick = { handlePrint1 }>打印</Button></TableCell>
+          </TableRow> 
+          <TableRow >
+            <TableCell >界址标示表留白</TableCell>
+            <TableCell><Button onClick = { handlePrint2 }>打印</Button></TableCell>
           </TableRow> 
           <TableRow >
             <TableCell >不动产单元草图</TableCell>
@@ -213,12 +217,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch({
             type: 'ProgressShow',
           });
-         
-          // setTimeout(() => {
-          //   dispatch({
-          //       type:'handlePrintTrue2'
-          //   }
-          // )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
@@ -228,7 +226,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch(appConfig.fileServiceRootPath + '/project/print/2')
+      fetch(appConfig.fileServiceRootPath + '/project/printforms2')
         .then(response => response.json())
         .then( json => {
           dispatch({
@@ -240,12 +238,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch({
             type: 'ProgressShow',
           });
-
-          setTimeout(() => {
-            dispatch({
-                type:'handlePrintTrue2'
-            }
-          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },
