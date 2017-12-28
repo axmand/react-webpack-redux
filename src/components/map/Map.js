@@ -143,7 +143,7 @@ let drawTool = new maptalks.DrawTool({
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
   tolerance: 10,
-  mode: "line"
+  mode: "point"
 });
 let target,
   clickedObj = [],
@@ -316,7 +316,7 @@ addLabel =
       'textSymbol': {
         'textFaceName' : '宋体',
         'textFill' : '#000',
-        'textSize' : 15,
+        'textSize' : 28,
         'textVerticalAlignment' : 'top'
       }
     });
@@ -487,11 +487,15 @@ class Map extends Component {
     let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
       'symbol':{ 
         markerType:'ellipse',
-        markerFill: '#aaa',
-        markerLineColor:'#000',
-        markerWidth : 5,
-        markerHeight : 5}}).addTo(map);
-    let dx2=new maptalks.VectorLayer('DX', lineGeometries).addTo(map);
+        markerFill: '#ccc',
+        markerLineColor:'#444444',
+        markerWidth : 4,
+        markerHeight : 4}}).addTo(map);
+    let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
+      'symbol':{ 
+        lineColor:'#444444',
+        lineWidth:1
+      }}).addTo(map);
     let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).addTo(map);
     console.log(lineGeometries)
     console.log(polygonGeometries) 

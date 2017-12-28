@@ -53,7 +53,7 @@ import coordinate from "../../utils/coordinate"
 const styles = theme => ({
   root: {
     height: `${window.innerHeight * 0.075}px`,
-    width:  `${window.innerHeight * 1.35}px`,
+    width:  `${window.innerHeight * 1.275}px`,
     position: "absolute", 
     top: `${window.innerHeight * 0.1}px`,
     left: "1%",
@@ -287,7 +287,7 @@ class SkechToolBar extends Component {
                 <BorderStyle className={classes.icon} />
                 <Typograghy className={classes.text}>界址线</Typograghy>
             </Button>
-            <Button
+            {/* <Button
                 className={classes.button}
                 style={{
                 backgroundColor: drawArcIsChecked
@@ -298,7 +298,7 @@ class SkechToolBar extends Component {
             >
                 <Looks className={classes.icon} />
                 <Typograghy className={classes.text}>弧线</Typograghy>
-            </Button>
+            </Button> */}
             <Button
                 className={classes.button}
                 style={{

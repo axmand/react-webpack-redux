@@ -26,6 +26,9 @@ import appConfig from "../../redux/Config";
 import html2canvas from "html2canvas";
 import projectData from "./../../redux/RootData";
 import { read } from "fs";
+import poiData from "./../map/Point";
+import lineData from "./../map/Line";
+import polygonData from "./../map/Polygon";
 
 const styles = theme => ({
   root: {
@@ -232,19 +235,36 @@ class ThematicMap extends Component {
       thematicMap = new maptalks.Map(ThematicMapDiv, {
         center: mapCenter,
         zoom:mapZoom,
-        baseLayer: new maptalks.TileLayer("base", {
-          crossOrigin: "anonymous",
-          // 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
-          urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
-          subdomains  : ['1','2','3','4','5'],
-          attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
-        })
+        // baseLayer: new maptalks.TileLayer("base", {
+        //   crossOrigin: "anonymous",
+        //   // 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
+        //   urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
+        //   subdomains  : ['1','2','3','4','5'],
+        //   attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
+        // })
       });
       jzd.addTo(thematicMap);
       sz.addTo(thematicMap);
       jzx.addTo(thematicMap);
       zd.addTo(thematicMap);
       zj.addTo(thematicMap);
+      let poiGeometries=maptalks.GeoJSON.toGeometry(poiData);
+      console.log(poiGeometries)
+      let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
+      let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
+      let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
+        'symbol':{ 
+          markerType:'ellipse',
+          markerFill: '#ccc',
+          markerLineColor:'#444444',
+          markerWidth : 4,
+          markerHeight : 4}}).addTo(thematicMap);
+      let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
+        'symbol':{ 
+          lineColor:'#444444',
+          lineWidth:1
+        }}).addTo(thematicMap);
+      let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).addTo(thematicMap);
     }
   }
 
