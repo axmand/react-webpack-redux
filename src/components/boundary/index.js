@@ -306,12 +306,14 @@ const BoundaryReduce = (
         return todo;
       })
       newState.DeleteId = [];
-      Photoitems.foreach(todo =>{
+      // console.log(Photoitems)
+      Photoitems.map(todo =>{
         if(todo.checked === true){
           let data=todo.key.replace('.png','')
           newState.DeleteId.push(data)
         }
       })
+     
       projectData.PhotoItem =Photoitems.slice(0);
       newState.PhotoItemTest = Photoitems;
       return { ...state, ...newState };
