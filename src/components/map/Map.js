@@ -519,6 +519,7 @@ class Map extends Component {
     zd.addTo(map);
     zj.addTo(map).bringToFront();  
     jzd.addTo(map).bringToFront();
+    dx2.bringToFront();
     location.addTo(map);
     console.log(map)
     //map.on('click',endLabelEdit);
@@ -1011,6 +1012,7 @@ const sketchReduce = (
     drawPoint ||
     function(e) {
       recoverObj();
+      console.log(snap.snaplayer._id)
       let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let content = jzdnum;
       //为界址点添加点号注记
@@ -1327,9 +1329,12 @@ const sketchReduce = (
       return Object.assign({}, state, { ...isRealtimeOn });
     //修正点坐标
     case "jzdPlotClick":
-      //recoverObj();
+      recoverObj();
       map.off("click", rectifyPoint);
       modifyPointId = action.payload.command;
+      //高亮显示选择纠正位置的点
+      map.getLayer('point').getGeometryById(modifyPointId).updateSymbol({polygonFill: "#00FFFF", lineColor: "#00FFFF"});
+      clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
       if (!rectifyPoint) {
         rectifyPoint = function(e) {
           console.log("纠正点位")
@@ -1371,11 +1376,11 @@ const sketchReduce = (
             id: num,
             labels: label.getId(),
             picture: oldPoi.options.picture,
-            isClicked: false,
+            isClicked: true,
             symbol: {
-              lineColor: "#000000",
+              lineColor: "#00FFFF",
               lineWidth: 1.5,
-              polygonFill: "#FFFFFF"
+              polygonFill: "#00FFFF"
             }
           });
           
@@ -1384,7 +1389,7 @@ const sketchReduce = (
           map.getLayer("label").addGeometry(label);
           map.getLayer("point").addGeometry(point);
           point.on("click", clickObj);
-          recoverObj();
+          clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
         };
       }
       map.on("click", rectifyPoint);
@@ -1556,7 +1561,6 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawToolOn);
       map.off("click", addLabel);
       map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
@@ -2181,11 +2185,9 @@ const sketchReduce = (
       let layerChoice = action.payload.command;
       console.log(snap)
       if(layerChoice==="point"){
-        //snap.setMode(point);
         snap.setLayer(map.getLayer('point'));
         if(!state.snapJzdIsChecked){
           snap.enable();
-          snap.setMode('point');
           (console.log('捕捉开启'))
         }else{
           snap.disable();
@@ -2201,7 +2203,6 @@ const sketchReduce = (
         snap.setLayer(map.getLayer('DX'));
         if(!state.snapDxIsChecked){
           snap.enable();
-          snap.setMode('point');
           (console.log('捕捉开启'))
         }else{
           snap.disable();
