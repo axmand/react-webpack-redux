@@ -1012,7 +1012,6 @@ const sketchReduce = (
     drawPoint ||
     function(e) {
       recoverObj();
-      console.log(snap.snaplayer._id)
       let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let content = jzdnum;
       //为界址点添加点号注记
