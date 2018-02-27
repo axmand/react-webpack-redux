@@ -538,19 +538,7 @@ class SkechToolBar extends Component {
               checked={editLabelIsChecked}
               className={classes.checkbox}
             />
-            <span className={classes.snaptext}>开始修改</span>
-          </ListItem>
-          <ListItem
-            button
-            className={classes.snapitem}
-            onClick={onEditLabel}
-          >
-            <Checkbox
-              classes={{ checked: classes.checked }}
-              checked={!editLabelIsChecked}
-              className={classes.checkbox}
-            />
-            <span className={classes.snaptext}>完成修改</span>
+            <span className={classes.snaptext}>编辑完成</span>
           </ListItem>
       </Popover>
       <Popover
