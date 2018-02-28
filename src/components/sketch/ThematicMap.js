@@ -116,7 +116,7 @@ const styles = theme => ({
   },
   right: {
     position: "absolute",
-    top: "72%",
+    top: "76%",
     left:"92.5%",
     fontSize: "2em",
     fontFamily: "宋体",
