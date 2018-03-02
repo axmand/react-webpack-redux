@@ -39,8 +39,8 @@ const styles = theme => ({
   },
   thematicMap: {
     position: "absolute",
-    width: `${window.innerHeight * 0.61875*3}px`,
-    height: `${window.innerHeight * 0.875*3}px`,
+    width: `${window.innerHeight * 0.61875*2.5}px`,
+    height: `${window.innerHeight * 0.875*2.5}px`,
   },
   title: {
     padding: "2% 0 2% 0",
@@ -52,8 +52,8 @@ const styles = theme => ({
   table:{    
     position:'absolute',
     left:'7.5%',
-    width:`${window.innerHeight * 0.61875*0.85*3}px`,
-    height: `${window.innerHeight * 0.875*0.85*3}px`,
+    width:`${window.innerHeight * 0.61875*0.85*2.5}px`,
+    height: `${window.innerHeight * 0.875*0.85*2.5}px`,
     borderCollapse:'collapse',
     border:'solid 2px #000'
   },
@@ -88,13 +88,13 @@ const styles = theme => ({
     position:'absolute',
     top: "92%",
     left:'54%',
-    width: `${window.innerHeight * 0.24*3}px`,
-    height:`${window.innerHeight * 0.875* 0.06*3}px`,
+    width: `${window.innerHeight * 0.24*2.5}px`,
+    height:`${window.innerHeight * 0.875* 0.06*2.5}px`,
     padding:0,
     border:0,
   },
   btmtr:{
-    height: `${window.innerHeight * 0.875* 0.03*3}px`,
+    height: `${window.innerHeight * 0.875* 0.03*2.5}px`,
     width:'100%',
     padding:0,
     border:0,
@@ -116,7 +116,7 @@ const styles = theme => ({
   },
   right: {
     position: "absolute",
-    top: "72%",
+    top: "76%",
     left:"92.5%",
     fontSize: "2em",
     fontFamily: "宋体",
@@ -208,6 +208,7 @@ class ThematicMap extends Component {
       zdJSONData,
       zjJSONData
     } = this.props;
+    console.log(window.innerHeight)
     if (saveIsChecked) {   
       let jzd,sz,jzx,zd,zj;
       if(jzdJSONData){
@@ -302,13 +303,13 @@ class ThematicMap extends Component {
           className={classes.thematicMap}
           style={{
             transform:previewPrintIsChecked
-            ?"scale(0.33,0.33)"
+            ?"scale(0.4,0.4)"
             :"",
             top:previewPrintIsChecked
-            ?"-77%"
+            ?"-56%"
             :"",
             left:previewPrintIsChecked
-            ?"-15%"
+            ?"-4%"
             :""
           }}
         >

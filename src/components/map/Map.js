@@ -149,7 +149,7 @@ let target,
   clickedObj = [],
   editingLabel,
   linePoiArr = [];
-let clickObj, deleteObj, recoverObj, addLabel;
+let clickObj, deleteObj, recoverObj, addLabel,editLabel;
 //用于获取点线面对象
 clickObj =
   clickObj ||
@@ -243,15 +243,6 @@ clickObj =
     console.log(clickedObj)
   };
 
-// //用于结束label的编辑状态
-// let endLabelEdit=
-//   endLabelEdit||
-//   function(){
-//     if(editingLabel){
-//       //editingLabel.endEditText();
-//     }
-// }
-
 //用于清除对象被选中的高亮效果
 recoverObj =
   recoverObj ||
@@ -292,7 +283,7 @@ addLabel =
   addLabel ||
   function(e) {
     recoverObj();
- let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);   
+    let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);   
     let label = new maptalks.Label("label", e.coordinate, {
       'id':labelId, 
       'isClicked':false,     
@@ -322,9 +313,20 @@ addLabel =
     });
     map.getLayer("label").addGeometry(label);
     label.on("click", clickObj);
+    editingLabel=label;
+    label.startEditText();
     recoverObj();
   };
 
+  //编辑标注
+  editLabel=
+    editLabel||
+    function(){
+      if(editingLabel){
+      console.log(editingLabel)
+      editingLabel.endEditText();
+      }
+   }
 // //用于删除对象
 deleteObj =
   deleteObj ||
@@ -825,7 +827,7 @@ let plot,
   drawPolygon,
   drawBalconyEnd,
   drawBalcony,
-  editLabel,
+  //editLabel,
   drawUndo,
   drawRedo;
 
@@ -1012,7 +1014,6 @@ const sketchReduce = (
     drawPoint ||
     function(e) {
       recoverObj();
-      console.log(snap.snaplayer._id)
       let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let content = jzdnum;
       //为界址点添加点号注记
@@ -1272,36 +1273,6 @@ const sketchReduce = (
       });
       drawTool.on("drawend", drawBalconyEnd);
     };
-  //编辑标注
-  editLabel=
-    editLabel||
-    function(){
-      if(target){
-        if (target.getJSONType() === "Label") {
-          //编辑状态下禁用选中
-          target.config('isClicked',false);
-          for(let i=0;i<clickedObj.length;i++){
-            if(clickedObj[i].getId() === target.getId()){
-              clickedObj.splice(i, 1);
-              break;
-              }
-            }
-          target.updateSymbol({
-            'textHaloFill' : '#000000',
-            'textHaloRadius' : 0});
-          //根据点击的对象进行开始和结束编辑操作
-          if(editingLabel){
-            editingLabel.endEditText();
-            editingLabel=target;
-            editingLabel.startEditText();
-          }else{
-            editingLabel=target;
-            editingLabel.startEditText();
-          }
-        }
-      }
-    recoverObj();  
-   }
 
   //撤销
   drawUndo =
@@ -1992,23 +1963,24 @@ const sketchReduce = (
       }
       const addLabelState = {
         editLabelIsChecked:false,
-        addLabelIsChecked: !state.addLabelIsChecked,
+        addLabelIsChecked: true,
       };
       return { ...state, ...addLabelState };
     //编辑标注
     case "editLabel":
-      map.off("click", addLabel);
-      if (!state.editLabelIsChecked) {
-        map.on("click", editLabel);
-      } else {
-        if(editingLabel){
-          editingLabel.endEditText();
-        }
-        map.off("click", editLabel);
-      }
+       map.off("click", addLabel);
+       editLabel();
+      // if (!state.editLabelIsChecked) {
+      //   map.on("click", editLabel);
+      // } else {
+      //   if(editingLabel){
+      //     editingLabel.endEditText();
+      //   }
+      //   map.off("click", editLabel);
+      // }
       const editLabelState = {
         addLabelIsChecked: false,
-        editLabelIsChecked:!state.editLabelIsChecked,
+        editLabelIsChecked:true,
       };
       return { ...state, ...editLabelState };
     //测距
