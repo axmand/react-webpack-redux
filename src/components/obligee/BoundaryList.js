@@ -42,13 +42,13 @@ if(LandPointCodeList.length>0)
   LandPointDistance.length=LandPointCodeList.length-1;
 }
   projectData.ProjectItem.F2.LandPointCodeList  =LandPointCodeList;
-  projectData.ProjectItem.F2.LandPointDistance   =LandPointDistance; 
-  console.log(LandPointDistance);
+  //projectData.ProjectItem.F2.LandPointDistance   =LandPointDistance; 
+  // console.log(LandPointDistance);
 
     return {
       LandPointCodeList:LandPointCodeList,
       LandPointTypeList:state.ObContentReducer[tableIndex].LandPointTypeList,
-      LandPointDistance:LandPointDistance,
+      LandPointDistance:[],//LandPointDistance,
       LandBoundaryType:state.ObContentReducer[tableIndex].LandBoundaryType,
       LandBoundaryLocation:state.ObContentReducer[tableIndex].LandBoundaryLocation,
       LandBoundaryExplain:state.ObContentReducer[tableIndex].LandBoundaryExplain
@@ -162,7 +162,9 @@ var firstLine=(
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={2} type="LandPointTypeList"/></p></td>
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={3} type="LandPointTypeList"/></p></td>
     <td width="29"><p ><CheckCell tableIndex="F2" value={""} row={0} col={4} type="LandPointTypeList"/></p></td>
-    <td width="100" rowSpan="2"><InputListCell name="LandPointDistance" tableIndex="F2" index={0} defaultValue="test"  title="距离" tips="请填写距离"/></td>
+    {/* <td width="100" rowSpan="2"><InputListCell name="LandPointDistance" tableIndex="F2" index={0} defaultValue="test"  title="距离" tips="请填写距离"/></td> */}
+
+    <td width="100" rowSpan="2"></td>
     <td width="25" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={0} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={1} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={0} col={2} type="LandBoundaryType"/></p></td>
@@ -197,7 +199,9 @@ var tr1=(
   </tr>);
  var tr2=( <tr>
     {/* <td width="60" rowSpan="2"></td> */}
-    <td width="100" rowSpan="2"><InputListCell tableIndex="F2" name="LandPointDistance"  index={i} defaultValue="test" title="距离" tips="请填写距离"/></td>
+    {/* <td width="100" rowSpan="2"><InputListCell tableIndex="F2" name="LandPointDistance"  index={i} defaultValue="test" title="距离" tips="请填写距离"/></td> */}
+
+    <td width="100" rowSpan="2"></td>
     <td width="25" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={0} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={1} type="LandBoundaryType"/></p></td>
     <td width="28" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={2} type="LandBoundaryType"/></p></td>
