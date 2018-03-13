@@ -34,7 +34,7 @@ let distanceTool = new maptalks.DistanceTool({
     markerFill: "#1bbc9b",
     markerLineColor: "#000",
     markerLineWidth: 3,
-    markerWidth: 10,
+    markerWidth: 10, 
     markerHeight: 10
   },
 
@@ -207,12 +207,9 @@ clickObj =
       if (target.options.isClicked) {
         target.updateSymbol({
           'textHaloFill' : '#00FFFF',
-          'textHaloRadius' : 3});
-        clickedObj.push(target);
-        //点击对象进行内容编辑
-        //判断正在编辑的标签是否为空，若为空则赋值
-        //否则结束当前编辑，更新编辑对象开始编辑
-        
+          'textHaloRadius' : 3
+        });
+          clickedObj.push(target);  
       }else {
        for(let i=0;i<clickedObj.length;i++){
          if(clickedObj[i].getId() === target.getId()){
@@ -272,7 +269,7 @@ recoverObj =
       if (clickedObj[i].getJSONType() === "Label") {
         clickedObj[i].config('isClicked',false);
         clickedObj[i].endEditText();
-        //clickedObj[i].updateSymbol({ textFill: "#000000" });
+        clickedObj[i].updateSymbol({ 'textHaloFill' : '#000000', 'textHaloRadius' : 0});
       }
     }
     console.log(clickedObj)
@@ -542,7 +539,6 @@ class Map extends Component {
     snap.addTo(map)
     snap.bindDrawTool(drawTool);
     snap.disable();
-   ;
   }
 
   render() {
@@ -814,9 +810,11 @@ let labels = [],
   addObjLabel,
   computeAngle;
 let plot,
-  drawPoint,
+  rectifyPointEnd,
   rectifyPoint,
   drawToolOn,
+  drawPointEnd,
+  drawPoint,
   drawLineEnd,
   drawLine,
   drawJZXEnd,
@@ -1009,15 +1007,18 @@ const sketchReduce = (
       point.on("click", clickObj);
       console.log(point);
     };
-  //用于画点
-  drawPoint =
-    drawPoint ||
-    function(e) {
+
+//画点时DrawTool的绑定事件
+drawPointEnd=
+    drawPointEnd||function(param){
+      console.log("drawtool")
       recoverObj();
+      let coorArr = param.geometry.getCoordinates();
+      console.log(coorArr);
       let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let content = jzdnum;
       //为界址点添加点号注记
-      let label = new maptalks.Label(content, e.coordinate, {
+      let label = new maptalks.Label(content, coorArr, {
         'id': jzdnum,
         'isClicked':false,
         'draggable': true,
@@ -1044,7 +1045,7 @@ const sketchReduce = (
         }
       });
       label.on("click", clickObj);
-      let point = new maptalks.Circle(e.coordinate, 4, {
+      let point = new maptalks.Circle(coorArr, 4, {
         id: jzdnum,
         labels: label.getId(),
         picture: "",
@@ -1060,7 +1061,17 @@ const sketchReduce = (
       point.on("click", clickObj);
       console.log(point);
       recoverObj();
-    };
+    }
+    drawPoint=
+      drawPoint || 
+      function(){
+        drawTool.setMode("Point").enable();
+        drawTool.setSymbol({           
+          lineColor: "#000000",
+          lineWidth: 1.5,
+          polygonFill: "#FFFFFF" });
+        drawTool.on("drawend", drawPointEnd);
+      }
 
   //画线时drawTool的绑定事件
   drawLineEnd =
@@ -1299,71 +1310,91 @@ const sketchReduce = (
       }
       return Object.assign({}, state, { ...isRealtimeOn });
     //修正点坐标
-    case "jzdPlotClick":
+    case "rectifyJzdClick":
       recoverObj();
-      map.off("click", rectifyPoint);
+      console.log(clickedObj);
+      distanceTool.disable();
+      areaTool.disable();
+      drawTool.off("drawend", drawPointEnd);
+      drawTool.off("drawend", drawLineEnd);
+      drawTool.off("drawend", drawJZXEnd);
+      drawTool.off("drawend", drawCurveEnd);
+      drawTool.off("drawend", drawPolygonEnd);
+      drawTool.off("drawend", drawBalconyEnd);
+      map.off("click", addLabel);
+      map.off("click", editLabel);
+
       modifyPointId = action.payload.command;
       //高亮显示选择纠正位置的点
       map.getLayer('point').getGeometryById(modifyPointId).updateSymbol({polygonFill: "#00FFFF", lineColor: "#00FFFF"});
       clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
-      if (!rectifyPoint) {
-        rectifyPoint = function(e) {
-          console.log("纠正点位")
-          
-          let num = modifyPointId;          
-          let oldPoi = map.getLayer("point").getGeometryById(num);
-          let oldLabel = map.getLayer("label").getGeometryById(num);
-          let labelContent= num;
-          console.log(labelContent)
-          //为界址点添加点号注记
-          let label = new maptalks.Label(labelContent, e.coordinate, {
-            'id': num,
-            'isClicked':false,
-            'draggable': true,
-            'type': "Label",
-            'boxStyle' : {
-              'padding' : [12, 8],
-              'verticalAlignment' : 'top',
-              'horizontalAlignment' : 'right',
-              'minWidth' : 48,
-              'minHeight' : 24,
-              'symbol' : {
-                'textDy':-10,
-                'markerType' : 'square',
-                'markerFill' : 'rgb(255,255,255)',
-                'markerFillOpacity' : 0,
-                'markerLineWidth' : 0
-              }
-            },
-            'textSymbol': {
-              'textFaceName' : '宋体',
-              'textFill' : '#000',
-              'textSize' : 15,
-              'textVerticalAlignment' : 'top'
-            }
-          });
-          label.on("click", clickObj);
-          let point = new maptalks.Circle(e.coordinate, 4, {
-            id: num,
-            labels: label.getId(),
-            picture: oldPoi.options.picture,
-            isClicked: true,
-            symbol: {
-              lineColor: "#00FFFF",
-              lineWidth: 1.5,
-              polygonFill: "#00FFFF"
-            }
-          });
-          
-          oldPoi.remove();
-          oldLabel.remove();
-          map.getLayer("label").addGeometry(label);
-          map.getLayer("point").addGeometry(point);
-          point.on("click", clickObj);
-          clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
-        };
+      rectifyPointEnd=function(param){
+      console.log("纠正点位");
+      recoverObj();
+      let coorArr = param.geometry.getCoordinates();
+      let num = modifyPointId;          
+      let oldPoi = map.getLayer("point").getGeometryById(num);
+      let oldLabel = map.getLayer("label").getGeometryById(num);
+      let labelContent= num;
+      console.log(labelContent)
+      //为界址点添加点号注记
+      let label = new maptalks.Label(labelContent, coorArr, {
+        'id': num,
+        'isClicked':false,
+        'draggable': true,
+        'type': "Label",
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'verticalAlignment' : 'top',
+          'horizontalAlignment' : 'right',
+          'minWidth' : 48,
+          'minHeight' : 24,
+          'symbol' : {
+            'textDy':-10,
+            'markerType' : 'square',
+            'markerFill' : 'rgb(255,255,255)',
+            'markerFillOpacity' : 0,
+            'markerLineWidth' : 0
+          }
+        },
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 15,
+          'textVerticalAlignment' : 'top'
+        }
+      });
+      label.on("click", clickObj);
+      let point = new maptalks.Circle(coorArr, 4, {
+        id: num,
+        labels: label.getId(),
+        picture: oldPoi.options.picture,
+        isClicked: true,
+        symbol: {
+          lineColor: "#00FFFF",
+          lineWidth: 1.5,
+          polygonFill: "#00FFFF"
+        }
+      });
+      
+      oldPoi.remove();
+      oldLabel.remove();
+      map.getLayer("label").addGeometry(label);
+      map.getLayer("point").addGeometry(point);
+      point.on("click", clickObj);
+      clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
+    }
+    rectifyPoint=
+      rectifyPoint || 
+      function(){
+        drawTool.setMode("Point").enable();
+        drawTool.setSymbol({           
+          lineColor: "#000000",
+          lineWidth: 1.5,
+          polygonFill: "#FFFFFF" });
+        drawTool.on("drawend", rectifyPointEnd);
       }
-      map.on("click", rectifyPoint);
+      rectifyPoint();
       const new_jzdData = map.getLayer("point").toJSON()
       let new_jzdpoi = new_jzdData.geometries;
       let new_tableRow;
@@ -1383,9 +1414,7 @@ const sketchReduce = (
     //展点
     case "plotRTK":
       console.log("展点");
-      recoverObj();
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
+      recoverObj();      
       map.off("click", editLabel);
       drawTool.disable();
       distanceTool.disable();
@@ -1463,17 +1492,14 @@ const sketchReduce = (
       return Object.assign({}, state, { ...FetchPoiNum_Y });
     //关闭取号确认框
     case "closeFetchPoiNum":
-    const FetchPoiNum_N={fetchPoiNumIsChecked:false}
-    return Object.assign({}, state, { ...FetchPoiNum_N });
+      const FetchPoiNum_N={fetchPoiNumIsChecked:false}
+      return Object.assign({}, state, { ...FetchPoiNum_N });
     //取界址点号
     case "fetchPoi_NumClick":
-      map.off("click", rectifyPoint);
       let i = action.payload2.id - 1;
       let old_id=action.payload2.id;//旧id
       let new_id=action.payload1.d;
-
       map.getLayer("point").getGeometryById(old_id).setId(new_id); 
-
       let oldLabel = map.getLayer("label").getGeometryById(old_id);
       let labelContent=new_id;
       console.log(labelContent)
@@ -1527,19 +1553,22 @@ const sketchReduce = (
    
     //画点
     case "drawPointClick":
-      console.log("画点");
       recoverObj();
-      drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
+      drawTool.off("drawend", rectifyPointEnd);
+      drawTool.off("drawend", drawLineEnd);
+      drawTool.off("drawend", drawJZXEnd);
+      drawTool.off("drawend", drawCurveEnd);
+      drawTool.off("drawend", drawPolygonEnd);
+      drawTool.off("drawend", drawBalconyEnd);
       map.off("click", addLabel);
       map.off("click", editLabel);
-      map.off("dblclick", drawToolOn);
-      map.off("click", rectifyPoint);
-      if(!state.drawPointIsChecked){
-        map.on('click',drawPoint);
-      }else{
-        map.off("click",drawPoint)
+      if (!state.drawPointIsChecked) {
+        //开始画点
+        drawPoint();
+      } else {
+        drawTool.disable();
       }
       const drawPointState = {
         plotIsChecked: false,
@@ -1575,14 +1604,13 @@ const sketchReduce = (
         tableData.push(tableRow);
       }
       recoverObj();
-      drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
+      drawTool.disable();
       map.off("dblclick", drawToolOn);
-      map.off("click", rectifyPoint);
       map.off("click", editLabel);
       map.off("click", addLabel);
-      map.off("click", drawPoint);
+      
       const rectifyPoiState = {
         plotIsChecked: false,
         drawPointIsChecked:false,
@@ -1608,10 +1636,10 @@ const sketchReduce = (
     //画四至线
     case "drawLineClick":
       recoverObj();
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
       distanceTool.disable();
       areaTool.disable();
+      drawTool.off("drawend", drawPointEnd);
+      drawTool.off("drawend", rectifyPointEnd);
       drawTool.off("drawend", drawJZXEnd);
       drawTool.off("drawend", drawCurveEnd);
       drawTool.off("drawend", drawPolygonEnd);
@@ -1649,10 +1677,10 @@ const sketchReduce = (
     //画界址线
     case "drawJZXClick":
       recoverObj();
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
       distanceTool.disable();
       areaTool.disable();
+      drawTool.off("drawend", drawPointEnd);
+      drawTool.off("drawend", rectifyPointEnd);
       drawTool.off("drawend", drawLineEnd);
       drawTool.off("drawend", drawCurveEnd);
       drawTool.off("drawend", drawPolygonEnd);
@@ -1755,8 +1783,8 @@ const sketchReduce = (
       return { ...state, ...JZXState };
     //画弧线
     case "drawArcClick":
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
+      drawTool.off("drawend", drawPointEnd);
+      drawTool.off("drawend", rectifyPointEnd);
       distanceTool.disable();
       areaTool.disable();
       drawTool.off("drawend", drawLineEnd);
@@ -1841,8 +1869,8 @@ const sketchReduce = (
       return { ...state, ...CurveState };
     //构面
     case "drawPolygonClick":
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);    
+      drawTool.off("drawend", drawPointEnd);
+      drawTool.off("drawend", rectifyPointEnd);    
       distanceTool.disable();
       areaTool.disable();
       drawTool.off("drawend", drawLineEnd);
@@ -1881,8 +1909,8 @@ const sketchReduce = (
       return { ...state, ...newState3 };
     //阳台
     case "balconyClick":        
-        map.off("click", drawPoint);
-        map.off("click", rectifyPoint);
+        drawTool.off("drawend", drawPointEnd);
+        drawTool.off("drawend", rectifyPointEnd);
         distanceTool.disable();
         areaTool.disable();
         drawTool.off("drawend", drawLineEnd);
@@ -1925,8 +1953,6 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
       map.off("dblclick", drawToolOn);
       const labelOpen={
         labelIsChecked:!state.labelIsChecked,
@@ -1991,9 +2017,9 @@ const sketchReduce = (
       drawTool.off("drawend", drawBalconyEnd);
       drawTool.off("drawend", drawCurveEnd);
       map.off("click", addLabel);
-      map.off("click", drawPoint);
+      drawTool.off("drawend", drawPointEnd);
       map.off("dblclick", drawToolOn);
-      map.off("click", rectifyPoint);
+      drawTool.off("drawend", rectifyPointEnd);
       map.off("click", editLabel);
       drawTool.disable();
       areaTool.disable();
@@ -2033,8 +2059,8 @@ const sketchReduce = (
       drawTool.off("drawend", drawCurveEnd);
       map.off("click", addLabel);
       map.off("click", editLabel);
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
+      drawTool.off("drawend", drawPointEnd);
+      drawTool.off("drawend", rectifyPointEnd);
       map.off("dblclick", drawToolOn);
       drawTool.disable();
       distanceTool.disable();
@@ -2071,8 +2097,6 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
       map.off("click", addLabel);
       map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
@@ -2119,8 +2143,6 @@ const sketchReduce = (
       drawTool.disable();
       distanceTool.disable();
       areaTool.disable();
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
       map.off("click", addLabel);
       map.off("click", editLabel);
       map.off("dblclick", drawToolOn);
@@ -2188,8 +2210,6 @@ const sketchReduce = (
       }
     //撤销
     case "undoClick":
-    map.off("click", drawPoint);
-    map.off("click", rectifyPoint);
     map.off("click", editLabel);
     if(drawTool.getCurrentGeometry()){
       drawUndo();
@@ -2202,8 +2222,6 @@ const sketchReduce = (
     //重做
     case "redoClick":
       console.log("重做");
-      map.off("click", drawPoint);
-      map.off("click", rectifyPoint);
       map.off("click", editLabel);
       if(drawTool.getCurrentGeometry()){
         drawRedo();
@@ -2227,9 +2245,7 @@ const sketchReduce = (
         drawTool.disable();
         distanceTool.disable();
         areaTool.disable();
-        map.off("click", drawToolOn);
-        map.off("click", drawPoint);
-        map.off("click", rectifyPoint);
+        map.off("click", drawToolOn);       
         map.off("click", addLabel);
         map.off("click", editLabel);
         map.off("dblclick", drawToolOn);
