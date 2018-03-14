@@ -196,7 +196,7 @@ class SkechToolBar extends Component {
       openFetchPoiNum,
       closeFetchPoiNum,
       // onJzdTableClick,
-      onjzdPlotClick,
+      onRectifyJzdClick,
       onSnapClick,//捕捉
       SnapListClose,
     } = this.props;
@@ -632,7 +632,7 @@ class SkechToolBar extends Component {
                     <TableCell 
                       className={classes.tablecell}
                       style={{width:`${window.innerWidth * 0.015}px`,padding:0}}
-                      onClick={()=>onjzdPlotClick(n.id)}
+                      onClick={()=>onRectifyJzdClick(n.id)}
                     >
                     <Adjust style={{color:'#000',width:`${window.innerWidth * 0.015}px`}}/>
                     </TableCell>
@@ -987,11 +987,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type:"drawAlerClose"
       })
     },
-    onjzdPlotClick:poi_id=>{
+    onRectifyJzdClick:poi_id=>{
       dispatch({
-        type:'jzdPlotClick',
+        type:'rectifyJzdClick',
         payload:{command:poi_id}
       });
+      
     },
     closeFetchPoiNum:()=>{
       dispatch({
