@@ -57,7 +57,7 @@ class PrintModule extends Component {
       handlePrintShow,handlePrintClose,
       handlePrint1,
       handlePrint2,
-      // handlePrint3,
+      handlePrint3,
       handlePrint4,
       // handlePrint5,
       // handlePrint6,
@@ -103,6 +103,10 @@ class PrintModule extends Component {
           <TableRow >
             <TableCell >界址标示表留白</TableCell>
             <TableCell><Button onClick = { handlePrint2 }>打印</Button></TableCell>
+          </TableRow> 
+          <TableRow >
+            <TableCell >界址签章表</TableCell>
+            <TableCell><Button onClick = { handlePrint3 }>打印</Button></TableCell>
           </TableRow> 
           <TableRow >
             <TableCell >不动产单元草图</TableCell>
@@ -247,7 +251,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'ProgressShow',
       });
       
-      fetch(appConfig.fileServiceRootPath + '/project/print/3')
+      fetch(appConfig.fileServiceRootPath + '/project/printjzqzb')
         .then(response => response.json())
         .then( json => {
           dispatch({
