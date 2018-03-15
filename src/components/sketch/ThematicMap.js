@@ -116,7 +116,7 @@ const styles = theme => ({
   },
   right: {
     position: "absolute",
-    top: "76%",
+    top: "74%",
     left:"92.5%",
     fontSize: "2em",
     fontFamily: "宋体",
@@ -373,22 +373,22 @@ class ThematicMap extends Component {
           <table className={classes.bottomtable}>
             <tbody>
               <tr className={classes.btmtr}>
-                <td className={classes.btmtd} style={{width:'18%'}}>调查者：</td>
-                <td className={classes.btmtd} style={{width:'18%'}}>
+                <td className={classes.btmtd} style={{width:'21%'}}>调查者：</td>
+                <td className={classes.btmtd} style={{width:'20%'}}>
                 <input className={classes.btminput} required id="investigator"/>
                 </td> 
-                <td className={classes.btmtd} style={{width:'24%'}}>调查日期：</td>   
-                <td className={classes.btmtd} style={{width:'40%'}}>
+                <td className={classes.btmtd} style={{width:'27%'}}>调查日期：</td>   
+                <td className={classes.btmtd} style={{width:'32%'}}>
                 <input className={classes.btminput} required defaultValue={date} id="invest_time"/>
                 </td>                  
               </tr>
               <tr className={classes.btmtr}>
-                <td className={classes.btmtd} style={{width:'18%'}}>审核者：</td>
-                <td className={classes.btmtd} style={{width:'18%'}}>
+                <td className={classes.btmtd} style={{width:'21%'}}>审核者：</td>
+                <td className={classes.btmtd} style={{width:'20%'}}>
                 <input className={classes.btminput} required id="auditor"/>
                 </td> 
-                <td className={classes.btmtd} style={{width:'24%'}}>审核日期：</td>   
-                <td className={classes.btmtd} style={{width:'40%'}}>
+                <td className={classes.btmtd} style={{width:'27%'}}>审核日期：</td>   
+                <td className={classes.btmtd} style={{width:'32%'}}>
                 <input className={classes.btminput} required defaultValue={date} id="audit_time"/>
                 </td>                  
               </tr>
