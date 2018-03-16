@@ -87,7 +87,7 @@ const styles = theme => ({
   bottomtable:{
     position:'absolute',
     top: "92%",
-    left:'54%',
+    left:'52%',
     width: `${window.innerHeight * 0.24*2.5}px`,
     height:`${window.innerHeight * 0.875* 0.06*2.5}px`,
     padding:0,
@@ -208,7 +208,9 @@ class ThematicMap extends Component {
       zdJSONData,
       zjJSONData
     } = this.props;
-    console.log(window.innerHeight)
+    console.log(window.innerHeight);
+
+
     if (saveIsChecked) {   
       let jzd,sz,jzx,zd,zj;
       if(jzdJSONData){
@@ -244,15 +246,27 @@ class ThematicMap extends Component {
         //   attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
         // })
       });
-      jzd.addTo(thematicMap);
-      sz.addTo(thematicMap);
-      jzx.addTo(thematicMap);
-      zd.addTo(thematicMap);
-      zj.addTo(thematicMap);
+
+
+
+
       let poiGeometries=maptalks.GeoJSON.toGeometry(poiData);
       console.log(poiGeometries)
       let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
       let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
+      let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).setStyle({
+        'symbol':{ 
+          lineColor: "#000000",
+          lineWidth: 1.5,
+          polygonFill: "#FFFFFF"
+        }}).addTo(thematicMap);
+  
+      let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
+        'symbol':{ 
+          lineColor:'#444444',
+          lineWidth:1
+        }}).addTo(thematicMap);
+  
       let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
         'symbol':{ 
           markerType:'ellipse',
@@ -260,12 +274,12 @@ class ThematicMap extends Component {
           markerLineColor:'#444444',
           markerWidth : 4,
           markerHeight : 4}}).addTo(thematicMap);
-      let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
-        'symbol':{ 
-          lineColor:'#444444',
-          lineWidth:1
-        }}).addTo(thematicMap);
-      let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).addTo(thematicMap);
+      zd.addTo(thematicMap);      
+      sz.addTo(thematicMap);
+      jzx.addTo(thematicMap);
+      jzd.addTo(thematicMap);
+      zj.addTo(thematicMap);
+
     }
   }
 

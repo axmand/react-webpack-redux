@@ -497,6 +497,20 @@ class Map extends Component {
     console.log(poiGeometries)
     let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
     let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
+
+    let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).setStyle({
+      'symbol':{ 
+        lineColor: "#000000",
+        lineWidth: 1.5,
+        polygonFill: "#FFFFFF"
+      }}).addTo(map);
+
+    let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
+      'symbol':{ 
+        lineColor:'#444444',
+        lineWidth:1
+      }}).addTo(map);
+
     let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
       'symbol':{ 
         markerType:'ellipse',
@@ -504,21 +518,12 @@ class Map extends Component {
         markerLineColor:'#444444',
         markerWidth : 4,
         markerHeight : 4}}).addTo(map);
-    let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
-      'symbol':{ 
-        lineColor:'#444444',
-        lineWidth:1
-      }}).addTo(map);
-    let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).addTo(map);
-    console.log(lineGeometries)
-    console.log(polygonGeometries) 
 
+    zd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
-    zd.addTo(map);
     zj.addTo(map).bringToFront();  
     jzd.addTo(map).bringToFront();
-    dx2.bringToFront();
     location.addTo(map);
     console.log(map)
     //map.on('click',endLabelEdit);
@@ -1011,7 +1016,8 @@ const sketchReduce = (
 //画点时DrawTool的绑定事件
 drawPointEnd=
     drawPointEnd||function(param){
-      console.log("drawtool")
+      console.log("drawtool");
+      console.log(snap);
       recoverObj();
       let coorArr = param.geometry.getCoordinates();
       console.log(coorArr);
@@ -1336,7 +1342,7 @@ drawPointEnd=
       let oldPoi = map.getLayer("point").getGeometryById(num);
       let oldLabel = map.getLayer("label").getGeometryById(num);
       let labelContent= num;
-      console.log(labelContent)
+      console.log(labelContent);
       //为界址点添加点号注记
       let label = new maptalks.Label(labelContent, coorArr, {
         'id': num,
