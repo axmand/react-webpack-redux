@@ -60,7 +60,7 @@ const styles = theme => ({
   head:{    
     height: "5%",
   },
-  headcell:{
+  tablecell:{
     padding:0,
     border:'solid 1px #000',
   },
@@ -100,19 +100,17 @@ const styles = theme => ({
     border:0,
   },
   btmtd:{
-    padding:0,
     border:0,
+    padding:0,
+  },
+  bottomtext:{
+    width:'95%',
     fontSize: "2em",
     fontFamily: "宋体",
     fontWeight: "400",
-  },
-  btminput:{
+    textAlign:'center',
     padding:0,
     border:0,
-    width:'100%',
-    fontSize: "1em",
-    fontFamily: "宋体",
-    fontWeight: "400",
   },
   right: {
     position: "absolute",
@@ -122,7 +120,7 @@ const styles = theme => ({
     fontFamily: "宋体",
     letterSpacing: "20px",
     width: "2%",
-    height: "20%",
+    height: "17%",
     padding: "0 1% 0 1%"
   },
   alert: { 
@@ -352,30 +350,31 @@ class ThematicMap extends Component {
           </Typography>
 
           <table ref="tabletest" className={classes.table}>
-            <tbody>
-              <tr className={classes.head}>
-                <td className={classes.headcell} style={{width:'20%'}}>            
+            <thead className={classes.head}> 
+              <tr style={{height:'100%'}}>
+                <td className={classes.tablecell} style={{width:'20%'}}>            
                   <Typography className={classes.headtext} >土地权利人</Typography>      
                 </td>
-                <td className={classes.headcell} style={{width:'30%'}}>
-                  <textarea 
+                <td className={classes.tablecell} style={{width:'30%'}}>
+                  <input 
                   className={classes.headtext} 
                   defaultValue={TuDiQuanLiRen}
-                  style={{height:'50%'}}
                   required/>
                 </td>
-                <td className={classes.headcell} style={{width:'15%'}}>
+                <td className={classes.tablecell} style={{width:'15%'}}>
                   <Typography className={classes.headtext} >坐落</Typography>  
                 </td>
-                <td className={classes.headcell} style={{width:'35%'}}>
+                <td className={classes.tablecell} style={{width:'35%'}}>
                   <textarea 
                   className={classes.headtext} 
                   defaultValue={ZuoLuo}
                   required/>
                 </td>
               </tr>
+            </thead>
+            <tbody>
               <tr className={classes.mapPic}>
-                <td colSpan="4">
+                <td  className={classes.tablecell} colSpan="4">
                   <div
                     className={classes.pic}
                     ref="ThematicMap"
@@ -384,26 +383,35 @@ class ThematicMap extends Component {
               </tr>
             </tbody>
           </table>
+
           <table className={classes.bottomtable}>
             <tbody>
               <tr className={classes.btmtr}>
-                <td className={classes.btmtd} style={{width:'21%'}}>调查者：</td>
+                <td className={classes.btmtd} style={{width:'21%'}}>
+                <Typography className={classes.bottomtext} >调查者：</Typography>
+                </td>
                 <td className={classes.btmtd} style={{width:'20%'}}>
-                <input className={classes.btminput} required id="investigator"/>
+                <input className={classes.bottomtext} required id="investigator"/>
                 </td> 
-                <td className={classes.btmtd} style={{width:'27%'}}>调查日期：</td>   
+                <td className={classes.btmtd} style={{width:'27%'}}>
+                <Typography className={classes.bottomtext} >调查日期：</Typography>
+                </td>   
                 <td className={classes.btmtd} style={{width:'32%'}}>
-                <input className={classes.btminput} required defaultValue={date} id="invest_time"/>
+                <input className={classes.bottomtext} required defaultValue={date} id="invest_time"/>
                 </td>                  
               </tr>
               <tr className={classes.btmtr}>
-                <td className={classes.btmtd} style={{width:'21%'}}>审核者：</td>
+                <td className={classes.btmtd} style={{width:'21%'}}>
+                <Typography className={classes.bottomtext} >审核者：</Typography>
+                </td>
                 <td className={classes.btmtd} style={{width:'20%'}}>
-                <input className={classes.btminput} required id="auditor"/>
+                <input className={classes.bottomtext} required id="auditor"/>
                 </td> 
-                <td className={classes.btmtd} style={{width:'27%'}}>审核日期：</td>   
+                <td className={classes.btmtd} style={{width:'27%'}}>
+                <Typography className={classes.bottomtext} >审核日期：</Typography>
+                </td>   
                 <td className={classes.btmtd} style={{width:'32%'}}>
-                <input className={classes.btminput} required defaultValue={date} id="audit_time"/>
+                <input className={classes.bottomtext} required defaultValue={date} id="audit_time"/>
                 </td>                  
               </tr>
             </tbody>
