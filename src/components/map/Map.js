@@ -142,7 +142,7 @@ let drawTool = new maptalks.DrawTool({
 });
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
-  tolerance: 10,
+  tolerance: 40,
   mode: "point"
 });
 let target,
