@@ -142,7 +142,7 @@ let drawTool = new maptalks.DrawTool({
 });
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
-  tolerance: 10,
+  tolerance: 40,
   mode: "point"
 });
 let target,
@@ -431,6 +431,7 @@ class Map extends Component {
     if(projectData.ProjectItem.L.jzdJSONData){
 
       jzd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
+      console.log(projectData.ProjectItem.L.jzdJSONData);
       //为地图对象添加点击绑定事件
       if(jzd.getGeometries()){
         for (let i = 0; i < jzd.getGeometries().length; i++) {
@@ -497,6 +498,20 @@ class Map extends Component {
     console.log(poiGeometries)
     let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
     let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
+
+    let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).setStyle({
+      'symbol':{ 
+        lineColor: "#000000",
+        lineWidth: 1.5,
+        polygonFill: "#FFFFFF"
+      }}).addTo(map);
+
+    let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
+      'symbol':{ 
+        lineColor:'#444444',
+        lineWidth:1
+      }}).addTo(map);
+
     let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
       'symbol':{ 
         markerType:'ellipse',
@@ -504,21 +519,12 @@ class Map extends Component {
         markerLineColor:'#444444',
         markerWidth : 4,
         markerHeight : 4}}).addTo(map);
-    let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
-      'symbol':{ 
-        lineColor:'#444444',
-        lineWidth:1
-      }}).addTo(map);
-    let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).addTo(map);
-    console.log(lineGeometries)
-    console.log(polygonGeometries) 
 
+    zd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
-    zd.addTo(map);
     zj.addTo(map).bringToFront();  
     jzd.addTo(map).bringToFront();
-    dx2.bringToFront();
     location.addTo(map);
     console.log(map)
     //map.on('click',endLabelEdit);
@@ -536,7 +542,8 @@ class Map extends Component {
       },
       generate: geometry => geometry
     });
-    snap.addTo(map)
+    snap.addTo(map);
+    snap.setLayer(map.getLayer('DX'));
     snap.bindDrawTool(drawTool);
     snap.disable();
   }
@@ -1010,8 +1017,9 @@ const sketchReduce = (
 
 //画点时DrawTool的绑定事件
 drawPointEnd=
-    drawPointEnd||function(param){
-      console.log("drawtool")
+    drawPointEnd ||
+    function(param){
+      console.log(snap);
       recoverObj();
       let coorArr = param.geometry.getCoordinates();
       console.log(coorArr);
@@ -1061,6 +1069,7 @@ drawPointEnd=
       point.on("click", clickObj);
       console.log(point);
       recoverObj();
+      snap.setLayer(map.getLayer('DX'));
     }
     drawPoint=
       drawPoint || 
@@ -1336,7 +1345,7 @@ drawPointEnd=
       let oldPoi = map.getLayer("point").getGeometryById(num);
       let oldLabel = map.getLayer("label").getGeometryById(num);
       let labelContent= num;
-      console.log(labelContent)
+      console.log(labelContent);
       //为界址点添加点号注记
       let label = new maptalks.Label(labelContent, coorArr, {
         'id': num,
@@ -2177,15 +2186,16 @@ drawPointEnd=
     //选择捕捉图层
     case "snapListClick":
       let layerChoice = action.payload.command;
-      console.log(snap)
-      if(layerChoice==="point"){
-        snap.setLayer(map.getLayer('point'));
-        if(!state.snapJzdIsChecked){
+      console.log(layerChoice);
+      console.log(snap);
+      if(layerChoice=="point"){
+        if(!state.snapJzdIsChecked){ 
+          snap.setLayer(map.getLayer('point'));
           snap.enable();
-          (console.log('捕捉开启'))
+          (console.log('界址点捕捉开启'))
         }else{
           snap.disable();
-          console.log('捕捉关闭')
+          console.log('界址点捕捉关闭')
         }
         const snapJzdState={
           snapJzdIsChecked:!state.snapJzdIsChecked,
@@ -2193,14 +2203,14 @@ drawPointEnd=
         }
         return Object.assign({}, state, { ...snapJzdState });
       }
-      if(layerChoice==="DX"){
-        snap.setLayer(map.getLayer('DX'));
-        if(!state.snapDxIsChecked){
+      if(layerChoice=="DX"){
+        if(!state.snapDxIsChecked){ 
+          snap.setLayer(map.getLayer('DX'));
           snap.enable();
-          (console.log('捕捉开启'))
+          (console.log('底图捕捉开启'))
         }else{
           snap.disable();
-          console.log('捕捉关闭')
+          console.log('底图捕捉关闭')
         }
         const snapDxState={
           snapJzdIsChecked:false,
