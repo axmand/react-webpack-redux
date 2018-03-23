@@ -378,53 +378,32 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     let center;
-    if(projectData.ProjectItem.L.jzdJSONData)
-    {
-      let poi_data= maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
-      console.log(poi_data);
-      let poi_arr=poi_data.getGeometries();
-      if(poi_arr.length>0){
-        center=poi_arr[poi_arr.length-1].getCoordinates();
-      }
-      else{
-        center= new maptalks.Coordinate([108.37, 22.82]);
-      }
+    //读取并剔除不合格的底图数据
+    let poiGeometries=maptalks.GeoJSON.toGeometry(poiData).filter(geometry=>geometry!==null);
+    let lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
+    let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);
+    console.log(poiGeometries)
+    console.log(lineGeometries)
+    console.log(polygonGeometries)
+//设置地图中心点坐标
+    if(poiGeometries){
+      center = poiGeometries[0].getCoordinates();
+    }else{
+      center = new maptalks.Coordinate([108.37, 22.82]);
     }
-    else{
-      center= new maptalks.Coordinate([108.37, 22.82]);
-    }
-    console.log(center)
+    poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+//初始化加载地图
     map = new maptalks.Map(mapDiv, {
       center:center,
       zoom: 16,
       baseLayer: new maptalks.TileLayer("base", {
         crossOrigin: "anonymous",
-        // urlTemplate:
-        //   "http://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
-        // subdomains: ["01", "02", "03", "04"],
-        // attribution: '&copy; <a href="http://www.gaode.com/">Gaode.com</a>'
         urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
         subdomains  : ['1','2','3','4','5'],
         attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
       }),
-      // layers : [
-      //   new maptalks.TileLayer('vectorPoint',{
-      //     'urlTemplate': 'http://localhost:1338/point/point/{z}/{x}/{y}',
-      //     renderer: 'canvas'
-      //   }),
-      //   new maptalks.TileLayer('vectorLine',{
-      //     'urlTemplate': 'http://localhost:1338/layer/line/{z}/{x}/{y}',
-      //     renderer: 'canvas'
-      //   }),
-      //   new maptalks.TileLayer('vectorPolygon',{
-      //     'urlTemplate': 'http://localhost:1338/layer/polygon/{z}/{x}/{y}',
-      //     renderer: 'canvas'
-      //   })
-      // ]
     });
-    map.setZoom(18);
-    map.setCenter([108.397350, 22.887379]);
-    //将项目草图数据导入至地图
+//将项目草图数据导入至地图
     let jzd,sz,jzx,zd,zj,dx;
     //判断地图数据是否为空，若为空则新建地图图层
     console.log(projectData.ProjectItem.L)
@@ -432,7 +411,7 @@ class Map extends Component {
 
       jzd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
       console.log(projectData.ProjectItem.L.jzdJSONData);
-      //为地图对象添加点击绑定事件
+//为地图对象添加点击绑定事件
       if(jzd.getGeometries()){
         for (let i = 0; i < jzd.getGeometries().length; i++) {
           jzd.getGeometries()[i].on("click", clickObj);
@@ -492,42 +471,30 @@ class Map extends Component {
     }
     console.log(zj)
     let location=new maptalks.VectorLayer("location");
-    //新建地形图层显示底图数据
 
-    let poiGeometries=maptalks.GeoJSON.toGeometry(poiData);
-    console.log(poiGeometries)
-    let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
-    let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
+//新建地形图层显示底图数据
 
-    let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).setStyle({
-      'symbol':{ 
-        lineColor: "#000000",
-        lineWidth: 1.5,
-        polygonFill: "#FFFFFF"
-      }}).addTo(map);
-
-    let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
-      'symbol':{ 
-        lineColor:'#444444',
-        lineWidth:1
-      }}).addTo(map);
-
-    let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
-      'symbol':{ 
-        markerType:'ellipse',
-        markerFill: '#ccc',
-        markerLineColor:'#444444',
-        markerWidth : 4,
-        markerHeight : 4}}).addTo(map);
-
+    let DT=new maptalks.VectorLayer('DT', poiGeometries).setStyle({
+      symbol:{
+          markerType:'ellipse',
+          markerFill: '#ccc',
+          markerLineColor:'#444',
+          markerWidth : 4,
+          markerHeight : 4,
+          lineColor:'#000',
+          lineWidth:1,
+          polygonFill: "#FFF",
+          polygonOpacity: 0.4
+      }
+    }).addTo(map);
+   
     zd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
     zj.addTo(map).bringToFront();  
     jzd.addTo(map).bringToFront();
     location.addTo(map);
-    console.log(map)
-    //map.on('click',endLabelEdit);
+    console.log(map);
 
     //将测距测面积工具添加至地图
     distanceTool.addTo(map).disable();
@@ -543,7 +510,7 @@ class Map extends Component {
       generate: geometry => geometry
     });
     snap.addTo(map);
-    snap.setLayer(map.getLayer('DX'));
+    snap.setLayer(map.getLayer('DT'));
     snap.bindDrawTool(drawTool);
     snap.disable();
   }
@@ -733,9 +700,9 @@ const layerControlReduce = (
       topographicMapIsChecked: !state.topographicMapIsChecked
     };
     if (state.topographicMapIsChecked) {
-      map.getLayer("DX").hide();
+      map.getLayer("DT_line").hide();
     } else {
-      map.getLayer("DX").show();
+      map.getLayer("DT_line").show();
     }
     return Object.assign({}, state, { ...checkedtopographicMap });
   }
@@ -1069,7 +1036,7 @@ drawPointEnd=
       point.on("click", clickObj);
       console.log(point);
       recoverObj();
-      snap.setLayer(map.getLayer('DX'));
+      snap.setLayer(map.getLayer('DT'));
     }
     drawPoint=
       drawPoint || 
@@ -2205,7 +2172,7 @@ drawPointEnd=
       }
       if(layerChoice=="DX"){
         if(!state.snapDxIsChecked){ 
-          snap.setLayer(map.getLayer('DX'));
+          snap.setLayer(map.getLayer('DT'));
           snap.enable();
           (console.log('底图捕捉开启'))
         }else{
