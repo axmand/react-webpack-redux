@@ -1036,7 +1036,6 @@ drawPointEnd=
       point.on("click", clickObj);
       console.log(point);
       recoverObj();
-      snap.setLayer(map.getLayer('DT'));
     }
     drawPoint=
       drawPoint || 
