@@ -23,115 +23,6 @@ import MapToolBar from "./MapToolBar";
  * 全局的地图对象和方法
  */
 let map;
-//定义测距工具
-let distanceTool = new maptalks.DistanceTool({
-  symbol: {
-    lineColor: "#34495e",
-    lineWidth: 2
-  },
-  vertexSymbol: {
-    markerType: "ellipse",
-    markerFill: "#1bbc9b",
-    markerLineColor: "#000",
-    markerLineWidth: 3,
-    markerWidth: 10, 
-    markerHeight: 10
-  },
-
-  labelOptions: {
-    textSymbol: {
-      textFaceName: "monospace",
-      textFill: "#fff",
-      textLineSpacing: 1,
-      textHorizontalAlignment: "right",
-      textDx: 15,
-      markerLineColor: "#b4b3b3",
-      markerFill: "#000"
-    },
-    boxStyle: {
-      padding: [6, 2],
-      symbol: {
-        markerType: "square",
-        markerFill: "#000",
-        markerFillOpacity: 0.9,
-        markerLineColor: "#b4b3b3"
-      }
-    }
-  },
-  clearButtonSymbol: [
-    {
-      markerType: "square",
-      markerFill: "#000",
-      markerLineColor: "#b4b3b3",
-      markerLineWidth: 2,
-      markerWidth: 15,
-      markerHeight: 15,
-      markerDx: 20
-    },
-    {
-      markerType: "x",
-      markerWidth: 10,
-      markerHeight: 10,
-      markerLineColor: "#fff",
-      markerDx: 20
-    }
-  ],
-  language: "en-US"
-});
-//定义测面积工具
-let areaTool = new maptalks.AreaTool({
-  symbol: {
-    lineColor: "#1bbc9b",
-    lineWidth: 2,
-    polygonFill: "#fff",
-    polygonOpacity: 0.3
-  },
-  vertexSymbol: {
-    markerType: "ellipse",
-    markerFill: "#34495e",
-    markerLineColor: "#1bbc9b",
-    markerLineWidth: 3,
-    markerWidth: 10,
-    markerHeight: 10
-  },
-  labelOptions: {
-    textSymbol: {
-      textFaceName: "monospace",
-      textFill: "#fff",
-      textLineSpacing: 1,
-      textHorizontalAlignment: "right",
-      textDx: 15
-    },
-    boxStyle: {
-      padding: [6, 2],
-      symbol: {
-        markerType: "square",
-        markerFill: "#000",
-        markerFillOpacity: 0.9,
-        markerLineColor: "#b4b3b3"
-      }
-    }
-  },
-  clearButtonSymbol: [
-    {
-      markerType: "square",
-      markerFill: "#000",
-      markerLineColor: "#b4b3b3",
-      markerLineWidth: 2,
-      markerWidth: 15,
-      markerHeight: 15,
-      markerDx: 22
-    },
-    {
-      markerType: "x",
-      markerWidth: 10,
-      markerHeight: 10,
-      markerLineColor: "#fff",
-      markerDx: 22
-    }
-  ],
-  language: ""
-});
 //添加画图工具
 let drawTool = new maptalks.DrawTool({
   mode: "Polygon",
@@ -495,10 +386,6 @@ class Map extends Component {
     jzd.addTo(map).bringToFront();
     location.addTo(map);
     console.log(map);
-
-    //将测距测面积工具添加至地图
-    distanceTool.addTo(map).disable();
-    areaTool.addTo(map).disable();
     //将画图工具添加至地图
     drawTool.addTo(map).disable();
     maptalks.DrawTool.registerMode("ArcCurve", {
@@ -511,6 +398,7 @@ class Map extends Component {
     });
     snap.addTo(map);
     snap.setLayer(map.getLayer('DT'));
+    //绑定吸附工具到绘图工具
     snap.bindDrawTool(drawTool);
     snap.disable();
   }
@@ -799,9 +687,13 @@ let plot,
   drawPolygon,
   drawBalconyEnd,
   drawBalcony,
-  //editLabel,
   drawUndo,
-  drawRedo;
+  drawRedo,
+  BindOnDisTool,
+  UseDisTool,
+  BindOnAreaTool,
+  UseAreaTool;
+
 
 let modifyPointId;
 
@@ -916,10 +808,8 @@ const sketchReduce = (
           'textVerticalAlignment' : 'top'
         }
       });
-      //map.getLayer("label").addGeometry(objLabel);
-      //objLabel.on("click", clickObj);
-      labels.push(objLabel.getId());
-      
+      map.getLayer("label").addGeometry(objLabel);
+      objLabel.on("click", clickObj);
     };
 
   //打开画图工具
@@ -983,10 +873,9 @@ const sketchReduce = (
     };
 
 //画点时DrawTool的绑定事件
-drawPointEnd=
+  drawPointEnd=
     drawPointEnd ||
     function(param){
-      console.log(snap);
       recoverObj();
       let coorArr = param.geometry.getCoordinates();
       console.log(coorArr);
@@ -1088,7 +977,7 @@ drawPointEnd=
         length = map.computeLength(startPoi, endPoi);
         sz_line.config("length", length);
         let content = sz_line.options.length.toFixed(2);
-        addObjLabel(content, startPoi, endPoi);
+        //addObjLabel(content, startPoi, endPoi);
       }
       sz_line.config("labels", labels);
       labels = [];
@@ -1156,7 +1045,7 @@ drawPointEnd=
         }
         length = map.computeLength(startPoi, endPoi);
         let content = length.toFixed(2);
-        addObjLabel(content, startPoi, endPoi);
+       // addObjLabel(content, startPoi, endPoi);
       }
       zd_obj.config("labels", labels);
       labels = [];
@@ -1229,7 +1118,7 @@ drawPointEnd=
           }
           length = map.computeLength(startPoi, endPoi);
           let content = length.toFixed(2);
-          addObjLabel(content, startPoi, endPoi);
+          //addObjLabel(content, startPoi, endPoi);
         }
         zd_obj.config("labels", labels);
         labels = [];
@@ -1272,215 +1161,71 @@ drawPointEnd=
     function() {
       drawTool.redo();
     };
-
-  //////
-  switch (action.type) {
-    //实时定位
-    case "handleRealtimeMapping":
-      const isRealtimeOn = { isRealtimeOn: !state.isRealtimeOn };
-      if (isRealtimeOn.isRealtimeOn) {
-        console.log("打开了");
-      } else {
-        console.log("没打开");
-      }
-      return Object.assign({}, state, { ...isRealtimeOn });
-    //修正点坐标
-    case "rectifyJzdClick":
-      recoverObj();
-      console.log(clickedObj);
-      distanceTool.disable();
-      areaTool.disable();
-      drawTool.off("drawend", drawPointEnd);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-
-      modifyPointId = action.payload.command;
-      //高亮显示选择纠正位置的点
-      map.getLayer('point').getGeometryById(modifyPointId).updateSymbol({polygonFill: "#00FFFF", lineColor: "#00FFFF"});
-      clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
-      rectifyPointEnd=function(param){
-      console.log("纠正点位");
-      recoverObj();
-      let coorArr = param.geometry.getCoordinates();
-      let num = modifyPointId;          
-      let oldPoi = map.getLayer("point").getGeometryById(num);
-      let oldLabel = map.getLayer("label").getGeometryById(num);
-      let labelContent= num;
-      console.log(labelContent);
-      //为界址点添加点号注记
-      let label = new maptalks.Label(labelContent, coorArr, {
-        'id': num,
-        'isClicked':false,
-        'draggable': true,
-        'type': "Label",
-        'boxStyle' : {
-          'padding' : [12, 8],
-          'verticalAlignment' : 'top',
-          'horizontalAlignment' : 'right',
-          'minWidth' : 48,
-          'minHeight' : 24,
-          'symbol' : {
-            'textDy':-10,
-            'markerType' : 'square',
-            'markerFill' : 'rgb(255,255,255)',
-            'markerFillOpacity' : 0,
-            'markerLineWidth' : 0
-          }
-        },
-        'textSymbol': {
-          'textFaceName' : '宋体',
-          'textFill' : '#000',
-          'textSize' : 15,
-          'textVerticalAlignment' : 'top'
+ //测量距离
+  BindOnDisTool=
+    BindOnDisTool || 
+      function(param){
+        recoverObj();
+        let coorArr = param.geometry.getCoordinates();
+        coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+        if(coorArr.length<2){
+          drawTool.disable();
+        }else{
+          //计算两点间的距离
+          for (let i = 0; i < coorArr.length - 1; i++) {
+            //每条线段的起点和终点坐标
+            let startPoi = coorArr[i],
+              endPoi = coorArr[i + 1];
+            //计算每条线段的长度
+            length = map.computeLength(startPoi, endPoi).toFixed(3);
+            addObjLabel(length,startPoi,endPoi);
         }
-      });
-      label.on("click", clickObj);
-      let point = new maptalks.Circle(coorArr, 4, {
-        id: num,
-        labels: label.getId(),
-        picture: oldPoi.options.picture,
-        isClicked: true,
-        symbol: {
-          lineColor: "#00FFFF",
-          lineWidth: 1.5,
-          polygonFill: "#00FFFF"
+        //清除点选高亮的点样式
+        for(let i=0;i<linePoiArr.length;i++){
+          console.log(linePoiArr)
+          map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+            lineColor: "#000000",
+            polygonFill: "#FFFFFF"
+          });
         }
-      });
-      
-      oldPoi.remove();
-      oldLabel.remove();
-      map.getLayer("label").addGeometry(label);
-      map.getLayer("point").addGeometry(point);
-      point.on("click", clickObj);
-      clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
+       linePoiArr = [];
     }
-    rectifyPoint=
-      rectifyPoint || 
+  }
+  UseDisTool=
+      UseDisTool ||
       function(){
-        drawTool.setMode("Point").enable();
-        drawTool.setSymbol({           
-          lineColor: "#000000",
-          lineWidth: 1.5,
-          polygonFill: "#FFFFFF" });
-        drawTool.on("drawend", rectifyPointEnd);
+        drawTool.setMode("LineString").enable();
+        drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
+        drawTool.on("drawend",BindOnDisTool);
       }
-      rectifyPoint();
-      const new_jzdData = map.getLayer("point").toJSON()
-      let new_jzdpoi = new_jzdData.geometries;
-      let new_tableRow;
-      let new_tableData = [];
-      for (let i = 0; i < new_jzdpoi.length; i++) {
-        new_tableRow = {
-          id: new_jzdpoi[i].feature.id,
-          coordinates: new_jzdpoi[i].coordinates,
-        };
-        new_tableData.push(new_tableRow);
-      }
-      const updateTableData={
-        plotListData: new_tableData
-      }
-      return Object.assign({}, state, { ...updateTableData });
-
-    //展点
-    case "plotRTK":
-      console.log("展点");
-      recoverObj();      
-      map.off("click", editLabel);
-      drawTool.disable();
-      distanceTool.disable();
-      areaTool.disable();
-      let plotData = [];
-      plotData = JSON.parse(action.payload.data);
-      console.log(plotData);
-      let poi = new maptalks.Coordinate([plotData[1], plotData[0]]);
-      plot(poi);
-      const plotSuccessState = {
-        plotIsChecked: true,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        deleteIsChecked: false,
-        chooseObjIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...plotSuccessState };
-    case "plotFail":
-      let error = action.payload;
-      console.log(error);
-
-      const plotFailState = {
-        plotIsChecked: true,
-        alertPlotFail: true,
-        errorMessage: error,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        deleteIsChecked: false,
-        chooseObjIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...plotFailState };
-    //通过文件展点
-    case "plotFile":
-      return { ...state };
-
-    //关闭错误提示
-    case "plotAlerClose":
-      if (state.isRealtimeOn) {
-        const closePlotAlert1 = { alertPlotFail: false };
-        return Object.assign({}, state, { ...closePlotAlert1 });
-      } else {
-        const closePlotAlert2 = { alertPlot2: false };
-        return Object.assign({}, state, { ...closePlotAlert2 });
-      }
-
-    case "handleChooseItem":
-      return {...state};
-    //弹出取号确认框
-    case "openFetchPoiNum":
-      const FetchPoiNum_Y={fetchPoiNumIsChecked:true}
-      return Object.assign({}, state, { ...FetchPoiNum_Y });
-    //关闭取号确认框
-    case "closeFetchPoiNum":
-      const FetchPoiNum_N={fetchPoiNumIsChecked:false}
-      return Object.assign({}, state, { ...FetchPoiNum_N });
-    //取界址点号
-    case "fetchPoi_NumClick":
-      let i = action.payload2.id - 1;
-      let old_id=action.payload2.id;//旧id
-      let new_id=action.payload1.d;
-      map.getLayer("point").getGeometryById(old_id).setId(new_id); 
-      let oldLabel = map.getLayer("label").getGeometryById(old_id);
-      let labelContent=new_id;
-      console.log(labelContent)
-      //为界址点添加点号注记
-      let label = new maptalks.Label(labelContent, oldLabel.getCoordinates(), {
-          'id': new_id,
+//测量面积
+  BindOnAreaTool=
+    BindOnAreaTool || 
+    function(param){
+      let coorArr = param.geometry.getCoordinates()[0];
+      //删除由于缓慢双击产生的最后一个坐标
+      coorArr.pop();
+      if(coorArr.length<3){
+        drawTool.disable();
+      }else{       
+        let zd_obj=new maptalks.Polygon(coorArr, {
+          visible : true,
+          editable : true,
+          cursor : 'pointer',
+          draggable : false,
+          drawOnAxis : null, 
+        });
+        let Area=map.computeGeometryArea(zd_obj).toFixed(3);
+        let x_sum=0,y_sum=0;
+        for(let i=0;i<coorArr.length;i++){
+          x_sum+=coorArr[i].x;
+          y_sum+=coorArr[i].y;
+        }
+        let avg_x=x_sum/coorArr.length;
+        let avg_y=y_sum/coorArr.length;
+        let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+        let objLabel = new maptalks.Label(Area, [avg_x,avg_y], {
+          'id':labelId,
           'isClicked':false,
           'draggable': true,
           'type': "Label",
@@ -1504,728 +1249,868 @@ drawPointEnd=
             'textSize' : 15,
             'textVerticalAlignment' : 'top'
           }
+        });
+        map.getLayer("label").addGeometry(objLabel);
+        objLabel.on("click", clickObj);
+    }
+    //清除点选高亮的点样式
+    for(let i=0;i<linePoiArr.length;i++){
+      console.log(linePoiArr)
+      map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+        lineColor: "#000000",
+        polygonFill: "#FFFFFF"
       });
-      label.on("click", clickObj);
-      oldLabel.remove();
-      map.getLayer("label").addGeometry(label);
-      map.getLayer("point").getGeometryById(new_id).config('labels',new_id)
-      //更新实时成图点列表数据
-      const new_jzdData2 = map.getLayer("point").toJSON()
-      let new_jzdpoi2 = new_jzdData2.geometries;
-      let new_tableRow2;
-      let new_tableData2 = [];
-      for (let i = 0; i < new_jzdpoi2.length; i++) {
-        new_tableRow2 = {
-          id: new_jzdpoi2[i].feature.id,
-          coordinates: new_jzdpoi2[i].coordinates,
-        };
-        new_tableData2.push(new_tableRow2);
-      }
-      const updateTableData2={
-        plotListData: new_tableData2
-      }
-      return Object.assign({}, state, { ...updateTableData2 });   
-   
-    //画点
-    case "drawPointClick":
-      recoverObj();
-      distanceTool.disable();
-      areaTool.disable();
-      drawTool.off("drawend", rectifyPointEnd);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-      if (!state.drawPointIsChecked) {
-        //开始画点
-        drawPoint();
-      } else {
-        drawTool.disable();
-      }
-      const drawPointState = {
-        plotIsChecked: false,
-        drawPointIsChecked: !state.drawPointIsChecked,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        addLabelIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...drawPointState };
-    //纠点拍照
-    case "rectifyPoiClick":
-      const jzdData = map.getLayer("point").toJSON()
-      let jzdpoi = jzdData.geometries;
-      let tableRow;
-      let tableData = [];
-      for (let i = 0; i < jzdpoi.length; i++) {
-        tableRow = {
-          id: jzdpoi[i].feature.id,
-          coordinates: jzdpoi[i].coordinates
-        };
-        tableData.push(tableRow);
-      }
-      recoverObj();
-      distanceTool.disable();
-      areaTool.disable();
-      drawTool.disable();
-      map.off("dblclick", drawToolOn);
-      map.off("click", editLabel);
-      map.off("click", addLabel);
-      
-      const rectifyPoiState = {
-        plotIsChecked: false,
-        drawPointIsChecked:false,
-        plotListData: tableData,
-        rectifyPoiIsChecked: !state.rectifyPoiIsChecked,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...rectifyPoiState };
+    }
+    recoverObj();
+  }
+  UseAreaTool=
+    UseAreaTool ||
+      function(){
+        drawTool.setMode("Polygon").enable();
+        drawTool.setSymbol({
+          lineColor: "#000000",
+          lineWidth: 2,
+          polygonFill: "#FFFFFF",
+          polygonOpacity: 0.4
+        });
+      drawTool.on("drawend",BindOnAreaTool);
+    }
 
-    //画四至线
-    case "drawLineClick":
-      recoverObj();
-      distanceTool.disable();
-      areaTool.disable();
-      drawTool.off("drawend", drawPointEnd);
-      drawTool.off("drawend", rectifyPointEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-      if (!state.drawLineIsChecked) {
-        //开始画线
-        drawLine();
-        map.on("dblclick", drawToolOn);
-      } else {
-        drawTool.disable();
-        map.off("dblclick", drawToolOn);
-      }
-      const newState2 = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: !state.drawLineIsChecked,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...newState2 };
-    //画界址线
-    case "drawJZXClick":
-      recoverObj();
-      distanceTool.disable();
-      areaTool.disable();
-      drawTool.off("drawend", drawPointEnd);
-      drawTool.off("drawend", rectifyPointEnd);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-      //画线时drawTool的绑定事件
-      drawJZXEnd =
-        drawJZXEnd ||
-        function(param) {
-          recoverObj();
-          let coorArr = param.geometry.getCoordinates();
-          coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
-          if(coorArr.length<2){
-            drawTool.disable();
-          }else{
-              //随机数加当前时间构成id
-            let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-            let  jzx_line = new maptalks.LineString(coorArr, {
-              id:jzxnum,
-              isClicked:false,
-              arrowStyle : null, 
-              arrowPlacement : 'vertex-last',
-              visible : true,
-              editable : true,
-              cursor : null,
-              draggable : false,
-              dragShadow : false, 
-              drawOnAxis : null,
-              symbol: {
-                'lineColor' : '#000000',
-                'lineWidth' : 1.5
-              }
-            });
-            //为折线的每条线段添加长度标注
-            for (let i = 0; i < coorArr.length - 1; i++) {
-              //每条线段的起点和终点坐标
-              let startPoi = coorArr[i],
-                endPoi = coorArr[i + 1];
-              //计算每条线段的长度
-              length = map.computeLength(startPoi, endPoi);
-              jzx_line.config("length", length);
-              let content = jzx_line.options.length.toFixed(2);
-              addObjLabel(content, startPoi, endPoi);
-            }
-            jzx_line.config("labels", labels);
-            labels = [];
-            jzx_line.config("poiArr", linePoiArr);
-            //清除点选高亮的点样式
-            for(let i=0;i<linePoiArr.length;i++){
-              console.log(linePoiArr)
-              map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
-                lineColor: "#000000",
-                polygonFill: "#FFFFFF"
-              });
-            }
-            map.getLayer("JZX").addGeometry(jzx_line);
-            jzx_line.on("click", clickObj);
-            linePoiArr = [];
-          }
-         
-        };
-      //用于画线
-      drawJZX =
-        drawJZX ||
-        function() {
-          linePoiArr = [];
-          drawTool.setMode("LineString").enable();
-          drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
-          drawTool.on("drawend", drawJZXEnd);
-        };
-
-      if (!state.drawJZXIsChecked) {
-        //开始画线
-        drawJZX();
-        map.on("dblclick", drawToolOn);
-      } else {
-        drawTool.disable();
-        map.off("dblclick", drawToolOn);
-      }
-      const JZXState = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawArcIsChecked: false,
-        drawJZXIsChecked: !state.drawJZXIsChecked,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...JZXState };
-    //画弧线
-    case "drawArcClick":
-      drawTool.off("drawend", drawPointEnd);
-      drawTool.off("drawend", rectifyPointEnd);
-      distanceTool.disable();
-      areaTool.disable();
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-      //画线时drawTool的绑定事件
-      drawCurveEnd =
-        drawCurveEnd ||
-        function(param) {
-          let coorArr = param.geometry.getCoordinates();
-          coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
-          if(coorArr.length<2){
-            drawTool.disable();
-          }else{
-            //随机数加当前时间构成id
-            let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
-            let jzx_arc = new maptalks.ArcCurve(coorArr, {
-              id:jzxnum,
-              isClicked:false,
-              arcDegree:45,
-              symbol :{
-                lineColor: "#000000",
-                lineWidth: 1.5 
-              }
-            });
-            jzx_arc.config("poiArr", linePoiArr);
-            //清除点选高亮的点样式
-            for(let i=0;i<linePoiArr.length;i++){
-              console.log(linePoiArr)
-              map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
-                lineColor: "#000000",
-                polygonFill: "#FFFFFF"
-              });
-            }
-            map.getLayer("JZX").addGeometry(jzx_arc);
-            jzx_arc.on("click", clickObj);
-            recoverObj();
-            linePoiArr = [];
-          }     
-        };
-      //用于画线
-      drawCurve =
-        drawCurve ||
-        function() {
-          recoverObj();
-          linePoiArr = [];
-          drawTool.setMode("ArcCurve").enable();
-          drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
-          drawTool.on("drawend", drawCurveEnd);
-        };
-      if (!state.drawArcIsChecked) {
-        //开始画线
-        drawCurve();
-        map.on("dblclick", drawToolOn);
-      } else {
-        drawTool.disable();
-        map.off("dblclick", drawToolOn);
-      }
-      const CurveState = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: !state.drawArcIsChecked,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      console.log(state);
-      return { ...state, ...CurveState };
-    //构面
-    case "drawPolygonClick":
-      drawTool.off("drawend", drawPointEnd);
-      drawTool.off("drawend", rectifyPointEnd);    
-      distanceTool.disable();
-      areaTool.disable();
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-      if (!state.drawPolygonIsChecked) {
-        //开始构面
-        drawPolygon();
-        map.on("dblclick", drawToolOn);
-      } else {
-        drawTool.disable();
-        map.off("dblclick", drawToolOn);
-      }
-      const newState3 = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawPolygonIsChecked: !state.drawPolygonIsChecked,
-        drawArcIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...newState3 };
-    //阳台
-    case "balconyClick":        
+    //////
+    switch (action.type) {
+      //实时定位
+      case "handleRealtimeMapping":
+        const isRealtimeOn = { isRealtimeOn: !state.isRealtimeOn };
+        if (isRealtimeOn.isRealtimeOn) {
+          console.log("打开了");
+        } else {
+          console.log("没打开");
+        }
+        return Object.assign({}, state, { ...isRealtimeOn });
+      //修正点坐标
+      case "rectifyJzdClick":
+        recoverObj();
+        console.log(clickedObj);
         drawTool.off("drawend", drawPointEnd);
-        drawTool.off("drawend", rectifyPointEnd);
-        distanceTool.disable();
-        areaTool.disable();
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
         drawTool.off("drawend", drawCurveEnd);
         drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend",BindOnDisTool);
+        drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
         map.off("click", editLabel);
-      if (!state.balconyIsChecked) {
-        //开始构面
-        drawBalcony();
-        map.on("dblclick", drawToolOn);
-      } else {
+
+        modifyPointId = action.payload.command;
+        //高亮显示选择纠正位置的点
+        map.getLayer('point').getGeometryById(modifyPointId).updateSymbol({polygonFill: "#00FFFF", lineColor: "#00FFFF"});
+        clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
+        rectifyPointEnd=function(param){
+        console.log("纠正点位");
+        recoverObj();
+        let coorArr = param.geometry.getCoordinates();
+        let num = modifyPointId;          
+        let oldPoi = map.getLayer("point").getGeometryById(num);
+        let oldLabel = map.getLayer("label").getGeometryById(num);
+        let labelContent= num;
+        console.log(labelContent);
+        //为界址点添加点号注记
+        let label = new maptalks.Label(labelContent, coorArr, {
+          'id': num,
+          'isClicked':false,
+          'draggable': true,
+          'type': "Label",
+          'boxStyle' : {
+            'padding' : [12, 8],
+            'verticalAlignment' : 'top',
+            'horizontalAlignment' : 'right',
+            'minWidth' : 48,
+            'minHeight' : 24,
+            'symbol' : {
+              'textDy':-10,
+              'markerType' : 'square',
+              'markerFill' : 'rgb(255,255,255)',
+              'markerFillOpacity' : 0,
+              'markerLineWidth' : 0
+            }
+          },
+          'textSymbol': {
+            'textFaceName' : '宋体',
+            'textFill' : '#000',
+            'textSize' : 15,
+            'textVerticalAlignment' : 'top'
+          }
+        });
+        label.on("click", clickObj);
+        let point = new maptalks.Circle(coorArr, 4, {
+          id: num,
+          labels: label.getId(),
+          picture: oldPoi.options.picture,
+          isClicked: true,
+          symbol: {
+            lineColor: "#00FFFF",
+            lineWidth: 1.5,
+            polygonFill: "#00FFFF"
+          }
+        });
+        
+        oldPoi.remove();
+        oldLabel.remove();
+        map.getLayer("label").addGeometry(label);
+        map.getLayer("point").addGeometry(point);
+        point.on("click", clickObj);
+        clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
+      }
+      rectifyPoint=
+        rectifyPoint || 
+        function(){
+          drawTool.setMode("Point").enable();
+          drawTool.setSymbol({           
+            lineColor: "#000000",
+            lineWidth: 1.5,
+            polygonFill: "#FFFFFF" });
+          drawTool.on("drawend", rectifyPointEnd);
+        }
+        rectifyPoint();
+        const new_jzdData = map.getLayer("point").toJSON()
+        let new_jzdpoi = new_jzdData.geometries;
+        let new_tableRow;
+        let new_tableData = [];
+        for (let i = 0; i < new_jzdpoi.length; i++) {
+          new_tableRow = {
+            id: new_jzdpoi[i].feature.id,
+            coordinates: new_jzdpoi[i].coordinates,
+          };
+          new_tableData.push(new_tableRow);
+        }
+        const updateTableData={
+          plotListData: new_tableData
+        }
+        return Object.assign({}, state, { ...updateTableData });
+
+      //展点
+      case "plotRTK":
+        console.log("展点");
+        recoverObj();      
+        map.off("click", editLabel);
         drawTool.disable();
-        map.off("dblclick", drawToolOn);
-      }
-      const newState4 = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: !state.balconyIsChecked,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...newState4 };
-    //打开捕捉选择列表
-    case "labelClick":
-      console.log("kai")
-      drawTool.disable();
-      distanceTool.disable();
-      areaTool.disable();
-      map.off("dblclick", drawToolOn);
-      const labelOpen={
-        labelIsChecked:!state.labelIsChecked,
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      }
-    return Object.assign({}, state, { ...labelOpen });
-    //关闭label下拉列表
-    case "labelListClose":
-      const labelClose={labelIsChecked:false}
-      return Object.assign({}, state, { ...labelClose});
-    //添加注记
-    case "addLabelClick":
-      recoverObj();
-      map.off("click", editLabel);
-      if (!state.addLabelIsChecked) {
-        map.on("click", addLabel);
-      } else {
-        map.off("click", addLabel);
-      }
-      const addLabelState = {
-        editLabelIsChecked:false,
-        addLabelIsChecked: true,
-      };
-      return { ...state, ...addLabelState };
-    //编辑标注
-    case "editLabel":
-       map.off("click", addLabel);
-       editLabel();
-      // if (!state.editLabelIsChecked) {
-      //   map.on("click", editLabel);
-      // } else {
-      //   if(editingLabel){
-      //     editingLabel.endEditText();
-      //   }
-      //   map.off("click", editLabel);
-      // }
-      const editLabelState = {
-        addLabelIsChecked: false,
-        editLabelIsChecked:true,
-      };
-      return { ...state, ...editLabelState };
-    //测距
-    case "measureDistanceClick":        
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      map.off("click", addLabel);
-      drawTool.off("drawend", drawPointEnd);
-      map.off("dblclick", drawToolOn);
-      drawTool.off("drawend", rectifyPointEnd);
-      map.off("click", editLabel);
-      drawTool.disable();
-      areaTool.disable();
-      if (!state.measureDistanceIsChecked) {
-        distanceTool.enable();
-        console.log(state.measureDistanceIsChecked);
-      } else {
-        distanceTool.disable();
-        console.log(state.measureDistanceIsChecked);
-      }
-      const measureDis = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        addLabelIsChecked: false,
-        measureDistanceIsChecked: !state.measureDistanceIsChecked,
-        measureAreaIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...measureDis };
-    //测面积
-    case "measureAreaClick":
-      drawTool.off("drawend", drawPolygonEnd);
-      drawTool.off("drawend", drawLineEnd);
-      drawTool.off("drawend", drawJZXEnd);
-      drawTool.off("drawend", drawBalconyEnd);
-      drawTool.off("drawend", drawCurveEnd);
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-      drawTool.off("drawend", drawPointEnd);
-      drawTool.off("drawend", rectifyPointEnd);
-      map.off("dblclick", drawToolOn);
-      drawTool.disable();
-      distanceTool.disable();
-      if (!state.measureAreaIsChecked) {
-        areaTool.enable();
-        console.log(state.measureAreaIsChecked);
-      } else {
-        areaTool.disable();
-        console.log(state.measureAreaIsChecked);
-      }
-      const measureArea = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        addLabelIsChecked: false,
-        measureAreaIsChecked: !state.measureAreaIsChecked,
-        measureDistanceIsChecked: false,
-        chooseObjIsChecked: false,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...measureArea };
-    //删除
-    case "deleteClick":
-      console.log(target);
-      drawTool.disable();
-      distanceTool.disable();
-      areaTool.disable();
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-      map.off("dblclick", drawToolOn);
-      console.log(clickedObj.length)
-      if (clickedObj.length>0) {
-        const newState6 = {
-          deleteIsChecked: !state.deleteIsChecked,
-          showDelDialog: true,
-          haveObjToDel: false,
+        let plotData = [];
+        plotData = JSON.parse(action.payload.data);
+        console.log(plotData);
+        let poi = new maptalks.Coordinate([plotData[1], plotData[0]]);
+        plot(poi);
+        const plotSuccessState = {
+          plotIsChecked: true,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          deleteIsChecked: false,
+          chooseObjIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
           saveIsChecked: false,
-          alertSave: true
+          alertSave: true,
         };
-        return Object.assign({}, state, { ...newState6 });
-      } else {
-        const stateDelFail = {
-          deleteIsChecked: !state.deleteIsChecked,
-          showDelDialog: false,
-          haveObjToDel: true,
+        return { ...state, ...plotSuccessState };
+      case "plotFail":
+        let error = action.payload;
+        console.log(error);
+
+        const plotFailState = {
+          plotIsChecked: true,
+          alertPlotFail: true,
+          errorMessage: error,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          deleteIsChecked: false,
+          chooseObjIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
           saveIsChecked: false,
-          alertSave: true
+          alertSave: true,
         };
-        return Object.assign({}, state, { ...stateDelFail });
-      }
-
-    case "handleCloseDelDialog":
-      const showDelDialog1 = { showDelDialog: false };
-      return Object.assign({}, state, { ...showDelDialog1 });
-
-    case "handleDelete":
-      deleteObj();
-      clickedObj=[];
-      const showDelDialog2 = { showDelDialog: false };
-      return Object.assign({}, state, { ...showDelDialog2 });
-    case "delAlerClose":
-      const closeAlert = { haveObjToDel: false };
-      return Object.assign({}, state, { ...closeAlert });
-    //选中
-    case "chooseObjClick":
-      console.log("choose");
-      drawTool.disable();
-      distanceTool.disable();
-      areaTool.disable();
-      map.off("click", addLabel);
-      map.off("click", editLabel);
-      map.off("dblclick", drawToolOn);
-      const newState7 = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        addLabelIsChecked: false,
-        measureAreaIsChecked: false,
-        measureDistanceIsChecked: false,
-        chooseObjIsChecked: !state.chooseObjIsChecked,
-        deleteIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true
-      };
-      return Object.assign({}, state, { ...newState7 });
-    //打开捕捉选择列表
-    case "snapClick":
-      const snapOpen={snapIsChecked:!state.snapIsChecked}
-      return Object.assign({}, state, { ...snapOpen });
-    //关闭捕捉列表
-    case "snapListClose":
-      const snapClose={snapIsChecked:false}
-      return Object.assign({}, state, { ...snapClose });
-    //选择捕捉图层
-    case "snapListClick":
-      let layerChoice = action.payload.command;
-      console.log(layerChoice);
-      console.log(snap);
-      if(layerChoice=="point"){
-        if(!state.snapJzdIsChecked){ 
-          snap.setLayer(map.getLayer('point'));
-          snap.enable();
-          (console.log('界址点捕捉开启'))
-        }else{
-          snap.disable();
-          console.log('界址点捕捉关闭')
-        }
-        const snapJzdState={
-          snapJzdIsChecked:!state.snapJzdIsChecked,
-          snapDxIsChecked:false
-        }
-        return Object.assign({}, state, { ...snapJzdState });
-      }
-      if(layerChoice=="DX"){
-        if(!state.snapDxIsChecked){ 
-          snap.setLayer(map.getLayer('DT'));
-          snap.enable();
-          (console.log('底图捕捉开启'))
-        }else{
-          snap.disable();
-          console.log('底图捕捉关闭')
-        }
-        const snapDxState={
-          snapJzdIsChecked:false,
-          snapDxIsChecked:!state.snapDxIsChecked
-        }
-        return Object.assign({}, state, { ...snapDxState });
-      }
-    //撤销
-    case "undoClick":
-    map.off("click", editLabel);
-    if(drawTool.getCurrentGeometry()){
-      drawUndo();
-      const new_drawAlert={ drawAlert:false}
-      return Object.assign({}, state, { ...new_drawAlert });
-    }else{
-      const new_drawAlert={ drawAlert:true}
-      return Object.assign({}, state, { ...new_drawAlert });
-    }
-    //重做
-    case "redoClick":
-      console.log("重做");
-      map.off("click", editLabel);
-      if(drawTool.getCurrentGeometry()){
-        drawRedo();
-        const new_drawAlert={ drawAlert:false}
-        return Object.assign({}, state, { ...new_drawAlert });
-      }else{
-        const new_drawAlert={ drawAlert:true}
-        return Object.assign({}, state, { ...new_drawAlert });
-      }
-    //关闭错误使用撤销重做提示
-    case "drawAlerClose":
-    const drawAlerClose = { drawAlert: false };
-    return Object.assign({}, state, { ...drawAlerClose });
-    //保存
-    case "saveClick":
-      if (map === undefined){
-        console.log(state)
+        return { ...state, ...plotFailState };
+      //通过文件展点
+      case "plotFile":
         return { ...state };
-      } else{
-        let mapCenter = map.getCenter();
+
+      //关闭错误提示
+      case "plotAlerClose":
+        if (state.isRealtimeOn) {
+          const closePlotAlert1 = { alertPlotFail: false };
+          return Object.assign({}, state, { ...closePlotAlert1 });
+        } else {
+          const closePlotAlert2 = { alertPlot2: false };
+          return Object.assign({}, state, { ...closePlotAlert2 });
+        }
+
+      case "handleChooseItem":
+        return {...state};
+      //弹出取号确认框
+      case "openFetchPoiNum":
+        const FetchPoiNum_Y={fetchPoiNumIsChecked:true}
+        return Object.assign({}, state, { ...FetchPoiNum_Y });
+      //关闭取号确认框
+      case "closeFetchPoiNum":
+        const FetchPoiNum_N={fetchPoiNumIsChecked:false}
+        return Object.assign({}, state, { ...FetchPoiNum_N });
+      //取界址点号
+      case "fetchPoi_NumClick":
+        let i = action.payload2.id - 1;
+        let old_id=action.payload2.id;//旧id
+        let new_id=action.payload1.d;
+        map.getLayer("point").getGeometryById(old_id).setId(new_id); 
+        let oldLabel = map.getLayer("label").getGeometryById(old_id);
+        let labelContent=new_id;
+        console.log(labelContent)
+        //为界址点添加点号注记
+        let label = new maptalks.Label(labelContent, oldLabel.getCoordinates(), {
+            'id': new_id,
+            'isClicked':false,
+            'draggable': true,
+            'type': "Label",
+            'boxStyle' : {
+              'padding' : [12, 8],
+              'verticalAlignment' : 'top',
+              'horizontalAlignment' : 'right',
+              'minWidth' : 48,
+              'minHeight' : 24,
+              'symbol' : {
+                'textDy':-10,
+                'markerType' : 'square',
+                'markerFill' : 'rgb(255,255,255)',
+                'markerFillOpacity' : 0,
+                'markerLineWidth' : 0
+              }
+            },
+            'textSymbol': {
+              'textFaceName' : '宋体',
+              'textFill' : '#000',
+              'textSize' : 15,
+              'textVerticalAlignment' : 'top'
+            }
+        });
+        label.on("click", clickObj);
+        oldLabel.remove();
+        map.getLayer("label").addGeometry(label);
+        map.getLayer("point").getGeometryById(new_id).config('labels',new_id)
+        //更新实时成图点列表数据
+        const new_jzdData2 = map.getLayer("point").toJSON()
+        let new_jzdpoi2 = new_jzdData2.geometries;
+        let new_tableRow2;
+        let new_tableData2 = [];
+        for (let i = 0; i < new_jzdpoi2.length; i++) {
+          new_tableRow2 = {
+            id: new_jzdpoi2[i].feature.id,
+            coordinates: new_jzdpoi2[i].coordinates,
+          };
+          new_tableData2.push(new_tableRow2);
+        }
+        const updateTableData2={
+          plotListData: new_tableData2
+        }
+        return Object.assign({}, state, { ...updateTableData2 });   
+    
+      //画点
+      case "drawPointClick":
+        recoverObj();
+        drawTool.off("drawend", rectifyPointEnd);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawCurveEnd);
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend",BindOnDisTool);
+        drawTool.off("drawend",BindOnAreaTool);
+        map.off("click", addLabel);
+        map.off("click", editLabel);
+        if (!state.drawPointIsChecked) {
+          //开始画点
+          drawPoint();
+        } else {
+          drawTool.disable();
+        }
+        const drawPointState = {
+          plotIsChecked: false,
+          drawPointIsChecked: !state.drawPointIsChecked,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          addLabelIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...drawPointState };
+      //纠点拍照
+      case "rectifyPoiClick":
+        const jzdData = map.getLayer("point").toJSON()
+        let jzdpoi = jzdData.geometries;
+        let tableRow;
+        let tableData = [];
+        for (let i = 0; i < jzdpoi.length; i++) {
+          tableRow = {
+            id: jzdpoi[i].feature.id,
+            coordinates: jzdpoi[i].coordinates
+          };
+          tableData.push(tableRow);
+        }
+        recoverObj();
         drawTool.disable();
-        distanceTool.disable();
-        areaTool.disable();
-        map.off("click", drawToolOn);       
+        map.off("dblclick", drawToolOn);
+        map.off("click", editLabel);
+        map.off("click", addLabel);
+        
+        const rectifyPoiState = {
+          plotIsChecked: false,
+          drawPointIsChecked:false,
+          plotListData: tableData,
+          rectifyPoiIsChecked: !state.rectifyPoiIsChecked,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...rectifyPoiState };
+
+      //画四至线
+      case "drawLineClick":
+        recoverObj();
+        drawTool.off("drawend", drawPointEnd);
+        drawTool.off("drawend", rectifyPointEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawCurveEnd);
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend",BindOnDisTool);
+        drawTool.off("drawend",BindOnAreaTool);
+        map.off("click", addLabel);
+        map.off("click", editLabel);
+        if (!state.drawLineIsChecked) {
+          //开始画线
+          drawLine();
+          map.on("dblclick", drawToolOn);
+        } else {
+          drawTool.disable();
+          map.off("dblclick", drawToolOn);
+        }
+        const newState2 = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: !state.drawLineIsChecked,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...newState2 };
+      //画界址线
+      case "drawJZXClick":
+        recoverObj();
+        drawTool.off("drawend", drawPointEnd);
+        drawTool.off("drawend", rectifyPointEnd);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawCurveEnd);
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend",BindOnDisTool);
+        drawTool.off("drawend",BindOnAreaTool);
+        map.off("click", addLabel);
+        map.off("click", editLabel);
+        //画线时drawTool的绑定事件
+        drawJZXEnd =
+          drawJZXEnd ||
+          function(param) {
+            recoverObj();
+            let coorArr = param.geometry.getCoordinates();
+            coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+            if(coorArr.length<2){
+              drawTool.disable();
+            }else{
+                //随机数加当前时间构成id
+              let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+              let  jzx_line = new maptalks.LineString(coorArr, {
+                id:jzxnum,
+                isClicked:false,
+                arrowStyle : null, 
+                arrowPlacement : 'vertex-last',
+                visible : true,
+                editable : true,
+                cursor : null,
+                draggable : false,
+                dragShadow : false, 
+                drawOnAxis : null,
+                symbol: {
+                  'lineColor' : '#000000',
+                  'lineWidth' : 1.5
+                }
+              });
+              //为折线的每条线段添加长度标注
+              for (let i = 0; i < coorArr.length - 1; i++) {
+                //每条线段的起点和终点坐标
+                let startPoi = coorArr[i],
+                  endPoi = coorArr[i + 1];
+                //计算每条线段的长度
+                length = map.computeLength(startPoi, endPoi);
+                jzx_line.config("length", length);
+                let content = jzx_line.options.length.toFixed(2);
+                //addObjLabel(content, startPoi, endPoi);
+              }
+              jzx_line.config("labels", labels);
+              labels = [];
+              jzx_line.config("poiArr", linePoiArr);
+              //清除点选高亮的点样式
+              for(let i=0;i<linePoiArr.length;i++){
+                console.log(linePoiArr)
+                map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+                  lineColor: "#000000",
+                  polygonFill: "#FFFFFF"
+                });
+              }
+              map.getLayer("JZX").addGeometry(jzx_line);
+              jzx_line.on("click", clickObj);
+              linePoiArr = [];
+            }
+          
+          };
+        //用于画线
+        drawJZX =
+          drawJZX ||
+          function() {
+            linePoiArr = [];
+            drawTool.setMode("LineString").enable();
+            drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
+            drawTool.on("drawend", drawJZXEnd);
+          };
+
+        if (!state.drawJZXIsChecked) {
+          //开始画线
+          drawJZX();
+          map.on("dblclick", drawToolOn);
+        } else {
+          drawTool.disable();
+          map.off("dblclick", drawToolOn);
+        }
+        const JZXState = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawArcIsChecked: false,
+          drawJZXIsChecked: !state.drawJZXIsChecked,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...JZXState };
+      //画弧线
+      case "drawArcClick":
+        drawTool.off("drawend", drawPointEnd);
+        drawTool.off("drawend", rectifyPointEnd);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend",BindOnDisTool);
+        drawTool.off("drawend",BindOnAreaTool);
+        map.off("click", addLabel);
+        map.off("click", editLabel);
+        //画线时drawTool的绑定事件
+        drawCurveEnd =
+          drawCurveEnd ||
+          function(param) {
+            let coorArr = param.geometry.getCoordinates();
+            coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+            if(coorArr.length<2){
+              drawTool.disable();
+            }else{
+              //随机数加当前时间构成id
+              let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+              let jzx_arc = new maptalks.ArcCurve(coorArr, {
+                id:jzxnum,
+                isClicked:false,
+                arcDegree:45,
+                symbol :{
+                  lineColor: "#000000",
+                  lineWidth: 1.5 
+                }
+              });
+              jzx_arc.config("poiArr", linePoiArr);
+              //清除点选高亮的点样式
+              for(let i=0;i<linePoiArr.length;i++){
+                console.log(linePoiArr)
+                map.getLayer('point').getGeometryById(linePoiArr[i]).updateSymbol({
+                  lineColor: "#000000",
+                  polygonFill: "#FFFFFF"
+                });
+              }
+              map.getLayer("JZX").addGeometry(jzx_arc);
+              jzx_arc.on("click", clickObj);
+              recoverObj();
+              linePoiArr = [];
+            }     
+          };
+        //用于画线
+        drawCurve =
+          drawCurve ||
+          function() {
+            recoverObj();
+            linePoiArr = [];
+            drawTool.setMode("ArcCurve").enable();
+            drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
+            drawTool.on("drawend", drawCurveEnd);
+          };
+        if (!state.drawArcIsChecked) {
+          //开始画线
+          drawCurve();
+          map.on("dblclick", drawToolOn);
+        } else {
+          drawTool.disable();
+          map.off("dblclick", drawToolOn);
+        }
+        const CurveState = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: !state.drawArcIsChecked,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        console.log(state);
+        return { ...state, ...CurveState };
+      //构面
+      case "drawPolygonClick":
+        drawTool.off("drawend", drawPointEnd);
+        drawTool.off("drawend", rectifyPointEnd);    
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawCurveEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend",BindOnDisTool);
+        drawTool.off("drawend",BindOnAreaTool);
+        map.off("click", addLabel);
+        map.off("click", editLabel);
+        if (!state.drawPolygonIsChecked) {
+          //开始构面
+          drawPolygon();
+          map.on("dblclick", drawToolOn);
+        } else {
+          drawTool.disable();
+          map.off("dblclick", drawToolOn);
+        }
+        const newState3 = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawPolygonIsChecked: !state.drawPolygonIsChecked,
+          drawArcIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...newState3 };
+      //阳台
+      case "balconyClick":        
+          drawTool.off("drawend", drawPointEnd);
+          drawTool.off("drawend", rectifyPointEnd);
+          drawTool.off("drawend", drawLineEnd);
+          drawTool.off("drawend", drawJZXEnd);
+          drawTool.off("drawend", drawCurveEnd);
+          drawTool.off("drawend", drawPolygonEnd);
+          drawTool.off("drawend",BindOnDisTool);
+          drawTool.off("drawend",BindOnAreaTool);
+          map.off("click", addLabel);
+          map.off("click", editLabel);
+        if (!state.balconyIsChecked) {
+          //开始构面
+          drawBalcony();
+          map.on("dblclick", drawToolOn);
+        } else {
+          drawTool.disable();
+          map.off("dblclick", drawToolOn);
+        }
+        const newState4 = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: !state.balconyIsChecked,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...newState4 };
+      //打开捕捉选择列表
+      case "labelClick":
+        console.log("kai")
+        drawTool.disable();
+        map.off("dblclick", drawToolOn);
+        const labelOpen={
+          labelIsChecked:!state.labelIsChecked,
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        }
+      return Object.assign({}, state, { ...labelOpen });
+      //关闭label下拉列表
+      case "labelListClose":
+        const labelClose={labelIsChecked:false}
+        return Object.assign({}, state, { ...labelClose});
+      //添加注记
+      case "addLabelClick":
+        recoverObj();
+        map.off("click", editLabel);
+        if (!state.addLabelIsChecked) {
+          map.on("click", addLabel);
+        } else {
+          map.off("click", addLabel);
+        }
+        const addLabelState = {
+          editLabelIsChecked:false,
+          addLabelIsChecked: true,
+        };
+        return { ...state, ...addLabelState };
+      //编辑标注
+      case "editLabel":
+        map.off("click", addLabel);
+        editLabel();
+        // if (!state.editLabelIsChecked) {
+        //   map.on("click", editLabel);
+        // } else {
+        //   if(editingLabel){
+        //     editingLabel.endEditText();
+        //   }
+        //   map.off("click", editLabel);
+        // }
+        const editLabelState = {
+          addLabelIsChecked: false,
+          editLabelIsChecked:true,
+        };
+        return { ...state, ...editLabelState };
+      //测距
+      case "measureDistanceClick":        
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend", drawCurveEnd);
+        drawTool.off("drawend", rectifyPointEnd);  
+        drawTool.off("drawend", drawPointEnd);
+        map.off("click", addLabel);
+        map.off("dblclick", drawToolOn);
+        map.off("click", editLabel);
+        if (!state.measureDistanceIsChecked) {
+          UseDisTool();
+          map.on("dblclick", drawToolOn);
+        } else {
+          drawTool.disable();
+          map.off("dblclick", drawToolOn);
+        }
+        const measureDis = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          addLabelIsChecked: false,
+          measureDistanceIsChecked: !state.measureDistanceIsChecked,
+          measureAreaIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...measureDis };
+      //测面积
+      case "measureAreaClick":
+        drawTool.off("drawend", drawPolygonEnd);
+        drawTool.off("drawend", drawLineEnd);
+        drawTool.off("drawend", drawJZXEnd);
+        drawTool.off("drawend", drawBalconyEnd);
+        drawTool.off("drawend", drawCurveEnd);
+        drawTool.off("drawend", drawPointEnd);
+        drawTool.off("drawend", rectifyPointEnd);
+        map.off("dblclick", drawToolOn);      
+        map.off("click", addLabel);
+        map.off("click", editLabel);
+        if (!state.measureAreaIsChecked) {
+          UseAreaTool();
+          map.on("dblclick", drawToolOn);
+        } else {
+          drawTool.disable();
+          map.off("dblclick", drawToolOn);
+        }
+        const measureArea = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          addLabelIsChecked: false,
+          measureAreaIsChecked: !state.measureAreaIsChecked,
+          measureDistanceIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...measureArea };
+      //删除
+      case "deleteClick":
+        console.log(target);
+        drawTool.disable();
         map.off("click", addLabel);
         map.off("click", editLabel);
         map.off("dblclick", drawToolOn);
-        const saveData = {
+        console.log(clickedObj.length)
+        if (clickedObj.length>0) {
+          const newState6 = {
+            deleteIsChecked: !state.deleteIsChecked,
+            showDelDialog: true,
+            haveObjToDel: false,
+            undoIsChecked: false,
+            redoIsChecked: false,
+            saveIsChecked: false,
+            alertSave: true
+          };
+          return Object.assign({}, state, { ...newState6 });
+        } else {
+          const stateDelFail = {
+            deleteIsChecked: !state.deleteIsChecked,
+            showDelDialog: false,
+            haveObjToDel: true,
+            undoIsChecked: false,
+            redoIsChecked: false,
+            saveIsChecked: false,
+            alertSave: true
+          };
+          return Object.assign({}, state, { ...stateDelFail });
+        }
+
+      case "handleCloseDelDialog":
+        const showDelDialog1 = { showDelDialog: false };
+        return Object.assign({}, state, { ...showDelDialog1 });
+
+      case "handleDelete":
+        deleteObj();
+        clickedObj=[];
+        const showDelDialog2 = { showDelDialog: false };
+        return Object.assign({}, state, { ...showDelDialog2 });
+      case "delAlerClose":
+        const closeAlert = { haveObjToDel: false };
+        return Object.assign({}, state, { ...closeAlert });
+      //选中
+      case "chooseObjClick":
+        console.log("choose");
+        drawTool.disable();
+        map.off("click", addLabel);
+        map.off("click", editLabel);
+        map.off("dblclick", drawToolOn);
+        const newState7 = {
           plotIsChecked: false,
           drawPointIsChecked: false,
           rectifyPoiIsChecked:false,
@@ -2237,100 +2122,202 @@ drawPointEnd=
           addLabelIsChecked: false,
           measureAreaIsChecked: false,
           measureDistanceIsChecked: false,
-          chooseObjIsChecked: false,
+          chooseObjIsChecked: !state.chooseObjIsChecked,
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: true,
-          alertSave: false,
-          mapZoom:map.getZoom(),
-          mapCenter: mapCenter,
-          jzdJSONData: map.getLayer("point").toJSON(),
-          szJSONData: map.getLayer("SZ").toJSON(),
-          jzxJSONData: map.getLayer("JZX").toJSON(),
-          zdJSONData: map.getLayer("polygon").toJSON(),
-          zjJSONData: map.getLayer("label").toJSON()
+          saveIsChecked: false,
+          alertSave: true
         };
-        //将图层数据存储至项目变量中
-        projectData.ProjectItem.L.jzdJSONData = JSON.stringify(
-          saveData.jzdJSONData
-        );
-        projectData.ProjectItem.L.szJSONData = JSON.stringify(
-          saveData.szJSONData
-        );
-        projectData.ProjectItem.L.jzxJSONData = JSON.stringify(
-          saveData.jzxJSONData
-        );
-        projectData.ProjectItem.L.zdJSONData = JSON.stringify(
-          saveData.zdJSONData
-        );
-        projectData.ProjectItem.L.zjJSONData = JSON.stringify(
-          saveData.zjJSONData
-        );
-  
-        console.log(JSON.parse(projectData.ProjectItem.L.jzxJSONData))
-  
-        return Object.assign({}, state, { ...saveData });
+        return Object.assign({}, state, { ...newState7 });
+      //打开捕捉选择列表
+      case "snapClick":
+        const snapOpen={snapIsChecked:!state.snapIsChecked}
+        return Object.assign({}, state, { ...snapOpen });
+      //关闭捕捉列表
+      case "snapListClose":
+        const snapClose={snapIsChecked:false}
+        return Object.assign({}, state, { ...snapClose });
+      //选择捕捉图层
+      case "snapListClick":
+        let layerChoice = action.payload.command;
+        console.log(layerChoice);
+        console.log(snap);
+        if(layerChoice=="point"){
+          if(!state.snapJzdIsChecked){ 
+            snap.setLayer(map.getLayer('point'));
+            snap.enable();
+            (console.log('界址点捕捉开启'))
+          }else{
+            snap.disable();
+            console.log('界址点捕捉关闭')
+          }
+          const snapJzdState={
+            snapJzdIsChecked:!state.snapJzdIsChecked,
+            snapDxIsChecked:false
+          }
+          return Object.assign({}, state, { ...snapJzdState });
+        }
+        if(layerChoice=="DX"){
+          if(!state.snapDxIsChecked){ 
+            snap.setLayer(map.getLayer('DT'));
+            snap.enable();
+            (console.log('底图捕捉开启'))
+          }else{
+            snap.disable();
+            console.log('底图捕捉关闭')
+          }
+          const snapDxState={
+            snapJzdIsChecked:false,
+            snapDxIsChecked:!state.snapDxIsChecked
+          }
+          return Object.assign({}, state, { ...snapDxState });
+        }
+      //撤销
+      case "undoClick":
+      map.off("click", editLabel);
+      if(drawTool.getCurrentGeometry()){
+        drawUndo();
+        const new_drawAlert={ drawAlert:false}
+        return Object.assign({}, state, { ...new_drawAlert });
+      }else{
+        const new_drawAlert={ drawAlert:true}
+        return Object.assign({}, state, { ...new_drawAlert });
       }
-     
-    case "saveAlertClose":
-      const saveAlertClose = { alertSave: false };
-      return Object.assign({}, state, { ...saveAlertClose });
-    //签章
-    case "signatureAlertOpen":
-      const signatureAlert = {
-        alertSignature: true,
-      };
-      return Object.assign({}, state, { ...signatureAlert });
+      //重做
+      case "redoClick":
+        console.log("重做");
+        map.off("click", editLabel);
+        if(drawTool.getCurrentGeometry()){
+          drawRedo();
+          const new_drawAlert={ drawAlert:false}
+          return Object.assign({}, state, { ...new_drawAlert });
+        }else{
+          const new_drawAlert={ drawAlert:true}
+          return Object.assign({}, state, { ...new_drawAlert });
+        }
+      //关闭错误使用撤销重做提示
+      case "drawAlerClose":
+      const drawAlerClose = { drawAlert: false };
+      return Object.assign({}, state, { ...drawAlerClose });
+      //保存
+      case "saveClick":
+        if (map === undefined){
+          console.log(state)
+          return { ...state };
+        } else{
+          let mapCenter = map.getCenter();
+          drawTool.disable();
+          map.off("click", drawToolOn);       
+          map.off("click", addLabel);
+          map.off("click", editLabel);
+          map.off("dblclick", drawToolOn);
+          const saveData = {
+            plotIsChecked: false,
+            drawPointIsChecked: false,
+            rectifyPoiIsChecked:false,
+            drawLineIsChecked: false,
+            drawJZXIsChecked: false,
+            drawArcIsChecked: false,
+            drawPolygonIsChecked: false,
+            balconyIsChecked: false,
+            addLabelIsChecked: false,
+            measureAreaIsChecked: false,
+            measureDistanceIsChecked: false,
+            chooseObjIsChecked: false,
+            deleteIsChecked: false,
+            undoIsChecked: false,
+            redoIsChecked: false,
+            saveIsChecked: true,
+            alertSave: false,
+            mapZoom:map.getZoom(),
+            mapCenter: mapCenter,
+            jzdJSONData: map.getLayer("point").toJSON(),
+            szJSONData: map.getLayer("SZ").toJSON(),
+            jzxJSONData: map.getLayer("JZX").toJSON(),
+            zdJSONData: map.getLayer("polygon").toJSON(),
+            zjJSONData: map.getLayer("label").toJSON()
+          };
+          //将图层数据存储至项目变量中
+          projectData.ProjectItem.L.jzdJSONData = JSON.stringify(
+            saveData.jzdJSONData
+          );
+          projectData.ProjectItem.L.szJSONData = JSON.stringify(
+            saveData.szJSONData
+          );
+          projectData.ProjectItem.L.jzxJSONData = JSON.stringify(
+            saveData.jzxJSONData
+          );
+          projectData.ProjectItem.L.zdJSONData = JSON.stringify(
+            saveData.zdJSONData
+          );
+          projectData.ProjectItem.L.zjJSONData = JSON.stringify(
+            saveData.zjJSONData
+          );
+    
+          console.log(JSON.parse(projectData.ProjectItem.L.jzxJSONData))
+    
+          return Object.assign({}, state, { ...saveData });
+        }
+      
+      case "saveAlertClose":
+        const saveAlertClose = { alertSave: false };
+        return Object.assign({}, state, { ...saveAlertClose });
+      //签章
+      case "signatureAlertOpen":
+        const signatureAlert = {
+          alertSignature: true,
+        };
+        return Object.assign({}, state, { ...signatureAlert });
 
-    case "signatureAlerClose":
-      const signatureAlertClose = { alertSignature: false };
-      return Object.assign({}, state, { ...signatureAlertClose });
+      case "signatureAlerClose":
+        const signatureAlertClose = { alertSignature: false };
+        return Object.assign({}, state, { ...signatureAlertClose });
 
-    //草图专题图切换时初始化数据
-    case "resetSketchState":
-      console.log("reset");
-      const resetSketchState = {
-        plotIsChecked: false,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        addLabelIsChecked: false,
-        measureAreaIsChecked: false,
-        measureDistanceIsChecked: false,
-        deleteIsChecked: false,
-        chooseObjIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-        showDelDialog: false,
-        haveObjToDel: false
-      };
-      return Object.assign({}, state, { ...resetSketchState });
-    //界址点签章表点击后高亮
-    case "jzxTableClick":
-      let line_num = action.payload.command;
-      console.log(line_num);
-      let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
-      console.log(jzxPoi);
-      jzxPoi.updateSymbol({ lineColor: "#00FFFF" });
-      //将地图中心设置为当前选中的界址线端点
-      map.setCenter(jzxPoi.getCoordinates()[0]);
-      return {...state};
-    //点击拍照按钮后读取所选的界址点点号并打开摄像头进行拍照
-    case 'jzdXCZJClick':
-      projectData.PoiId =  action.payload.command;
-      return {...state}
+      //草图专题图切换时初始化数据
+      case "resetSketchState":
+        console.log("reset");
+        const resetSketchState = {
+          plotIsChecked: false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          addLabelIsChecked: false,
+          measureAreaIsChecked: false,
+          measureDistanceIsChecked: false,
+          deleteIsChecked: false,
+          chooseObjIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+          showDelDialog: false,
+          haveObjToDel: false
+        };
+        return Object.assign({}, state, { ...resetSketchState });
+      //界址点签章表点击后高亮
+      case "jzxTableClick":
+        let line_num = action.payload.command;
+        console.log(line_num);
+        let jzxPoi = map.getLayer("JZX").getGeometryById(line_num);
+        console.log(jzxPoi);
+        jzxPoi.updateSymbol({ lineColor: "#00FFFF" });
+        //将地图中心设置为当前选中的界址线端点
+        map.setCenter(jzxPoi.getCoordinates()[0]);
+        return {...state};
+      //点击拍照按钮后读取所选的界址点点号并打开摄像头进行拍照
+      case 'jzdXCZJClick':
+        projectData.PoiId =  action.payload.command;
+        return {...state}
 
-    default:
-      return { ...state };
-  }
-};
+      default:
+        return { ...state };
+    }
+  };
 RootReducer.merge(sketchReduce);
 /**
 * 
