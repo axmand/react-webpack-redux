@@ -310,7 +310,7 @@ class Map extends Component {
         }
       }
     }else{
-      jzd = new maptalks.VectorLayer('point');
+      jzd = new maptalks.VectorLayer('point',{geometryEvents:false});
     }    
     console.log(jzd)
     if(projectData.ProjectItem.L.szJSONData){
@@ -322,7 +322,7 @@ class Map extends Component {
         }
       }
     }else{
-       sz = new maptalks.VectorLayer('SZ');
+       sz = new maptalks.VectorLayer('SZ',{geometryEvents:false});
     }
     console.log(sz)
     if(projectData.ProjectItem.L.jzxJSONData){
@@ -334,7 +334,7 @@ class Map extends Component {
         }
       }
     }else{
-       jzx = new maptalks.VectorLayer('JZX');
+       jzx = new maptalks.VectorLayer('JZX',{geometryEvents:false});
     }
     console.log(jzx)
     if(projectData.ProjectItem.L.zdJSONData){
@@ -346,7 +346,7 @@ class Map extends Component {
           }
         }
       }else{
-       zd = new maptalks.VectorLayer('polygon');
+       zd = new maptalks.VectorLayer('polygon',{geometryEvents:false});
     }
     console.log(zd)
     if(projectData.ProjectItem.L.zjJSONData){
@@ -358,14 +358,14 @@ class Map extends Component {
           }
         }  
       }else{
-       zj = new maptalks.VectorLayer('label');
+       zj = new maptalks.VectorLayer('label',{geometryEvents:false});
     }
     console.log(zj)
-    let location=new maptalks.VectorLayer("location");
+    let location=new maptalks.VectorLayer("location",{geometryEvents:false});
 
 //新建地形图层显示底图数据
 
-    let DT=new maptalks.VectorLayer('DT', poiGeometries).setStyle({
+    let DT=new maptalks.VectorLayer('DT', poiGeometries,{geometryEvents:false}).setStyle({
       symbol:{
           markerType:'ellipse',
           markerFill: '#ccc',
