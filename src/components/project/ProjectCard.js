@@ -64,6 +64,10 @@ const mapStateToProps = (state,ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleChooseItem:( ProjectUrl )=>{
+      dispatch({
+            type: 'handleProjectProgress',
+      })
+      console.log(ownProps)
       fetch(ProjectUrl)
       .then(response => response.json())
       .then( json => {
@@ -73,15 +77,32 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           itemName: ProjectUrl.slice(40),
           ProjectUrl
         })
-        //console.log(json)
-       
-        setTimeout(() => {
-          dispatch({
-              type:'handleProjectTrue2'
-          }
-        )}, 500);
+        console.log(json)
+        dispatch({
+          type: 'handleProjectProgress',
+        }) 
+        
+        dispatch({
+              type:'handleProjectTrue'
+        })
+
+        // setTimeout(() => {
+        //   dispatch({
+        //       type:'handleProjectTrue'
+        //   }
+        // )}, 500);
       })
-      .catch(e => console.log("Oops, error", e))
+      .catch(e => {
+        dispatch({
+          type: 'handleProjectProgress',
+        }) 
+        
+        dispatch({
+        type: 'handleProjectFalse',
+        })
+        console.log(ownProps)
+        console.log("Oops, error", e)
+    })
     },
     
     handleContentClose2:()=>{
