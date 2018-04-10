@@ -274,12 +274,12 @@ class Map extends Component {
     if(poiData!==null){
       poiGeometries=maptalks.GeoJSON.toGeometry(poiData).filter(geometry=>geometry!==null);
     }
-    if(lineData!==null){
-      lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
-    }
-    if(poiData!==null){
-      polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);  
-    }
+    // if(lineData!==null){
+    //   lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
+    // }
+    // if(poiData!==null){
+    //   polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);  
+    // }
     console.log(poiGeometries)
     console.log(lineGeometries)
     console.log(polygonGeometries)
@@ -289,7 +289,7 @@ class Map extends Component {
     }else{
       center = new maptalks.Coordinate([108.37, 22.82]);
     }
-    poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+  // poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
 //初始化加载地图
     map = new maptalks.Map(mapDiv, {
       center:center,
@@ -407,7 +407,7 @@ if(poiGeometries!==null){
     snap.setLayer(map.getLayer('DT'));
     //绑定吸附工具到绘图工具
     snap.bindDrawTool(drawTool);
-    //snap.disable();
+    snap.disable();
   }
 
   render() {
@@ -709,6 +709,8 @@ const sketchReduce = (
     isRealtimeOn: false,
     drawAlert:false,
     plotIsChecked: false,
+    plotRTKIsChecked:false,
+    plotFromFile:false,
     drawPointIsChecked: false,
     rectifyPoiIsChecked:false,
     drawLineIsChecked: false,
@@ -1283,7 +1285,7 @@ const sketchReduce = (
       drawTool.on("drawend",BindOnAreaTool);
     }
 
-    //////
+    //////           
     switch (action.type) {
       //实时定位
       case "handleRealtimeMapping":
@@ -1395,10 +1397,37 @@ const sketchReduce = (
           plotListData: new_tableData
         }
         return Object.assign({}, state, { ...updateTableData });
-
-      //展点
+      //选择展点方式
+      case"choosePlotType":
+        const PlotChooseOpen={
+          plotIsChecked:!state.plotIsChecked,
+          plotRTKIsChecked: false,
+          plotFromFile:false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          addLabelIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        }
+        return Object.assign({}, state, { ...PlotChooseOpen });
+      //关闭展点选择列表
+      case"plotListClose":
+        const PlotListClose={plotIsChecked:false}
+        return Object.assign({}, state, { ...PlotListClose });
+      //RTK展点
       case "plotRTK":
-        console.log("展点");
+        console.log("RTK展点");
         recoverObj();      
         map.off("click", editLabel);
         drawTool.disable();
@@ -1407,8 +1436,9 @@ const sketchReduce = (
         console.log(plotData);
         let poi = new maptalks.Coordinate([plotData[1], plotData[0]]);
         plot(poi);
-        const plotSuccessState = {
-          plotIsChecked: true,
+        const RTKplotSuccessState = {
+          plotRTKIsChecked: true,
+          plotFromFile:false,
           drawPointIsChecked: false,
           rectifyPoiIsChecked:false,
           drawLineIsChecked: false,
@@ -1426,13 +1456,12 @@ const sketchReduce = (
           saveIsChecked: false,
           alertSave: true,
         };
-        return { ...state, ...plotSuccessState };
-      case "plotFail":
+        return { ...state, ...RTKplotSuccessState };
+      case "RTKplotFail":
         let error = action.payload;
         console.log(error);
-
         const plotFailState = {
-          plotIsChecked: true,
+          plotRTKIsChecked: true,
           alertPlotFail: true,
           errorMessage: error,
           drawPointIsChecked: false,
@@ -1454,9 +1483,30 @@ const sketchReduce = (
         };
         return { ...state, ...plotFailState };
       //通过文件展点
-      case "plotFile":
-        return { ...state };
-
+      case"getFileContent":
+      let fileData=action.payload.content;
+      console.log(fileData);
+      const FileplotSuccessState = {
+        plotRTKIsChecked: false,
+        plotFromFile:true,
+        drawPointIsChecked: false,
+        rectifyPoiIsChecked:false,
+        drawLineIsChecked: false,
+        drawJZXIsChecked: false,
+        drawArcIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        measureDistanceIsChecked: false,
+        measureAreaIsChecked: false,
+        addLabelIsChecked: false,
+        deleteIsChecked: false,
+        chooseObjIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+      };
+      return { ...state, ...FileplotSuccessState };
       //关闭错误提示
       case "plotAlerClose":
         if (state.isRealtimeOn) {
