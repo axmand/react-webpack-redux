@@ -29,7 +29,7 @@
     "html2canvas": "^0.5.0-beta4",
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
-    "maptalks": "^0.35.1",
+    "maptalks": "^0.39.5",
     "maptalks.snapto": "^0.1.9",
     "material-ui": "^1.0.0-beta.21",
     "material-ui-icons": "^1.0.0-beta.5",
