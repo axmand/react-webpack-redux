@@ -82,6 +82,7 @@ class ProjectModule extends Component {
       ProjectTrue,
       ProjectFalse,
       ProjectProgress,
+      projectData,
       classes
     } = this.props
 
@@ -163,6 +164,7 @@ ProjectModule.propTypes = {
   ProjectProgress: PropTypes.bool.isRequired,
   handleProjectTrue:PropTypes.func.isRequired,
   handleProjectFalse:PropTypes.func.isRequired,
+  projectData:PropTypes.array.isRequired,
 };
 
 //声明State与Action
@@ -173,6 +175,7 @@ const mapStateToProps = (state, ownProps) => {
     ProjectTrue: state.ProjectReduce.ProjectTrue,
     ProjectFalse: state.ProjectReduce.ProjectFalse,
     ProjectProgress: state.ProjectReduce.ProjectProgress,
+    projectData: state.ProjectReduce.projectData,//导入数据
   }
 }
 
@@ -200,6 +203,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch({
           type: 'handleProjectProgress',
         }) 
+
       })
       .catch(e =>{        
         console.log("Oops, error", e)
@@ -211,9 +215,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             }
           });
         
-          dispatch({
+        dispatch({
           type: 'handleProjectProgress',
         }) 
+
         dispatch({
           type: 'handleProjectFalse',
         })
@@ -236,23 +241,23 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: 'handleProjectTrue',
       })
-      
-
     },
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { name: 'ProjectModule' })(ProjectModule));
+
 //Reducer 
 const ProjectReduce = (
   state = {
     inputItems: [],
-    ProjectDataTest: {
-      ProjectItem: [],
-      ProjectName:[],
-      PhotoItem:[],
-      Loaded:false,   
-      PoiId:0,
+    projectData: {
+      ProjectItem: [],//项目JOSN数据
+      ProjectName:[],//项目名称
+      PhotoItem:[],//照片信息
+      Loaded:false,   //是否加载
+      PoiId:0, //点ID
+      MacInfo:'',//设备信息
     },
     ContentShow: false,
     ProjectFalse:false,
@@ -261,64 +266,6 @@ const ProjectReduce = (
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
-
-  // if(action.type==="handleAddItem"){
-  //   const uuidv4 = require('uuid/v4');
-  //   let IdNumber = uuidv4();
-
-  //   newState.IdNumber = IdNumber;
-  //   newState.showDialog = !state.showDialog;
-  //   newState.inputItems.push({text:action.payload,key:IdNumber,checked:false})
-  //   return { ...state, ...newState };
-  // }
-
-  // if(action.type==="handleChooseList"){
-  //   let listItems = newState.inputItems.map( todo => {
-  //     if ( todo.key === action.id ) {
-  //       return {
-  //         ...todo, 
-  //         checked: !todo.checked
-  //       }
-  //     }
-  //     return todo;
-  //   })
-  //   newState.inputItems = listItems
-  //   return { ...state, ...newState };
-  // }
-
-  // if(action.type==="handleShowDialog"){
-  //   const showDialog ={showDialog: !state.showDialog} 
-  //   return Object.assign({},state,{... showDialog})
-  // }
-
-  // if(action.type==="handleRequestClose"){
-  //   const showDialog ={showDialog: !state.showDialog} 
-  //   return Object.assign({},state,{... showDialog})
-  // }
-
-  // if(action.type==="handleShowDelDialog"){
-  //   const showDelDialog ={showDelDialog: !state.showDelDialog} 
-  //   return Object.assign({},state,{... showDelDialog})
-  // }
-
-  // if(action.type==="handleCloseDelDialog"){
-  //   const showDelDialog ={showDelDialog: !state.showDelDialog} 
-  //   return Object.assign({},state,{... showDelDialog})
-  // }
-
-  // if(action.type==="handleDeleteCard"){
-  //   const inputItems = state.inputItems
-  //   newState.showDelDialog = !state.showDelDialog;
-  //   let listItems = newState.inputItems.filter( (todo) =>{return todo.checked === false } )
-  //   newState.inputItems = listItems
-  //   return { ...state, ...newState };
-  // }
-
-  // if(action.type==="handleSwitchChange"){
-  //   newState.SwitchChecked = !state.SwitchChecked
-  //   newState.ButtonDisabled = !state.ButtonDisabled
-  //   return { ...state, ...newState };
-  // }
 
   if (action.type === "handleContentShow") {
     //console.log('Project Module ...')
@@ -371,27 +318,17 @@ const ProjectReduce = (
     list0 = JSON.parse(action.payload.data);
     Prolist = action.itemName;
    
-    projectData.ProjectName = Prolist;
-    projectData.ProjectItem = list0[0];
-
-    newState.ProjectDataTest.ProjectName = Prolist;
-    
-    projectData.Loaded = ! projectData.Loaded;
+    newState.projectData.ProjectName = Prolist;
+    newState.projectData.ProjectItem = list0[0];
+    newState.projectData.Loaded = ! state.projectData.Loaded;   
+    // projectData.ProjectName = Prolist;
+    // projectData.ProjectItem = list0[0];
+    // projectData.Loaded = ! state.projectData.Loaded;
    
     newState.ContentShow = !state.ContentShow;
-    
-    if(sta === 200)
-      newState.ProjectTrue = !state.ProjectTrue
-    else
-      newState.ProjectFalse = !state.ProjectFalse
-    
      return { ...state, ...newState }; 
   }
 
-  if(action.type === 'handleProjectTrue2'){
-    newState.ProjectTrue = !state.ProjectTrue
-    return { ...state, ...newState }; 
-  }
   
   else
     return state

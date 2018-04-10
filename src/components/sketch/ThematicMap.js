@@ -244,40 +244,39 @@ class ThematicMap extends Component {
         //   attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
         // })
       });
-
-
-
-
-      let poiGeometries=maptalks.GeoJSON.toGeometry(poiData);
-      console.log(poiGeometries)
-      let lineGeometries=maptalks.GeoJSON.toGeometry(lineData);
-      let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData);
-      let dx3=new maptalks.VectorLayer('DX3',polygonGeometries).setStyle({
-        'symbol':{ 
-          lineColor: "#000000",
-          lineWidth: 1.5,
-          polygonFill: "#FFFFFF"
-        }}).addTo(thematicMap);
-  
-      let dx2=new maptalks.VectorLayer('DX', lineGeometries).setStyle({
-        'symbol':{ 
-          lineColor:'#444444',
-          lineWidth:1
-        }}).addTo(thematicMap);
-  
-      let dx1=new maptalks.VectorLayer('DX1', poiGeometries).setStyle({
-        'symbol':{ 
-          markerType:'ellipse',
-          markerFill: '#ccc',
-          markerLineColor:'#444444',
-          markerWidth : 4,
-          markerHeight : 4}}).addTo(thematicMap);
+      //读取并剔除不合格的底图数据
+      let poiGeometries,lineGeometries,polygonGeometries
+      if(poiData!==null){
+        poiGeometries=maptalks.GeoJSON.toGeometry(poiData).filter(geometry=>geometry!==null);
+      }
+      if(lineData!==null){
+        lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
+      }
+      if(poiData!==null){
+        polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);  
+      }
+      poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+      //新建地形图层显示底图数据
+      if(poiGeometries!==null){
+        let DT=new maptalks.VectorLayer('DT', poiGeometries,{geometryEvents:false}).setStyle({
+          symbol:{
+              markerType:'ellipse',
+              markerFill: '#ccc',
+              markerLineColor:'#444',
+              markerWidth : 4,
+              markerHeight : 4,
+              lineColor:'#000',
+              lineWidth:1,
+              polygonFill: "#FFF",
+              polygonOpacity: 0.4
+          }
+        }).addTo(thematicMap);
+      }
       zd.addTo(thematicMap);      
       sz.addTo(thematicMap);
       jzx.addTo(thematicMap);
       jzd.addTo(thematicMap);
       zj.addTo(thematicMap);
-
     }
   }
 

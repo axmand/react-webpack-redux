@@ -9,7 +9,7 @@ import FileUploadIcon from 'material-ui-icons/FileUpload';
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
-import projectData from './../../redux/RootData';
+// import projectData from './../../redux/RootData';
 import appConfig from "../../redux/Config"
 
 const styles = {
@@ -42,8 +42,10 @@ class OutputModule extends Component {
       handleOutputShow,
       handleOutput,
       OutputShow,
+      Outputdata,
       classes
     } = this.props
+
   
     return (
     <div>
@@ -87,17 +89,19 @@ OutputModule.propTypes = {
   handleOutputShow: PropTypes.func.isRequired,
   handleOutput: PropTypes.func.isRequired,
   OutputShow: PropTypes.bool.isRequired,
+  Outputdata:PropTypes.array.isRequired,
 };
 
 //声明State与Action
 const mapStateToProps = (state, ownProps) => {
-
+  // console.log(ownProps);
   return {
     OutputShow: state.OutputReduce.OutputShow,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  // console.log(ownProps);
   return {
     handleOutputShow: () => {
       dispatch({
@@ -108,6 +112,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       });
       dispatch({
         type: 'handleOutputShow',
+        payload: ownProps.Outputdata.Loaded
       });
     },
 
@@ -118,7 +123,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleOutput: () => {
-      let JsonData = JSON.stringify([projectData.ProjectItem]);
+      console.log(ownProps);
+      let JsonData = JSON.stringify([ownProps.Outputdata.ProjectItem]);
+      // let JsonData = {};
 
       console.log(JsonData)
       fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
@@ -158,7 +165,7 @@ const OutputReduce = (
   let newState = JSON.parse(JSON.stringify(state))
 
   if (action.type === "handleOutputShow") {
-    if(projectData.Loaded === false)
+    if(action.payload === false)
       alert("Error_import_002:请选择项目！");
     else
       { newState.OutputShow =  !state.OutputShow }

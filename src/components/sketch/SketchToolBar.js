@@ -11,6 +11,7 @@ import Dialog, {
   DialogContentText
 } from "material-ui/Dialog";
 import Drawer from 'material-ui/Drawer';
+import Input from 'material-ui/Input';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -119,6 +120,36 @@ const styles = theme => ({
     fontSize: "1em",
     fontFamily:'微软雅黑',
   },
+  fileitem:{
+    height:`${window.innerHeight * 0.025}px`,
+    width:`${window.innerHeight * 0.08}px`,
+    justifyContent: 'center ',
+    background: "rgba(69, 90, 100, .6)",
+    paddingLeft: '1%',
+    paddingRight: '1%',
+    color:'#fff',
+    fontSize: "1em",
+    fontFamily:'微软雅黑',
+  },
+  file_A:{
+    overflow: 'hidden',
+    textAlign:'center',
+    height:'100%',
+    width: '100%',
+    color:'#fff',
+    fontSize: "1em",
+    fontFamily:'微软雅黑',
+    position: 'relative',
+    display: 'inline-block',
+  },
+  file_input:{
+    height:'100%',
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    opacity: 0,
+  },
   rectifydrawerPaper: {
     left:`${window.innerWidth * 0.083}px`,
     top:`${window.innerHeight * 0.2}px`,
@@ -164,13 +195,26 @@ const styles = theme => ({
 class SkechToolBar extends Component {
   state = {
     anchorEl: findDOMNode(this.button),
+    //filePath: '',
   };
+
+  // inputfilePath_onChange = filePath => event => {
+  //   this.setState({
+  //     [filePath]: event.target.value,
+  //   });
+  //   console.log(event.target.value);
+  // };
+
 
   render() {
     const classes = this.props.classes;
     const {anchorEl}=this.state;
     const {
       onPlotClick,
+      PlotListClose,
+      onRTKPlotClick,
+      onPlotfromFileClick,
+      getFilePath,
       onDrawPointClick,
       onRectifyPoiClick,
       onDrawLineClick,
@@ -211,6 +255,7 @@ class SkechToolBar extends Component {
       alertPlotFail,
       plotListData,
       alertSignature,
+      plotIsChecked,
       drawPointIsChecked,
       rectifyPoiIsChecked,
       drawLineIsChecked,
@@ -237,7 +282,18 @@ class SkechToolBar extends Component {
     <div>
         <Draggable handle="span">
             <List className={classes.root}>
-            <Button className={classes.button} onClick={onPlotClick}>
+            <Button 
+                ref={node => {
+                  this.Plot = node;
+                }}
+                className={classes.button} 
+                style={{
+                backgroundColor: drawPointIsChecked
+                    ? "rgba(69, 90, 100, .8)"
+                    : "transparent"
+                }}
+                onClick={onPlotClick}
+                >
                 <LocationSearching className={classes.icon} />
                 <Typograghy className={classes.text}>展点</Typograghy>
             </Button>
@@ -581,6 +637,51 @@ class SkechToolBar extends Component {
             <span className={classes.snaptext}>地形图</span>
           </ListItem>
       </Popover>
+      <Popover
+          anchorEl={findDOMNode(this.Plot)}
+          open={plotIsChecked}
+          onRequestClose={PlotListClose}
+          anchorOrigin={{
+            vertical:"bottom",
+            horizontal: "center"
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center"
+          }}
+          className={classes.snapList}
+        >
+          <ListItem
+            button
+            className={classes.fileitem}
+            disableGutters={true}
+            onClick={onRTKPlotClick}
+          >
+          RTK展点
+          </ListItem>
+          <ListItem
+            button
+            className={classes.fileitem}
+          >
+
+        <span  className={classes.file_A}>
+            <span>从文件展点</span>
+            <input 
+              type="file" 
+              className={classes.file_input}
+              value=""
+              onChange={onPlotfromFileClick}/>
+        </span>
+           {/* <a href='javascript:void(0);' 
+           className={classes.file_A}>从文件展点
+              <input 
+              type="file" 
+              className={classes.file_input}
+              value=""
+              onChange={onPlotfromFileClick}/>
+            </a> */}
+          </ListItem>
+      </Popover>
       <Drawer
         type="persistent"
         classes={{
@@ -682,6 +783,7 @@ const mapStateToProps = state => {
     showDelDialog: sketchState.showDelDialog,
     haveObjToDel: sketchState.haveObjToDel,
     drawAlert:sketchState.drawAlert,
+    plotIsChecked:sketchState.plotIsChecked,
     drawPointIsChecked: sketchState.drawPointIsChecked,
     rectifyPoiIsChecked:sketchState.rectifyPoiIsChecked,
     drawLineIsChecked: sketchState.drawLineIsChecked,
@@ -711,14 +813,24 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   //console.log(ownProps);
   return {
-    //展点
-    onPlotClick: () => {
+    //选择展点方式
+    onPlotClick:()=>{
+      dispatch({
+        type:"choosePlotType"
+      });
+    },
+    //关闭展点选择列表
+    PlotListClose:()=>{
+      dispatch({
+        type:"plotListClose",
+      })
+    },
+//选择RTK展点
+    onRTKPlotClick: () => {
       if (ownProps.isRealtimeOn) {
-
         dispatch({
           type: "OPEN_WAITING_MODULE",
         });
-
         console.log("Fetching latitude and longtitude from the satellite ...");
         console.log(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea");
         fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea")
@@ -740,7 +852,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             if (json.status === 500)
             {
               dispatch({
-                  type:"plotFail",
+                  type:"RTKplotFail",
                   payload: "尚未获取到差分后的测量点坐标数据"
               })           
             };
@@ -777,15 +889,33 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       } else {
         console.log("Importing surveying data from the files ...");
         dispatch({
-            type:'plotFile'
-        })
-        dispatch({
           type: "STATUS_BAR_NOTIFICATION",
           payload: {
             notification: "尚未实现从文件中展出测量点，请将实时成图按钮打开，从RTK获取测量数据！",
           }
         });
       }
+    },
+//选择从文件展点
+    onPlotfromFileClick:event=>{
+      //读取文件数据
+      let file=event.target.files[0];
+      let txtContent;
+      let oFReader=new FileReader();
+      oFReader.readAsText(file,"UTF-8");	
+      oFReader.onloadend=function(oFRevent){
+        txtContent=oFRevent.target.result;
+        console.log(txtContent)
+      }
+      dispatch({
+        type:"getFileContent",
+        payload:{
+          content:txtContent
+        }
+      });
+      dispatch({
+        type:"plotListClose",
+      })
     },
     //画点
     onDrawPointClick: () => {

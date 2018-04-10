@@ -12,6 +12,9 @@ import OutputModule from '../components/output'
 
 import List from 'material-ui/List';
 import Divider from 'material-ui/Divider';
+//redux
+import { connect } from 'react-redux'
+
 
 const styles = {
   root: {
@@ -30,7 +33,10 @@ const styles = {
 class NavigationPanel extends Component {
 
   render() {
-    const classes = this.props.classes;
+    const { 
+      projectData,
+      classes
+    } = this.props
   
     return (
       <div className={classes.root}>
@@ -39,11 +45,11 @@ class NavigationPanel extends Component {
           <Divider className={classes.divider} />
             <ProjectModule />
             <InvestigationModule />
-            <BoundaryModule />
+            <BoundaryModule BoundaryData = {projectData}/>
             <SketchModule />
             <ObligeeModule />
             <PrintModule />
-            <OutputModule />
+            <OutputModule  OutputData={ projectData }/>
         </List>
       </div>
     )
@@ -51,4 +57,10 @@ class NavigationPanel extends Component {
   
 }
 
-export default withStyles(styles)(NavigationPanel);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    projectData: state.ProjectReduce.projectData,
+  }
+}
+
+export default connect(mapStateToProps)(withStyles(styles, { name: 'NavigationPanel' })(NavigationPanel));

@@ -270,19 +270,26 @@ class Map extends Component {
     const mapDiv = this.refs.map;
     let center;
     //读取并剔除不合格的底图数据
-    let poiGeometries=maptalks.GeoJSON.toGeometry(poiData).filter(geometry=>geometry!==null);
-    let lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
-    let polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);
+    let poiGeometries,lineGeometries,polygonGeometries
+    if(poiData!==null){
+      poiGeometries=maptalks.GeoJSON.toGeometry(poiData).filter(geometry=>geometry!==null);
+    }
+    // if(lineData!==null){
+    //   lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
+    // }
+    // if(poiData!==null){
+    //   polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);  
+    // }
     console.log(poiGeometries)
     console.log(lineGeometries)
     console.log(polygonGeometries)
 //设置地图中心点坐标
-    if(poiGeometries){
+    if(poiGeometries!==null){
       center = poiGeometries[0].getCoordinates();
     }else{
       center = new maptalks.Coordinate([108.37, 22.82]);
     }
-    poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+  // poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
 //初始化加载地图
     map = new maptalks.Map(mapDiv, {
       center:center,
@@ -303,82 +310,82 @@ class Map extends Component {
       jzd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
       console.log(projectData.ProjectItem.L.jzdJSONData);
 //为地图对象添加点击绑定事件
-      if(jzd.getGeometries()){
-        for (let i = 0; i < jzd.getGeometries().length; i++) {
-          jzd.getGeometries()[i].on("click", clickObj);
-          jzd.getGeometries()[i].setRadius(4);
-        }
+    if(jzd.getGeometries()){
+      for (let i = 0; i < jzd.getGeometries().length; i++) {
+        jzd.getGeometries()[i].on("click", clickObj);
+        jzd.getGeometries()[i].setRadius(4);
       }
-    }else{
-      jzd = new maptalks.VectorLayer('point',{geometryEvents:false});
-    }    
-    console.log(jzd)
-    if(projectData.ProjectItem.L.szJSONData){
-       sz = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.szJSONData));
+    }
+  }else{
+    jzd = new maptalks.VectorLayer('point',{geometryEvents:false});
+  }    
+  console.log(jzd)
+  if(projectData.ProjectItem.L.szJSONData){
+      sz = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.szJSONData));
+    //为地图对象添加点击绑定事件
+    if(sz.getGeometries()){
+      for (let i = 0; i < sz.getGeometries().length; i++) {
+        sz.getGeometries()[i].on("click", clickObj);
+      }
+    }
+  }else{
+      sz = new maptalks.VectorLayer('SZ',{geometryEvents:false});
+  }
+  console.log(sz)
+  if(projectData.ProjectItem.L.jzxJSONData){
+      jzx = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData));
+    //为地图对象添加点击绑定事件
+    if(jzx.getGeometries()){
+      for (let i = 0; i < jzx.getGeometries().length; i++) {
+        jzx.getGeometries()[i].on("click", clickObj);
+      }
+    }
+  }else{
+      jzx = new maptalks.VectorLayer('JZX',{geometryEvents:false});
+  }
+  console.log(jzx)
+  if(projectData.ProjectItem.L.zdJSONData){
+      zd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zdJSONData));
       //为地图对象添加点击绑定事件
-      if(sz.getGeometries()){
-        for (let i = 0; i < sz.getGeometries().length; i++) {
-          sz.getGeometries()[i].on("click", clickObj);
+      if( zd.getGeometries()){
+        for (let i = 0; i < zd.getGeometries().length; i++) {
+          zd.getGeometries()[i].on("click", clickObj);
         }
       }
     }else{
-       sz = new maptalks.VectorLayer('SZ',{geometryEvents:false});
-    }
-    console.log(sz)
-    if(projectData.ProjectItem.L.jzxJSONData){
-       jzx = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData));
+      zd = new maptalks.VectorLayer('polygon',{geometryEvents:false});
+  }
+  console.log(zd)
+  if(projectData.ProjectItem.L.zjJSONData){
+      zj = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zjJSONData));
       //为地图对象添加点击绑定事件
-      if(jzx.getGeometries()){
-        for (let i = 0; i < jzx.getGeometries().length; i++) {
-          jzx.getGeometries()[i].on("click", clickObj);
+      if(zj.getGeometries()){
+        for (let i = 0; i < zj.getGeometries().length; i++) {
+          zj.getGeometries()[i].on("click", clickObj);
         }
-      }
+      }  
     }else{
-       jzx = new maptalks.VectorLayer('JZX',{geometryEvents:false});
-    }
-    console.log(jzx)
-    if(projectData.ProjectItem.L.zdJSONData){
-       zd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zdJSONData));
-        //为地图对象添加点击绑定事件
-        if( zd.getGeometries()){
-          for (let i = 0; i < zd.getGeometries().length; i++) {
-            zd.getGeometries()[i].on("click", clickObj);
-          }
-        }
-      }else{
-       zd = new maptalks.VectorLayer('polygon',{geometryEvents:false});
-    }
-    console.log(zd)
-    if(projectData.ProjectItem.L.zjJSONData){
-       zj = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zjJSONData));
-        //为地图对象添加点击绑定事件
-        if(zj.getGeometries()){
-          for (let i = 0; i < zj.getGeometries().length; i++) {
-            zj.getGeometries()[i].on("click", clickObj);
-          }
-        }  
-      }else{
-       zj = new maptalks.VectorLayer('label',{geometryEvents:false});
-    }
-    console.log(zj)
-    let location=new maptalks.VectorLayer("location",{geometryEvents:false});
+      zj = new maptalks.VectorLayer('label',{geometryEvents:false});
+  }
+  console.log(zj)
+  let location=new maptalks.VectorLayer("location",{geometryEvents:false});
 
 //新建地形图层显示底图数据
-
-    let DT=new maptalks.VectorLayer('DT', poiGeometries,{geometryEvents:false}).setStyle({
-      symbol:{
-          markerType:'ellipse',
-          markerFill: '#ccc',
-          markerLineColor:'#444',
-          markerWidth : 4,
-          markerHeight : 4,
-          lineColor:'#000',
-          lineWidth:1,
-          polygonFill: "#FFF",
-          polygonOpacity: 0.4
-      }
-    }).addTo(map);
-   
+if(poiGeometries!==null){
+  let DT=new maptalks.VectorLayer('DT', poiGeometries,{geometryEvents:false}).setStyle({
+    symbol:{
+        markerType:'ellipse',
+        markerFill: '#ccc',
+        markerLineColor:'#444',
+        markerWidth : 4,
+        markerHeight : 4,
+        lineColor:'#000',
+        lineWidth:1,
+        polygonFill: "#FFF",
+        polygonOpacity: 0.4
+    }
+  }).addTo(map);
+}
     zd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
@@ -702,6 +709,8 @@ const sketchReduce = (
     isRealtimeOn: false,
     drawAlert:false,
     plotIsChecked: false,
+    plotRTKIsChecked:false,
+    plotFromFile:false,
     drawPointIsChecked: false,
     rectifyPoiIsChecked:false,
     drawLineIsChecked: false,
@@ -718,7 +727,7 @@ const sketchReduce = (
     chooseObjIsChecked: false,
     snapIsChecked:false,
     snapJzdIsChecked:false,
-    snapDxIsChecked:false,
+    snapDxIsChecked:true,
     undoIsChecked: false,
     redoIsChecked: false,
     saveIsChecked: false,
@@ -1276,7 +1285,7 @@ const sketchReduce = (
       drawTool.on("drawend",BindOnAreaTool);
     }
 
-    //////
+    //////           
     switch (action.type) {
       //实时定位
       case "handleRealtimeMapping":
@@ -1388,10 +1397,37 @@ const sketchReduce = (
           plotListData: new_tableData
         }
         return Object.assign({}, state, { ...updateTableData });
-
-      //展点
+      //选择展点方式
+      case"choosePlotType":
+        const PlotChooseOpen={
+          plotIsChecked:!state.plotIsChecked,
+          plotRTKIsChecked: false,
+          plotFromFile:false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          addLabelIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          chooseObjIsChecked: false,
+          deleteIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        }
+        return Object.assign({}, state, { ...PlotChooseOpen });
+      //关闭展点选择列表
+      case"plotListClose":
+        const PlotListClose={plotIsChecked:false}
+        return Object.assign({}, state, { ...PlotListClose });
+      //RTK展点
       case "plotRTK":
-        console.log("展点");
+        console.log("RTK展点");
         recoverObj();      
         map.off("click", editLabel);
         drawTool.disable();
@@ -1400,8 +1436,9 @@ const sketchReduce = (
         console.log(plotData);
         let poi = new maptalks.Coordinate([plotData[1], plotData[0]]);
         plot(poi);
-        const plotSuccessState = {
-          plotIsChecked: true,
+        const RTKplotSuccessState = {
+          plotRTKIsChecked: true,
+          plotFromFile:false,
           drawPointIsChecked: false,
           rectifyPoiIsChecked:false,
           drawLineIsChecked: false,
@@ -1419,13 +1456,12 @@ const sketchReduce = (
           saveIsChecked: false,
           alertSave: true,
         };
-        return { ...state, ...plotSuccessState };
-      case "plotFail":
+        return { ...state, ...RTKplotSuccessState };
+      case "RTKplotFail":
         let error = action.payload;
         console.log(error);
-
         const plotFailState = {
-          plotIsChecked: true,
+          plotRTKIsChecked: true,
           alertPlotFail: true,
           errorMessage: error,
           drawPointIsChecked: false,
@@ -1447,9 +1483,30 @@ const sketchReduce = (
         };
         return { ...state, ...plotFailState };
       //通过文件展点
-      case "plotFile":
-        return { ...state };
-
+      case"getFileContent":
+      let fileData=action.payload.content;
+      console.log(fileData);
+      const FileplotSuccessState = {
+        plotRTKIsChecked: false,
+        plotFromFile:true,
+        drawPointIsChecked: false,
+        rectifyPoiIsChecked:false,
+        drawLineIsChecked: false,
+        drawJZXIsChecked: false,
+        drawArcIsChecked: false,
+        drawPolygonIsChecked: false,
+        balconyIsChecked: false,
+        measureDistanceIsChecked: false,
+        measureAreaIsChecked: false,
+        addLabelIsChecked: false,
+        deleteIsChecked: false,
+        chooseObjIsChecked: false,
+        undoIsChecked: false,
+        redoIsChecked: false,
+        saveIsChecked: false,
+        alertSave: true,
+      };
+      return { ...state, ...FileplotSuccessState };
       //关闭错误提示
       case "plotAlerClose":
         if (state.isRealtimeOn) {
