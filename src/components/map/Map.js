@@ -268,7 +268,9 @@ deleteObj =
 class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
+    const MapData=this.props.MapData;
     let center;
+    console.log(MapData);
     //读取并剔除不合格的底图数据
     let poiGeometries,lineGeometries,polygonGeometries
     if(poiData!==null){
@@ -304,11 +306,10 @@ class Map extends Component {
 //将项目草图数据导入至地图
     let jzd,sz,jzx,zd,zj,dx;
     //判断地图数据是否为空，若为空则新建地图图层
-    console.log(projectData.ProjectItem.L)
-    if(projectData.ProjectItem.L.jzdJSONData){
-
-      jzd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzdJSONData));
-      console.log(projectData.ProjectItem.L.jzdJSONData);
+    console.log(MapData.ProjectItem.L)
+    if(MapData.ProjectItem.L.jzdJSONData){
+      jzd = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.jzdJSONData));
+      console.log(MapData.ProjectItem.L.jzdJSONData);
 //为地图对象添加点击绑定事件
     if(jzd.getGeometries()){
       for (let i = 0; i < jzd.getGeometries().length; i++) {
@@ -320,8 +321,9 @@ class Map extends Component {
     jzd = new maptalks.VectorLayer('point',{geometryEvents:false});
   }    
   console.log(jzd)
-  if(projectData.ProjectItem.L.szJSONData){
-      sz = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.szJSONData));
+  
+  if(MapData.ProjectItem.L.szJSONData){
+      sz = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.szJSONData));
     //为地图对象添加点击绑定事件
     if(sz.getGeometries()){
       for (let i = 0; i < sz.getGeometries().length; i++) {
@@ -332,8 +334,8 @@ class Map extends Component {
       sz = new maptalks.VectorLayer('SZ',{geometryEvents:false});
   }
   console.log(sz)
-  if(projectData.ProjectItem.L.jzxJSONData){
-      jzx = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.jzxJSONData));
+  if(MapData.ProjectItem.L.jzxJSONData){
+      jzx = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.jzxJSONData));
     //为地图对象添加点击绑定事件
     if(jzx.getGeometries()){
       for (let i = 0; i < jzx.getGeometries().length; i++) {
@@ -344,8 +346,8 @@ class Map extends Component {
       jzx = new maptalks.VectorLayer('JZX',{geometryEvents:false});
   }
   console.log(jzx)
-  if(projectData.ProjectItem.L.zdJSONData){
-      zd = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zdJSONData));
+  if(MapData.ProjectItem.L.zdJSONData){
+      zd = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.zdJSONData));
       //为地图对象添加点击绑定事件
       if( zd.getGeometries()){
         for (let i = 0; i < zd.getGeometries().length; i++) {
@@ -356,8 +358,8 @@ class Map extends Component {
       zd = new maptalks.VectorLayer('polygon',{geometryEvents:false});
   }
   console.log(zd)
-  if(projectData.ProjectItem.L.zjJSONData){
-      zj = maptalks.Layer.fromJSON(JSON.parse(projectData.ProjectItem.L.zjJSONData));
+  if(MapData.ProjectItem.L.zjJSONData){
+      zj = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.zjJSONData));
       //为地图对象添加点击绑定事件
       if(zj.getGeometries()){
         for (let i = 0; i < zj.getGeometries().length; i++) {
@@ -738,10 +740,12 @@ const sketchReduce = (
     showDelDialog: false,
     haveObjToDel: false,
     fetchPoiNumIsChecked:false,
-    jzdJSONData: JSON,
-    szJSONData: JSON,
-    zdJSONData: JSON,
-    zjJSONData: JSON,
+    layerData: {
+      jzdJSONData: JSON,
+      szJSONData: JSON,
+      zdJSONData: JSON,
+      zjJSONData: JSON,
+    },
     poiTableData: [],
     mapCenter: [],
     mapZoom:16,
@@ -2289,34 +2293,21 @@ const sketchReduce = (
             alertSave: false,
             mapZoom:map.getZoom(),
             mapCenter: mapCenter,
-            jzdJSONData: map.getLayer("point").toJSON(),
-            szJSONData: map.getLayer("SZ").toJSON(),
-            jzxJSONData: map.getLayer("JZX").toJSON(),
-            zdJSONData: map.getLayer("polygon").toJSON(),
-            zjJSONData: map.getLayer("label").toJSON()
-          };
-          //将图层数据存储至项目变量中
-          projectData.ProjectItem.L.jzdJSONData = JSON.stringify(
-            saveData.jzdJSONData
-          );
-          projectData.ProjectItem.L.szJSONData = JSON.stringify(
-            saveData.szJSONData
-          );
-          projectData.ProjectItem.L.jzxJSONData = JSON.stringify(
-            saveData.jzxJSONData
-          );
-          projectData.ProjectItem.L.zdJSONData = JSON.stringify(
-            saveData.zdJSONData
-          );
-          projectData.ProjectItem.L.zjJSONData = JSON.stringify(
-            saveData.zjJSONData
-          );
-    
-          console.log(JSON.parse(projectData.ProjectItem.L.jzxJSONData))
-    
+            layerData:{
+              jzdJSONData: map.getLayer("point").toJSON(),
+              szJSONData: map.getLayer("SZ").toJSON(),
+              jzxJSONData: map.getLayer("JZX").toJSON(),
+              zdJSONData: map.getLayer("polygon").toJSON(),
+              zjJSONData: map.getLayer("label").toJSON()
+            }
+          }; 
           return Object.assign({}, state, { ...saveData });
         }
-      
+
+      case"updateData2projectData":
+        console.log(state.layerData)
+      return{...state}
+
       case "saveAlertClose":
         const saveAlertClose = { alertSave: false };
         return Object.assign({}, state, { ...saveAlertClose });
@@ -2383,7 +2374,8 @@ RootReducer.merge(sketchReduce);
 */
 const mapStateToProps = (state, ownProps) => {
   return {
-    text: ownProps.ownProps
+    text: ownProps.ownProps,
+    MapData:ownProps.MapData,
   };
 };
 /**

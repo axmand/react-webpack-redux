@@ -46,10 +46,7 @@ import DragHandle from "material-ui-icons/DragHandle"; //拖动
 // import CloseIcon from "material-ui-icons/Close";
 // import Snackbar from "material-ui/Snackbar";
 import SecondDialog from '../obligee/SecondDialog'
-// import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
-import projectData from "../../redux/RootData";
-
 import coordinate from "../../utils/coordinate"
 import macinfo from "../../utils/macinfo"
 
@@ -806,12 +803,11 @@ const mapStateToProps = state => {
     alertPlotFail: sketchState.alertPlotFail,
     alertSignature:sketchState.alertSignature,
     fetchPoiNumIsChecked:sketchState.fetchPoiNumIsChecked,
-    // plotListData:sketchState.plotListData
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  //console.log(ownProps);
+  console.log(ownProps);
   return {
     //选择展点方式
     onPlotClick:()=>{
@@ -1063,8 +1059,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     //保存
     onSaveClick: () => {
+      //保存数据至sketchstate
       dispatch({
         type: "saveClick",
+      });
+      //更新图层数据至项目数据
+      dispatch({
+        type: "updateData2projectData",
+        payload:{
+           data:ownProps.LayerData
+         }
       });
     },
     //签章

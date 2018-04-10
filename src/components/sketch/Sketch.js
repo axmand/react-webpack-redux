@@ -44,7 +44,16 @@ class Sketch extends Component {
   };
 
   render() {
-    const { classes, onClick, onTabSketchClick, onTabThematicClick,isRealtimeOn, saveIsChecked, plotListData,appBarLonger } = this.props;
+    const { classes, 
+      onClick, 
+      onTabSketchClick, 
+      onTabThematicClick,
+      isRealtimeOn, 
+      projectData,//项目数据
+      layerData,//图层数据
+      saveIsChecked,
+      plotListData,
+      appBarLonger } = this.props;
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -84,9 +93,13 @@ class Sketch extends Component {
             isRealtimeOn={isRealtimeOn}  
             saveIsChecked={saveIsChecked}
             plotListData={plotListData}
+            LayerData={layerData}
           />
         )}
-        {this.state.index === 1 && <ThematicMap />}
+        {this.state.index === 1 && 
+        <ThematicMap 
+        ThematicMapData={projectData}
+        />}
       </div>
     );
   }
@@ -110,6 +123,8 @@ const mapStateToProps = state => {
     isRealtimeOn: sketchState.isRealtimeOn,
     plotListData:sketchState.plotListData,
     appBarLonger:canvasSeduce.appBarLonger,
+    projectData: state.ProjectReduce.projectData,
+    layerData:state.sketchReduce.layerData
   };
 };
 

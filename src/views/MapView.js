@@ -24,12 +24,13 @@ class MapView extends Component {
       classes,
       isRealtimeOn,
       projectDataLoadState,
+      projectData
     } = this.props
 		// console.log(sketchDisplayState)	
     return (
       <div className={classes.root}>
-        {sketchDisplayState && <Sketch /> }
-        {projectDataLoadState && <Map isRealtimeOn={isRealtimeOn} />}
+        {sketchDisplayState && <Sketch/> }
+        {projectDataLoadState && <Map isRealtimeOn={isRealtimeOn} MapData={projectData} />}
       </div>
     )
   }
@@ -78,6 +79,7 @@ const mapStateToProps = ( state ) => {
     sketchDisplayState: mapViewState.sketchDisplayState,
     isRealtimeOn: sketchState.isRealtimeOn,
     projectDataLoadState: projectData.Loaded,
+    projectData: state.ProjectReduce.projectData,
   }
 }
 

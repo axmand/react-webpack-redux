@@ -24,7 +24,6 @@ import Dialog, {DialogContent} from "material-ui/Dialog";
 
 import appConfig from "../../redux/Config";
 import html2canvas from "html2canvas";
-import projectData from "./../../redux/RootData";
 import { read } from "fs";
 import poiData from "./../map/Point";
 import lineData from "./../map/Line";
@@ -200,19 +199,16 @@ class ThematicMap extends Component {
       saveIsChecked,
       mapCenter,
       mapZoom,
-      jzdJSONData,
-      szJSONData,
-      jzxJSONData,
-      zdJSONData,
-      zjJSONData
+      layerData
     } = this.props;
-    console.log(window.innerHeight);
+    const ThematicMapData=this.props.ThematicMapData;
+    console.log(ThematicMapData);
 
 
     if (saveIsChecked) {   
       let jzd,sz,jzx,zd,zj;
-      if(jzdJSONData){
-        jzd=maptalks.Layer.fromJSON(jzdJSONData);
+      if(layerData.jzdJSONData){
+        jzd=maptalks.Layer.fromJSON(layerData.jzdJSONData);
         //设置界址点半径成图美观
         if(jzd.getGeometries()){
           for (let i = 0; i <jzd.getGeometries().length; i++) {
@@ -220,29 +216,22 @@ class ThematicMap extends Component {
           }
         }
       }
-      if(szJSONData){
-        sz= maptalks.Layer.fromJSON(szJSONData);
+      if(layerData.szJSONData){
+        sz= maptalks.Layer.fromJSON(layerData.szJSONData);
       }
-      if(jzxJSONData){
-        jzx= maptalks.Layer.fromJSON(jzxJSONData);
+      if(layerData.jzxJSONData){
+        jzx= maptalks.Layer.fromJSON(layerData.jzxJSONData);
       }
-      if(zdJSONData){
-        zd= maptalks.Layer.fromJSON(zdJSONData);
+      if(layerData.zdJSONData){
+        zd= maptalks.Layer.fromJSON(layerData.zdJSONData);
       }
-      if(zjJSONData){
-        zj=maptalks.Layer.fromJSON(zjJSONData);
+      if(layerData.zjJSONData){
+        zj=maptalks.Layer.fromJSON(layerData.zjJSONData);
       }
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
         center: mapCenter,
         zoom:mapZoom,
-        // baseLayer: new maptalks.TileLayer("base", {
-        //   crossOrigin: "anonymous",
-        //   // 'http://webst{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
-        //   urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
-        //   subdomains  : ['1','2','3','4','5'],
-        //   attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
-        // })
       });
       //读取并剔除不合格的底图数据
       let poiGeometries,lineGeometries,polygonGeometries
@@ -459,15 +448,14 @@ ThematicMap.PropTypes = {
   open: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const sketchState = state.sketchReduce;
   const canvasSeduce = state.CanvasReduce;
-  console.log(projectData.ProjectItem.F1.PrincipalName)
-
+  const ThematicMapData=ownProps.ThematicMapData;
 
   return {
-    TuDiQuanLiRen: projectData.ProjectItem.F1.PrincipalName,
-    ZuoLuo: projectData.ProjectItem.F1.Location,
+    TuDiQuanLiRen: ThematicMapData.ProjectItem.F1.PrincipalName,
+    ZuoLuo: ThematicMapData.ProjectItem.F1.Location,
     alertSave: sketchState.alertSave,
     saveIsChecked: sketchState.saveIsChecked,
     thematicMapSaveSuccess: canvasSeduce.thematicMapSaveSuccess,
@@ -476,11 +464,7 @@ const mapStateToProps = state => {
     unclosePreviewAlert:canvasSeduce.unclosePreviewAlert,
     mapCenter: sketchState.mapCenter,
     mapZoom:sketchState.mapZoom,
-    jzdJSONData: sketchState.jzdJSONData,
-    szJSONData: sketchState.szJSONData,
-    jzxJSONData:sketchState.jzxJSONData,
-    zdJSONData: sketchState.zdJSONData,
-    zjJSONData: sketchState.zjJSONData
+    layerData:sketchState.layerData
   };
 };
 
@@ -540,32 +524,6 @@ const mapDispatchToProps = dispatch => {
             console.log(err);
           });
       })
-
-      // const ThematicMapDataURL = thematicMap.toDataURL();
-      // const ThematicMapDataLoad = ThematicMapDataURL.slice(
-      //   ThematicMapDataURL.indexOf(",") + 1
-      // );
-      // console.log(ThematicMapDataLoad);
-
-      // fetch(appConfig.fileServiceRootPath + "/project/savepicture", {
-      //   method: "POST",
-      //   body: ThematicMapDataLoad
-      // })
-      //   .then(response => response.json())
-      //   .then(json => {
-      //     dispatch({
-      //       type: "SUCCESS_SAVE_THEMATICMAP_CLICK"
-      //     });
-      //     setTimeout(() => {
-      //       dispatch({
-      //         type: "RESTARE_SUCCESS_SAVE_THEMATICMAP_CLICK"
-      //       });
-      //     }, 1000);
-      //     console.log(json);
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
     }
   };
 };
