@@ -807,7 +807,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  console.log(ownProps);
+  // console.log(ownProps);
   return {
     //选择展点方式
     onPlotClick:()=>{
@@ -1064,6 +1064,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: "saveClick",
       });
       //更新图层数据至项目数据
+      console.log(ownProps.LayerData)
       dispatch({
         type: "updateData2projectData",
         payload:{
@@ -1243,7 +1244,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     .then( json => {
       dispatch({
         type: 'handleCameraShow',
-        payload:json,
+        payload:{json:json,ownProps:ownProps},
       })
       //console.log(json)
       dispatch({
@@ -1252,6 +1253,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     })
     .catch(err => {
       console.log(err)
+      console.log(ownProps)
       dispatch({
         type: 'ProgressShow',
       }) 

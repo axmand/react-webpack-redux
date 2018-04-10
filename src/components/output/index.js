@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 // import projectData from './../../redux/RootData';
 import appConfig from "../../redux/Config"
+// import coordinate from "../../utils/coordinate"
 
 const styles = {
   listitem: {
@@ -42,7 +43,6 @@ class OutputModule extends Component {
       handleOutputShow,
       handleOutput,
       OutputShow,
-      Outputdata,
       classes
     } = this.props
 
@@ -112,31 +112,32 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       });
       dispatch({
         type: 'handleOutputShow',
-        payload: ownProps.Outputdata.Loaded
+        payload: ownProps.OutputData.Loaded
       });
     },
 
     handleOutputClose: () => {
+    //  let PointX= coordinate.LB2XY(108.1226789,22.59317239).descartesX;
+    //  let PointY= coordinate.LB2XY(108.1226789,22.59317239).descartesY;
+    //  console.log(PointX,PointY)
       dispatch({
         type: 'handleOutputClose',
       })
     },
 
     handleOutput: () => {
-      console.log(ownProps);
-      let JsonData = JSON.stringify([ownProps.Outputdata.ProjectItem]);
-      // let JsonData = {};
+      // console.log(ownProps);
+      let JsonData = JSON.stringify([ownProps.OutputData.ProjectItem]);
 
-      console.log(JsonData)
+      // console.log(JsonData)
       fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
       { 
       method: 'POST', 
       // headers: {
-      //   //  "Access-Control-Allow-Origin": "*",
-      //   // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
-      //   // 'Accept': 'application/json',
+      //    "Access-Control-Allow-Origin": "*",
+      //   'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
+      //   'Accept': 'application/json',
       //   'Content-Type': 'application/json',
-      //   //  'Content-Type': 'text/plain', 
       // }, 
       // body: params(JsonData) 
       body: JsonData

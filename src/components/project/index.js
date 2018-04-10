@@ -328,7 +328,16 @@ const ProjectReduce = (
     newState.ContentShow = !state.ContentShow;
      return { ...state, ...newState }; 
   }
+  
+  if (action.type === "updateData2projectData") {
+    let list0 = {};
+    console.log(action.payload.data)
+    list0 = action.payload.data; 
+    newState.projectData.ProjectItem.L = list0;   
 
+     return { ...state, ...newState }; 
+  }
+ 
   
   else
     return state

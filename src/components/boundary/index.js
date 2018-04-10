@@ -70,7 +70,7 @@ class BoundaryModule extends Component {
       CameraShow,
       DeleteShow,
       PrintProgress,
-      //XCZJclick,
+      // XCZJclick,
       // PhotoItemTest,
       // DeleteId,
       classes
@@ -138,6 +138,7 @@ class BoundaryModule extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  // console.log(ownProps)
   return {
     CameraShow: state.BoundaryReduce.CameraShow,
     DeleteShow: state.BoundaryReduce.DeleteShow,
@@ -147,9 +148,8 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-
+  console.log(ownProps)
   return {
-    
     XCZJclick:()=>{
       dispatch({
         type: 'MAP_SKETCH_VIEW_SWITCH',
@@ -160,7 +160,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleCameraClose: () => {
-      console.log('1')
       console.log(ownProps)
       dispatch({
         type: 'handleCameraClose',

@@ -2304,10 +2304,6 @@ const sketchReduce = (
           return Object.assign({}, state, { ...saveData });
         }
 
-      case"updateData2projectData":
-        console.log(state.layerData)
-      return{...state}
-
       case "saveAlertClose":
         const saveAlertClose = { alertSave: false };
         return Object.assign({}, state, { ...saveAlertClose });
@@ -2373,6 +2369,7 @@ RootReducer.merge(sketchReduce);
 * @param {*} ownProps 
 */
 const mapStateToProps = (state, ownProps) => {
+  // console.log(ownProps)
   return {
     text: ownProps.ownProps,
     MapData:ownProps.MapData,

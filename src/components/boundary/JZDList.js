@@ -120,7 +120,7 @@ const mapStateToProps = state =>{
 }
 
 const mapDispatchToProps = (dispatch,ownProps)=> {
-
+console.log(ownProps)
   return{
     onJZDListClose:()=>{
       dispatch({
