@@ -192,17 +192,7 @@ const styles = theme => ({
 class SkechToolBar extends Component {
   state = {
     anchorEl: findDOMNode(this.button),
-    //filePath: '',
   };
-
-  // inputfilePath_onChange = filePath => event => {
-  //   this.setState({
-  //     [filePath]: event.target.value,
-  //   });
-  //   console.log(event.target.value);
-  // };
-
-
   render() {
     const classes = this.props.classes;
     const {anchorEl}=this.state;
@@ -285,7 +275,7 @@ class SkechToolBar extends Component {
                 }}
                 className={classes.button} 
                 style={{
-                backgroundColor: drawPointIsChecked
+                backgroundColor: plotIsChecked
                     ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
@@ -669,14 +659,6 @@ class SkechToolBar extends Component {
               value=""
               onChange={onPlotfromFileClick}/>
         </span>
-           {/* <a href='javascript:void(0);' 
-           className={classes.file_A}>从文件展点
-              <input 
-              type="file" 
-              className={classes.file_input}
-              value=""
-              onChange={onPlotfromFileClick}/>
-            </a> */}
           </ListItem>
       </Popover>
       <Drawer
@@ -903,12 +885,33 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         txtContent=oFRevent.target.result;
         console.log(txtContent)
       }
-      dispatch({
-        type:"getFileContent",
-        payload:{
-          content:txtContent
-        }
-      });
+      // fetch(appConfig.fileServiceRootPath + '//project/changeid',
+      // {
+      //   method:"POST",
+      //   body:txtContent
+      // }).then(response=>{
+      //   return response.json()
+      //   .then(json=>{
+      //     if(response.ok){
+      //       dispatch({
+      //         type:"getFileContent",
+      //         payload:{
+      //           content:json
+      //         }
+      //       });
+      //       return json
+      //     }else{
+      //       return Promise.reject(json);
+
+      //     }
+      //   })
+      // })
+      // .then(json=>{
+      //   console.log(json)
+      // }).catch(err=>{
+      //   console.log(err)
+      // })
+
       dispatch({
         type:"plotListClose",
       })
