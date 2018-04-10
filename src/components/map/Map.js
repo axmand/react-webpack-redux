@@ -276,12 +276,12 @@ class Map extends Component {
     if(poiData!==null){
       poiGeometries=maptalks.GeoJSON.toGeometry(poiData).filter(geometry=>geometry!==null);
     }
-    // if(lineData!==null){
-    //   lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
-    // }
-    // if(poiData!==null){
-    //   polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);  
-    // }
+    if(lineData!==null){
+      lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
+    }
+    if(poiData!==null){
+      polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);  
+    }
     console.log(poiGeometries)
     console.log(lineGeometries)
     console.log(polygonGeometries)
@@ -291,7 +291,7 @@ class Map extends Component {
     }else{
       center = new maptalks.Coordinate([108.37, 22.82]);
     }
-  // poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+  poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
 //初始化加载地图
     map = new maptalks.Map(mapDiv, {
       center:center,
@@ -391,8 +391,8 @@ if(poiGeometries!==null){
     zd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
-    zj.addTo(map).bringToFront();  
-    jzd.addTo(map).bringToFront();
+    jzd.addTo(map); 
+    zj.addTo(map);  
     location.addTo(map);
     console.log(map);
     //将画图工具添加至地图
@@ -597,9 +597,9 @@ const layerControlReduce = (
       topographicMapIsChecked: !state.topographicMapIsChecked
     };
     if (state.topographicMapIsChecked) {
-      map.getLayer("DT_line").hide();
+      map.getLayer("DT").hide();
     } else {
-      map.getLayer("DT_line").show();
+      map.getLayer("DT").show();
     }
     return Object.assign({}, state, { ...checkedtopographicMap });
   }
@@ -729,7 +729,7 @@ const sketchReduce = (
     chooseObjIsChecked: false,
     snapIsChecked:false,
     snapJzdIsChecked:false,
-    snapDxIsChecked:true,
+    snapDxIsChecked:false,
     undoIsChecked: false,
     redoIsChecked: false,
     saveIsChecked: false,
@@ -1488,29 +1488,29 @@ const sketchReduce = (
         return { ...state, ...plotFailState };
       //通过文件展点
       case"getFileContent":
-      let fileData=action.payload.content;
-      console.log(fileData);
-      const FileplotSuccessState = {
-        plotRTKIsChecked: false,
-        plotFromFile:true,
-        drawPointIsChecked: false,
-        rectifyPoiIsChecked:false,
-        drawLineIsChecked: false,
-        drawJZXIsChecked: false,
-        drawArcIsChecked: false,
-        drawPolygonIsChecked: false,
-        balconyIsChecked: false,
-        measureDistanceIsChecked: false,
-        measureAreaIsChecked: false,
-        addLabelIsChecked: false,
-        deleteIsChecked: false,
-        chooseObjIsChecked: false,
-        undoIsChecked: false,
-        redoIsChecked: false,
-        saveIsChecked: false,
-        alertSave: true,
-      };
-      return { ...state, ...FileplotSuccessState };
+        let fileData=action.payload.content;
+        console.log(fileData);
+        const FileplotSuccessState = {
+          plotRTKIsChecked: false,
+          plotFromFile:true,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          deleteIsChecked: false,
+          chooseObjIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          saveIsChecked: false,
+          alertSave: true,
+        };
+        return { ...state, ...FileplotSuccessState };
       //关闭错误提示
       case "plotAlerClose":
         if (state.isRealtimeOn) {
