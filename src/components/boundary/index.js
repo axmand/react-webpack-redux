@@ -64,7 +64,7 @@ class BoundaryModule extends Component {
   render() {
     const {
       handleCameraClose,
-      // handleCameraShow,
+      handleCameraShow,
       handlePhotoDeleteShow,
       handlePhotoDelete,
       CameraShow,
@@ -147,7 +147,9 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+
   return {
+    
     XCZJclick:()=>{
       dispatch({
         type: 'MAP_SKETCH_VIEW_SWITCH',
@@ -158,6 +160,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleCameraClose: () => {
+      console.log('1')
+      console.log(ownProps)
       dispatch({
         type: 'handleCameraClose',
       })
