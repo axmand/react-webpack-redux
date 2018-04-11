@@ -42,6 +42,7 @@ class PhotoContent extends Component {
       CardShow,
       classes,
       PhotoItemTest,
+      projectData
 		} = this.props
 
     console.log(PhotoItemTest)
@@ -82,7 +83,7 @@ class PhotoContent extends Component {
               </IconButton>
             </Toolbar>
           </AppBar>   
-          <CameraWrapper/>
+          <CameraWrapper projectData ={projectData} PhotoItemTest ={PhotoItemTest}/>
       </Dialog>       
     </div>
   );
@@ -94,7 +95,7 @@ PhotoContent.propTypes = {
   handleCardShow:PropTypes.func.isRequired,
   handleChoosePhoto:PropTypes.func.isRequired,
   CardShow:PropTypes.bool.isRequired,
-  PhotoItemTest:PropTypes.array.isRequired
+  PhotoItemTest:PropTypes.array.isRequired,
 };
 
 //声明state和方法
@@ -103,6 +104,7 @@ const mapStateToProps = (state,ownProps) => {
   return {
    CardShow: state.BoundaryReduce.CardShow,
    PhotoItemTest: state.BoundaryReduce.PhotoItemTest,
+   projectData: state.ProjectReduce.projectData
   }
 }
 
@@ -124,7 +126,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch({
           type: 'handleChoosePhoto',
           id
-				})
+        }),
+        dispatch({
+          type: 'ChoosePhoto2projectData',
+          payload:{ownProps:ownProps}
+        })
     },
 	} 
 }  		
