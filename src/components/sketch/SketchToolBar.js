@@ -1250,6 +1250,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'handleCameraShow',
         payload:{json:json,ownProps:ownProps},
       })
+      
+      dispatch({
+        type: 'showPhoto2projectData',
+        payload:{json:json,ownProps:ownProps},
+      })
       //console.log(json)
       dispatch({
         type: 'ProgressShow',

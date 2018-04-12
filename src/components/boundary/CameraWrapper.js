@@ -52,19 +52,24 @@ CameraWrapper.propTypes = {
 //声明state和方法
 const mapStateToProps = (state,ownProps) => {
   return {
+    PhotoItemTest: state.BoundaryReduce.PhotoItemTest,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+          console.log(ownProps)
   return {
     capture:()=>{
       camera.snapshot()
       .then(data => {
          dispatch({
          type: 'capture',
-         payload: data
+         payload: {data:data,ownProps:ownProps}
          })
-        console.log(data)
+         dispatch({
+         type: 'capture2projectData',
+         payload: {data:data,ownProps:ownProps}
+         })        
       })
       .catch(console.error)
     },

@@ -10,7 +10,7 @@ import RootReducer from "./../../redux/RootReducer";
 import PropTypes from "prop-types";
 import * as maptalks from "maptalks";
 import { SnapTool } from "maptalks.snapto";
-import projectData from "./../../redux/RootData";
+// import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
 import poiData from "./Point";
 import lineData from "./Line";
@@ -2352,8 +2352,8 @@ const sketchReduce = (
         map.setCenter(jzxPoi.getCoordinates()[0]);
         return {...state};
       //点击拍照按钮后读取所选的界址点点号并打开摄像头进行拍照
-      case 'jzdXCZJClick':
-        projectData.PoiId =  action.payload.command;
+      // case 'jzdXCZJClick':
+      //   projectData.PoiId =  action.payload.command;
         return {...state}
 
       default:
