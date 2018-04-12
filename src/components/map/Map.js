@@ -290,7 +290,7 @@ class Map extends Component {
     }else{
       center = new maptalks.Coordinate([108.37, 22.82]);
     }
-  poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+  //poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
 //初始化加载地图
     map = new maptalks.Map(mapDiv, {
       center:center,

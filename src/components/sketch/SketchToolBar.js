@@ -884,33 +884,34 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       oFReader.onloadend=function(oFRevent){
         txtContent=oFRevent.target.result;
         console.log(txtContent)
+        console.log(typeof(txtContent))
       }
-      // fetch(appConfig.fileServiceRootPath + '//project/changeid',
-      // {
-      //   method:"POST",
-      //   body:txtContent
-      // }).then(response=>{
-      //   return response.json()
-      //   .then(json=>{
-      //     if(response.ok){
-      //       dispatch({
-      //         type:"getFileContent",
-      //         payload:{
-      //           content:json
-      //         }
-      //       });
-      //       return json
-      //     }else{
-      //       return Promise.reject(json);
+      fetch(appConfig.fileServiceRootPath + '//project/totalstation',
+      {
+        method:"POST",
+        body:txtContent
+      }).then(response=>{
+        return response.json()
+        .then(json=>{
+          if(response.ok){
+            dispatch({
+              type:"getFileContent",
+              payload:{
+                content:json
+              }
+            });
+            return json
+          }else{
+            return Promise.reject(json);
 
-      //     }
-      //   })
-      // })
-      // .then(json=>{
-      //   console.log(json)
-      // }).catch(err=>{
-      //   console.log(err)
-      // })
+          }
+        })
+      })
+      .then(json=>{
+        console.log(json)
+      }).catch(err=>{
+        console.log(err)
+      })
 
       dispatch({
         type:"plotListClose",
