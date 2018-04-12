@@ -18,6 +18,7 @@ import polygonData from "./Polygon";
 
 //引入地图组件
 import MapToolBar from "./MapToolBar";
+import { stat } from "fs";
 /**
  * @type {maptalks.Map}
  * 全局的地图对象和方法
@@ -290,7 +291,7 @@ class Map extends Component {
     }else{
       center = new maptalks.Coordinate([108.37, 22.82]);
     }
-  //poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+  poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
 //初始化加载地图
     map = new maptalks.Map(mapDiv, {
       center:center,
@@ -877,10 +878,10 @@ const sketchReduce = (
           polygonFill: "#FFFFFF"
         }
       });
+      point.on("click", clickObj);
       map.getLayer("label").addGeometry(label);
       map.getLayer("point").addGeometry(point);
       map.setCenter(poi);
-      point.on("click", clickObj);
       console.log(point);
     };
 
@@ -1486,8 +1487,61 @@ const sketchReduce = (
         return { ...state, ...plotFailState };
       //通过文件展点
       case"getFileContent":
-        let fileData=action.payload.content;
-        console.log(fileData);
+        let fileDatastr =eval("("+action.payload.content+")");
+        let fileDataJson=JSON.parse(fileDatastr); 
+        let filedata_mapCenter;
+        for(let i=0;i<fileDataJson.length;i++){
+          let poi_coor=new maptalks.Coordinate([fileDataJson[i].L,fileDataJson[i].B])
+          let poi_name= fileDataJson[i].PointName;
+          console.log(poi_name);
+          filedata_mapCenter=poi_coor;
+        
+         //为界址点添加点号注记
+         let label = new maptalks.Label(poi_name, poi_coor, {
+          'id': poi_name,
+          'isClicked':false,
+          'draggable': true,
+          'type': "Label",
+          'boxStyle' : {
+            'padding' : [12, 8],
+            'verticalAlignment' : 'top',
+            'horizontalAlignment' : 'right',
+            'minWidth' : 48,
+            'minHeight' : 24,
+            'symbol' : {
+              'textDy':-24,
+              'markerType' : 'square',
+              'markerFill' : 'rgb(255,255,255)',
+              'markerFillOpacity' : 0,
+              'markerLineWidth' : 0
+            }
+          },
+          'textSymbol': {
+            'textFaceName' : '宋体',
+            'textFill' : '#000',
+            'textSize' : 15,
+            'textVerticalAlignment' : 'top'
+          }
+        });
+        label.on("click", clickObj);
+        let point = new maptalks.Circle(poi_coor, 3, {
+          id: poi_name,
+          labels: label.getId(),
+          picture: "",
+          isClicked: false,
+          symbol: {
+            lineColor: "#000000",
+            lineWidth: 1.5,
+            polygonFill: "#FFFFFF"
+          }
+        });        
+        point.on("click", clickObj);
+        map.getLayer("label").addGeometry(label);
+        map.getLayer("point").addGeometry(point);
+        console.log(point);
+        }
+        map.setCenter(filedata_mapCenter);
+
         const FileplotSuccessState = {
           plotRTKIsChecked: false,
           plotFromFile:true,
