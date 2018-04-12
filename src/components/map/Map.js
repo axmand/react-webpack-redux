@@ -185,7 +185,6 @@ addLabel =
         'minWidth' : 48,
         'minHeight' : 24,
         'symbol' : {
-          'textDy':-10,
           'markerType' : 'square',
           'markerFill' : 'rgb(255,255,255)',
           'markerFillOpacity' : 0,
@@ -497,7 +496,7 @@ const mapReduce = (state = 0, action) => {
           'minWidth' : 48,
           'minHeight' : 24,
           'symbol' : {
-            'textDy':-10,
+            'textDy':-24,
             'markerType' : 'square',
             'markerFill' : 'rgb(255,255,255)',
             'markerFillOpacity' : 0,
@@ -547,7 +546,7 @@ const mapReduce = (state = 0, action) => {
         'minWidth' : 48,
         'minHeight' : 24,
         'symbol' : {
-          'textDy':-10,
+          'textDy':-24,
           'markerType' : 'square',
           'markerFill' : 'rgb(255,255,255)',
           'markerFillOpacity' : 0,
@@ -852,7 +851,7 @@ const sketchReduce = (
           'minWidth' : 48,
           'minHeight' : 24,
           'symbol' : {
-            'textDy':-10,
+            'textDy':-24,
             'markerType' : 'square',
             'markerFill' : 'rgb(255,255,255)',
             'markerFillOpacity' : 0,
@@ -867,7 +866,7 @@ const sketchReduce = (
         }
       });
       label.on("click", clickObj);
-      let point = new maptalks.Circle(poi, 4, {
+      let point = new maptalks.Circle(poi, 3, {
         id: jzdnum,
         labels: label.getId(),
         picture: "",
@@ -907,7 +906,7 @@ const sketchReduce = (
           'minWidth' : 48,
           'minHeight' : 24,
           'symbol' : {
-            'textDy':-10,
+            'textDy':-24,
             'markerType' : 'square',
             'markerFill' : 'rgb(255,255,255)',
             'markerFillOpacity' : 0,
@@ -922,7 +921,7 @@ const sketchReduce = (
         }
       });
       label.on("click", clickObj);
-      let point = new maptalks.Circle(coorArr, 4, {
+      let point = new maptalks.Circle(coorArr, 3, {
         id: jzdnum,
         labels: label.getId(),
         picture: "",
@@ -961,7 +960,7 @@ const sketchReduce = (
       coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
       console.log(coorArr)
       if(coorArr.length<2){
-        drawTool.disable();
+       // drawTool.disable();
       }else{
       //随机数加当前时间构成id
       let sznum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
@@ -1023,8 +1022,8 @@ const sketchReduce = (
       //删除由于缓慢双击产生的最后一个坐标
      coorArr.pop();
      console.log(coorArr);
-     if(coorArr.length<2){
-      drawTool.disable();
+     if(coorArr.length<3){
+      //drawTool.disable();
     }else{      
       //随机数加当前时间构成id
       let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
@@ -1095,8 +1094,8 @@ const sketchReduce = (
     function(param) {
       let coorArr = param.geometry.getCoordinates()[0];
       coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
-      if(coorArr.length<2){
-        drawTool.disable();
+      if(coorArr.length<3){
+       // drawTool.disable();
       }else{
           //随机数加当前时间构成id
         let zdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
@@ -1182,7 +1181,7 @@ const sketchReduce = (
         let coorArr = param.geometry.getCoordinates();
         coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
         if(coorArr.length<2){
-          drawTool.disable();
+          //drawTool.disable();
         }else{
           //计算两点间的距离
           for (let i = 0; i < coorArr.length - 1; i++) {
@@ -1219,7 +1218,7 @@ const sketchReduce = (
       //删除由于缓慢双击产生的最后一个坐标
       coorArr.pop();
       if(coorArr.length<3){
-        drawTool.disable();
+       // drawTool.disable();
       }else{       
         let zd_obj=new maptalks.Polygon(coorArr, {
           visible : true,
@@ -1249,7 +1248,6 @@ const sketchReduce = (
             'minWidth' : 48,
             'minHeight' : 24,
             'symbol' : {
-              'textDy':-10,
               'markerType' : 'square',
               'markerFill' : 'rgb(255,255,255)',
               'markerFillOpacity' : 0,
@@ -1341,7 +1339,7 @@ const sketchReduce = (
             'minWidth' : 48,
             'minHeight' : 24,
             'symbol' : {
-              'textDy':-10,
+              'textDy':-24,
               'markerType' : 'square',
               'markerFill' : 'rgb(255,255,255)',
               'markerFillOpacity' : 0,
@@ -1356,7 +1354,7 @@ const sketchReduce = (
           }
         });
         label.on("click", clickObj);
-        let point = new maptalks.Circle(coorArr, 4, {
+        let point = new maptalks.Circle(coorArr, 3, {
           id: num,
           labels: label.getId(),
           picture: oldPoi.options.picture,
@@ -1553,7 +1551,7 @@ const sketchReduce = (
               'minWidth' : 48,
               'minHeight' : 24,
               'symbol' : {
-                'textDy':-10,
+                'textDy':-24,
                 'markerType' : 'square',
                 'markerFill' : 'rgb(255,255,255)',
                 'markerFillOpacity' : 0,
@@ -1730,7 +1728,7 @@ const sketchReduce = (
             let coorArr = param.geometry.getCoordinates();
             coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
             if(coorArr.length<2){
-              drawTool.disable();
+             // drawTool.disable();
             }else{
                 //随机数加当前时间构成id
               let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
@@ -1835,7 +1833,7 @@ const sketchReduce = (
             let coorArr = param.geometry.getCoordinates();
             coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
             if(coorArr.length<2){
-              drawTool.disable();
+              //drawTool.disable();
             }else{
               //随机数加当前时间构成id
               let jzxnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
