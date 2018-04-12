@@ -328,7 +328,49 @@ const ProjectReduce = (
     newState.ContentShow = !state.ContentShow;
      return { ...state, ...newState }; 
   }
+  
+  if (action.type === "updateData2projectData") {
+    let list0 = {};
+    console.log(action.payload.data)
+    list0 = action.payload.data; 
+    newState.projectData.ProjectItem.L = list0;   
 
+    return { ...state, ...newState }; 
+  }
+  
+  if (action.type === "showPhoto2projectData") {
+        let list = [];
+        newState.projectData.PhotoItem = list.slice(0);
+
+        list = JSON.parse(action.payload.json.data);
+
+        for(let i = 0;i<list.length;i++)
+        {
+            newState.projectData.PhotoItem.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false});
+        }
+
+    return { ...state, ...newState }; 
+  }
+  
+  if (action.type === "capture2projectData") {
+    newState.projectData.PhotoItem = action.payload.ownProps.PhotoItemTest
+    return { ...state, ...newState }; 
+  }
+
+  if (action.type === "PhotoDelete2projectData") {
+    newState.projectData.PhotoItem = action.payload.ownProps.PhotoItemTest
+    return { ...state, ...newState }; 
+  }
+
+  if (action.type === "ChoosePhoto2projectData") {
+    newState.projectData.PhotoItem = action.payload.ownProps.PhotoItemTest
+    return { ...state, ...newState }; 
+  }
+  
+  if (action.type === "jzdXCZJClick") {
+    newState.projectData.PoiId =  action.payload.command;
+    return { ...state, ...newState }; 
+  }
   
   else
     return state

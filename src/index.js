@@ -41,7 +41,7 @@ ReactDOM.render(
     <Router basename="/">
       <div>
         <Route exact path="/" component={ MainView } />
-        <Route path="/mainview" component={ MainView } />
+        <Route path="/mainview" component={ LoginView } />
       </div>
     </Router>
   </Provider>,

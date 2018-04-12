@@ -16,7 +16,7 @@ import { LinearProgress } from 'material-ui/Progress';
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
-import projectData from './../../redux/RootData';
+// import projectData from './../../redux/RootData';
 import appConfig from "../../redux/Config";
 import JZDList from "./JZDList";
 
@@ -70,7 +70,8 @@ class BoundaryModule extends Component {
       CameraShow,
       DeleteShow,
       PrintProgress,
-      //XCZJclick,
+      projectData,
+      // XCZJclick,
       // PhotoItemTest,
       // DeleteId,
       classes
@@ -89,7 +90,7 @@ class BoundaryModule extends Component {
           primary="现场指界"
         />
       </ListItem> */}
-       <JZDList /> 
+       <JZDList projectData ={projectData}/> 
         <Dialog
           fullScreen
           className={classes.dialog}
@@ -138,18 +139,19 @@ class BoundaryModule extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  // console.log(ownProps)
   return {
     CameraShow: state.BoundaryReduce.CameraShow,
     DeleteShow: state.BoundaryReduce.DeleteShow,
     PhotoItemTest: state.BoundaryReduce.PhotoItemTest,
-    DeleteId: state.BoundaryReduce.DeleteId
+    DeleteId: state.BoundaryReduce.DeleteId,
+    projectData: state.ProjectReduce.projectData
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-
+  console.log(ownProps)
   return {
-    
     XCZJclick:()=>{
       dispatch({
         type: 'MAP_SKETCH_VIEW_SWITCH',
@@ -160,7 +162,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleCameraClose: () => {
-      console.log('1')
       console.log(ownProps)
       dispatch({
         type: 'handleCameraClose',
@@ -176,6 +177,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     handlePhotoDelete: () => {
       dispatch({
         type: 'handlePhotoDelete',
+      }),
+      dispatch({
+        type: 'PhotoDelete2projectData',
+        payload:{ownProps:ownProps}
       })
     },
   }
@@ -201,19 +206,19 @@ const BoundaryReduce = (
   }
   
   if (action.type === "handleCameraShow") {
-    let sta = JSON.parse(action.payload.status)
-    if(projectData.Loaded === false||sta !== 200)
+    let sta = JSON.parse(action.payload.json.status)
+    if(action.payload.ownProps.projectData.Loaded === false||sta !== 200)
       alert("Error_import_002:请选择项目或检查数据是否成功导入！");
     else
       { 
         let list = [];
-        projectData.PhotoItem = list.slice(0);
+        // action.payload.ownProps.projectData.PhotoItem = list.slice(0);
         newState.PhotoItemTest = list.slice(0);
-        list = JSON.parse(action.payload.data);
+        list = JSON.parse(action.payload.json.data);
 
         for(let i = 0;i<list.length;i++)
           {
-            projectData.PhotoItem.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false});
+            // projectData.PhotoItem.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false});
             newState.PhotoItemTest.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false})
           }
         newState.CameraShow =  !state.CameraShow
@@ -256,9 +261,9 @@ const BoundaryReduce = (
                 + seperator2 + date.getSeconds();
         return currentdate;
       }
-    let PhotoId = projectData.PoiId.toString() + '-' + timetrans();
+    let PhotoId = action.payload.ownProps.projectData.PoiId.toString() + '-' + timetrans();
     
-    let Stringitem = action.payload;
+    let Stringitem = action.payload.data;
     let PhotoString = Stringitem.slice(23);
     let PhotoData = JSON.stringify({
         PhotoId: PhotoId,
@@ -274,7 +279,7 @@ const BoundaryReduce = (
     .then( json => {console.log(json)})
     .catch(err => {console.log(err)})
     
-    projectData.PhotoItem.push({text:PhotoString,key:PhotoId,checked:false})
+    // projectData.PhotoItem.push({text:PhotoString,key:PhotoId,checked:false})
     newState.PhotoItemTest.push({text:PhotoString,key:PhotoId,checked:false})
     newState.CardShow =  !state.CardShow 
     return { ...state, ...newState };
@@ -288,7 +293,7 @@ const BoundaryReduce = (
   if(action.type === "handlePhotoDelete"){
     newState.DeleteShow = !state.DeleteShow;
     let Photoitems = newState.PhotoItemTest.filter( (todo) =>{return todo.checked === false } )
-    projectData.PhotoItem = Photoitems.slice(0);
+    // projectData.PhotoItem = Photoitems.slice(0);
     newState.PhotoItemTest = Photoitems;
     
     console.log(appConfig.fileServiceRootPath + '//project/deletephoto/' + newState.DeleteId)
@@ -318,7 +323,7 @@ const BoundaryReduce = (
         }
       })
      
-      projectData.PhotoItem =Photoitems.slice(0);
+      // projectData.PhotoItem =Photoitems.slice(0);
       newState.PhotoItemTest = Photoitems;
       return { ...state, ...newState };
   }

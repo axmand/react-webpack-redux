@@ -12,7 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
-import projectData from "./../../redux/RootData";
+// import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
 
 const styles = {
@@ -120,7 +120,7 @@ const mapStateToProps = state =>{
 }
 
 const mapDispatchToProps = (dispatch,ownProps)=> {
-
+console.log(ownProps)
   return{
     onJZDListClose:()=>{
       dispatch({
@@ -152,9 +152,14 @@ const mapDispatchToProps = (dispatch,ownProps)=> {
       .then( json => {
         dispatch({
           type: 'handleCameraShow',
-          payload:json,
+          payload:{json:json,ownProps:ownProps},
         })
-        //console.log(json)
+       
+        dispatch({
+        type: 'showPhoto2projectData',
+        payload:{json:json,ownProps:ownProps},
+        })
+
         dispatch({
           type: 'ProgressShow',
         }) 
@@ -179,30 +184,30 @@ const JZDListReduce =( state = {
     },action)=>{
         switch(action.type){
           //打开界址点列表，将界址点的id及坐标等相关信息依次填入表中
-            case 'XCZJclick':
-                const jzdData=JSON.parse(projectData.ProjectItem.L.jzdJSONData);
-                console.log(jzdData)
-                let jzdpoi=jzdData.geometries;
-                let tableRow;
-                let tableData=[];
-                for(let i=0;i<jzdpoi.length;i++){
-                  tableRow={
-                    id: jzdpoi[i].feature.id,
-                    coordinates:jzdpoi[i].coordinates
-                  };
-                  tableData.push(tableRow)
-                }
-                console.log(tableData)
+            // case 'XCZJclick':
+            //     const jzdData=JSON.parse(projectData.ProjectItem.L.jzdJSONData);
+            //     console.log(jzdData)
+            //     let jzdpoi=jzdData.geometries;
+            //     let tableRow;
+            //     let tableData=[];
+            //     for(let i=0;i<jzdpoi.length;i++){
+            //       tableRow={
+            //         id: jzdpoi[i].feature.id,
+            //         coordinates:jzdpoi[i].coordinates
+            //       };
+            //       tableData.push(tableRow)
+            //     }
+            //     console.log(tableData)
 
-                const XCZJ1={
-                    showXCZJDialog:true,
-                    jzdTableData:tableData
-                }
-                return Object.assign({}, state, {...XCZJ1});
+            //     const XCZJ1={
+            //         showXCZJDialog:true,
+            //         jzdTableData:tableData
+            //     }
+            //     return Object.assign({}, state, {...XCZJ1});
             //点击拍照按钮后读取所选的界址点点号并打开摄像头进行拍照
-            case 'jzdXCZJClick':
-                projectData.PoiId =  action.payload.command;
-                return {...state}
+            // case 'jzdXCZJClick':
+            //     projectData.PoiId =  action.payload.command;
+            //     return {...state}
             //关闭界址点列表   
             case 'JZDListClose':
                 const jzdListClose={showXCZJDialog:false}
