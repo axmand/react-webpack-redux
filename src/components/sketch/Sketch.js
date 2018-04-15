@@ -116,9 +116,10 @@ Sketch.propTypes = {
  * @param {*} state 
  *
  */
-const mapStateToProps = state => {
+const mapStateToProps =  (state, ownProps) => {
   const sketchState = state.sketchReduce;
   const canvasSeduce = state.CanvasReduce;
+  console.log(ownProps)
   return {
     saveIsChecked: sketchState.saveIsChecked,
     isRealtimeOn: sketchState.isRealtimeOn,
@@ -129,15 +130,12 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch,ownProps) => {
-  console.log(ownProps.MapData)
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onClick: () => {
       dispatch({
         type: "MAP_SKETCH_VIEW_SWITCH",
-        payload:{
-          Loaded:ownProps.MapData.Loaded
-        }
+        payload:ownProps.SketchData,
       });
     },
     onTabSketchClick: () => {

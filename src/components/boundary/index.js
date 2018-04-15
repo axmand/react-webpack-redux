@@ -155,9 +155,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     XCZJclick:()=>{
       dispatch({
         type: 'MAP_SKETCH_VIEW_SWITCH',
-        payload:{
-          Loaded:ownProps.BoundaryData.Loaded
-        }
+        payload:ownProps,
       }),
       dispatch({
         type: "drawPointClick",
