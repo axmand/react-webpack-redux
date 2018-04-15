@@ -46,7 +46,7 @@ class NavigationPanel extends Component {
             <ProjectModule />
             <InvestigationModule />
             <BoundaryModule BoundaryData = {projectData}/>
-            <SketchModule />
+            <SketchModule  SketchModule = {projectData} />
             <ObligeeModule />
             <PrintModule />
             <OutputModule  OutputData={ projectData }/>

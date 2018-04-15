@@ -882,39 +882,37 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       let oFReader=new FileReader();
       oFReader.readAsText(file,"UTF-8");	
       oFReader.onloadend=function(oFRevent){
-        txtContent=oFRevent.target.result;
-        console.log(txtContent)
+        txtContent=oFRevent.target.result;      
+        fetch(appConfig.fileServiceRootPath + '//project/totalstation',
+          {
+            method:"POST",
+            body:txtContent
+          }).then(response=>{
+            return response.json()
+            .then(json=>{
+              if(response.ok){
+                dispatch({
+                  type:"getFileContent",
+                  payload:{
+                    content:json.data
+                  }
+                });
+                return json
+              }else{
+                return Promise.reject(json);
+
+              }
+            })
+          })
+          .then(json=>{
+            console.log(json)
+          }).catch(err=>{
+            console.log(err)
+          })
+          dispatch({
+            type:"plotListClose",
+          })
       }
-      // fetch(appConfig.fileServiceRootPath + '//project/changeid',
-      // {
-      //   method:"POST",
-      //   body:txtContent
-      // }).then(response=>{
-      //   return response.json()
-      //   .then(json=>{
-      //     if(response.ok){
-      //       dispatch({
-      //         type:"getFileContent",
-      //         payload:{
-      //           content:json
-      //         }
-      //       });
-      //       return json
-      //     }else{
-      //       return Promise.reject(json);
-
-      //     }
-      //   })
-      // })
-      // .then(json=>{
-      //   console.log(json)
-      // }).catch(err=>{
-      //   console.log(err)
-      // })
-
-      dispatch({
-        type:"plotListClose",
-      })
     },
     //画点
     onDrawPointClick: () => {

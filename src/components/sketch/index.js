@@ -51,15 +51,17 @@ class SketchModule extends Component {
   }
 }
 
-const mapStateToProps = ( state ) => ({
+const mapStateToProps = (state, ownProps) => ({
   ...state
 })
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
+  console.log(ownProps)
     return {
       onClick: () => {
           dispatch({
               type: 'MAP_SKETCH_VIEW_SWITCH',
+              payload:ownProps.SketchModule
           })
       },
     }
