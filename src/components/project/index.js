@@ -253,6 +253,9 @@ const ProjectReduce = (
     inputItems: [],
     projectData: {
       ProjectItem: [],//项目JOSN数据
+      Project_DT_Point: [],
+      Project_DT_Line: [],
+      Project_DT_Polygon: [],
       ProjectName:[],//项目名称
       PhotoItem:[],//照片信息
       Loaded:false,   //是否加载
@@ -327,6 +330,24 @@ const ProjectReduce = (
    
     newState.ContentShow = !state.ContentShow;
      return { ...state, ...newState }; 
+  }
+  
+  if (action.type === "Read_DT_Point") {
+    let list0 = JSON.parse(action.payload);
+    newState.projectData.Project_DT_Point = list0; 
+    return { ...state, ...newState }; 
+  }
+  
+  if (action.type === "Read_DT_Line") {
+    let list0 = JSON.parse(action.payload);
+    newState.projectData.Project_DT_Line = list0; 
+    return { ...state, ...newState }; 
+  }
+  
+  if (action.type === "Read_DT_Polygon") {
+    let list0 = JSON.parse(action.payload);
+    newState.projectData.Project_DT_Polygon = list0; 
+    return { ...state, ...newState }; 
   }
   
   if (action.type === "updateData2projectData") {

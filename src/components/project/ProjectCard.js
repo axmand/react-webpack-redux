@@ -64,20 +64,57 @@ const mapStateToProps = (state,ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleChooseItem:( ProjectUrl )=>{
+      console.log(ProjectUrl.slice(36))
       dispatch({
             type: 'handleProjectProgress',
       })
-      // console.log(ownProps)
+      
+      fetch(appConfig.fileServiceRootPath + '/project/importpoint/'+ProjectUrl.slice(36))
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'Read_DT_Point',
+          payload: json.data,
+        })
+      })
+      .catch(e => {
+        console.log("Oops, error", e)
+      })
+      
+      fetch(appConfig.fileServiceRootPath + '/project/importline/'+ProjectUrl.slice(36))
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'Read_DT_Line',
+          payload: json.data,
+        })
+      })
+      .catch(e => {
+        console.log("Oops, error", e)
+      })
+      
+      fetch(appConfig.fileServiceRootPath + '/project/importpolygon/'+ProjectUrl.slice(36))
+      .then(response => response.json())
+      .then( json => {
+        dispatch({
+          type: 'Read_DT_Polygon',
+          payload: json.data,
+        })
+      })
+      .catch(e => {
+        console.log("Oops, error", e)
+      })
+
       fetch(ProjectUrl)
       .then(response => response.json())
       .then( json => {
         dispatch({
           type: 'handleChooseItem',
           payload: json,
-          itemName: ProjectUrl.slice(40),
+          itemName: ProjectUrl.slice(36),
           ProjectUrl
         })
-        console.log(json)
+
         dispatch({
           type: 'handleProjectProgress',
         }) 
@@ -100,9 +137,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch({
         type: 'handleProjectFalse',
         })
-        console.log(ownProps)
         console.log("Oops, error", e)
     })
+
+
     },
     
     handleContentClose2:()=>{
