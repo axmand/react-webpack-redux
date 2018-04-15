@@ -55,11 +55,15 @@ const mapStateToProps = ( state ) => ({
   ...state
 })
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch,ownProps) => {
+  console.log(ownProps)
     return {
       onClick: () => {
           dispatch({
               type: 'MAP_SKETCH_VIEW_SWITCH',
+              payload:{
+                Loaded:ownProps.SketchData.Loaded
+              }
           })
       },
     }

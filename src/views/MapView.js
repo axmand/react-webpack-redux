@@ -7,7 +7,6 @@ import { withStyles } from 'material-ui/styles'
 import RootReducer from '../redux/RootReducer';
 import Map from '../components/map/Map'
 import Sketch from '../components/sketch/Sketch'
-import projectData from './../redux/RootData';
 
 const styles = {
   root: {
@@ -29,7 +28,7 @@ class MapView extends Component {
 		// console.log(sketchDisplayState)	
     return (
       <div className={classes.root}>
-        {sketchDisplayState && <Sketch/> }
+        {sketchDisplayState && <Sketch MapData={projectData}/> }
         {projectDataLoadState && <Map isRealtimeOn={isRealtimeOn} MapData={projectData} />}
       </div>
     )
@@ -49,7 +48,8 @@ const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
 
   switch(action.type) {
     case 'MAP_SKETCH_VIEW_SWITCH':
-      if(projectData.Loaded === false)
+    console.log(action.payload.Loaded)
+      if(action.payload.Loaded === false)
         alert("Error_import_002:请选择项目！");
       else
         { newState.sketchDisplayState =  !state.sketchDisplayState }
@@ -78,8 +78,8 @@ const mapStateToProps = ( state ) => {
   return {
     sketchDisplayState: mapViewState.sketchDisplayState,
     isRealtimeOn: sketchState.isRealtimeOn,
-    projectDataLoadState: projectData.Loaded,
-    projectData: state.ProjectReduce.projectData,
+    projectDataLoadState:state.ProjectReduce.projectData.Loaded,
+    projectData: state.ProjectReduce.projectData
   }
 }
 
