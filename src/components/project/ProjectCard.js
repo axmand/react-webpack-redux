@@ -67,7 +67,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
             type: 'handleProjectProgress',
       })
-      console.log(ownProps)
+      // console.log(ownProps)
       fetch(ProjectUrl)
       .then(response => response.json())
       .then( json => {
