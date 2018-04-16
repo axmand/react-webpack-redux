@@ -71,13 +71,9 @@ RootReducer.merge(mapViewReduce);
  *
  */
 const mapStateToProps = ( state ) => {
-
-  const mapViewState = state.mapViewReduce;
-  const sketchState = state.sketchReduce;
-
   return {
-    sketchDisplayState: mapViewState.sketchDisplayState,
-    isRealtimeOn: sketchState.isRealtimeOn,
+    sketchDisplayState:  state.mapViewReduce.sketchDisplayState,
+    isRealtimeOn: state.sketchReduce.isRealtimeOn,
     projectDataLoadState: state.ProjectReduce.projectData.Loaded,
     projectData: state.ProjectReduce.projectData,
   }

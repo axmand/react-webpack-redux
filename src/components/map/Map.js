@@ -269,32 +269,9 @@ class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
     const MapData=this.props.MapData;
-    let center;
-    console.log(MapData);
-    //读取并剔除不合格的底图数据
-    let poiGeometries,lineGeometries,polygonGeometries
-    if(poiData!==null){
-      poiGeometries=maptalks.GeoJSON.toGeometry(poiData).filter(geometry=>geometry!==null);
-    }
-    if(lineData!==null){
-      lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
-    }
-    if(poiData!==null){
-      polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);  
-    }
-    console.log(poiGeometries)
-    console.log(lineGeometries)
-    console.log(polygonGeometries)
-//设置地图中心点坐标
-    if(poiGeometries!==null){
-      center = poiGeometries[0].getCoordinates();
-    }else{
-      center = new maptalks.Coordinate([108.37, 22.82]);
-    }
-  poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
-//初始化加载地图
+    //初始化加载地图
     map = new maptalks.Map(mapDiv, {
-      center:center,
+      center:[108.37, 22.82],
       zoom: 16,
       baseLayer: new maptalks.TileLayer("base", {
         crossOrigin: "anonymous",
@@ -303,14 +280,14 @@ class Map extends Component {
         attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
       }),
     });
-//将项目草图数据导入至地图
+    //将项目草图数据导入至地图
     let jzd,sz,jzx,zd,zj,dx;
     //判断地图数据是否为空，若为空则新建地图图层
-    console.log(MapData.ProjectItem.L)
+    //    console.log(MapData.ProjectItem.L)
     if(MapData.ProjectItem.L.jzdJSONData){
       jzd = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.jzdJSONData));
-      console.log(MapData.ProjectItem.L.jzdJSONData);
-//为地图对象添加点击绑定事件
+     // console.log(MapData.ProjectItem.L.jzdJSONData);
+     //为地图对象添加点击绑定事件
     if(jzd.getGeometries()){
       for (let i = 0; i < jzd.getGeometries().length; i++) {
         jzd.getGeometries()[i].on("click", clickObj);
@@ -371,23 +348,6 @@ class Map extends Component {
   }
   console.log(zj)
   let location=new maptalks.VectorLayer("location",{geometryEvents:false});
-
-//新建地形图层显示底图数据
-if(poiGeometries!==null){
-  let DT=new maptalks.VectorLayer('DT', poiGeometries,{geometryEvents:false}).setStyle({
-    symbol:{
-        markerType:'ellipse',
-        markerFill: '#ccc',
-        markerLineColor:'#444',
-        markerWidth : 4,
-        markerHeight : 4,
-        lineColor:'#000',
-        lineWidth:1,
-        polygonFill: "#FFF",
-        polygonOpacity: 0.4
-    }
-  }).addTo(map);
-}
     zd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
@@ -411,6 +371,50 @@ if(poiGeometries!==null){
     snap.bindDrawTool(drawTool);
     snap.disable();
   }
+  componentWillReceiveProps(nextProps) {   
+    console.log("打印nextProps")  
+    console.log(nextProps) 
+    let MapData=nextProps.MapData; 
+    let center;
+    //读取并剔除不合格的底图数据
+    let poiGeometries,lineGeometries,polygonGeometries
+    if(MapData.Project_DT_Point!==null){
+      poiGeometries=maptalks.GeoJSON.toGeometry(MapData.Project_DT_Point).filter(geometry=>geometry!==null);
+    }
+    if(MapData.Project_DT_Line!==null){
+      lineGeometries=maptalks.GeoJSON.toGeometry(MapData.Project_DT_Line).filter(geometry=>geometry!==null);
+    }
+    if(MapData.Project_DT_Polygon!==null){
+      polygonGeometries=maptalks.GeoJSON.toGeometry(MapData.Project_DT_Polygon).filter(geometry=>geometry!==null);  
+    }
+    console.log(poiGeometries)
+    console.log(lineGeometries)
+    console.log(polygonGeometries)
+    //设置地图中心点坐标
+    if(poiGeometries.length!==0){
+      center = poiGeometries[0].getCoordinates();
+      map.setCenter(center);
+    }
+    poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+    //新建地形图层显示底图数据
+    if(poiGeometries!==null){
+      let DT=new maptalks.VectorLayer('DT', poiGeometries,{geometryEvents:false}).setStyle({
+        symbol:{
+            markerType:'ellipse',
+            markerFill: '#ccc',
+            markerLineColor:'#444',
+            markerWidth : 4,
+            markerHeight : 4,
+            lineColor:'#000',
+            lineWidth:1,
+            polygonFill: "#FFF",
+            polygonOpacity: 0.4
+        }
+      }).addTo(map)
+      DT.bringToBack();
+
+    }
+  }  
 
   render() {
     const { onMenuItemClick } = this.props;
