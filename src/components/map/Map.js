@@ -280,81 +280,34 @@ class Map extends Component {
         attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
       }),
     });
-    //将项目草图数据导入至地图
-    let jzd,sz,jzx,zd,zj,dx;
-    //判断地图数据是否为空，若为空则新建地图图层
-    //    console.log(MapData.ProjectItem.L)
-    if(MapData.ProjectItem.L.jzdJSONData){
-      jzd = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.jzdJSONData));
-     // console.log(MapData.ProjectItem.L.jzdJSONData);
-     //为地图对象添加点击绑定事件
-    if(jzd.getGeometries()){
-      for (let i = 0; i < jzd.getGeometries().length; i++) {
-        jzd.getGeometries()[i].on("click", clickObj);
-        jzd.getGeometries()[i].setRadius(4);
+     //初始化新建所有图层
+     let jzd,sz,jzx,zd,zj,DT,location;
+     jzd = new maptalks.VectorLayer('point',{geometryEvents:false});
+     sz = new maptalks.VectorLayer('SZ',{geometryEvents:false});
+     jzx = new maptalks.VectorLayer('JZX',{geometryEvents:false});
+     zd = new maptalks.VectorLayer('polygon',{geometryEvents:false});
+     zj = new maptalks.VectorLayer('label',{geometryEvents:false});
+     location=new maptalks.VectorLayer("location",{geometryEvents:false});
+     DT=new maptalks.VectorLayer("DT",{geometryEvents:false}).setStyle({
+      symbol:{
+          markerType:'ellipse',
+          markerFill: '#ccc',
+          markerLineColor:'#444',
+          markerWidth : 4,
+          markerHeight : 4,
+          lineColor:'#000',
+          lineWidth:1,
+          polygonFill: "#FFF",
+          polygonOpacity: 0.4
       }
-    }
-  }else{
-    jzd = new maptalks.VectorLayer('point',{geometryEvents:false});
-  }    
-  console.log(jzd)
-  
-  if(MapData.ProjectItem.L.szJSONData){
-      sz = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.szJSONData));
-    //为地图对象添加点击绑定事件
-    if(sz.getGeometries()){
-      for (let i = 0; i < sz.getGeometries().length; i++) {
-        sz.getGeometries()[i].on("click", clickObj);
-      }
-    }
-  }else{
-      sz = new maptalks.VectorLayer('SZ',{geometryEvents:false});
-  }
-  console.log(sz)
-  if(MapData.ProjectItem.L.jzxJSONData){
-      jzx = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.jzxJSONData));
-    //为地图对象添加点击绑定事件
-    if(jzx.getGeometries()){
-      for (let i = 0; i < jzx.getGeometries().length; i++) {
-        jzx.getGeometries()[i].on("click", clickObj);
-      }
-    }
-  }else{
-      jzx = new maptalks.VectorLayer('JZX',{geometryEvents:false});
-  }
-  console.log(jzx)
-  if(MapData.ProjectItem.L.zdJSONData){
-      zd = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.zdJSONData));
-      //为地图对象添加点击绑定事件
-      if( zd.getGeometries()){
-        for (let i = 0; i < zd.getGeometries().length; i++) {
-          zd.getGeometries()[i].on("click", clickObj);
-        }
-      }
-    }else{
-      zd = new maptalks.VectorLayer('polygon',{geometryEvents:false});
-  }
-  console.log(zd)
-  if(MapData.ProjectItem.L.zjJSONData){
-      zj = maptalks.Layer.fromJSON(JSON.parse(MapData.ProjectItem.L.zjJSONData));
-      //为地图对象添加点击绑定事件
-      if(zj.getGeometries()){
-        for (let i = 0; i < zj.getGeometries().length; i++) {
-          zj.getGeometries()[i].on("click", clickObj);
-        }
-      }  
-    }else{
-      zj = new maptalks.VectorLayer('label',{geometryEvents:false});
-  }
-  console.log(zj)
-  let location=new maptalks.VectorLayer("location",{geometryEvents:false});
+    });
+    DT.addTo(map);
     zd.addTo(map);
     sz.addTo(map);
     jzx.addTo(map);
     jzd.addTo(map); 
     zj.addTo(map);  
     location.addTo(map);
-    console.log(map);
     //将画图工具添加至地图
     drawTool.addTo(map).disable();
     maptalks.DrawTool.registerMode("ArcCurve", {
@@ -371,11 +324,176 @@ class Map extends Component {
     snap.bindDrawTool(drawTool);
     snap.disable();
   }
+  //初始化完成进行项目数据加载
   componentWillReceiveProps(nextProps) {   
-    console.log("打印nextProps")  
     console.log(nextProps) 
     let MapData=nextProps.MapData; 
     let center;
+    let jzd,sz,jzx,zd,zj,location,DT;
+    //项目切换时清空地图图层数据
+    jzd = map.getLayer('point');
+    sz = map.getLayer('SZ');
+    jzx = map.getLayer('JZX');
+    zd = map.getLayer('polygon');
+    zj = map.getLayer('label');
+    location=map.getLayer('location');
+    DT=map.getLayer('DT');
+    if(jzd.getGeometries()){
+      jzd.clear();
+    }
+    if(sz.getGeometries()){
+      sz.clear();
+    }
+    if(jzx.getGeometries()){
+      jzx.clear();
+    }
+    if(zd.getGeometries()){
+      zd.clear();
+    }
+    if(zj.getGeometries()){
+      zj.clear();
+    }
+    if(location.getGeometries()){
+      location.clear();
+    }
+    if(DT.getGeometries()){
+      DT.clear();
+    }
+    //添加界址点图层数据
+    if(MapData.ProjectItem.L.jzdJSONData){
+      console.log(MapData.ProjectItem.L.jzdJSONData);
+      let jzd_geos=JSON.parse(MapData.ProjectItem.L.jzdJSONData).geometries;
+      //为地图对象添加点击绑定事件
+      if(jzd_geos){
+        for (let i = 0; i < jzd_geos.length; i++) {
+          console.log(jzd_geos[i]);
+          let jzd_geo = new maptalks.Circle(jzd_geos[i].coordinates, 3, {
+            id: jzd_geos[i].feature.id,
+            labels: jzd_geos[i].options.labels,
+            picture:  jzd_geos[i].options.picture,
+            isClicked: jzd_geos[i].options.isClicked,
+            symbol:  jzd_geos[i].symbol
+          });
+          jzd_geo.on("click", clickObj);
+          jzd.addGeometry(jzd_geo);
+        }
+      }
+    }
+    //添加四至图层数据
+    if(MapData.ProjectItem.L.szJSONData){
+          let sz_geos=JSON.parse(MapData.ProjectItem.L.szJSONData).geometries;
+          console.log(sz_geos);
+          //为地图对象添加点击绑定事件
+          if(sz_geos){
+            for (let i = 0; i < sz_geos.length; i++) {
+              let sz_geo = new maptalks.LineString(sz_geos[i].feature.geometry.coordinates,  {
+                id: sz_geos[i].feature.geometry.id,
+                isClicked: sz_geos[i].options.isClicked,
+                length: sz_geos[i].options.length,
+                labels: sz_geos[i].options.labels,
+                arrowStyle : null, 
+                arrowPlacement : 'vertex-last',
+                visible : true,
+                editable : true,
+                cursor : null,
+                draggable : false,
+                dragShadow : false, 
+                drawOnAxis : null,
+                symbol:  sz_geos[i].symbol,
+              });
+              sz_geo.on("click", clickObj);
+              sz.addGeometry(sz_geo);
+            }
+          }
+      }
+      //添加界址线图层数据
+      if(MapData.ProjectItem.L.jzxJSONData){
+        let jzx_geos=JSON.parse(MapData.ProjectItem.L.jzxJSONData).geometries;
+        //为地图对象添加点击绑定事件
+        if(jzx_geos){
+          for (let i = 0; i < jzx_geos.length; i++) {
+            let jzx_geo = new maptalks.LineString(jzx_geos[i].feature.geometry.coordinates,  {
+              id: jzx_geos[i].feature.geometry.id,
+              labels: jzx_geos[i].options.labels,
+              length: jzx_geos[i].options.length,
+              poiArr: jzx_geos[i].options.linePoiArr,
+              isClicked: jzx_geos[i].options.isClicked,
+              symbol:  jzx_geos[i].symbol,
+              arrowStyle : null, 
+              arrowPlacement : 'vertex-last',
+              visible : true,
+              editable : true,
+              cursor : null,
+              draggable : false,
+              dragShadow : false, 
+              drawOnAxis : null,
+            });
+            jzx_geo.on("click", clickObj);
+            jzx.addGeometry(jzx_geo);
+          }
+        }
+    }
+    //添加宗地图层数据
+    if(MapData.ProjectItem.L.zdJSONData){
+      let zd_geos=JSON.parse(MapData.ProjectItem.L.zdJSONData).geometries;
+      console.log(zd_geos)
+      //为地图对象添加点击绑定事件
+      if(zd_geos){
+        for (let i = 0; i < zd_geos.length; i++) {
+          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometr.coordinates,  {
+            id: zd_geos[i].feature.geometry.id,
+            labels: zd_geos[i].options.labels,
+            isClicked: zd_geos[i].options.isClicked,
+            polygonType:zd_geos[i].options.polygonType,
+            symbol:  zd_geos[i].symbol,
+            visible : true,
+            editable : true,
+            cursor : 'pointer',
+            draggable : false,
+            drawOnAxis : null, 
+          });
+          zd_geo.on("click", clickObj);
+          zd.addGeometry(zd_geo);
+        }
+      }
+    }
+    //添加注记图层数据
+    if(MapData.ProjectItem.L.zjJSONData){
+      let zj_geos=JSON.parse(MapData.ProjectItem.L.zjJSONData).geometries;
+      console.log(zj_geos)
+      //为地图对象添加点击绑定事件
+      if(zj_geos){
+        for (let i = 0; i < zj_geos.length; i++) {
+          let zj_geo = new maptalks.Label(zj_geos[i].content,zj_geos[i].feature.geometry.coordinates,  {
+            'id': zj_geos[i].feature.geometry.id,
+            'draggable': true,
+            'type': "Label",
+            'isClicked': zj_geos[i].options.isClicked,
+            'boxStyle' : {
+              'padding' : [12, 8],
+              'verticalAlignment' : 'top',
+              'horizontalAlignment' : 'right',
+              'minWidth' : 48,
+              'minHeight' : 24,
+              'symbol' : {
+                'markerType' : 'square',
+                'markerFill' : 'rgb(255,255,255)',
+                'markerFillOpacity' : 0,
+                'markerLineWidth' : 0
+              }
+            },
+            'textSymbol': {
+              'textFaceName' : '宋体',
+              'textFill' : '#000',
+              'textSize' : 15,
+              'textVerticalAlignment' : 'top'
+            }
+          });
+          zj_geo.on("click", clickObj);
+          zj.addGeometry(zj_geo);
+        }
+      }
+    }
     //读取并剔除不合格的底图数据
     let poiGeometries,lineGeometries,polygonGeometries
     if(MapData.Project_DT_Point!==null){
@@ -387,35 +505,17 @@ class Map extends Component {
     if(MapData.Project_DT_Polygon!==null){
       polygonGeometries=maptalks.GeoJSON.toGeometry(MapData.Project_DT_Polygon).filter(geometry=>geometry!==null);  
     }
-    console.log(poiGeometries)
-    console.log(lineGeometries)
-    console.log(polygonGeometries)
     //设置地图中心点坐标
     if(poiGeometries.length!==0){
       center = poiGeometries[0].getCoordinates();
       map.setCenter(center);
     }
     poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
-    //新建地形图层显示底图数据
     if(poiGeometries!==null){
-      let DT=new maptalks.VectorLayer('DT', poiGeometries,{geometryEvents:false}).setStyle({
-        symbol:{
-            markerType:'ellipse',
-            markerFill: '#ccc',
-            markerLineColor:'#444',
-            markerWidth : 4,
-            markerHeight : 4,
-            lineColor:'#000',
-            lineWidth:1,
-            polygonFill: "#FFF",
-            polygonOpacity: 0.4
-        }
-      }).addTo(map)
+      DT.addGeometry(poiGeometries);
       DT.bringToBack();
-
     }
-  }  
-
+  }
   render() {
     const { onMenuItemClick } = this.props;
 
@@ -2329,6 +2429,7 @@ const sketchReduce = (
           map.off("click", addLabel);
           map.off("click", editLabel);
           map.off("dblclick", drawToolOn);
+          console.log(map.getLayer("point").toJSON())
           const saveData = {
             plotIsChecked: false,
             drawPointIsChecked: false,
