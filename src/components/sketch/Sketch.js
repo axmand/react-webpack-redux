@@ -94,7 +94,6 @@ class Sketch extends Component {
             saveIsChecked={saveIsChecked}
             plotListData={plotListData}
             LayerData={layerData}
-            projectData={projectData}
           />
         )}
         {this.state.index === 1 && 
