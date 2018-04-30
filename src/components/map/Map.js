@@ -268,7 +268,6 @@ deleteObj =
 class Map extends Component {
   componentDidMount() {
     const mapDiv = this.refs.map;
-    const MapData=this.props.MapData;
     //初始化加载地图
     map = new maptalks.Map(mapDiv, {
       center:[108.37, 22.82],
@@ -326,8 +325,12 @@ class Map extends Component {
   }
   //初始化完成进行项目数据加载
   componentWillReceiveProps(nextProps) {   
-    console.log(nextProps) 
-    let MapData=nextProps.MapData; 
+    console.log(nextProps) ;
+    console.log(map.getLayers())
+    let LayersData=nextProps.LayersData;
+    let DT_Point=nextProps.DT_Point;
+    let DT_Line=nextProps.DT_Line;
+    let DT_Polygon=nextProps.DT_Polygon;
     let center;
     let jzd,sz,jzx,zd,zj,location,DT;
     //项目切换时清空地图图层数据
@@ -360,9 +363,18 @@ class Map extends Component {
       DT.clear();
     }
     //添加界址点图层数据
-    if(MapData.ProjectItem.L.jzdJSONData){
-      console.log(MapData.ProjectItem.L.jzdJSONData);
-      let jzd_geos=JSON.parse(MapData.ProjectItem.L.jzdJSONData).geometries;
+    if(LayersData.jzdJSONData){
+      let jzd_geos;
+      if(typeof(LayersData.jzdJSONData)==='JSON'){
+        if(LayersData.jzdJSONData.geometries){
+            if(LayersData.jzdJSONData.geometries.length!==0){
+            jzd_geos=JSON.parse(LayersData.jzdJSONData).geometries;         
+            }
+          }
+      }
+      if(typeof(LayersData.jzdJSONData)==='string'){
+        jzd_geos=JSON.parse(LayersData.jzdJSONData).geometries;
+      }
       //为地图对象添加点击绑定事件
       if(jzd_geos){
         for (let i = 0; i < jzd_geos.length; i++) {
@@ -380,35 +392,54 @@ class Map extends Component {
       }
     }
     //添加四至图层数据
-    if(MapData.ProjectItem.L.szJSONData){
-          let sz_geos=JSON.parse(MapData.ProjectItem.L.szJSONData).geometries;
-          console.log(sz_geos);
-          //为地图对象添加点击绑定事件
-          if(sz_geos){
-            for (let i = 0; i < sz_geos.length; i++) {
-              let sz_geo = new maptalks.LineString(sz_geos[i].feature.geometry.coordinates,  {
-                id: sz_geos[i].feature.geometry.id,
-                isClicked: sz_geos[i].options.isClicked,
-                length: sz_geos[i].options.length,
-                labels: sz_geos[i].options.labels,
-                arrowStyle : null, 
-                arrowPlacement : 'vertex-last',
-                visible : true,
-                editable : true,
-                cursor : null,
-                draggable : false,
-                dragShadow : false, 
-                drawOnAxis : null,
-                symbol:  sz_geos[i].symbol,
-              });
-              sz_geo.on("click", clickObj);
-              sz.addGeometry(sz_geo);
+    if(LayersData.szJSONData){
+      let sz_geos;
+      if(typeof(LayersData.szJSONData)==='JSON'){
+        if(LayersData.szJSONData.geometries){
+          if(LayersData.szJSONData.geometries.length!==0){
+            sz_geos=JSON.parse(LayersData.szJSONData).geometries;
+          }
+        }  
+      }
+      if(typeof(LayersData.szJSONData)==='string'){
+        sz_geos=JSON.parse(LayersData.szJSONData).geometries;
+      }
+      //为地图对象添加点击绑定事件
+      if(sz_geos){
+        for (let i = 0; i < sz_geos.length; i++) {
+          let sz_geo = new maptalks.LineString(sz_geos[i].feature.geometry.coordinates,  {
+            id: sz_geos[i].feature.geometry.id,
+            isClicked: sz_geos[i].options.isClicked,
+            length: sz_geos[i].options.length,
+            labels: sz_geos[i].options.labels,
+            arrowStyle : null, 
+            arrowPlacement : 'vertex-last',
+            visible : true,
+            editable : true,
+            cursor : null,
+            draggable : false,
+            dragShadow : false, 
+            drawOnAxis : null,
+            symbol:  sz_geos[i].symbol,
+          });
+          sz_geo.on("click", clickObj);
+          sz.addGeometry(sz_geo);
+        }
+      }
+    }
+      //添加界址线图层数据
+      if(LayersData.jzxJSONData){
+        let jzx_geos;
+        if(typeof(LayersData.jzxJSONData)==='JSON'){
+          if(LayersData.jzxJSONData.geometries){
+            if(LayersData.jzxJSONData.geometries.length!==0){
+               jzx_geos=JSON.parse(LayersData.jzxJSONData).geometries;
             }
           }
-      }
-      //添加界址线图层数据
-      if(MapData.ProjectItem.L.jzxJSONData){
-        let jzx_geos=JSON.parse(MapData.ProjectItem.L.jzxJSONData).geometries;
+        }
+        if(typeof(LayersData.jzxJSONData)==='string'){
+          jzx_geos=JSON.parse(LayersData.jzxJSONData).geometries;
+        }
         //为地图对象添加点击绑定事件
         if(jzx_geos){
           for (let i = 0; i < jzx_geos.length; i++) {
@@ -434,8 +465,18 @@ class Map extends Component {
         }
     }
     //添加宗地图层数据
-    if(MapData.ProjectItem.L.zdJSONData){
-      let zd_geos=JSON.parse(MapData.ProjectItem.L.zdJSONData).geometries;
+    if(LayersData.zdJSONData){
+      let zd_geos;
+      if(typeof(LayersData.zdJSONData)==='JSON'){
+        if(LayersData.zdJSONData.geometries){
+          if(LayersData.zdJSONData.geometries.length!==0){
+            zd_geos=JSON.parse(LayersData.zdJSONData).geometries;
+          }
+        }
+      }
+      if(typeof(LayersData.zdJSONData)==='string'){
+        zd_geos=JSON.parse(LayersData.zdJSONData).geometries;
+      }
       console.log(zd_geos)
       //为地图对象添加点击绑定事件
       if(zd_geos){
@@ -458,8 +499,18 @@ class Map extends Component {
       }
     }
     //添加注记图层数据
-    if(MapData.ProjectItem.L.zjJSONData){
-      let zj_geos=JSON.parse(MapData.ProjectItem.L.zjJSONData).geometries;
+    if(LayersData.zjJSONData){
+      let zj_geos;
+      if(typeof(LayersData.zjJSONData)==='JSON'){
+        if(LayersData.zjJSONData.geometries){
+          if(LayersData.zjJSONData.geometries.length!==0){
+            zj_geos=JSON.parse(LayersData.zjJSONData).geometries;
+          }
+        }
+      }
+      if(typeof(LayersData.zjJSONData)==='string'){
+        zj_geos=JSON.parse(LayersData.zjJSONData).geometries;
+      }
       console.log(zj_geos)
       //为地图对象添加点击绑定事件
       if(zj_geos){
@@ -496,14 +547,14 @@ class Map extends Component {
     }
     //读取并剔除不合格的底图数据
     let poiGeometries,lineGeometries,polygonGeometries
-    if(MapData.Project_DT_Point!==null){
-      poiGeometries=maptalks.GeoJSON.toGeometry(MapData.Project_DT_Point).filter(geometry=>geometry!==null);
+    if(DT_Point!==null){
+      poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
     }
-    if(MapData.Project_DT_Line!==null){
-      lineGeometries=maptalks.GeoJSON.toGeometry(MapData.Project_DT_Line).filter(geometry=>geometry!==null);
+    if(DT_Line!==null){
+      lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
     }
-    if(MapData.Project_DT_Polygon!==null){
-      polygonGeometries=maptalks.GeoJSON.toGeometry(MapData.Project_DT_Polygon).filter(geometry=>geometry!==null);  
+    if(DT_Polygon!==null){
+      polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
     }
     //设置地图中心点坐标
     if(poiGeometries.length!==0){
@@ -2359,12 +2410,12 @@ const sketchReduce = (
       case "snapListClick":
         let layerChoice = action.payload.command;
         console.log(layerChoice);
-        console.log(snap);
         if(layerChoice=="point"){
           if(!state.snapJzdIsChecked){ 
             snap.setLayer(map.getLayer('point'));
             snap.enable();
-            (console.log('界址点捕捉开启'))
+            console.log(map.getLayers())
+            console.log('界址点捕捉开启')
           }else{
             snap.disable();
             console.log('界址点捕捉关闭')
@@ -2529,7 +2580,10 @@ const mapStateToProps = (state, ownProps) => {
   // console.log(ownProps)
   return {
     text: ownProps.ownProps,
-    MapData:ownProps.MapData,
+    LayersData:ownProps.LayersData,
+    DT_Point:ownProps.DT_Point,
+    DT_Line:ownProps.DT_Line,
+    DT_Polygon:ownProps.DT_Polygon,
   };
 };
 /**
