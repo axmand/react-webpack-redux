@@ -24,13 +24,22 @@ class MapView extends Component {
       classes,
       isRealtimeOn,
       projectDataLoadState,
-      projectData
+      LayersData,
+      DT_Point,
+      DT_Line,
+      DT_Polygon,
     } = this.props
 		// console.log(sketchDisplayState)	
     return (
       <div className={classes.root}>
-        {sketchDisplayState && <Sketch SketchData ={projectData}/> }
-        {projectDataLoadState && <Map isRealtimeOn={isRealtimeOn} MapData={projectData} />}
+        {sketchDisplayState && <Sketch/> }
+        {projectDataLoadState && <Map 
+        isRealtimeOn={isRealtimeOn} 
+        LayersData={LayersData}
+        DT_Point={DT_Point}
+        DT_Line={DT_Line}
+        DT_Polygon={DT_Polygon}
+         />}
       </div>
     )
   }
@@ -71,15 +80,14 @@ RootReducer.merge(mapViewReduce);
  *
  */
 const mapStateToProps = ( state ) => {
-
-  const mapViewState = state.mapViewReduce;
-  const sketchState = state.sketchReduce;
-
   return {
-    sketchDisplayState: mapViewState.sketchDisplayState,
-    isRealtimeOn: sketchState.isRealtimeOn,
+    sketchDisplayState:  state.mapViewReduce.sketchDisplayState,
+    isRealtimeOn: state.sketchReduce.isRealtimeOn,
     projectDataLoadState: state.ProjectReduce.projectData.Loaded,
-    projectData: state.ProjectReduce.projectData,
+    LayersData: state.ProjectReduce.projectData.ProjectItem.L,
+    DT_Point:state.ProjectReduce.projectData.Project_DT_Point,
+    DT_Line:state.ProjectReduce.projectData.Project_DT_Line,
+    DT_Polygon:state.ProjectReduce.projectData.Project_DT_Polygon
   }
 }
 
