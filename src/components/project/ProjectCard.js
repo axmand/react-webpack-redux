@@ -64,81 +64,111 @@ const mapStateToProps = (state,ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleChooseItem:( ProjectUrl )=>{
-      console.log(ProjectUrl.slice(36))
+
       dispatch({
             type: 'handleProjectProgress',
       })
       
-      fetch(appConfig.fileServiceRootPath + '/project/importpoint/'+ProjectUrl.slice(36))
-      .then(response => response.json())
-      .then( json => {
+      var promises = [appConfig.fileServiceRootPath + '/project/importpoint/'+ProjectUrl.slice(36),appConfig.fileServiceRootPath + '/project/importline/'+ProjectUrl.slice(36),appConfig.fileServiceRootPath + '/project/importpolygon/'+ProjectUrl.slice(36),ProjectUrl].map(url => fetch(url).then(y => y.json()));
+      Promise.all(promises).then(results => {
         dispatch({
-          type: 'Read_DT_Point',
-          payload: json.data,
-        })
-      })
-      .catch(e => {
-        console.log("Oops, error", e)
-      })
-      
-      fetch(appConfig.fileServiceRootPath + '/project/importline/'+ProjectUrl.slice(36))
-      .then(response => response.json())
-      .then( json => {
-        dispatch({
-          type: 'Read_DT_Line',
-          payload: json.data,
-        })
-      })
-      .catch(e => {
-        console.log("Oops, error", e)
-      })
-      
-      fetch(appConfig.fileServiceRootPath + '/project/importpolygon/'+ProjectUrl.slice(36))
-      .then(response => response.json())
-      .then( json => {
-        dispatch({
-          type: 'Read_DT_Polygon',
-          payload: json.data,
-        })
-      })
-      .catch(e => {
-        console.log("Oops, error", e)
-      })
-
-      fetch(ProjectUrl)
-      .then(response => response.json())
-      .then( json => {
-        dispatch({
-          type: 'handleChooseItem',
-          payload: json,
+          type:'handleChooseItem',
+          // type:'test',
+          payload:results,
           itemName: ProjectUrl.slice(36),
           ProjectUrl
         })
-
         dispatch({
           type: 'handleProjectProgress',
         }) 
-        
         dispatch({
-              type:'handleProjectTrue'
+          type:'handleProjectTrue'
         })
-
-        // setTimeout(() => {
-        //   dispatch({
-        //       type:'handleProjectTrue'
-        //   }
-        // )}, 500);
       })
       .catch(e => {
         dispatch({
           type: 'handleProjectProgress',
         }) 
-        
         dispatch({
-        type: 'handleProjectFalse',
+          type: 'handleProjectFalse',
         })
         console.log("Oops, error", e)
-    })
+    });
+
+      // Promise.all([appConfig.fileServiceRootPath + '/project/importpoint/'+ProjectUrl.slice(36),appConfig.fileServiceRootPath + '/project/importline/'+ProjectUrl.slice(36),appConfig.fileServiceRootPath + '/project/importpolygon/'+ProjectUrl.slice(36),ProjectUrl].map(fetch))
+      // .then(responses =>Promise.all(responses.map(res => res.json()))
+      // .then(json => {console.log(json)})
+      
+    //   fetch(appConfig.fileServiceRootPath + '/project/importpoint/'+ProjectUrl.slice(36))
+    //   .then(response => response.json())
+    //   .then( json => {
+    //     dispatch({
+    //       type: 'Read_DT_Point',
+    //       payload: json.data,
+    //     })
+    //   })
+    //   .catch(e => {
+    //     console.log("Oops, error", e)
+    //   })
+      
+    //   fetch(appConfig.fileServiceRootPath + '/project/importline/'+ProjectUrl.slice(36))
+    //   .then(response => response.json())
+    //   .then( json => {
+    //     dispatch({
+    //       type: 'Read_DT_Line',
+    //       payload: json.data,
+    //     })
+    //   })
+    //   .catch(e => {
+    //     console.log("Oops, error", e)
+    //   })
+      
+    //   fetch(appConfig.fileServiceRootPath + '/project/importpolygon/'+ProjectUrl.slice(36))
+    //   .then(response => response.json())
+    //   .then( json => {
+    //     dispatch({
+    //       type: 'Read_DT_Polygon',
+    //       payload: json.data,
+    //     })
+    //   })
+    //   .catch(e => {
+    //     console.log("Oops, error", e)
+    //   })
+
+    //   fetch(ProjectUrl)
+    //   .then(response => response.json())
+    //   .then( json => {
+    //     dispatch({
+    //       type: 'handleChooseItem',
+    //       payload: json,
+    //       itemName: ProjectUrl.slice(36),
+    //       ProjectUrl
+    //     })
+
+    //     dispatch({
+    //       type: 'handleProjectProgress',
+    //     }) 
+        
+    //     dispatch({
+    //           type:'handleProjectTrue'
+    //     })
+
+    //     // setTimeout(() => {
+    //     //   dispatch({
+    //     //       type:'handleProjectTrue'
+    //     //   }
+    //     // )}, 500);
+    //   })
+    //   .catch(e => {
+    //     dispatch({
+    //       type: 'handleProjectProgress',
+    //     }) 
+        
+    //     dispatch({
+    //     type: 'handleProjectFalse',
+    //     })
+    //     console.log("Oops, error", e)
+    // })
 
 
     },

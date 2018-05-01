@@ -324,7 +324,7 @@ class Map extends Component {
     snap.disable();
   }
   //初始化完成进行项目数据加载
-  componentWillReceiveProps(nextProps) {   
+  componentWillReceiveProps(nextProps) {
     console.log(nextProps) ;
     console.log(map.getLayers())
     let LayersData=nextProps.LayersData;
