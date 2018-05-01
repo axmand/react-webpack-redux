@@ -17,7 +17,7 @@ import ProjectCard from './ProjectCard'
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
-import projectData from './../../redux/RootData';
+// import projectData from './../../redux/RootData';
 import appConfig from "../../redux/Config"
 
 const styles = {
@@ -82,7 +82,6 @@ class ProjectModule extends Component {
       ProjectTrue,
       ProjectFalse,
       ProjectProgress,
-      projectData,
       classes
     } = this.props
 
@@ -316,7 +315,6 @@ const ProjectReduce = (
   
   if (action.type === "handleChooseItem") {
     let list0 = [];
-    let sta = JSON.parse(action.payload.status)
     let Prolist = [];
     list0 = JSON.parse(action.payload.data);
     Prolist = action.itemName;
@@ -327,7 +325,6 @@ const ProjectReduce = (
     // projectData.ProjectName = Prolist;
     // projectData.ProjectItem = list0[0];
     // projectData.Loaded = ! state.projectData.Loaded;
-   
     newState.ContentShow = !state.ContentShow;
      return { ...state, ...newState }; 
   }
