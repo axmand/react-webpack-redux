@@ -17,7 +17,7 @@ import ProjectCard from './ProjectCard'
 //redux
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
-import projectData from './../../redux/RootData';
+// import projectData from './../../redux/RootData';
 import appConfig from "../../redux/Config"
 
 const styles = {
@@ -82,7 +82,6 @@ class ProjectModule extends Component {
       ProjectTrue,
       ProjectFalse,
       ProjectProgress,
-      projectData,
       classes
     } = this.props
 
@@ -316,37 +315,44 @@ const ProjectReduce = (
   
   if (action.type === "handleChooseItem") {
     let list0 = [];
-    let sta = JSON.parse(action.payload.status)
     let Prolist = [];
-    list0 = JSON.parse(action.payload.data);
+    list0 = action.payload;
     Prolist = action.itemName;
-   
+      //  console.log(action.payload)
     newState.projectData.ProjectName = Prolist;
-    newState.projectData.ProjectItem = list0[0];
-    newState.projectData.Loaded = ! state.projectData.Loaded;   
+    newState.projectData.ProjectItem = JSON.parse(list0[3].data)[0];
+    newState.projectData.Project_DT_Point = (JSON.parse(list0[0].data));
+    newState.projectData.Project_DT_Line = (JSON.parse(list0[1].data));
+    newState.projectData.Project_DT_Polygon = (JSON.parse(list0[2].data)); 
+    newState.projectData.Loaded = true;   
+
     // projectData.ProjectName = Prolist;
     // projectData.ProjectItem = list0[0];
     // projectData.Loaded = ! state.projectData.Loaded;
-   
     newState.ContentShow = !state.ContentShow;
      return { ...state, ...newState }; 
   }
   
-  if (action.type === "Read_DT_Point") {
-    let list0 = JSON.parse(action.payload);
-    newState.projectData.Project_DT_Point = list0; 
-    return { ...state, ...newState }; 
-  }
+  // if (action.type === "Read_DT_Point") {
+  //   let list0 = JSON.parse(action.payload);
+  //   newState.projectData.Project_DT_Point = list0; 
+  //   return { ...state, ...newState }; 
+  // }
   
-  if (action.type === "Read_DT_Line") {
-    let list0 = JSON.parse(action.payload);
-    newState.projectData.Project_DT_Line = list0; 
-    return { ...state, ...newState }; 
-  }
+  // if (action.type === "Read_DT_Line") {
+  //   let list0 = JSON.parse(action.payload);
+  //   newState.projectData.Project_DT_Line = list0; 
+  //   return { ...state, ...newState }; 
+  // }
   
-  if (action.type === "Read_DT_Polygon") {
-    let list0 = JSON.parse(action.payload);
-    newState.projectData.Project_DT_Polygon = list0; 
+  // if (action.type === "Read_DT_Polygon") {
+  //   let list0 = JSON.parse(action.payload);
+  //   newState.projectData.Project_DT_Polygon = list0; 
+  //   return { ...state, ...newState }; 
+  // }
+  
+  if (action.type === "test") {
+    console.log(action.payload)
     return { ...state, ...newState }; 
   }
   

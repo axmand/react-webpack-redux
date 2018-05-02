@@ -229,7 +229,7 @@ loaded:false
    
    let list = [];
    
-   list = JSON.parse(action.payload.data);
+   list = action.payload;
   
   
    var newValue = list.slice(0);

@@ -24,7 +24,7 @@ class MapView extends Component {
       classes,
       isRealtimeOn,
       projectDataLoadState,
-      LayersData,
+      LayerData,
       DT_Point,
       DT_Line,
       DT_Polygon,
@@ -35,7 +35,7 @@ class MapView extends Component {
         {sketchDisplayState && <Sketch/> }
         {projectDataLoadState && <Map 
         isRealtimeOn={isRealtimeOn} 
-        LayersData={LayersData}
+        LayerData={LayerData}
         DT_Point={DT_Point}
         DT_Line={DT_Line}
         DT_Polygon={DT_Polygon}
@@ -84,7 +84,7 @@ const mapStateToProps = ( state ) => {
     sketchDisplayState:  state.mapViewReduce.sketchDisplayState,
     isRealtimeOn: state.sketchReduce.isRealtimeOn,
     projectDataLoadState: state.ProjectReduce.projectData.Loaded,
-    LayersData: state.ProjectReduce.projectData.ProjectItem.L,
+    LayerData: state.ProjectReduce.projectData.ProjectItem.L,
     DT_Point:state.ProjectReduce.projectData.Project_DT_Point,
     DT_Line:state.ProjectReduce.projectData.Project_DT_Line,
     DT_Polygon:state.ProjectReduce.projectData.Project_DT_Polygon
