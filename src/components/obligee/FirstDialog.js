@@ -161,16 +161,19 @@ function mapStateToProps(state) {
 }
 
 // Map Redux actions to component props
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     close: () =>{ dispatch({
       type: 'close',
       payload: {
         choice: 1
       }
+    }),
+    // console.log(ownProps)
+    dispatch({
+      type: 'TableData2projectData',
+      payload: ownProps
     })
-   
-  
   },
  
     

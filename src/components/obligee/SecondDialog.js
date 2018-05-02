@@ -175,7 +175,11 @@ const mapDispatchToProps = (dispatch,ownProps) => {
       payload: {
         choice: 2
       }
-    })
+    });
+    dispatch({
+      type: 'TableData2projectData',
+      payload: ownProps
+    });
     
   
   

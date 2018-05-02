@@ -134,7 +134,7 @@ const mapStateToProps=(state)=> {
 }
 
 // Map Redux actions to component props
-const mapDispatchToProps=(dispatch)=> {
+const mapDispatchToProps=(dispatch,ownProps)=> {
   return {
   
 
@@ -143,7 +143,11 @@ const mapDispatchToProps=(dispatch)=> {
               payload: {
                 choice: 6
               }
-            })
+            });
+                dispatch({
+      type: 'TableData2projectData',
+      payload: ownProps
+    });
            
           },
   }

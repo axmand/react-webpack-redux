@@ -27,7 +27,7 @@ class ObligeeModule extends Component {
 
 
   render() {
-    const { projectName,ObligeeData
+    const { projectName,ObligeeData,TableData
     } = this.props
   
     return (
@@ -35,10 +35,10 @@ class ObligeeModule extends Component {
       <div>
         
           <ChooseDialog projectName={projectName} ObligeeData={ObligeeData}/>
-          <FirstDialog   ObligeeData={ObligeeData} />
-          <SecondDialog    ObligeeData={ObligeeData}/>
-          <ThirdDialog   ObligeeData={ObligeeData}/>
-          <ForthDialog  ObligeeData={ObligeeData}/>
+          <FirstDialog   TableData={TableData} />
+          <SecondDialog    TableData={TableData}/>
+          <ThirdDialog    TableData={TableData}/>
+          <ForthDialog   TableData={TableData}/>
    
       </div>
 
@@ -49,8 +49,11 @@ class ObligeeModule extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   var test=ownProps.ObligeeData.ProjectName;
+  var test1=state.ObContentReducer
+  console.log(ownProps)
   return {
-    projectName:ownProps.ObligeeData.ProjectName
+    projectName:ownProps.ObligeeData.ProjectName,
+    TableData:state.ObContentReducer,
   }
 }
 
