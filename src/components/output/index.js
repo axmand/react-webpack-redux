@@ -133,13 +133,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
       { 
       method: 'POST', 
-      // headers: {
-      //    "Access-Control-Allow-Origin": "*",
-      //   'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
-      //   'Accept': 'application/json',
-      //   'Content-Type': 'application/json',
-      // }, 
-      // body: params(JsonData) 
       body: JsonData
       })
     .then(response => response.json())

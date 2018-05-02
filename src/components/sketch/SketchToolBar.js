@@ -1065,7 +1065,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: "saveClick",
       });
       //更新图层数据至项目数据
-      console.log(ownProps.LayerData)
+      console.log(ownProps)
       dispatch({
         type: "updateData2projectData",
         payload:{

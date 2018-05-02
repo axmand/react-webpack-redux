@@ -43,6 +43,11 @@ class Sketch extends Component {
     this.setState({ index });
   };
 
+  componentWillReceiveProps(nextProps) {
+      console.log("Sketch componentWillReceiveProps ...")
+      // this.setState({someThings: nextProps.someThings});
+  }
+
   render() {
     const { classes, 
       onClick, 

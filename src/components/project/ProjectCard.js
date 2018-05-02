@@ -73,7 +73,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       Promise.all(promises).then(results => {
         dispatch({
           type:'handleChooseItem',
-          // type:'test',
           payload:results,
           itemName: ProjectUrl.slice(36),
           ProjectUrl
@@ -94,10 +93,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
         console.log("Oops, error", e)
     });
-
-      // Promise.all([appConfig.fileServiceRootPath + '/project/importpoint/'+ProjectUrl.slice(36),appConfig.fileServiceRootPath + '/project/importline/'+ProjectUrl.slice(36),appConfig.fileServiceRootPath + '/project/importpolygon/'+ProjectUrl.slice(36),ProjectUrl].map(fetch))
-      // .then(responses =>Promise.all(responses.map(res => res.json()))
-      // .then(json => {console.log(json)})
       
     //   fetch(appConfig.fileServiceRootPath + '/project/importpoint/'+ProjectUrl.slice(36))
     //   .then(response => response.json())
