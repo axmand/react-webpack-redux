@@ -280,7 +280,7 @@ class Map extends Component {
       }),
     });
      //获取项目图层数据
-     let LayersData=this.props.LayersData;
+     let LayerData=this.props.LayerData;
      let DT_Point=this.props.DT_Point;
      let DT_Line=this.props.DT_Line;
      let DT_Polygon=this.props.DT_Polygon;
@@ -315,17 +315,17 @@ class Map extends Component {
     zj.addTo(map);  
     location.addTo(map);
     //添加界址点图层数据
-    if(LayersData.jzdJSONData){
+    if(LayerData.jzdJSONData){
       let jzd_geos;
-      if(typeof(LayersData.jzdJSONData)==='JSON'){
-        if(LayersData.jzdJSONData.geometries){
-            if(LayersData.jzdJSONData.geometries.length!==0){
-            jzd_geos=JSON.parse(LayersData.jzdJSONData).geometries;         
+      if(typeof(LayerData.jzdJSONData)==='JSON'){
+        if(LayerData.jzdJSONData.geometries){
+            if(LayerData.jzdJSONData.geometries.length!==0){
+            jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;         
             }
           }
       }
-      if(typeof(LayersData.jzdJSONData)==='string'){
-        jzd_geos=JSON.parse(LayersData.jzdJSONData).geometries;
+      if(typeof(LayerData.jzdJSONData)==='string'){
+        jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
       }
       //为地图对象添加点击绑定事件
       if(jzd_geos){
@@ -344,17 +344,17 @@ class Map extends Component {
       }
     }
     //添加四至图层数据
-    if(LayersData.szJSONData){
+    if(LayerData.szJSONData){
       let sz_geos;
-      if(typeof(LayersData.szJSONData)==='JSON'){
-        if(LayersData.szJSONData.geometries){
-          if(LayersData.szJSONData.geometries.length!==0){
-            sz_geos=JSON.parse(LayersData.szJSONData).geometries;
+      if(typeof(LayerData.szJSONData)==='JSON'){
+        if(LayerData.szJSONData.geometries){
+          if(LayerData.szJSONData.geometries.length!==0){
+            sz_geos=JSON.parse(LayerData.szJSONData).geometries;
           }
         }  
       }
-      if(typeof(LayersData.szJSONData)==='string'){
-        sz_geos=JSON.parse(LayersData.szJSONData).geometries;
+      if(typeof(LayerData.szJSONData)==='string'){
+        sz_geos=JSON.parse(LayerData.szJSONData).geometries;
       }
       //为地图对象添加点击绑定事件
       if(sz_geos){
@@ -380,17 +380,17 @@ class Map extends Component {
       }
     }
       //添加界址线图层数据
-      if(LayersData.jzxJSONData){
+      if(LayerData.jzxJSONData){
         let jzx_geos;
-        if(typeof(LayersData.jzxJSONData)==='JSON'){
-          if(LayersData.jzxJSONData.geometries){
-            if(LayersData.jzxJSONData.geometries.length!==0){
-               jzx_geos=JSON.parse(LayersData.jzxJSONData).geometries;
+        if(typeof(LayerData.jzxJSONData)==='JSON'){
+          if(LayerData.jzxJSONData.geometries){
+            if(LayerData.jzxJSONData.geometries.length!==0){
+               jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
             }
           }
         }
-        if(typeof(LayersData.jzxJSONData)==='string'){
-          jzx_geos=JSON.parse(LayersData.jzxJSONData).geometries;
+        if(typeof(LayerData.jzxJSONData)==='string'){
+          jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
         }
         //为地图对象添加点击绑定事件
         if(jzx_geos){
@@ -417,17 +417,17 @@ class Map extends Component {
         }
     }
     //添加宗地图层数据
-    if(LayersData.zdJSONData){
+    if(LayerData.zdJSONData){
       let zd_geos;
-      if(typeof(LayersData.zdJSONData)==='JSON'){
-        if(LayersData.zdJSONData.geometries){
-          if(LayersData.zdJSONData.geometries.length!==0){
-            zd_geos=JSON.parse(LayersData.zdJSONData).geometries;
+      if(typeof(LayerData.zdJSONData)==='JSON'){
+        if(LayerData.zdJSONData.geometries){
+          if(LayerData.zdJSONData.geometries.length!==0){
+            zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
           }
         }
       }
-      if(typeof(LayersData.zdJSONData)==='string'){
-        zd_geos=JSON.parse(LayersData.zdJSONData).geometries;
+      if(typeof(LayerData.zdJSONData)==='string'){
+        zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
       }
       console.log(zd_geos)
       //为地图对象添加点击绑定事件
@@ -451,17 +451,17 @@ class Map extends Component {
       }
     }
     //添加注记图层数据
-    if(LayersData.zjJSONData){
+    if(LayerData.zjJSONData){
       let zj_geos;
-      if(typeof(LayersData.zjJSONData)==='JSON'){
-        if(LayersData.zjJSONData.geometries){
-          if(LayersData.zjJSONData.geometries.length!==0){
-            zj_geos=JSON.parse(LayersData.zjJSONData).geometries;
+      if(typeof(LayerData.zjJSONData)==='JSON'){
+        if(LayerData.zjJSONData.geometries){
+          if(LayerData.zjJSONData.geometries.length!==0){
+            zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
           }
         }
       }
-      if(typeof(LayersData.zjJSONData)==='string'){
-        zj_geos=JSON.parse(LayersData.zjJSONData).geometries;
+      if(typeof(LayerData.zjJSONData)==='string'){
+        zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
       }
       console.log(zj_geos)
       //为地图对象添加点击绑定事件
@@ -538,7 +538,7 @@ class Map extends Component {
   componentWillReceiveProps(nextProps) {
     console.log(nextProps) ;
     console.log(map.getLayers())
-    let LayersData=nextProps.LayersData;
+    let LayerData=nextProps.LayerData;
     let DT_Point=nextProps.DT_Point;
     let DT_Line=nextProps.DT_Line;
     let DT_Polygon=nextProps.DT_Polygon;
@@ -574,17 +574,17 @@ class Map extends Component {
       DT.clear();
     }
     //添加界址点图层数据
-    if(LayersData.jzdJSONData){
+    if(LayerData.jzdJSONData){
       let jzd_geos;
-      if(typeof(LayersData.jzdJSONData)==='JSON'){
-        if(LayersData.jzdJSONData.geometries){
-            if(LayersData.jzdJSONData.geometries.length!==0){
-            jzd_geos=JSON.parse(LayersData.jzdJSONData).geometries;         
+      if(typeof(LayerData.jzdJSONData)==='JSON'){
+        if(LayerData.jzdJSONData.geometries){
+            if(LayerData.jzdJSONData.geometries.length!==0){
+            jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;         
             }
           }
       }
-      if(typeof(LayersData.jzdJSONData)==='string'){
-        jzd_geos=JSON.parse(LayersData.jzdJSONData).geometries;
+      if(typeof(LayerData.jzdJSONData)==='string'){
+        jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
       }
       //为地图对象添加点击绑定事件
       if(jzd_geos){
@@ -603,17 +603,17 @@ class Map extends Component {
       }
     }
     //添加四至图层数据
-    if(LayersData.szJSONData){
+    if(LayerData.szJSONData){
       let sz_geos;
-      if(typeof(LayersData.szJSONData)==='JSON'){
-        if(LayersData.szJSONData.geometries){
-          if(LayersData.szJSONData.geometries.length!==0){
-            sz_geos=JSON.parse(LayersData.szJSONData).geometries;
+      if(typeof(LayerData.szJSONData)==='JSON'){
+        if(LayerData.szJSONData.geometries){
+          if(LayerData.szJSONData.geometries.length!==0){
+            sz_geos=JSON.parse(LayerData.szJSONData).geometries;
           }
         }  
       }
-      if(typeof(LayersData.szJSONData)==='string'){
-        sz_geos=JSON.parse(LayersData.szJSONData).geometries;
+      if(typeof(LayerData.szJSONData)==='string'){
+        sz_geos=JSON.parse(LayerData.szJSONData).geometries;
       }
       //为地图对象添加点击绑定事件
       if(sz_geos){
@@ -639,17 +639,17 @@ class Map extends Component {
       }
     }
       //添加界址线图层数据
-      if(LayersData.jzxJSONData){
+      if(LayerData.jzxJSONData){
         let jzx_geos;
-        if(typeof(LayersData.jzxJSONData)==='JSON'){
-          if(LayersData.jzxJSONData.geometries){
-            if(LayersData.jzxJSONData.geometries.length!==0){
-               jzx_geos=JSON.parse(LayersData.jzxJSONData).geometries;
+        if(typeof(LayerData.jzxJSONData)==='JSON'){
+          if(LayerData.jzxJSONData.geometries){
+            if(LayerData.jzxJSONData.geometries.length!==0){
+               jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
             }
           }
         }
-        if(typeof(LayersData.jzxJSONData)==='string'){
-          jzx_geos=JSON.parse(LayersData.jzxJSONData).geometries;
+        if(typeof(LayerData.jzxJSONData)==='string'){
+          jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
         }
         //为地图对象添加点击绑定事件
         if(jzx_geos){
@@ -676,17 +676,17 @@ class Map extends Component {
         }
     }
     //添加宗地图层数据
-    if(LayersData.zdJSONData){
+    if(LayerData.zdJSONData){
       let zd_geos;
-      if(typeof(LayersData.zdJSONData)==='JSON'){
-        if(LayersData.zdJSONData.geometries){
-          if(LayersData.zdJSONData.geometries.length!==0){
-            zd_geos=JSON.parse(LayersData.zdJSONData).geometries;
+      if(typeof(LayerData.zdJSONData)==='JSON'){
+        if(LayerData.zdJSONData.geometries){
+          if(LayerData.zdJSONData.geometries.length!==0){
+            zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
           }
         }
       }
-      if(typeof(LayersData.zdJSONData)==='string'){
-        zd_geos=JSON.parse(LayersData.zdJSONData).geometries;
+      if(typeof(LayerData.zdJSONData)==='string'){
+        zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
       }
       console.log(zd_geos)
       //为地图对象添加点击绑定事件
@@ -710,17 +710,17 @@ class Map extends Component {
       }
     }
     //添加注记图层数据
-    if(LayersData.zjJSONData){
+    if(LayerData.zjJSONData){
       let zj_geos;
-      if(typeof(LayersData.zjJSONData)==='JSON'){
-        if(LayersData.zjJSONData.geometries){
-          if(LayersData.zjJSONData.geometries.length!==0){
-            zj_geos=JSON.parse(LayersData.zjJSONData).geometries;
+      if(typeof(LayerData.zjJSONData)==='JSON'){
+        if(LayerData.zjJSONData.geometries){
+          if(LayerData.zjJSONData.geometries.length!==0){
+            zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
           }
         }
       }
-      if(typeof(LayersData.zjJSONData)==='string'){
-        zj_geos=JSON.parse(LayersData.zjJSONData).geometries;
+      if(typeof(LayerData.zjJSONData)==='string'){
+        zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
       }
       console.log(zj_geos)
       //为地图对象添加点击绑定事件
@@ -2791,7 +2791,7 @@ const mapStateToProps = (state, ownProps) => {
   // console.log(ownProps)
   return {
     text: ownProps.ownProps,
-    LayersData:ownProps.LayersData,
+    LayerData:ownProps.LayerData,
     DT_Point:ownProps.DT_Point,
     DT_Line:ownProps.DT_Line,
     DT_Polygon:ownProps.DT_Polygon,
