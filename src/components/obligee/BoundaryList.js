@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CheckCell from './CheckCell'
 import { connect } from 'react-redux'
 // import  PointNameCell from './PointNameCell'
-import projectData from "./../../redux/RootData";
+//import projectData from "./../../redux/RootData";
 import InputListCell from "./InputListCell"
 import MutiCheckButton from "./MutiCheckButton"
 // Map Redux state to component props
@@ -13,9 +13,9 @@ const mapStateToProps=(state,ownProps)=> {
 var LandPointDistance=[];
  
 
-if(projectData.ProjectItem.L.jzxJSONData!="")
+if(state.ObContentReducer.L.jzxJSONData!="")
 {
-  var jzx =JSON.parse(projectData.ProjectItem.L.jzxJSONData);
+  var jzx =JSON.parse(state.ObContentReducer.L.jzxJSONData);
 
   console.log(jzx);
   for(let i=0;i<jzx.geometries.length;i++)
@@ -41,9 +41,8 @@ for(let j=0;j<jzx.geometries[i].options.poiArr.length;j++)
 if(LandPointCodeList.length>0)
   LandPointDistance.length=LandPointCodeList.length-1;
 }
-  projectData.ProjectItem.F2.LandPointCodeList  =LandPointCodeList;
-  //projectData.ProjectItem.F2.LandPointDistance   =LandPointDistance; 
-  // console.log(LandPointDistance);
+  //projectData.ProjectItem.F2.LandPointCodeList  =LandPointCodeList;
+ 
 
     return {
       LandPointCodeList:LandPointCodeList,

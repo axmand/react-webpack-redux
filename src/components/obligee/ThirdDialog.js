@@ -17,7 +17,7 @@ import Slide from 'material-ui/transitions/Slide';
 // import Paper from 'material-ui/Paper';
 // import Grid from 'material-ui/Grid';
 // import RootReducer from './../../redux/RootReducer';
-import projectData from './../../redux/RootData'
+//import projectData from './../../redux/RootData'
 import appConfig from "../../redux/Config"
 
 // import { createStore } from 'redux'
@@ -64,14 +64,6 @@ const styleSheet ={
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
-// const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
-//   root: {
-//     flexGrow: 1,
-//     marginTop: theme.spacing.unit * 3,
-//     backgroundColor: theme.palette.background.paper,
-//   },
-// }));
 
 class ThirdDialog extends Component {
 
@@ -176,33 +168,7 @@ const mapDispatchToProps=(dispatch) =>{
         choice: 5
       }
     })
-    let JsonData = JSON.stringify([projectData.ProjectItem]);
-    
-          console.log(JsonData)
-          fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
-          { 
-          method: 'POST', 
-          // headers: {
-          //   //  "Access-Control-Allow-Origin": "*",
-          //   // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
-          //   // 'Accept': 'application/json',
-          //   'Content-Type': 'application/json',
-          //   //  'Content-Type': 'text/plain', 
-          // }, 
-          // body: params(JsonData) 
-          body: JsonData
-          })
-        .then(response => response.json())
-        .then( json => {
-          // dispatch({
-          //   type: 'handleOutput',
-          //   payload: json,
-          // })
-          console.log(json)})
-          .catch(err => {
-            console.log(err)
-          })
-  
+   
   
   },
   }
@@ -210,49 +176,3 @@ const mapDispatchToProps=(dispatch) =>{
 var TD1=withStyles(styleSheet)(ThirdDialog);
 export default connect(mapStateToProps, mapDispatchToProps)(TD1);
 
-// Reducer
-// function reducer(state = {
- 
-
-// }, action) {
-  
-   
-//   let value = state.value;
-  
-//     switch (action.type) {
-  
-//       case 'change':
-//       var inputName=action.payload.inputName;
-      
- 
-//        var statenew=state;
-//        statenew[inputName]=action.payload.inputValue;
-      
-       
-//        return Object.assign({}, state, statenew);
-
-
-//   case 'changetest':
-//    console.log("clicked "+action.payload.row+" "+action.payload.col);
-
-//     var newValue=state[action.payload.type];
-//     var type=action.payload.type;
-//     newValue[action.payload.row]=action.payload.col;
-//     return  Object.assign({}, state, {
-    
-//       type:newValue
-//   });;
-//   case 'ZoomToPoint':
-//   console.log("clicked "+action.payload.pointName);
-
-//    return state;
-  
-//       default:
-//         return state
-//     }
-// }
-
-// // Store
-// const store = createStore(reducer);
-
-// RootReducer.merge(reducer);

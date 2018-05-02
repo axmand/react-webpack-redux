@@ -40,7 +40,7 @@ const mapStateToProps=(state,ownProps)=> {
   // if(state.ObContentReducer[ownProps.tableIndex][ownProps.name]!=undefined)
   // if(state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.index]!=undefined)
 
- valueData=state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.index];
+ valueData=state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.index];//state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.index];
  
   return {
     

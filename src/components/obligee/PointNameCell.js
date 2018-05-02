@@ -21,7 +21,7 @@ const mapStateToProps = (state, ownProps) => {
     // var ttt = state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row];
     return {
 
-        value: state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row]
+        value: state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row]//state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row]
     }
 }
 
