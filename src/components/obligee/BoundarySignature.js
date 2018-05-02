@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import PointNameCell from './PointNameCell'
-import projectData from "./../../redux/RootData";
+//import projectData from "./../../redux/RootData";
 // Map Redux state to component props
 function mapStateToProps(state ,ownProps) {
   // const tableIndex =ownProps.tableIndex;
@@ -10,7 +10,7 @@ function mapStateToProps(state ,ownProps) {
   var endPoints=[];
   var innerPoints=[];
   var jzxID=[];  
-  var jzxData=projectData.ProjectItem.L.jzxJSONData;
+  var jzxData=state.ObContentReducer.L.jzxJSONData;
   if(jzxData){
     var jzx =JSON.parse(jzxData);// eval('(' + jzxData + ')');
     console.log(jzx);
@@ -33,9 +33,9 @@ function mapStateToProps(state ,ownProps) {
     }
 
   }
-  projectData.ProjectItem.F3.StartPointCodeList=startPoints;
-  projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
-  projectData.ProjectItem.F3.EndPointCodeList=endPoints;
+  // projectData.ProjectItem.F3.StartPointCodeList=startPoints;
+  // projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
+  // projectData.ProjectItem.F3.EndPointCodeList=endPoints;
   
   return {
     startPoint:startPoints,

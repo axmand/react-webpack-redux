@@ -13,7 +13,7 @@ const mapStateToProps=(state,ownProps)=> {
   
   return {
 
-    FixedCount:state.ObContentReducer["F1"].FixedCount,
+    FixedCount:state.ObContentReducer["F7"].FixedCount,
     FixedCode:state.ObContentReducer["F7"].FixedCode,
     LandOwnUseArea:state.ObContentReducer["F7"].LandOwnUseArea,
     LandUniqueArea:state.ObContentReducer["F7"].LandUniqueArea,
@@ -48,7 +48,7 @@ class CommonAreaMessage extends Component {
    
   render() {
     const { 
-      // FixedCount,
+       FixedCount,
       FixedCode,
       // LandOwnUseArea,
       // LandUniqueArea,
@@ -69,14 +69,14 @@ class CommonAreaMessage extends Component {
   tableContent.push(tableHead);
   
   
-  for(var index=0;index<FixedCode.length;index++)
+  for(var index=0;index<FixedCount;index++)
     {
         var obj=(
         <tr>
-      <td width="143"><p >{FixedCode[index]}</p></td>
-            {/* <td width="150"><p >{LandOwnUseArea[index]}</p></td>
-            <td width="157"><p >{LandUniqueArea[index]}</p></td>
-            <td width="154"><p >{CommonArea[index]}</p></td> */}
+      <td width="143"><p >   <ListInputCell tableIndex={tableIndex} name="FixedCode" row={index} tips="..." title="..."/></p></td>
+
+   
+          
 
             <td width="150"><ListInputCell tableIndex={tableIndex} name="LandOwnUseArea" row={index} tips="..." title="..."/></td>
             <td width="157"><ListInputCell tableIndex={tableIndex}  name="LandUniqueArea" row={index} tips="..." title="..."/></td>
@@ -107,4 +107,3 @@ CommonAreaMessage.propTypes = {
     mapStateToProps,
     mapDispatchToProps
   )(CommonAreaMessage)
-// export default CommonAreaMessage;

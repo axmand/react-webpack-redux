@@ -17,7 +17,7 @@ import Slide from 'material-ui/transitions/Slide';
 // import Grid from 'material-ui/Grid';
 // import RootReducer from './../../redux/RootReducer';
 import CommonAreaTable from './CommonAreaTable'
-import projectData from './../../redux/RootData'
+//import projectData from './../../redux/RootData'
 import appConfig from "../../redux/Config"
 
 // import { createStore } from 'redux'
@@ -144,34 +144,7 @@ const mapDispatchToProps=(dispatch)=> {
                 choice: 6
               }
             })
-            let JsonData = JSON.stringify([projectData.ProjectItem]);
-            
-                  console.log(JsonData)
-                  fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
-                  { 
-                  method: 'POST', 
-                  // headers: {
-                  //   //  "Access-Control-Allow-Origin": "*",
-                  //   // 'Content-Type': 'x-www-form-urlencoded;charset=UTF-8',
-                  //   // 'Accept': 'application/json',
-                  //   'Content-Type': 'application/json',
-                  //   //  'Content-Type': 'text/plain', 
-                  // }, 
-                  // body: params(JsonData) 
-                  body: JsonData
-                  })
-                .then(response => response.json())
-                .then( json => {
-                  // dispatch({
-                  //   type: 'handleOutput',
-                  //   payload: json,
-                  // })
-                  console.log(json)})
-                  .catch(err => {
-                    console.log(err)
-                  })
-          
-          
+           
           },
   }
 }

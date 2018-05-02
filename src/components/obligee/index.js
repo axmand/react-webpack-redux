@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { withStyles } from 'material-ui/styles'
-import projectData from './../../redux/RootData';
+//import projectData from './../../redux/RootData';
 
+import { connect } from 'react-redux'
 
 import ChooseDialog from './ChooseDialog'
 import FirstDialog from './FirstDialog'
@@ -26,17 +27,18 @@ class ObligeeModule extends Component {
 
 
   render() {
-   
+    const { projectName,ObligeeData
+    } = this.props
   
     return (
 
       <div>
         
-          <ChooseDialog projectName="项目二"/>
-          <FirstDialog   />
-          <SecondDialog   />
-          <ThirdDialog  />
-          <ForthDialog />
+          <ChooseDialog projectName={projectName} ObligeeData={ObligeeData}/>
+          <FirstDialog   ObligeeData={ObligeeData} />
+          <SecondDialog    ObligeeData={ObligeeData}/>
+          <ThirdDialog   ObligeeData={ObligeeData}/>
+          <ForthDialog  ObligeeData={ObligeeData}/>
    
       </div>
 
@@ -45,7 +47,21 @@ class ObligeeModule extends Component {
 
 }
 
-export default withStyles(styles,{name:'ObligeeModule'})(ObligeeModule);
+const mapStateToProps = (state, ownProps) => {
+  var test=ownProps.ObligeeData.ProjectName;
+  return {
+    projectName:ownProps.ObligeeData.ProjectName
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  
+  return {
+   
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { name: 'ObligeeModule' })(ObligeeModule));
 
 // Reducer
 const obligeeReducer=(state = DialogState, action)=> {
@@ -57,17 +73,17 @@ const obligeeReducer=(state = DialogState, action)=> {
     return state;
     
     case 'clickIcon':
-    
-    if(projectData.Loaded===true)
+    if(action.payload=== false)
+    {
+      alert("Error_import_002:请选择项目或检查数据是否成功导入！");
+      return state
+    }
+  else
 
     {return Object.assign({}, state, {
         	open:true
       });}
-      else
-      {
-      alert("Error_import_002:请选择项目！");
-      return state
-      }
+     
   case 'closeChoose':
   return Object.assign({}, state, {
         	open:false

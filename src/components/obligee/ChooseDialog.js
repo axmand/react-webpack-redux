@@ -16,7 +16,7 @@ import { connect } from 'react-redux'
 import Paper from 'material-ui/Paper';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 // import PeopleIcon from 'material-ui-icons/People'
-import projectData from './../../redux/RootData';
+//import projectData from './../../redux/RootData';
 
 const styles = {
   avatar: {
@@ -57,7 +57,7 @@ class ChooseTableDialog extends Component {
   render() {
     
     const{open,close,search, choose1,choose2,choose3,choose4,choose5,choose6,
-      // projectName,
+       projectName,ObligeeData,
       classes,
       clickIcon
     }=this.props;
@@ -92,36 +92,36 @@ class ChooseTableDialog extends Component {
          
                 <TableRow >
             <TableCell ><Button onClick={choose1} key="权籍调查表">权籍调查表</Button></TableCell>
-            <TableCell><Button onClick={choose1} key="权籍调查表">{projectData.ProjectName}</Button></TableCell>
+            <TableCell><Button onClick={choose1} key="权籍调查表">{projectName}</Button></TableCell>
             
           </TableRow>
 
                <TableRow >
             <TableCell ><Button onClick={choose2} key={"界址标示表"}>界址标示表</Button></TableCell>
-            <TableCell><Button onClick={choose2} key={"界址标示表"}>{projectData.ProjectName}</Button></TableCell>
+            <TableCell><Button onClick={choose2} key={"界址标示表"}>{projectName}</Button></TableCell>
             
           </TableRow>
 
             <TableRow >
             <TableCell ><Button onClick={choose3} >界址签章表</Button></TableCell>
-            <TableCell><Button onClick={choose3} >{projectData.ProjectName}</Button></TableCell>
+            <TableCell><Button onClick={choose3} >{projectName}</Button></TableCell>
             
           </TableRow>
             <TableRow >
             <TableCell ><Button onClick={choose4} >界址说明表</Button></TableCell>
-            <TableCell><Button onClick={choose4} >{projectData.ProjectName}</Button></TableCell>
+            <TableCell><Button onClick={choose4} >{projectName}</Button></TableCell>
             
           </TableRow>
 
             <TableRow >
             <TableCell ><Button onClick={choose5} key={"调查审核表"}>调查审核表</Button></TableCell>
-            <TableCell><Button onClick={choose5} key={"调查审核表"}>{projectData.ProjectName}</Button></TableCell>
+            <TableCell><Button onClick={choose5} key={"调查审核表"}>{projectName}</Button></TableCell>
             
           </TableRow>
 
             <TableRow >
             <TableCell ><Button onClick={choose6} key={"共有宗地面积分摊表"}>共有宗地面积分摊表</Button></TableCell>
-            <TableCell><Button onClick={choose6} key={"共有宗地面积分摊表"}>{projectData.ProjectName}</Button></TableCell>
+            <TableCell><Button onClick={choose6} key={"共有宗地面积分摊表"}>{projectName}</Button></TableCell>
             
           </TableRow>
            
@@ -149,7 +149,7 @@ const mapStateToProps = (state) => {
     }
 }
 // Map Redux actions to component props
-const mapDispatchToProps= (dispatch)=> {
+const mapDispatchToProps= (dispatch,ownProps)=> {
   return {
     search:()=>dispatch(
       {
@@ -159,39 +159,45 @@ const mapDispatchToProps= (dispatch)=> {
     choose1: () => dispatch({
                 type: 'choose',
                 payload: {
-                    choice: 1
+                    choice: 1,
+                    data:ownProps.ObligeeData
                 }
             }),
     choose2: () => dispatch({
                 type: 'choose',
                 payload: {
-                    choice: 2
+                    choice: 2,
+                    data:ownProps.ObligeeData
                 }
             }),
     choose3: () => dispatch({
                 type: 'choose',
                 payload: {
-                    choice: 3
+                    choice: 3,
+                    data:ownProps.ObligeeData
                 }
             }),
 
     choose4: () => dispatch({
                 type: 'choose',
                 payload: {
-                    choice: 4
+                    choice: 4,
+                    data:ownProps.ObligeeData
                 }
             }),
 
     choose5: () => dispatch({
                 type: 'choose',
                 payload: {
-                    choice: 5
+                    choice: 5,
+                    data:ownProps.ObligeeData
                 }
     }),
    choose6: () => dispatch({
                 type: 'choose',
                 payload: {
-                    choice: 6
+                    choice: 6,
+                    data:ownProps.ObligeeData
                 }
     }),
     close:()=>dispatch({
@@ -209,6 +215,7 @@ const mapDispatchToProps= (dispatch)=> {
       });
       dispatch({
         type: 'clickIcon',
+                payload: ownProps.ObligeeData.Loaded        
       });
     }
   }
@@ -220,26 +227,26 @@ export default connect(mapStateToProps, mapDispatchToProps)(ChooseDialog);
 const ObContentReducer = (state={
 loaded:false
 }, action) => {
+  var newState = state;
+  
  
   
   switch (action.type) {
 
     case "handleChooseItem":
-
-   
-   let list = [];
-   
-   list = action.payload;
+    {
+      let list0 = [];
+    
+      list0 = action.payload;
+     
+      newState = JSON.parse(list0[3].data)[0];
+     
+      
   
-  
-   var newValue = list.slice(0);
-
-   //console.log(newValue[0].F1);
-   var newsss=newValue[0];
-   state=newsss;
-  
-   projectData.Loaded=true;
-   return state;
+     
+      
+       return { ...state, ...newState }; 
+    }
 break;
 
 
@@ -248,10 +255,12 @@ break;
      {
       var statenew=state;
       
-var LandPointInMap=[];
-if(projectData.ProjectItem.L.jzxJSONData=="")
-  return state;
-      var jzx =JSON.parse(projectData.ProjectItem.L.jzxJSONData);
+    var LandPointInMap=[];
+    if(action.payload.data.ProjectItem.L.jzxJSONData=="")
+      return state;
+
+
+      var jzx =JSON.parse(action.payload.data.ProjectItem.L.jzxJSONData);
       
 
       if(jzx.geometries.length!==0)
@@ -269,29 +278,17 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
         var LandPointInMapCount=LandPointInMap.length;
 
 
-      var LandPointCount =projectData.ProjectItem.F2.LandPointCodeList.length;
+      var LandPointCount =action.payload.data.ProjectItem.F2.LandPointCodeList.length;
 
-      var LandPointTypeCount =projectData.ProjectItem.F2.LandPointTypeList.length;
+      var LandPointTypeCount =action.payload.data.ProjectItem.F2.LandPointTypeList.length;
 
-      var LandPointDistanceCount =projectData.ProjectItem.F2.LandPointDistance.length;
+      var LandPointDistanceCount =action.payload.data.ProjectItem.F2.LandPointDistance.length;
 
-      var LandBoundaryTypeCount =projectData.ProjectItem.F2.LandBoundaryType.length;
+      var LandBoundaryTypeCount =action.payload.data.ProjectItem.F2.LandBoundaryType.length;
 
-      var LandBoundaryLocationCount =projectData.ProjectItem.F2.LandBoundaryLocation.length ;
+      var LandBoundaryLocationCount =action.payload.data.ProjectItem.F2.LandBoundaryLocation.length ;
 
-      console.log(LandPointInMapCount);
-      console.log(LandPointCount);
-
-      console.log(LandPointTypeCount);
-
-      console.log(LandPointDistanceCount);
-
-      console.log(LandBoundaryTypeCount);
-
-      console.log(LandBoundaryLocationCount);
-
-
-
+     
       if(LandPointInMapCount>LandPointCount)
       {
         if(LandPointCount===0)
@@ -300,9 +297,9 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
            statenew.F2.LandPointTypeList =new Array(LandPointInMapCount);
 
           statenew.F2.LandPointDistance  =new Array(LandPointInMapCount-1);
-        statenew.F2.LandBoundaryType  =new Array(LandPointInMapCount-1);
-        statenew.F2.LandBoundaryLocation  =new Array(LandPointInMapCount-1);
-        statenew.F2.LandBoundaryExplain  =new Array(LandPointInMapCount-1);
+          statenew.F2.LandBoundaryType  =new Array(LandPointInMapCount-1);
+          statenew.F2.LandBoundaryLocation  =new Array(LandPointInMapCount-1);
+          statenew.F2.LandBoundaryExplain  =new Array(LandPointInMapCount-1);
   
 
         for(let i=0;i<LandPointInMapCount;i++)
@@ -353,7 +350,7 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
     }
        var returnState=Object.assign({}, state, statenew);
  
-       projectData.ProjectItem=returnState;
+       //projectData.ProjectItem=returnState;
    
        return returnState;
 
@@ -371,7 +368,7 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
 
 
 
-      projectData.ProjectItem=returnState;
+     // projectData.ProjectItem=returnState;
 
       //console.log(projectData.ProjectItem)
       return returnState;
@@ -388,7 +385,7 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
       console.log(statenew[tableID][inputName][index]);
        var returnState=Object.assign({}, state, statenew);
  
-       projectData.ProjectItem=returnState;
+      // projectData.ProjectItem=returnState;
    
        console.log(returnState);
        return returnState;
@@ -396,7 +393,7 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
        
        case 'Muti_CHANGE_CHECKBOX':
        
-         var newState=state;
+         newState=state;
         
         for(var i=0;i<newState[action.payload.tableID][action.payload.type].length;i++)
         {
@@ -406,7 +403,7 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
      
      
           var returnState=Object.assign({}, state, newState);
-          projectData.ProjectItem=returnState;
+         // projectData.ProjectItem=returnState;
      
          console.log(returnState);
          return returnState;
@@ -416,21 +413,21 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
 
      case 'CHANGE_CHECKBOX':
   
-    var newState=state;
+    newState=state;
    
         
     newState[action.payload.tableID][action.payload.type][action.payload.row]=action.payload.col;
 
 
     var returnState=Object.assign({}, state, newState);
-    projectData.ProjectItem=returnState;
+   // projectData.ProjectItem=returnState;
 
     console.log(returnState);
     return returnState;
    
 
     case 'fillSignatureList':
-    let jzxData=projectData.ProjectItem.L.jzxJSONData;
+    let jzxData=action.payload.data.ProjectItem.L.jzxJSONData;
     console.log(jzxData)
     let jzx ;
     if(jzxData){
@@ -463,13 +460,13 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
         }
       }
       console.log(state)
-      let newState=state;
+      newState=state;
       newState.F3.StartPointCodeList=startPoints;
       newState.F3.InnerPointCodeList=innerPoints;
       newState.F3.EndPointCodeList=endPoints;
       console.log(newState)
       const returnState=Object.assign({}, state, newState);
-      projectData.ProjectItem=returnState;
+      //projectData.ProjectItem=returnState;
       return returnState;
     }else{
       return{...state}
@@ -484,7 +481,7 @@ if(projectData.ProjectItem.L.jzxJSONData=="")
          var statenew=state;
          statenew[tableID][type][action.payload.row]=action.payload.value;
          var returnState=Object.assign({}, state, statenew);
-         projectData.ProjectItem=returnState;
+         //projectData.ProjectItem=returnState;
          return returnState;
 
 
