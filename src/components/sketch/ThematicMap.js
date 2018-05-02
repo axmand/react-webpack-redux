@@ -25,9 +25,6 @@ import Dialog, {DialogContent} from "material-ui/Dialog";
 import appConfig from "../../redux/Config";
 import html2canvas from "html2canvas";
 import { read } from "fs";
-import poiData from "./../map/Point";
-import lineData from "./../map/Line";
-import polygonData from "./../map/Polygon";
 
 const styles = theme => ({
   root: {
@@ -199,14 +196,22 @@ class ThematicMap extends Component {
       saveIsChecked,
       mapCenter,
       mapZoom,
-      layerData
+      layerData//点线面注记图层数据
     } = this.props;
     const ThematicMapData=this.props.ThematicMapData;
     console.log(ThematicMapData);
-
+    //获取底图数据
+    let DT_Point=ThematicMapData.Project_DT_Point;
+    let DT_Line=ThematicMapData.Project_DT_Line;
+    let DT_Polygon=ThematicMapData.Project_DT_Polygon;
 
     if (saveIsChecked) {   
-      let jzd,sz,jzx,zd,zj;
+      let jzd,sz,jzx,zd,zj;      
+      const ThematicMapDiv = this.refs.ThematicMap;
+      thematicMap = new maptalks.Map(ThematicMapDiv, {
+        center: mapCenter,
+        zoom:mapZoom,
+      });
       if(layerData.jzdJSONData){
         jzd=maptalks.Layer.fromJSON(layerData.jzdJSONData);
         //设置界址点半径成图美观
@@ -228,44 +233,40 @@ class ThematicMap extends Component {
       if(layerData.zjJSONData){
         zj=maptalks.Layer.fromJSON(layerData.zjJSONData);
       }
-      const ThematicMapDiv = this.refs.ThematicMap;
-      thematicMap = new maptalks.Map(ThematicMapDiv, {
-        center: mapCenter,
-        zoom:mapZoom,
-      });
-      //读取并剔除不合格的底图数据
-      let poiGeometries,lineGeometries,polygonGeometries
-      if(poiData!==null){
-        poiGeometries=maptalks.GeoJSON.toGeometry(poiData).filter(geometry=>geometry!==null);
-      }
-      if(lineData!==null){
-        lineGeometries=maptalks.GeoJSON.toGeometry(lineData).filter(geometry=>geometry!==null);
-      }
-      if(poiData!==null){
-        polygonGeometries=maptalks.GeoJSON.toGeometry(polygonData).filter(geometry=>geometry!==null);  
-      }
-      poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
-      //新建地形图层显示底图数据
-      if(poiGeometries!==null){
-        let DT=new maptalks.VectorLayer('DT', poiGeometries,{geometryEvents:false}).setStyle({
-          symbol:{
-              markerType:'ellipse',
-              markerFill: '#ccc',
-              markerLineColor:'#444',
-              markerWidth : 4,
-              markerHeight : 4,
-              lineColor:'#000',
-              lineWidth:1,
-              polygonFill: "#FFF",
-              polygonOpacity: 0.4
-          }
-        }).addTo(thematicMap);
-      }
       zd.addTo(thematicMap);      
       sz.addTo(thematicMap);
       jzx.addTo(thematicMap);
       jzd.addTo(thematicMap);
       zj.addTo(thematicMap);
+      //读取并剔除不合格的底图数据
+      let DT=new maptalks.VectorLayer("DT",{geometryEvents:false}).setStyle({
+        symbol:{
+            markerType:'ellipse',
+            markerFill: '#ccc',
+            markerLineColor:'#444',
+            markerWidth : 4,
+            markerHeight : 4,
+            lineColor:'#000',
+            lineWidth:1,
+            polygonFill: "#FFF",
+            polygonOpacity: 0.4
+        }
+      }).addTo(thematicMap);
+      let poiGeometries,lineGeometries,polygonGeometries;
+      if(DT_Point!==null){
+        poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
+      }
+      if(DT_Line!==null){
+        lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
+      }
+      if(DT_Polygon!==null){
+        polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
+      }
+      poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+      if(poiGeometries!==null){
+        DT.addGeometry(poiGeometries);
+        DT.bringToBack();
+      }
     }
   }
 
