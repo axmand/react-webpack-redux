@@ -351,14 +351,9 @@ const ProjectReduce = (
   //   return { ...state, ...newState }; 
   // }
   
-  if (action.type === "test") {
-    console.log(action.payload)
-    return { ...state, ...newState }; 
-  }
-  
   if (action.type === "updateData2projectData") {
     let list0 = {};
-    console.log(action.payload.data)
+    // console.log(action.payload.data)
     list0 = action.payload.data; 
     newState.projectData.ProjectItem.L = list0;   
 
