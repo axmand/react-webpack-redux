@@ -281,6 +281,7 @@ class Map extends Component {
     });
      //获取项目图层数据
      let LayerData=this.props.LayerData;
+     console.log(LayerData)
      let DT_Point=this.props.DT_Point;
      let DT_Line=this.props.DT_Line;
      let DT_Polygon=this.props.DT_Polygon;

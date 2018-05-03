@@ -20,7 +20,8 @@ function mapStateToProps(state,ownProps) {
   let obj = {};
   obj['key2'] = key;
   // obj[key] = state.value[key];
-  obj[key] = state.ObContentReducer[ownProps.tableIndex][key];
+  
+  obj[key] =state.ObContentReducer[ownProps.tableIndex][key];// state.ObContentReducer[ownProps.tableIndex][key];
   return obj;
 }
 

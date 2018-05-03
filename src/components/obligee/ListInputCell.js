@@ -20,7 +20,7 @@ function mapStateToProps(state,ownProps) {
    
     
 return {
-    value:state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.row]
+    value:state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.row]//state.ObContentReducer[ownProps.tableIndex][ownProps.name][ownProps.row]
 }
 }
 
