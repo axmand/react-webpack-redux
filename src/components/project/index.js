@@ -334,12 +334,9 @@ const ProjectReduce = (
   }
 
   if (action.type === "TableData2projectData") {
-    //let list0 = {};
-    // console.log(action.payload.data)
     var list0 = action.payload.TableData;
 
     list0.L = state.projectData.ProjectItem.L;
-    list0.Loaded = state.projectData.ProjectItem.Loaded;
     newState.projectData.ProjectItem = list0;
     return { ...state, ...newState };
   }

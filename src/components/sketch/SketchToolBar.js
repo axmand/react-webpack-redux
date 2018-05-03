@@ -1144,10 +1144,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onFetchPoi_NumClick:()=>{
       dispatch({
         type:'closeFetchPoiNum',
-      });
-      
+      });       
 
-      
+      console.log(ownProps)
       ownProps.plotListData.forEach(n=>{
         let Poi_Data = JSON.stringify({
             	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
@@ -1156,7 +1155,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               strType: localStorage.getItem('Macinfo'),
               strUserName: null
         });
-        console.log(Poi_Data)
+        
         fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
           method: "POST",
