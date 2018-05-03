@@ -44,6 +44,7 @@ import uuidv4 from "uuid/v4";
 import AccountCircleIcon from "material-ui-icons/AccountCircle";
 import Bluetooth from "material-ui-icons/Bluetooth";
 import Devices from "material-ui-icons/Devices";
+import PhonelinkOff from "material-ui-icons/PhonelinkOff";
 import Photo from "material-ui-icons/Photo";
 
 //import page
@@ -126,12 +127,8 @@ const styles = theme => ({
   //specially for those mixed button
   buttonAttach: {
     display: "inline-block",
-    padding: 0,
     lineHeight: "2em",
     fontWeight:'bold',
-    marginTop: "30px",
-    marginLeft: "8%",
-    // marginRight: "36px",
     justify: "center",
     justifyContent: "center"
   },
@@ -166,7 +163,7 @@ const styles = theme => ({
     fontFamily: "微软雅黑",
     fontSize: "1.2em",
     width: "100%",
-    fontWeight:'bold',
+    fontWeight: 'bold',
   },
   //specially for those descriptional(or definitional) typography
   labelUser: {
@@ -233,8 +230,8 @@ const styles = theme => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    marginTop: '-30%',
-    marginLeft: '-16%',
+    marginTop: '-17%',
+    marginLeft: '-8%',
   },
 });
 
@@ -282,7 +279,10 @@ class UserModule extends Component {
       userJob,
       lastLoginTime,
       handleClickBluetooth,
-      bluetoothConnectModuleLoading
+      handleClickCompassModule,
+      bluetoothConnectModuleLoading,
+      CompassModuleRunningState,
+      CompassModuleLoading,
     } = this.props;
     const imageLists = [
       { imageName: "*****区域影像图1", imageSize: "105MB" },
@@ -411,23 +411,25 @@ class UserModule extends Component {
                     onClick={handleClickBluetooth}
                   >
                     <Bluetooth className={classes.icon} />                  
-                    <Typography className={classes.typography} bold>
+                    <Typography className={classes.typography}>
                       蓝牙连接
                     </Typography>
                   </Button>
                   {bluetoothConnectModuleLoading && <CircularProgress size={48} className={classes.buttonProgress} />}
                 </div>
 
-                {/* <div className={classes.wrapperWithProgress}>
-                  <Button className={classes.buttonAttach}>
-                    <Devices className={classes.icon} />
-                    <Typography className={classes.typography} bold>
-                      连接到电脑
-                    </Typography>
+                <div className={classes.wrapperWithProgress}>
+                  <Button 
+                    className={classes.buttonAttach}
+                    onClick={handleClickCompassModule}
+                  >
+                    {CompassModuleRunningState? <Devices className={classes.icon} /> : <PhonelinkOff className={classes.icon} />}                 
+                    {CompassModuleRunningState? <Typography className={classes.typography}>北斗模块断开 </Typography>: <Typography className={classes.typography}>北斗模块连接</Typography>} 
                   </Button>
+                  {CompassModuleLoading && <CircularProgress size={52} className={classes.buttonProgress} />}
                 </div>
 
-                <div className={classes.wrapperWithProgress}>
+                {/* <div className={classes.wrapperWithProgress}>
                   <Button
                     className={classes.buttonAttach}
                     onClick={this.handleClickImage}
@@ -453,7 +455,6 @@ class UserModule extends Component {
               >
                 <NavLink className={classes.navLink} to="/">
                   <Button
-                    flat
                     style={{
                       background: '#455A64',
                       border: 0,
@@ -468,7 +469,6 @@ class UserModule extends Component {
                   </Button>
                 </NavLink>
                 <Button
-                  flat
                   style={{
                     background: '#455A64',
                     border: 0,
@@ -541,14 +541,22 @@ const userReduce = (
     userJob: "地籍测量员",
     lastLoginTime: "2017/08/24/21:38",
     bluetoothConnectModuleLoading: false,
+    CompassModuleRunningState: false,
+    CompassModuleLoading: false,
   },
   action
 ) => {
   let newState = JSON.parse(JSON.stringify(state));
 
   switch (action.type) {
+    case 'COMPASS_MODULE_RUNNING_STATE':
+      newState.CompassModuleRunningState = !newState.CompassModuleRunningState;
+      return { ...state, ...newState };
     case 'BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH':
       newState.bluetoothConnectModuleLoading = !newState.bluetoothConnectModuleLoading;
+      return { ...state, ...newState };
+    case 'COMPASS_MODULE_LOADING_STATE_SWITCH':
+       newState.CompassModuleLoading = !newState.CompassModuleLoading;
       return { ...state, ...newState };
     case 'LOGIN_SUCCESS':
       const userInfo = action.payload.data;
@@ -575,18 +583,14 @@ const mapStateToProps = state => {
     userJob: userState.userJob,
     lastLoginTime: userState.lastLoginTime,
     bluetoothConnectModuleLoading: userState.bluetoothConnectModuleLoading,
+    CompassModuleLoading: userState.CompassModuleLoading,
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleClickBluetooth: () => {
-      // dispatch({
-      //   type: "COM_BLUETOOTH_VIEW_SWITCH",
-      // });
-      // dispatch({
-      //   type: "COM_BLUETOOTH_MODULE_GET",
-      // });
+      // console.log("call handleClickBluetooth function ...");
       dispatch({
         type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
       });
@@ -616,6 +620,104 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
           });
         });
+    },
+    // 处理北斗模块连接的相关操作
+    handleClickCompassModule: () => {
+      // console.log("call handleClickCompassModule ...");
+      dispatch({
+        type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+      });
+      if(ownProps.CompassModuleRunningState)
+      {
+        fetch(appConfig.fileServiceRootPath + "/sp/closesp")
+        .then(response => response.json())
+        .then(json => {
+          if (json.status === 500)
+          {
+            return Promise.reject(json.data)
+          }
+          
+          if (json.status === 200)
+          {
+            dispatch({
+              type: "COMPASS_MODULE_RUNNING_STATE",
+              payload: json.data
+            });
+          }
+
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: json.data,
+            }
+          });
+          dispatch({
+            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
+          });
+          dispatch({
+            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+          });
+        });
+      }
+      else
+      {
+        fetch(appConfig.fileServiceRootPath + "/sp/opensp")
+        .then(response => response.json()
+          .then(json => {
+            if (response.ok) {
+              return json
+            } 
+            else {
+              return Promise.reject(json)
+            }
+          })
+        )
+        .then(json => {
+          if (json.status === 500)
+          {
+            return Promise.reject(json.data)
+          }
+          
+          if (json.status === 200)
+          {
+            dispatch({
+              type: "COMPASS_MODULE_RUNNING_STATE",
+              payload: json.data
+            });
+          }
+
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: json.data,
+            }
+          });
+          dispatch({
+            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
+          });
+          dispatch({
+            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+          });
+        });
+      }
     }
   };
 };

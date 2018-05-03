@@ -35,13 +35,14 @@ class NavigationPanel extends Component {
   render() {
     const { 
       projectData,
+      CompassModuleRunningState,
       classes
     } = this.props
   
     return (
       <div className={classes.root}>
         <List>
-          <UserModule />
+          <UserModule CompassModuleRunningState={CompassModuleRunningState}/>
           <Divider className={classes.divider} />
             <ProjectModule />
             <InvestigationModule />
@@ -60,6 +61,7 @@ class NavigationPanel extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     projectData: state.ProjectReduce.projectData,
+    CompassModuleRunningState: state.userReduce.CompassModuleRunningState,
   }
 }
 
