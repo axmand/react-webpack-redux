@@ -195,15 +195,16 @@ class ThematicMap extends Component {
     const {
       saveIsChecked,
       mapCenter,
-      mapZoom,
-      layerData//点线面注记图层数据
+      mapZoom
     } = this.props;
     const ThematicMapData=this.props.ThematicMapData;
-    console.log(ThematicMapData);
-    //获取底图数据
+    console.log(this.props);
+    //获取地图数据
     let DT_Point=ThematicMapData.Project_DT_Point;
     let DT_Line=ThematicMapData.Project_DT_Line;
     let DT_Polygon=ThematicMapData.Project_DT_Polygon;
+    let LayerData=ThematicMapData.ProjectItem.L;
+    console.log(LayerData);
 
     if (saveIsChecked) {   
       let jzd,sz,jzx,zd,zj;      
@@ -212,8 +213,8 @@ class ThematicMap extends Component {
         center: mapCenter,
         zoom:mapZoom,
       });
-      if(layerData.jzdJSONData){
-        jzd=maptalks.Layer.fromJSON(layerData.jzdJSONData);
+      if(LayerData.jzdJSONData){
+        jzd=maptalks.Layer.fromJSON(LayerData.jzdJSONData);
         //设置界址点半径成图美观
         if(jzd.getGeometries()){
           for (let i = 0; i <jzd.getGeometries().length; i++) {
@@ -221,17 +222,17 @@ class ThematicMap extends Component {
           }
         }
       }
-      if(layerData.szJSONData){
-        sz= maptalks.Layer.fromJSON(layerData.szJSONData);
+      if(LayerData.szJSONData){
+        sz= maptalks.Layer.fromJSON(LayerData.szJSONData);
       }
-      if(layerData.jzxJSONData){
-        jzx= maptalks.Layer.fromJSON(layerData.jzxJSONData);
+      if(LayerData.jzxJSONData){
+        jzx= maptalks.Layer.fromJSON(LayerData.jzxJSONData);
       }
-      if(layerData.zdJSONData){
-        zd= maptalks.Layer.fromJSON(layerData.zdJSONData);
+      if(LayerData.zdJSONData){
+        zd= maptalks.Layer.fromJSON(LayerData.zdJSONData);
       }
-      if(layerData.zjJSONData){
-        zj=maptalks.Layer.fromJSON(layerData.zjJSONData);
+      if(LayerData.zjJSONData){
+        zj=maptalks.Layer.fromJSON(LayerData.zjJSONData);
       }
       zd.addTo(thematicMap);      
       sz.addTo(thematicMap);
@@ -465,7 +466,6 @@ const mapStateToProps = (state, ownProps) => {
     unclosePreviewAlert:canvasSeduce.unclosePreviewAlert,
     mapCenter: sketchState.mapCenter,
     mapZoom:sketchState.mapZoom,
-    layerData:sketchState.layerData
   };
 };
 

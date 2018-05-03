@@ -318,16 +318,7 @@ class Map extends Component {
     //添加界址点图层数据
     if(LayerData.jzdJSONData){
       let jzd_geos;
-      if(typeof(LayerData.jzdJSONData)==='JSON'){
-        if(LayerData.jzdJSONData.geometries){
-            if(LayerData.jzdJSONData.geometries.length!==0){
-            jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;         
-            }
-          }
-      }
-      if(typeof(LayerData.jzdJSONData)==='string'){
-        jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
-      }
+      jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(jzd_geos){
         for (let i = 0; i < jzd_geos.length; i++) {
@@ -347,16 +338,7 @@ class Map extends Component {
     //添加四至图层数据
     if(LayerData.szJSONData){
       let sz_geos;
-      if(typeof(LayerData.szJSONData)==='JSON'){
-        if(LayerData.szJSONData.geometries){
-          if(LayerData.szJSONData.geometries.length!==0){
-            sz_geos=JSON.parse(LayerData.szJSONData).geometries;
-          }
-        }  
-      }
-      if(typeof(LayerData.szJSONData)==='string'){
-        sz_geos=JSON.parse(LayerData.szJSONData).geometries;
-      }
+      sz_geos=JSON.parse(LayerData.szJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(sz_geos){
         for (let i = 0; i < sz_geos.length; i++) {
@@ -383,16 +365,7 @@ class Map extends Component {
       //添加界址线图层数据
       if(LayerData.jzxJSONData){
         let jzx_geos;
-        if(typeof(LayerData.jzxJSONData)==='JSON'){
-          if(LayerData.jzxJSONData.geometries){
-            if(LayerData.jzxJSONData.geometries.length!==0){
-               jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
-            }
-          }
-        }
-        if(typeof(LayerData.jzxJSONData)==='string'){
-          jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
-        }
+        jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
         //为地图对象添加点击绑定事件
         if(jzx_geos){
           for (let i = 0; i < jzx_geos.length; i++) {
@@ -420,21 +393,12 @@ class Map extends Component {
     //添加宗地图层数据
     if(LayerData.zdJSONData){
       let zd_geos;
-      if(typeof(LayerData.zdJSONData)==='JSON'){
-        if(LayerData.zdJSONData.geometries){
-          if(LayerData.zdJSONData.geometries.length!==0){
-            zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
-          }
-        }
-      }
-      if(typeof(LayerData.zdJSONData)==='string'){
-        zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
-      }
+      zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
       console.log(zd_geos)
       //为地图对象添加点击绑定事件
       if(zd_geos){
         for (let i = 0; i < zd_geos.length; i++) {
-          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometr.coordinates,  {
+          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometry.coordinates,  {
             id: zd_geos[i].feature.geometry.id,
             labels: zd_geos[i].options.labels,
             isClicked: zd_geos[i].options.isClicked,
@@ -454,16 +418,7 @@ class Map extends Component {
     //添加注记图层数据
     if(LayerData.zjJSONData){
       let zj_geos;
-      if(typeof(LayerData.zjJSONData)==='JSON'){
-        if(LayerData.zjJSONData.geometries){
-          if(LayerData.zjJSONData.geometries.length!==0){
-            zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
-          }
-        }
-      }
-      if(typeof(LayerData.zjJSONData)==='string'){
-        zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
-      }
+      zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
       console.log(zj_geos)
       //为地图对象添加点击绑定事件
       if(zj_geos){
@@ -545,7 +500,7 @@ class Map extends Component {
     let DT_Polygon=nextProps.DT_Polygon;
     let center;
     let jzd,sz,jzx,zd,zj,location,DT;
-    //项目切换时清空地图图层数据
+    //项目数据更新时清空地图图层数据
     jzd = map.getLayer('point');
     sz = map.getLayer('SZ');
     jzx = map.getLayer('JZX');
@@ -574,16 +529,19 @@ class Map extends Component {
     if(DT.getGeometries()){
       DT.clear();
     }
+     /*
+    项目地图数据更新但未导出时加载的是的JSON格式图层数据
+    项目切换时加载的是导出后的string格式图层数据
+    故需要在重载时进行判断
+    */
     //添加界址点图层数据
     if(LayerData.jzdJSONData){
       let jzd_geos;
-      if(typeof(LayerData.jzdJSONData)==='JSON'){
-        if(LayerData.jzdJSONData.geometries){
-            if(LayerData.jzdJSONData.geometries.length!==0){
-            jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;         
-            }
+      if(LayerData.jzdJSONData.geometries){
+          if(LayerData.jzdJSONData.geometries.length!==0){
+          jzd_geos=LayerData.jzdJSONData.geometries;        
           }
-      }
+        }
       if(typeof(LayerData.jzdJSONData)==='string'){
         jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
       }
@@ -606,13 +564,11 @@ class Map extends Component {
     //添加四至图层数据
     if(LayerData.szJSONData){
       let sz_geos;
-      if(typeof(LayerData.szJSONData)==='JSON'){
-        if(LayerData.szJSONData.geometries){
-          if(LayerData.szJSONData.geometries.length!==0){
-            sz_geos=JSON.parse(LayerData.szJSONData).geometries;
-          }
-        }  
-      }
+      if(LayerData.szJSONData.geometries){
+        if(LayerData.szJSONData.geometries.length!==0){
+          sz_geos=LayerData.szJSONData.geometries;
+        }
+      }  
       if(typeof(LayerData.szJSONData)==='string'){
         sz_geos=JSON.parse(LayerData.szJSONData).geometries;
       }
@@ -642,11 +598,9 @@ class Map extends Component {
       //添加界址线图层数据
       if(LayerData.jzxJSONData){
         let jzx_geos;
-        if(typeof(LayerData.jzxJSONData)==='JSON'){
-          if(LayerData.jzxJSONData.geometries){
-            if(LayerData.jzxJSONData.geometries.length!==0){
-               jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
-            }
+        if(LayerData.jzxJSONData.geometries){
+          if(LayerData.jzxJSONData.geometries.length!==0){
+              jzx_geos=LayerData.jzxJSONData.geometries;
           }
         }
         if(typeof(LayerData.jzxJSONData)==='string'){
@@ -679,11 +633,9 @@ class Map extends Component {
     //添加宗地图层数据
     if(LayerData.zdJSONData){
       let zd_geos;
-      if(typeof(LayerData.zdJSONData)==='JSON'){
-        if(LayerData.zdJSONData.geometries){
-          if(LayerData.zdJSONData.geometries.length!==0){
-            zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
-          }
+      if(LayerData.zdJSONData.geometries){
+        if(LayerData.zdJSONData.geometries.length!==0){
+          zd_geos=LayerData.zdJSONData.geometries;
         }
       }
       if(typeof(LayerData.zdJSONData)==='string'){
@@ -693,7 +645,7 @@ class Map extends Component {
       //为地图对象添加点击绑定事件
       if(zd_geos){
         for (let i = 0; i < zd_geos.length; i++) {
-          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometr.coordinates,  {
+          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometry.coordinates,  {
             id: zd_geos[i].feature.geometry.id,
             labels: zd_geos[i].options.labels,
             isClicked: zd_geos[i].options.isClicked,
@@ -713,11 +665,9 @@ class Map extends Component {
     //添加注记图层数据
     if(LayerData.zjJSONData){
       let zj_geos;
-      if(typeof(LayerData.zjJSONData)==='JSON'){
-        if(LayerData.zjJSONData.geometries){
-          if(LayerData.zjJSONData.geometries.length!==0){
-            zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
-          }
+      if(LayerData.zjJSONData.geometries){
+        if(LayerData.zjJSONData.geometries.length!==0){
+          zj_geos=LayerData.zjJSONData.geometries;
         }
       }
       if(typeof(LayerData.zjJSONData)==='string'){
@@ -739,6 +689,7 @@ class Map extends Component {
               'minWidth' : 48,
               'minHeight' : 24,
               'symbol' : {
+                'textDy':-24,
                 'markerType' : 'square',
                 'markerFill' : 'rgb(255,255,255)',
                 'markerFillOpacity' : 0,
@@ -1100,6 +1051,7 @@ const sketchReduce = (
     undoIsChecked: false,
     redoIsChecked: false,
     saveIsChecked: false,
+    showSaveDialog:false,
     alertSave: true,
     alertPlotFail: false,
     errorMessage: "",
@@ -1110,6 +1062,7 @@ const sketchReduce = (
     layerData: {
       jzdJSONData: JSON,
       szJSONData: JSON,
+      jzxJSONData:JSON,
       zdJSONData: JSON,
       zjJSONData: JSON,
     },
@@ -1121,6 +1074,12 @@ const sketchReduce = (
   action
 ) => {
   let newState = JSON.parse(JSON.stringify(state))
+
+  if (action.type === "handleChooseItem") {
+    newState.layerData = JSON.parse(action.payload[3].data)[0].L
+    return { ...state, ...newState };
+  }
+
   //用于计算标签的角度
   computeAngle =
     computeAngle ||
@@ -1174,7 +1133,7 @@ const sketchReduce = (
           'minWidth' : 48,
           'minHeight' : 24,
           'symbol' : {
-            'textDy':-10,
+            'textDy':-24,
             'markerType' : 'square',
             'markerFill' : 'rgb(255,255,255)',
             'markerFillOpacity' : 0,
@@ -2680,6 +2639,10 @@ const sketchReduce = (
       case "drawAlerClose":
       const drawAlerClose = { drawAlert: false };
       return Object.assign({}, state, { ...drawAlerClose });
+      //关闭保存弹出框
+      case "handleCloseSaveDialog":
+      const showSaveDialog = { showSaveDialog: false };
+      return Object.assign({}, state, { ...showSaveDialog });
       //保存
       case "saveClick":
         if (map === undefined){
@@ -2692,7 +2655,11 @@ const sketchReduce = (
           map.off("click", addLabel);
           map.off("click", editLabel);
           map.off("dblclick", drawToolOn);
-          console.log(map.getLayer("point").toJSON())
+          console.log(map.getLayer("point").toJSON());
+          console.log(map.getLayer("SZ").toJSON())
+          console.log(map.getLayer("JZX").toJSON())
+          console.log(map.getLayer("polygon").toJSON())
+          console.log(map.getLayer("label").toJSON())
           const saveData = {
             plotIsChecked: false,
             drawPointIsChecked: false,
@@ -2710,6 +2677,7 @@ const sketchReduce = (
             undoIsChecked: false,
             redoIsChecked: false,
             saveIsChecked: true,
+            showSaveDialog:true,
             alertSave: false,
             mapZoom:map.getZoom(),
             mapCenter: mapCenter,
