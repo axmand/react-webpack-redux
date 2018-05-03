@@ -235,7 +235,10 @@ class SkechToolBar extends Component {
       onPlotAlerClose,
       handleDelete,
       showDelDialog,
-      handleCloseDelDialog,
+      handleCloseDelDialog,      
+      updateMapdata2project,
+      showSaveDialog,
+      handleCloseSaveDialog,
       onDrawAlerClose
     } = this.props;
     const {
@@ -490,6 +493,19 @@ class SkechToolBar extends Component {
               </Button>
             </DialogActions>
           </Dialog>
+          <Dialog open={showSaveDialog} onRequestClose={handleCloseSaveDialog}>
+            <DialogContent>
+              <DialogContentText  style={{color:"#455A64"}}>确认保存？</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseSaveDialog} color="default">
+                取消
+              </Button>
+              <Button onClick={updateMapdata2project} style={{color:"#455A64"}}>
+                确认
+              </Button>
+            </DialogActions>
+          </Dialog>
 
 
           <Dialog 
@@ -739,9 +755,11 @@ class SkechToolBar extends Component {
 SkechToolBar.PropTypes = {
   classes: PropTypes.object.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  updateMapdata2project: PropTypes.func.isRequired,
   handleCloseDelDialog: PropTypes.func.isRequired,
-  handleShowDelDialog: PropTypes.func.isRequired,
+  handleCloseSaveDialog: PropTypes.func.isRequired,
   showDelDialog: PropTypes.bool.isRequired,
+  showSaveDialog:PropTypes.bool.isRequired,
   haveObjToDel: PropTypes.bool.isRequired,
   drawPointIsChecked: PropTypes.bool.isRequired,
   drawLineIsChecked: PropTypes.bool.isRequired,
@@ -760,6 +778,7 @@ const mapStateToProps = state => {
 
   return {
     showDelDialog: sketchState.showDelDialog,
+    showSaveDialog:sketchState.showSaveDialog,
     haveObjToDel: sketchState.haveObjToDel,
     drawAlert:sketchState.drawAlert,
     plotIsChecked:sketchState.plotIsChecked,
@@ -1064,6 +1083,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: "saveClick",
       });
+    },
+    updateMapdata2project:()=>{
       //更新图层数据至项目数据
       console.log(ownProps)
       dispatch({
@@ -1071,6 +1092,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         payload:{
            data:ownProps.LayerData
          }
+      });
+      dispatch({
+        type: "handleCloseSaveDialog"
+      });
+    },
+    handleCloseSaveDialog:()=>{
+      dispatch({
+        type: "handleCloseSaveDialog"
       });
     },
     //签章
@@ -1144,10 +1173,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onFetchPoi_NumClick:()=>{
       dispatch({
         type:'closeFetchPoiNum',
-      });
-      
+      });       
 
-      
+      console.log(ownProps)
       ownProps.plotListData.forEach(n=>{
         let Poi_Data = JSON.stringify({
             	PointX: coordinate.LB2XY(n.coordinates[0],n.coordinates[1]).descartesX,
@@ -1156,7 +1184,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
               strType: localStorage.getItem('Macinfo'),
               strUserName: null
         });
-        console.log(Poi_Data)
+        
         fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
           method: "POST",
