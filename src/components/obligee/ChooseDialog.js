@@ -256,11 +256,15 @@ break;
       var statenew=state;
       
     var LandPointInMap=[];
-    if(action.payload.data.ProjectItem.L.jzxJSONData=="")
+    if(action.payload.data==undefined)
       return state;
 
+      if(typeof(action.payload.data.ProjectItem.L.jzxJSONData)=="string")
 
       var jzx =JSON.parse(action.payload.data.ProjectItem.L.jzxJSONData);
+      else
+      var jzx =action.payload.data.ProjectItem.L.jzxJSONData;
+      
       
 
       if(jzx.geometries.length!==0)
@@ -349,8 +353,6 @@ break;
      }
     }
        var returnState=Object.assign({}, state, statenew);
- 
-       //projectData.ProjectItem=returnState;
    
        return returnState;
 
@@ -427,19 +429,19 @@ break;
    
 
     case 'fillSignatureList':
-    let jzxData=action.payload.data.ProjectItem.L.jzxJSONData;
-    console.log(jzxData)
-    let jzx ;
-    if(jzxData){
-      jzx =JSON.parse(jzxData);
-      console.log(jzx);
+    if(typeof(action.payload.data)=="undefined")
+return state;
+    console.log(action.payload.data);
+   
+    let jzx=action.payload.data.jzxJSONData;
+   
       let startPoints=[];
       let endPoints=[];
       let innerPoints=[];
       let jzxID=[];
       for(let i=0;i<jzx.geometries.length;i++)
       {
-        jzxID.push(jzx.geometries[i].options.id) ;
+        jzxID.push(jzx.geometries[i].feature.id) ;
         let jzxPoints=jzx.geometries[i].options.poiArr;
         startPoints.push(jzxPoints[0]);
         endPoints.push(jzxPoints[jzxPoints.length-1]);
@@ -466,11 +468,9 @@ break;
       newState.F3.EndPointCodeList=endPoints;
       console.log(newState)
       const returnState=Object.assign({}, state, newState);
-      //projectData.ProjectItem=returnState;
+      
       return returnState;
-    }else{
-      return{...state}
-    }
+  
 
 
   case 'changelist':

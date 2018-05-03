@@ -1112,7 +1112,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             }
         });
         dispatch({
-          type:'fillSignatureList'
+          type:'fillSignatureList',
+          payload: {
+          data:ownProps.LayerData
+          }
         });
       }else{
         dispatch({

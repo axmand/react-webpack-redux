@@ -335,10 +335,14 @@ const ProjectReduce = (
 
   if (action.type === "TableData2projectData") {
     var list0 = action.payload.TableData;
-
+if(list0!=undefined)
+{
     list0.L = state.projectData.ProjectItem.L;
     newState.projectData.ProjectItem = list0;
     return { ...state, ...newState };
+}
+else
+return state;
   }
 
   if (action.type === "showPhoto2projectData") {
