@@ -577,10 +577,10 @@ class Map extends Component {
     //添加界址点图层数据
     if(LayerData.jzdJSONData){
       let jzd_geos;
-      if(typeof(LayerData.jzdJSONData)==='JSON'){
+      if(typeof(LayerData.jzdJSONData)==='object'){
         if(LayerData.jzdJSONData.geometries){
             if(LayerData.jzdJSONData.geometries.length!==0){
-            jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;         
+            jzd_geos=LayerData.jzdJSONData.geometries;         
             }
           }
       }
@@ -1121,6 +1121,12 @@ const sketchReduce = (
   action
 ) => {
   let newState = JSON.parse(JSON.stringify(state))
+
+  if (action.type === "handleChooseItem") {
+    newState.layerData = JSON.parse(action.payload[3].data)[0].L
+    return { ...state, ...newState };
+  }
+
   //用于计算标签的角度
   computeAngle =
     computeAngle ||
