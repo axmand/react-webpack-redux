@@ -35,6 +35,7 @@ class NavigationPanel extends Component {
   render() {
     const { 
       projectData,
+      haveSaved,
       CompassModuleRunningState,
       classes
     } = this.props
@@ -46,11 +47,11 @@ class NavigationPanel extends Component {
           <Divider className={classes.divider} />
             <ProjectModule />
             <InvestigationModule />
-            <BoundaryModule BoundaryData = {projectData}/>
-            <SketchModule SketchModule = {projectData} />
+            <BoundaryModule BoundaryData = {projectData} sketchHaveSaved={haveSaved}/>
+            <SketchModule SketchModule = {projectData} sketchHaveSaved={haveSaved}/>
             <ObligeeModule ObligeeData={projectData} />
-            <PrintModule />
-            <OutputModule  OutputData={ projectData }/>
+            <PrintModule PrintData={ projectData } sketchHaveSaved={haveSaved}/>
+            <OutputModule  OutputData={ projectData } sketchHaveSaved={haveSaved}/>
         </List>
       </div>
     )
@@ -61,6 +62,7 @@ class NavigationPanel extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     projectData: state.ProjectReduce.projectData,
+    haveSaved:state.sketchReduce.haveSaved,
     CompassModuleRunningState: state.userReduce.CompassModuleRunningState,
   }
 }

@@ -207,16 +207,19 @@ const mapDispatchToProps= (dispatch,ownProps)=> {
       }
     }),
     clickIcon:() => {
-      dispatch({
-        type: "saveClick",
-      });
-      dispatch({
-        type: 'MAP_SKETCH_VIEW_HIDE',
-      });
+      if(ownProps.sketchHaveSaved){
+        dispatch({
+          type: 'MAP_SKETCH_VIEW_HIDE',
+        });
+      }
       dispatch({
         type: 'clickIcon',
-                payload: ownProps.ObligeeData.Loaded        
-      });
+        payload: {
+          Loaded:ownProps.ObligeeData.Loaded,
+          sketchHaveSaved:ownProps.sketchHaveSaved
+        }    
+      });      
+
     }
   }
 }

@@ -175,12 +175,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleContentShow: () => {
-      dispatch({
-        type: "saveClick"
-      });
-      dispatch({
-        type: "MAP_SKETCH_VIEW_HIDE"
-      });
+      if(ownProps.sketchHaveSaved){
+        dispatch({
+          type: 'MAP_SKETCH_VIEW_HIDE',
+        });
+      }
       dispatch({
         type: "handleProjectProgress"
       });

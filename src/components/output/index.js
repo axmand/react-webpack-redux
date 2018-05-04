@@ -104,15 +104,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   // console.log(ownProps);
   return {
     handleOutputShow: () => {
-      dispatch({
-        type: "saveClick",
-      });
-      dispatch({
-        type: 'MAP_SKETCH_VIEW_HIDE',
-      });
+      if(ownProps.sketchHaveSaved){
+        dispatch({
+          type: 'MAP_SKETCH_VIEW_HIDE',
+        });
+      }
       dispatch({
         type: 'handleOutputShow',
-        payload: ownProps.OutputData.Loaded
+        payload: {
+          Loaded:ownProps.OutputData.Loaded,
+          sketchHaveSaved:ownProps.sketchHaveSaved
+        }
       });
     },
 
@@ -159,10 +161,15 @@ const OutputReduce = (
   let newState = JSON.parse(JSON.stringify(state))
 
   if (action.type === "handleOutputShow") {
-    if(action.payload === false)
+    if(action.payload.Loaded === false){
       alert("Error_import_002:请选择项目！");
-    else
-      { newState.OutputShow =  !state.OutputShow }
+    }else{
+      if(action.payload.sketchHaveSaved===false){
+        alert("请先保存草图绘制数据！");
+      }else{
+        newState.OutputShow =  !state.OutputShow 
+      }
+    }
     return { ...state, ...newState }; 
   }
 

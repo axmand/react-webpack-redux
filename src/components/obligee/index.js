@@ -27,14 +27,14 @@ class ObligeeModule extends Component {
 
 
   render() {
-    const { projectName,ObligeeData,TableData
+    const { projectName,ObligeeData,TableData,haveSaved
     } = this.props
   
     return (
 
       <div>
         
-          <ChooseDialog projectName={projectName} ObligeeData={ObligeeData}/>
+          <ChooseDialog projectName={projectName} ObligeeData={ObligeeData} sketchHaveSaved={haveSaved}/>
           <FirstDialog   TableData={TableData} />
           <SecondDialog    TableData={TableData}/>
           <ThirdDialog    TableData={TableData}/>
@@ -54,11 +54,12 @@ const mapStateToProps = (state, ownProps) => {
   return {
     projectName:ownProps.ObligeeData.ProjectName,
     TableData:state.ObContentReducer,
+    haveSaved:state.sketchReduce.haveSaved,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  
+  console.log(ownProps)
   return {
    
   }
@@ -75,17 +76,18 @@ const obligeeReducer=(state = DialogState, action)=> {
       alert("属性查询");
     return state;
     
-    case 'clickIcon':
-    if(action.payload=== false)
-    {
+  case 'clickIcon':
+    console.log(action.payload)
+    if(action.payload.Loaded=== false){
       alert("Error_import_002:请选择项目或检查数据是否成功导入！");
-      return state
+    }else{
+      if(action.payload.sketchHaveSaved===false){
+        alert("请先保存草图绘制数据！");
+      }else{
+        return Object.assign({}, state, {open:true});
+      }
+      return{...state}
     }
-  else
-
-    {return Object.assign({}, state, {
-        	open:true
-      });}
      
   case 'closeChoose':
   return Object.assign({}, state, {

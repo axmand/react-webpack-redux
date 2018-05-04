@@ -61,10 +61,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onClick: () => {
           dispatch({
               type: 'MAP_SKETCH_VIEW_SWITCH',
-              payload:ownProps.SketchModule
-          })
-      },
+              payload:{
+                Loaded:ownProps.SketchModule.Loaded,
+                sketchHaveSaved:ownProps.sketchHaveSaved
+              }
+          })      
     }
+  }
 }
 
 export default withStyles(styleSheet,{name:'SketchModule'})(connect(mapStateToProps, mapDispatchToProps)(SketchModule))

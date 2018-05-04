@@ -137,11 +137,6 @@ console.log(ownProps)
       dispatch({
         type:'JZDListClose'
       });
-      
-      dispatch({
-        type: "saveClick",
-      }); 
-
       dispatch({
           type: 'ProgressShow',
       });

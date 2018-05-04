@@ -186,14 +186,17 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handlePrintShow: () => {
-      dispatch({
-        type: "saveClick",
-      });
-      dispatch({
-        type: 'MAP_SKETCH_VIEW_HIDE',
-      });
+      if(ownProps.sketchHaveSaved){
+        dispatch({
+          type: 'MAP_SKETCH_VIEW_HIDE',
+        });
+      }
       dispatch({
         type: 'handlePrintShow',
+        payload: {
+          Loaded:ownProps.PrintData.Loaded,
+          sketchHaveSaved:ownProps.sketchHaveSaved
+        }
       });
     },
 
@@ -406,10 +409,15 @@ const PrintReduce = (
   let newState = JSON.parse(JSON.stringify(state))
   
   if (action.type === "handlePrintShow") {
-    if(projectData.Loaded === false)
+    if(action.payload.Loaded === false){
       alert("Error_import_002:请选择项目！");
-    else
-      { newState.PrintShow =  !state.PrintShow }
+    } else{ 
+      if(action.payload.sketchHaveSaved===false){
+        alert("请先保存草图绘制数据！");
+      }else{
+        newState.PrintShow =  !state.PrintShow 
+      }
+    }
     return { ...state, ...newState }; 
   }
 

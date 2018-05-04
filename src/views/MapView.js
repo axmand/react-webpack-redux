@@ -28,6 +28,7 @@ class MapView extends Component {
       DT_Point,
       DT_Line,
       DT_Polygon,
+      ProjectName,
     } = this.props
 		// console.log(sketchDisplayState)	
     return (
@@ -39,6 +40,7 @@ class MapView extends Component {
         DT_Point={DT_Point}
         DT_Line={DT_Line}
         DT_Polygon={DT_Polygon}
+        ProjectName={ProjectName}
          />}
       </div>
     )
@@ -60,8 +62,13 @@ const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
     case 'MAP_SKETCH_VIEW_SWITCH':
       if(action.payload.Loaded === false)
         alert("Error_import_002:请选择项目！");
-      else
-        { newState.sketchDisplayState =  !state.sketchDisplayState }
+      else{
+        if(action.payload.sketchHaveSaved===false){
+          alert("请先保存草图绘制数据！");
+        }else{
+           newState.sketchDisplayState =  !state.sketchDisplayState 
+        } 
+      }
     return { ...state, ...newState }; 
     case 'MAP_SKETCH_VIEW_HIDE':
       if(state.sketchDisplayState === true)
@@ -87,7 +94,8 @@ const mapStateToProps = ( state ) => {
     LayerData: state.ProjectReduce.projectData.ProjectItem.L,
     DT_Point:state.ProjectReduce.projectData.Project_DT_Point,
     DT_Line:state.ProjectReduce.projectData.Project_DT_Line,
-    DT_Polygon:state.ProjectReduce.projectData.Project_DT_Polygon
+    DT_Polygon:state.ProjectReduce.projectData.Project_DT_Polygon,
+    ProjectName:state.ProjectReduce.projectData.ProjectName
   }
 }
 
