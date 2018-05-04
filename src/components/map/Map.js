@@ -1049,6 +1049,7 @@ const sketchReduce = (
     drawAlert:false,
     plotIsChecked: false,
     plotRTKIsChecked:false,
+    plotBDIsChecked:false,
     plotFromFile:false,
     drawPointIsChecked: false,
     rectifyPoiIsChecked:false,
@@ -1751,6 +1752,7 @@ const sketchReduce = (
         const PlotChooseOpen={
           plotIsChecked:!state.plotIsChecked,
           plotRTKIsChecked: false,
+          plotBDIsChecked:false,
           plotFromFile:false,
           drawPointIsChecked: false,
           rectifyPoiIsChecked:false,
@@ -1774,6 +1776,39 @@ const sketchReduce = (
       case"plotListClose":
         const PlotListClose={plotIsChecked:false}
         return Object.assign({}, state, { ...PlotListClose });
+      //内置北斗展点
+      case "plotBD":
+        console.log("内置北斗展点");
+        recoverObj();      
+        map.off("click", editLabel);
+        drawTool.disable();
+        let BDplotData = [];
+        BDplotData = JSON.parse(action.payload.data);
+        console.log(BDplotData);
+        let BDpoi = new maptalks.Coordinate([BDplotData[2], BDplotData[0]]);
+        plot(BDpoi);
+        const BDplotSuccessState = {
+          plotBDIsChecked:true,
+          plotRTKIsChecked: false,
+          plotFromFile:false,
+          drawPointIsChecked: false,
+          rectifyPoiIsChecked:false,
+          drawLineIsChecked: false,
+          drawJZXIsChecked: false,
+          drawArcIsChecked: false,
+          drawPolygonIsChecked: false,
+          balconyIsChecked: false,
+          measureDistanceIsChecked: false,
+          measureAreaIsChecked: false,
+          addLabelIsChecked: false,
+          deleteIsChecked: false,
+          chooseObjIsChecked: false,
+          undoIsChecked: false,
+          redoIsChecked: false,
+          haveSaved: false,
+          alertSave: true,
+        };
+        return { ...state, ...BDplotSuccessState };
       //RTK展点
       case "plotRTK":
         console.log("RTK展点");
@@ -1787,6 +1822,7 @@ const sketchReduce = (
         plot(poi);
         const RTKplotSuccessState = {
           plotRTKIsChecked: true,
+          plotBDIsChecked:false,
           plotFromFile:false,
           drawPointIsChecked: false,
           rectifyPoiIsChecked:false,
@@ -1890,6 +1926,7 @@ const sketchReduce = (
 
         const FileplotSuccessState = {
           plotRTKIsChecked: false,
+          plotBDIsChecked:false,
           plotFromFile:true,
           drawPointIsChecked: false,
           rectifyPoiIsChecked:false,
