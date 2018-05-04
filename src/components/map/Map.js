@@ -2750,12 +2750,12 @@ const sketchReduce = (
               alertSave: false,
               mapZoom:map.getZoom(),
               layerData:{
-                jzdJSONData: map.getLayer("point").toJSON(),
-                szJSONData: map.getLayer("SZ").toJSON(),
-                jzxJSONData: map.getLayer("JZX").toJSON(),
-                zdJSONData: map.getLayer("polygon").toJSON(),
-                zjJSONData: map.getLayer("label").toJSON(),
-                mapCenter: mapCenter
+                jzdJSONData: JSON.stringify(map.getLayer("point").toJSON()) ,
+                szJSONData: JSON.stringify(map.getLayer("SZ").toJSON()),
+                jzxJSONData: JSON.stringify(map.getLayer("JZX").toJSON()),
+                zdJSONData: JSON.stringify(map.getLayer("polygon").toJSON()),
+                zjJSONData: JSON.stringify(map.getLayer("label").toJSON()),
+                mapCenter: JSON.stringify(mapCenter)
               }
             }; 
             return Object.assign({}, state, { ...saveData });
