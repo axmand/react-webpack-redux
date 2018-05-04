@@ -200,6 +200,7 @@ class SkechToolBar extends Component {
       onPlotClick,
       PlotListClose,
       onRTKPlotClick,
+      onBDPlotClick,
       onPlotfromFileClick,
       getFilePath,
       onDrawPointClick,
@@ -659,27 +660,22 @@ class SkechToolBar extends Component {
           }}
           className={classes.snapList}
         >
-          <ListItem
-            button
-            className={classes.fileitem}
-            disableGutters={true}
-            onClick={onRTKPlotClick}
-          >
+          <ListItem button className={classes.fileitem} disableGutters={true} onClick={onRTKPlotClick}>
           RTK展点
           </ListItem>
-          <ListItem
-            button
-            className={classes.fileitem}
-          >
+          <ListItem button className={classes.fileitem} disableGutters={true} onClick={onBDPlotClick}>
+          内置北斗展点
+          </ListItem>
 
-        <span  className={classes.file_A}>
-            <span>从文件展点</span>
-            <input 
-              type="file" 
-              className={classes.file_input}
-              value=""
-              onChange={onPlotfromFileClick}/>
-        </span>
+          <ListItem button className={classes.fileitem}>
+            <span  className={classes.file_A}>
+                <span>从文件展点</span>
+                <input 
+                  type="file" 
+                  className={classes.file_input}
+                  value=""
+                  onChange={onPlotfromFileClick}/>
+            </span>
           </ListItem>
       </Popover>
       <Drawer
@@ -900,6 +896,60 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         });
       }
     },
+//选择内置北斗展点
+onBDPlotClick: () => {
+  dispatch({
+    type: "OPEN_WAITING_MODULE",
+  });
+  console.log("Fetching latitude and longtitude from the BD ...");
+
+  fetch(appConfig.fileServiceRootPath + "/sp/getresult ")
+    .then(response => {
+      console.log(response)
+      if (response.ok) {
+        return response.json()
+      } 
+      else {
+        return Promise.reject({
+          status: response.status,
+          statusText: response.statusText
+        })
+      }
+    })
+    .then(json => {
+      console.log(json);
+      //处理不同HTTP状态码下的对应操作
+      if (json.status === 200)
+      {
+        dispatch({
+          type: "plotBD",
+          payload: json
+        });
+      };
+      // 在状态栏显示调试信息
+      dispatch({
+        type: "STATUS_BAR_NOTIFICATION",
+        payload: {
+          notification: json,
+        }
+      });
+      dispatch({
+        type: "CLOSE_WAITING_MODULE",
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({
+        type: "STATUS_BAR_NOTIFICATION",
+        payload: {
+          notification: err,
+        }
+      });
+    dispatch({
+      type: "CLOSE_WAITING_MODULE",
+    });
+  });
+},
 //选择从文件展点
     onPlotfromFileClick:event=>{
       //读取文件数据
