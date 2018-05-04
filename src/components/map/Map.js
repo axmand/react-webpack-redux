@@ -23,7 +23,7 @@ import { stat } from "fs";
  * @type {maptalks.Map}
  * 全局的地图对象和方法
  */
-let map;
+let map,ProjectName;
 //添加画图工具
 let drawTool = new maptalks.DrawTool({
   mode: "Polygon",
@@ -279,12 +279,13 @@ class Map extends Component {
         attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
       }),
     });
-     //获取项目图层数据
+     //获取项目数据
      let LayerData=this.props.LayerData;
      console.log(LayerData)
      let DT_Point=this.props.DT_Point;
      let DT_Line=this.props.DT_Line;
      let DT_Polygon=this.props.DT_Polygon;
+     ProjectName=this.props.ProjectName;
      //初始化地图中心
      let center;
     //初始化新建所有图层
@@ -504,6 +505,7 @@ class Map extends Component {
     let DT_Point=nextProps.DT_Point;
     let DT_Line=nextProps.DT_Line;
     let DT_Polygon=nextProps.DT_Polygon;
+    let new_ProjectName=nextProps.ProjectName;
     let center;
     let jzd,sz,jzx,zd,zj,location,DT;
     //项目数据更新时清空地图图层数据
@@ -531,9 +533,6 @@ class Map extends Component {
     }
     if(location.getGeometries()){
       location.clear();
-    }
-    if(DT.getGeometries()){
-      DT.clear();
     }
      /*
     项目地图数据更新但未导出时加载的是的JSON格式图层数据
@@ -714,31 +713,40 @@ class Map extends Component {
         }
       }
     }
-    //读取并剔除不合格的底图数据
-    let poiGeometries,lineGeometries,polygonGeometries
-    if(DT_Point!==null){
-      poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
-    }
-    if(DT_Line!==null){
-      lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
-    }
-    if(DT_Polygon!==null){
-      polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
-    }
-    //设置地图中心点坐标
-    if(LayerData.mapCenter){
-      center=LayerData.mapCenter;
-      map.setCenter(center);
-    }else{
-      if(poiGeometries.length!==0){
-        center = poiGeometries[0].getCoordinates();
-        map.setCenter(center);
+    //判断项目是否切换若切换则更新底图数据
+    if(new_ProjectName!==ProjectName){
+      //更新项目名
+      ProjectName=new_ProjectName;
+      //清空底图数据重新载入
+      if(DT.getGeometries()){
+        DT.clear();
       }
-    }
-    poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
-    if(poiGeometries!==null){
-      DT.addGeometry(poiGeometries);
-      DT.bringToBack();
+    //读取并剔除不合格的底图数据
+      let poiGeometries,lineGeometries,polygonGeometries
+      if(DT_Point!==null){
+        poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
+      }
+      if(DT_Line!==null){
+        lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
+      }
+      if(DT_Polygon!==null){
+        polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
+      }
+      //设置地图中心点坐标
+      if(LayerData.mapCenter){
+        center=LayerData.mapCenter;
+        map.setCenter(center);
+      }else{
+        if(poiGeometries.length!==0){
+          center = poiGeometries[0].getCoordinates();
+          map.setCenter(center);
+        }
+      }
+      poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+      if(poiGeometries!==null){
+        DT.addGeometry(poiGeometries);
+        DT.bringToBack();
+      }
     }
   }
   render() {

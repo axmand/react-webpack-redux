@@ -28,6 +28,7 @@ class MapView extends Component {
       DT_Point,
       DT_Line,
       DT_Polygon,
+      ProjectName,
     } = this.props
 		// console.log(sketchDisplayState)	
     return (
@@ -39,6 +40,7 @@ class MapView extends Component {
         DT_Point={DT_Point}
         DT_Line={DT_Line}
         DT_Polygon={DT_Polygon}
+        ProjectName={ProjectName}
          />}
       </div>
     )
@@ -92,7 +94,8 @@ const mapStateToProps = ( state ) => {
     LayerData: state.ProjectReduce.projectData.ProjectItem.L,
     DT_Point:state.ProjectReduce.projectData.Project_DT_Point,
     DT_Line:state.ProjectReduce.projectData.Project_DT_Line,
-    DT_Polygon:state.ProjectReduce.projectData.Project_DT_Polygon
+    DT_Polygon:state.ProjectReduce.projectData.Project_DT_Polygon,
+    ProjectName:state.ProjectReduce.projectData.ProjectName
   }
 }
 
