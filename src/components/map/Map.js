@@ -289,12 +289,12 @@ class Map extends Component {
      let center;
     //初始化新建所有图层
      let jzd,sz,jzx,zd,zj,DT,location;
-     jzd = new maptalks.VectorLayer('point',{geometryEvents:false});
-     sz = new maptalks.VectorLayer('SZ',{geometryEvents:false});
-     jzx = new maptalks.VectorLayer('JZX',{geometryEvents:false});
-     zd = new maptalks.VectorLayer('polygon',{geometryEvents:false});
-     zj = new maptalks.VectorLayer('label',{geometryEvents:false});
-     location=new maptalks.VectorLayer("location",{geometryEvents:false});
+     jzd = new maptalks.VectorLayer('point');
+     sz = new maptalks.VectorLayer('SZ');
+     jzx = new maptalks.VectorLayer('JZX');
+     zd = new maptalks.VectorLayer('polygon');
+     zj = new maptalks.VectorLayer('label');
+     location=new maptalks.VectorLayer("location");
      DT=new maptalks.VectorLayer("DT",{geometryEvents:false}).setStyle({
       symbol:{
           markerType:'ellipse',
