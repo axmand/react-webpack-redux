@@ -56,7 +56,7 @@ class Sketch extends Component {
       isRealtimeOn, 
       projectData,//项目数据
       layerData,//图层数据
-      saveIsChecked,
+      haveSaved,
       plotListData,
       appBarLonger } = this.props;
     return (
@@ -96,7 +96,7 @@ class Sketch extends Component {
         {this.state.index === 0 && (
           <SketchToolBar 
             isRealtimeOn={isRealtimeOn}  
-            saveIsChecked={saveIsChecked}
+            haveSaved={haveSaved}
             plotListData={plotListData}
             LayerData={layerData}
           />
@@ -125,7 +125,7 @@ const mapStateToProps =  (state, ownProps) => {
   const canvasSeduce = state.CanvasReduce;
   console.log(ownProps)
   return {
-    saveIsChecked: sketchState.saveIsChecked,
+    haveSaved: sketchState.haveSaved,
     isRealtimeOn: sketchState.isRealtimeOn,
     plotListData:sketchState.plotListData,
     appBarLonger:canvasSeduce.appBarLonger,

@@ -435,6 +435,7 @@ class Map extends Component {
               'minWidth' : 48,
               'minHeight' : 24,
               'symbol' : {
+                'textDy':-24,
                 'markerType' : 'square',
                 'markerFill' : 'rgb(255,255,255)',
                 'markerFillOpacity' : 0,
@@ -465,10 +466,15 @@ class Map extends Component {
       polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
     }
     //设置地图中心点坐标
-    if(poiGeometries.length!==0){
-      center = poiGeometries[0].getCoordinates();
-      map.setCenter(center);
+    if(LayerData.mapCenter){
+      center=LayerData.mapCenter;
+    }else{
+      if(poiGeometries.length!==0){
+        center = poiGeometries[0].getCoordinates();
+        map.setCenter(center);
+      }
     }
+
     poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
     if(poiGeometries!==null){
       DT.addGeometry(poiGeometries);
@@ -720,9 +726,14 @@ class Map extends Component {
       polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
     }
     //设置地图中心点坐标
-    if(poiGeometries.length!==0){
-      center = poiGeometries[0].getCoordinates();
+    if(LayerData.mapCenter){
+      center=LayerData.mapCenter;
       map.setCenter(center);
+    }else{
+      if(poiGeometries.length!==0){
+        center = poiGeometries[0].getCoordinates();
+        map.setCenter(center);
+      }
     }
     poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
     if(poiGeometries!==null){
@@ -844,7 +855,7 @@ const mapReduce = (state = 0, action) => {
     console.log(coords);
     const center = new maptalks.Coordinate([coords[1], coords[0]]);
     map.setCenter(center);
-    const circle = new maptalks.Circle(center, 1, {
+    const circle = new maptalks.Circle(center, 3, {
       labels:"locationlabel",
       id:'locationcircle',
       symbol: {
@@ -1050,7 +1061,8 @@ const sketchReduce = (
     snapDxIsChecked:false,
     undoIsChecked: false,
     redoIsChecked: false,
-    saveIsChecked: false,
+    haveSaved: true,
+    alerthaveSaved:false,
     showSaveDialog:false,
     alertSave: true,
     alertPlotFail: false,
@@ -1065,9 +1077,9 @@ const sketchReduce = (
       jzxJSONData:JSON,
       zdJSONData: JSON,
       zjJSONData: JSON,
+      mapCenter: []
     },
     poiTableData: [],
-    mapCenter: [],
     mapZoom:16,
     plotListData: []
   },
@@ -1746,7 +1758,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         }
         return Object.assign({}, state, { ...PlotChooseOpen });
@@ -1782,7 +1794,7 @@ const sketchReduce = (
           chooseObjIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...RTKplotSuccessState };
@@ -1807,7 +1819,7 @@ const sketchReduce = (
           chooseObjIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...plotFailState };
@@ -1885,7 +1897,7 @@ const sketchReduce = (
           chooseObjIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...FileplotSuccessState };
@@ -2001,7 +2013,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...drawPointState };
@@ -2041,7 +2053,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...rectifyPoiState };
@@ -2083,7 +2095,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...newState2 };
@@ -2190,7 +2202,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...JZXState };
@@ -2275,7 +2287,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         console.log(state);
@@ -2316,7 +2328,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...newState3 };
@@ -2356,7 +2368,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...newState4 };
@@ -2381,7 +2393,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         }
       return Object.assign({}, state, { ...labelOpen });
@@ -2455,7 +2467,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...measureDis };
@@ -2494,7 +2506,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
         };
         return { ...state, ...measureArea };
@@ -2513,7 +2525,7 @@ const sketchReduce = (
             haveObjToDel: false,
             undoIsChecked: false,
             redoIsChecked: false,
-            saveIsChecked: false,
+            haveSaved: false,
             alertSave: true
           };
           return Object.assign({}, state, { ...newState6 });
@@ -2524,7 +2536,7 @@ const sketchReduce = (
             haveObjToDel: true,
             undoIsChecked: false,
             redoIsChecked: false,
-            saveIsChecked: false,
+            haveSaved: false,
             alertSave: true
           };
           return Object.assign({}, state, { ...stateDelFail });
@@ -2565,7 +2577,7 @@ const sketchReduce = (
           deleteIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true
         };
         return Object.assign({}, state, { ...newState7 });
@@ -2641,14 +2653,21 @@ const sketchReduce = (
       return Object.assign({}, state, { ...drawAlerClose });
       //关闭保存弹出框
       case "handleCloseSaveDialog":
-      const showSaveDialog = { showSaveDialog: false };
-      return Object.assign({}, state, { ...showSaveDialog });
+      if(state.showSaveDialog){
+        const closeSaveDialog1 = { showSaveDialog: false};
+        return Object.assign({}, state, { ...closeSaveDialog1 });
+      }
+      if(state.alerthaveSaved){
+        const closeSaveDialog2 = { alerthaveSaved: false};
+        return Object.assign({}, state, { ...closeSaveDialog2 });
+      }
+      
       //保存
-      case "saveClick":
+      case "opensaveDialog":
         if (map === undefined){
           console.log(state)
           return { ...state };
-        } else{
+        }else{
           let mapCenter = map.getCenter();
           drawTool.disable();
           map.off("click", drawToolOn);       
@@ -2660,37 +2679,46 @@ const sketchReduce = (
           console.log(map.getLayer("JZX").toJSON())
           console.log(map.getLayer("polygon").toJSON())
           console.log(map.getLayer("label").toJSON())
-          const saveData = {
-            plotIsChecked: false,
-            drawPointIsChecked: false,
-            rectifyPoiIsChecked:false,
-            drawLineIsChecked: false,
-            drawJZXIsChecked: false,
-            drawArcIsChecked: false,
-            drawPolygonIsChecked: false,
-            balconyIsChecked: false,
-            addLabelIsChecked: false,
-            measureAreaIsChecked: false,
-            measureDistanceIsChecked: false,
-            chooseObjIsChecked: false,
-            deleteIsChecked: false,
-            undoIsChecked: false,
-            redoIsChecked: false,
-            saveIsChecked: true,
-            showSaveDialog:true,
-            alertSave: false,
-            mapZoom:map.getZoom(),
-            mapCenter: mapCenter,
-            layerData:{
-              jzdJSONData: map.getLayer("point").toJSON(),
-              szJSONData: map.getLayer("SZ").toJSON(),
-              jzxJSONData: map.getLayer("JZX").toJSON(),
-              zdJSONData: map.getLayer("polygon").toJSON(),
-              zjJSONData: map.getLayer("label").toJSON()
-            }
-          }; 
-          return Object.assign({}, state, { ...saveData });
+          console.log(state.haveSaved)
+          if(state.haveSaved){
+            const alerthaveSaved={alerthaveSaved:true}
+            return Object.assign({}, state, { ...alerthaveSaved });
+          }else{
+            const saveData = {
+              plotIsChecked: false,
+              drawPointIsChecked: false,
+              rectifyPoiIsChecked:false,
+              drawLineIsChecked: false,
+              drawJZXIsChecked: false,
+              drawArcIsChecked: false,
+              drawPolygonIsChecked: false,
+              balconyIsChecked: false,
+              addLabelIsChecked: false,
+              measureAreaIsChecked: false,
+              measureDistanceIsChecked: false,
+              chooseObjIsChecked: false,
+              deleteIsChecked: false,
+              undoIsChecked: false,
+              redoIsChecked: false,
+              showSaveDialog:true,
+              haveSaved:true,
+              alertSave: false,
+              mapZoom:map.getZoom(),
+              layerData:{
+                jzdJSONData: map.getLayer("point").toJSON(),
+                szJSONData: map.getLayer("SZ").toJSON(),
+                jzxJSONData: map.getLayer("JZX").toJSON(),
+                zdJSONData: map.getLayer("polygon").toJSON(),
+                zjJSONData: map.getLayer("label").toJSON(),
+                mapCenter: mapCenter
+              }
+            }; 
+            return Object.assign({}, state, { ...saveData });
+          }
         }
+      case "mapDataSaveSuccess":
+        const saveSuccess={haveSaved:true}
+      return Object.assign({}, state, { ...saveSuccess });
 
       case "saveAlertClose":
         const saveAlertClose = { alertSave: false };
@@ -2725,7 +2753,7 @@ const sketchReduce = (
           chooseObjIsChecked: false,
           undoIsChecked: false,
           redoIsChecked: false,
-          saveIsChecked: false,
+          haveSaved: false,
           alertSave: true,
           showDelDialog: false,
           haveObjToDel: false

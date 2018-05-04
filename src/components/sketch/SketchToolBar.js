@@ -238,6 +238,7 @@ class SkechToolBar extends Component {
       handleCloseDelDialog,      
       updateMapdata2project,
       showSaveDialog,
+      alerthaveSaved,
       handleCloseSaveDialog,
       onDrawAlerClose
     } = this.props;
@@ -495,7 +496,7 @@ class SkechToolBar extends Component {
           </Dialog>
           <Dialog open={showSaveDialog} onRequestClose={handleCloseSaveDialog}>
             <DialogContent>
-              <DialogContentText  style={{color:"#455A64"}}>确认保存？</DialogContentText>
+              <DialogContentText  style={{color:"#455A64"}}>确认保存草图绘制数据？</DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseSaveDialog} color="default">
@@ -506,7 +507,11 @@ class SkechToolBar extends Component {
               </Button>
             </DialogActions>
           </Dialog>
-
+          <Dialog open={alerthaveSaved} onRequestClose={handleCloseSaveDialog}>
+            <DialogContent>
+              <DialogContentText  style={{color:"#455A64"}}>草图绘制数据已保存！</DialogContentText>
+            </DialogContent>
+          </Dialog>
 
           <Dialog 
             open={haveObjToDel} 
@@ -760,6 +765,7 @@ SkechToolBar.PropTypes = {
   handleCloseSaveDialog: PropTypes.func.isRequired,
   showDelDialog: PropTypes.bool.isRequired,
   showSaveDialog:PropTypes.bool.isRequired,
+  alerthaveSaved:PropTypes.bool.isRequired,
   haveObjToDel: PropTypes.bool.isRequired,
   drawPointIsChecked: PropTypes.bool.isRequired,
   drawLineIsChecked: PropTypes.bool.isRequired,
@@ -779,6 +785,7 @@ const mapStateToProps = state => {
   return {
     showDelDialog: sketchState.showDelDialog,
     showSaveDialog:sketchState.showSaveDialog,
+    alerthaveSaved:sketchState.alerthaveSaved,
     haveObjToDel: sketchState.haveObjToDel,
     drawAlert:sketchState.drawAlert,
     plotIsChecked:sketchState.plotIsChecked,
@@ -800,7 +807,7 @@ const mapStateToProps = state => {
     snapDxIsChecked:sketchState.snapDxIsChecked,
     undoIsChecked: sketchState.undoIsChecked,
     redoIsChecked: sketchState.redoIsChecked,
-    saveIsChecked: sketchState.saveIsChecked,
+    haveSaved: sketchState.haveSaved,
     alertPlotFail: sketchState.alertPlotFail,
     alertSignature:sketchState.alertSignature,
     fetchPoiNumIsChecked:sketchState.fetchPoiNumIsChecked,
@@ -1081,7 +1088,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onSaveClick: () => {
       //保存数据至sketchstate
       dispatch({
-        type: "saveClick",
+        type: "opensaveDialog",
       });
     },
     updateMapdata2project:()=>{
@@ -1096,6 +1103,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: "handleCloseSaveDialog"
       });
+      dispatch({
+        type:'mapDataSaveSuccess'
+      })
     },
     handleCloseSaveDialog:()=>{
       dispatch({
@@ -1104,7 +1114,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     //签章
     onSignatureClick:()=>{
-      if(ownProps.saveIsChecked){
+      console.log(ownProps)
+      if(ownProps.haveSaved){
         dispatch({
           type: "choose",
            payload: {
@@ -1262,11 +1273,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       type:'jzdXCZJClick',
       payload:{command:poi_id}
     });
-    
-    dispatch({
-      type: "saveClick",
-    }); 
-
     dispatch({
         type: 'ProgressShow',
     });

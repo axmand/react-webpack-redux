@@ -193,8 +193,7 @@ let thematicMap,thematicMapDOM;
 class ThematicMap extends Component {
   componentDidMount() {
     const {
-      saveIsChecked,
-      mapCenter,
+      haveSaved,
       mapZoom
     } = this.props;
     const ThematicMapData=this.props.ThematicMapData;
@@ -206,11 +205,11 @@ class ThematicMap extends Component {
     let LayerData=ThematicMapData.ProjectItem.L;
     console.log(LayerData);
 
-    if (saveIsChecked) {   
+    if (haveSaved) {   
       let jzd,sz,jzx,zd,zj;      
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
-        center: mapCenter,
+        center: LayerData.mapCenter,
         zoom:mapZoom,
       });
       if(LayerData.jzdJSONData){
@@ -279,7 +278,7 @@ class ThematicMap extends Component {
       TuDiQuanLiRen,
       ZuoLuo,
       alertSave,
-      // saveIsChecked,
+      // haveSaved,
       onSaveAlertClose,
       onSaveThematicMapClick,
       thematicMapSaveSuccess,
@@ -459,12 +458,11 @@ const mapStateToProps = (state, ownProps) => {
     TuDiQuanLiRen: ThematicMapData.ProjectItem.F1.PrincipalName,
     ZuoLuo: ThematicMapData.ProjectItem.F1.Location,
     alertSave: sketchState.alertSave,
-    saveIsChecked: sketchState.saveIsChecked,
+    haveSaved: sketchState.haveSaved,
     thematicMapSaveSuccess: canvasSeduce.thematicMapSaveSuccess,
     thematicMapSaveLoading: canvasSeduce.thematicMapSaveLoading,
     previewPrintIsChecked:canvasSeduce.previewPrintIsChecked,
     unclosePreviewAlert:canvasSeduce.unclosePreviewAlert,
-    mapCenter: sketchState.mapCenter,
     mapZoom:sketchState.mapZoom,
   };
 };
