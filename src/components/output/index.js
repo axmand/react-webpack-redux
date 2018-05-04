@@ -43,6 +43,10 @@ class OutputModule extends Component {
       handleOutputShow,
       handleOutput,
       OutputShow,
+      OutputTrue,
+      OutputFalse,
+      handleOutputFalse,
+      handleOutputTrue,
       classes
     } = this.props
 
@@ -79,6 +83,18 @@ class OutputModule extends Component {
           </Button>
         </DialogActions>
       </Dialog>
+      
+      <Dialog open={OutputTrue} onRequestClose={handleOutputTrue}>
+          <DialogContent>
+            <DialogContentText>数据导出成功！</DialogContentText>
+          </DialogContent>
+        </Dialog>
+
+      <Dialog open={OutputFalse} onRequestClose={handleOutputFalse}>
+          <DialogContent>
+            <DialogContentText>Error_import_001:数据导出失败！</DialogContentText>
+          </DialogContent>
+        </Dialog>
     </div>
     )
   }
@@ -89,19 +105,24 @@ OutputModule.propTypes = {
   handleOutputShow: PropTypes.func.isRequired,
   handleOutput: PropTypes.func.isRequired,
   OutputShow: PropTypes.bool.isRequired,
-  Outputdata:PropTypes.array.isRequired,
+  OutputData:PropTypes.object.isRequired,
+  OutputTrue:PropTypes.bool.isRequired,
+  OutputFalse:PropTypes.bool.isRequired,
+  handleOutputTrue: PropTypes.func.isRequired,
+  handleOutputFalse: PropTypes.func.isRequired,
 };
 
 //声明State与Action
 const mapStateToProps = (state, ownProps) => {
-  // console.log(ownProps);
+
   return {
     OutputShow: state.OutputReduce.OutputShow,
+    OutputTrue: state.OutputReduce.OutputTrue,
+    OutputFalse: state.OutputReduce.OutputFalse,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  // console.log(ownProps);
   return {
     handleOutputShow: () => {
       if(ownProps.sketchHaveSaved){
@@ -119,19 +140,27 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleOutputClose: () => {
-    //  let PointX= coordinate.LB2XY(108.1226789,22.59317239).descartesX;
-    //  let PointY= coordinate.LB2XY(108.1226789,22.59317239).descartesY;
-    //  console.log(PointX,PointY)
       dispatch({
         type: 'handleOutputClose',
       })
     },
-
+    
+    handleOutputTrue: () => {
+      dispatch({
+        type: 'handleOutputTrue',
+      })
+    },
+    
+    handleOutputFalse: () => {
+      dispatch({
+        type: 'handleOutputFalse',
+      })
+    },
+    
     handleOutput: () => {
-      // console.log(ownProps);
       let JsonData = JSON.stringify([ownProps.OutputData.ProjectItem]);
 
-      // console.log(JsonData)
+      console.log(JsonData)
       fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
       { 
       method: 'POST', 
@@ -142,11 +171,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: 'handleOutput',
         payload: json,
+      });
+      if(json.status === 200){      
+        dispatch({
+        type: 'handleOutputTrue',
+      })}
+      else{
+      dispatch({
+        type: 'handleOutputFalse',
       })
+      }
+
       console.log(json)})
-      .catch(err => {
-        console.log(err)
+    .catch(err => {
+        console.log(err);
+      dispatch({
+        type: 'handleOutputFalse',
       })
+      }
+    )
     },
   }
 }
@@ -156,6 +199,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, {
 const OutputReduce = (
   state = {
     OutputShow: false,
+    OutputFalse:false,
+    OutputTrue: false,
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
@@ -182,7 +227,16 @@ const OutputReduce = (
     newState.OutputShow = !state.OutputShow;
     return { ...state, ...newState }; 
   }
+  
+  if (action.type === "handleOutputTrue") {
+    const OutputTrue = { OutputTrue: !state.OutputTrue };
+    return Object.assign({}, state, { ...OutputTrue });
+  }
 
+  if (action.type === "handleOutputFalse") {
+    const OutputFalse = { OutputFalse: !state.OutputFalse };
+    return Object.assign({}, state, { ...OutputFalse });
+  }
   else
     return state
 }
