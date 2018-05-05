@@ -1155,7 +1155,13 @@ onBDPlotClick: () => {
       });
       dispatch({
         type:'mapDataSaveSuccess'
-      })
+      });
+      dispatch({
+        type:'fillSignatureList',
+        payload: {
+        data:ownProps.LayerData
+        }
+      });
     },
     handleCloseSaveDialog:()=>{
       dispatch({
