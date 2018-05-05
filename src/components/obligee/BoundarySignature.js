@@ -6,33 +6,20 @@ import PointNameCell from './PointNameCell'
 function mapStateToProps(state ,ownProps) {
   // const tableIndex =ownProps.tableIndex;
   
-  var startPoints=[];
-  var endPoints=[];
-  var innerPoints=[];
-  var jzxID=[];  
+  var startPoints=state.ObContentReducer.F3.StartPointCodeList;
+  var endPoints=state.ObContentReducer.F3.EndPointCodeList;
+  var innerPoints=state.ObContentReducer.F3.InnerPointCodeList;
+  var jzxID=[];//=state.ObContentReducer.F3.jzxID; 
   var jzxData=state.ObContentReducer.L.jzxJSONData;
   if(jzxData){
-    var jzx =JSON.parse(jzxData);// eval('(' + jzxData + ')');
+    if(typeof(jzxData)=="string")
+      var jzx =JSON.parse(jzxData);
     console.log(jzx);
     for(var i=0;i<jzx.geometries.length;i++){
       jzxID.push(jzx.geometries[i].feature.id) ;
-      var jzxPoints=jzx.geometries[i].options.poiArr;
-      startPoints.push(jzxPoints[0]);
-      endPoints.push(jzxPoints[jzxPoints.length-1]);
-      if(jzxPoints.length>2){
-        var temp="";
-        for(var j=1;j<jzxPoints.length-2;j++){ 
-          temp+=jzxPoints[j]+",";
-        }   
-        temp+=jzxPoints[jzxPoints.length-2];
-        innerPoints.push(temp);       
-      }
-      else{
-        innerPoints.push("");
-      }
     }
-
   }
+  // }
   // projectData.ProjectItem.F3.StartPointCodeList=startPoints;
   // projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
   // projectData.ProjectItem.F3.EndPointCodeList=endPoints;
@@ -99,7 +86,14 @@ var tableHead2=(<tr>
 
    tableContent.push(tableHead1);
    tableContent.push(tableHead2);
-   
+
+   if(jzxID.length<startPoint.length)
+   {
+     for(var j=jzxID.length-1;j<startPoint.length;j++)
+     jzxID[j]="";
+   }
+  if(startPoint.length>0) 
+  {
   for(var i=0;i<startPoint.length;i++)
     {
         var obj=(
@@ -119,7 +113,7 @@ var tableHead2=(<tr>
         );
         tableContent.push(obj);
     }
-    
+  }
     var table=(  
 
      <table className="mytable">

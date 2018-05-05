@@ -437,7 +437,8 @@ return state;
     console.log(action.payload.data);
    
     let jzx=action.payload.data.jzxJSONData;
-   
+   if(typeof(jzx)=="string")
+   jzx=JSON.parse(jzx);
       let startPoints=[];
       let endPoints=[];
       let innerPoints=[];
@@ -469,6 +470,8 @@ return state;
       newState.F3.StartPointCodeList=startPoints;
       newState.F3.InnerPointCodeList=innerPoints;
       newState.F3.EndPointCodeList=endPoints;
+      newState.F3.jzxID=jzxID;
+      
       console.log(newState)
       const returnState=Object.assign({}, state, newState);
       
