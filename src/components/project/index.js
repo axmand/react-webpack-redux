@@ -65,7 +65,9 @@ const styles = {
   },
   divStyle: {
     opacity: "1",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    overflowX: "hidden",
+    overflowY: "hidden",
   }
 };
 
@@ -158,7 +160,7 @@ ProjectModule.propTypes = {
   ProjectProgress: PropTypes.bool.isRequired,
   handleProjectTrue: PropTypes.func.isRequired,
   handleProjectFalse: PropTypes.func.isRequired,
-  projectData: PropTypes.array.isRequired
+  projectData: PropTypes.object.isRequired
 };
 
 //声明State与Action
@@ -334,14 +336,14 @@ const ProjectReduce = (
 
   if (action.type === "TableData2projectData") {
     var list0 = action.payload.TableData;
-if(list0!=undefined)
-{
-    list0.L = state.projectData.ProjectItem.L;
-    newState.projectData.ProjectItem = list0;
-    return { ...state, ...newState };
-}
-else
-return state;
+    if(list0!=undefined)
+    {
+        list0.L = state.projectData.ProjectItem.L;
+        newState.projectData.ProjectItem = list0;
+        return { ...state, ...newState };
+    }
+    else
+    return state;
   }
 
   if (action.type === "showPhoto2projectData") {
