@@ -83,8 +83,8 @@ const styles = theme => ({
   bottomtable:{
     position:'absolute',
     top: "92%",
-    left:'52%',
-    width: `${window.innerHeight * 0.24*2.5}px`,
+    left:'50%',
+    width: `${window.innerHeight * 0.28*2.5}px`,
     height:`${window.innerHeight * 0.875* 0.06*2.5}px`,
     padding:0,
     border:0,
@@ -206,12 +206,13 @@ class ThematicMap extends Component {
     console.log(LayerData);
 
     if (haveSaved) {   
-      let jzd,sz,jzx,zd,zj;      
+      let jzd,sz,jzx,zd,zj,mapCenter;      
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
-        center: JSON.parse(LayerData.mapCenter),
+        center:[108.37, 22.82] ,
         zoom:mapZoom,
-      });
+      });  
+
       if(LayerData.jzdJSONData){
         jzd=maptalks.Layer.fromJSON(JSON.parse(LayerData.jzdJSONData));
         //设置界址点半径成图美观
@@ -262,12 +263,22 @@ class ThematicMap extends Component {
       if(DT_Polygon!==null){
         polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
       }
+      //设置地图中心点坐标
+      if(LayerData.mapCenter){
+        mapCenter=JSON.parse(LayerData).mapCenter;
+        thematicMap.setCenter(mapCenter);
+      }else{
+        if(poiGeometries.length>0){
+          mapCenter = poiGeometries[0].getCoordinates();
+          thematicMap.setCenter(mapCenter);
+        }
+      } 
       poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
       if(poiGeometries!==null){
         DT.addGeometry(poiGeometries);
         DT.bringToBack();
       }
-    }
+   }
   }
 
   render() {
@@ -278,7 +289,7 @@ class ThematicMap extends Component {
       TuDiQuanLiRen,
       ZuoLuo,
       alertSave,
-      // haveSaved,
+      haveSaved,
       onSaveAlertClose,
       onSaveThematicMapClick,
       thematicMapSaveSuccess,
