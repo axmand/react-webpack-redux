@@ -9,21 +9,23 @@ function mapStateToProps(state ,ownProps) {
   var startPoints=state.ObContentReducer.F3.StartPointCodeList;
   var endPoints=state.ObContentReducer.F3.EndPointCodeList;
   var innerPoints=state.ObContentReducer.F3.InnerPointCodeList;
-  var jzxID=state.ObContentReducer.L.jzxID;
-  // var jzxID=[];//=state.ObContentReducer.F3.jzxID; 
-  // var jzxData=state.ObContentReducer.L.jzxJSONData;
-  // if(jzxData){
-  //   if(typeof(jzxData)=="string")
-  //     var jzx =JSON.parse(jzxData);
-  //   console.log(jzx);
-  //   for(var i=0;i<jzx.geometries.length;i++){
-  //     jzxID.push(jzx.geometries[i].feature.id) ;
-  //   }
+  
+  var jzxID=[];//=state.ObContentReducer.F3.jzxID; 
+  var jzxData=state.ObContentReducer.L.jzxJSONData;
+  if(jzxData){
+    if(typeof(jzxData)=="string")
+      var jzx =JSON.parse(jzxData);
+      else
+      var jzx=jzxData;
+    console.log(jzx);
+    for(var i=0;i<jzx.geometries.length;i++){
+      jzxID.push(jzx.geometries[i].feature.id) ;
+    }
+  }
   // }
-  // // }
-  // // projectData.ProjectItem.F3.StartPointCodeList=startPoints;
-  // // projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
-  // // projectData.ProjectItem.F3.EndPointCodeList=endPoints;
+  // projectData.ProjectItem.F3.StartPointCodeList=startPoints;
+  // projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
+  // projectData.ProjectItem.F3.EndPointCodeList=endPoints;
   
   return {
     startPoint:startPoints,

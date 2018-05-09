@@ -243,11 +243,48 @@ loaded:false
       list0 = action.payload;
      
       newState = JSON.parse(list0[3].data)[0];
-     
       
-  
+
+     var jzx=JSON.parse(newState.L.jzxJSONData);
      
-      
+      let jzxID=[];
+      for(let i=0;i<jzx.geometries.length;i++)
+      {
+        jzxID.push(jzx.geometries[i].feature.id) ;
+       
+      }
+      newState.L.jzxID=jzxID;
+     
+     
+    
+         let startPoints=[];
+         let endPoints=[];
+         let innerPoints=[];
+         for(let i=0;i<jzx.geometries.length;i++)
+         {
+           let jzxPoints=jzx.geometries[i].options.poiArr;
+           startPoints.push(jzxPoints[0]);
+           endPoints.push(jzxPoints[jzxPoints.length-1]);
+           if(jzxPoints.length>2)
+           {
+             let temp="";
+             for(let j=1;j<jzxPoints.length-2;j++)
+             { temp+=jzxPoints[j]+",";
+       
+             }   
+             temp+=jzxPoints[jzxPoints.length-2];
+             innerPoints.push(temp);
+                 
+           }
+           else
+           {
+             innerPoints.push("");
+           }
+         }
+         newState.F3.StartPointCodeList=startPoints;
+         newState.F3.InnerPointCodeList=innerPoints;
+         newState.F3.EndPointCodeList=endPoints;
+
        return { ...state, ...newState }; 
     }
 break;
@@ -471,6 +508,7 @@ return state;
       newState.F3.InnerPointCodeList=innerPoints;
       newState.F3.EndPointCodeList=endPoints;
       newState.L.jzxID=jzxID;
+      newState.L.jzxJSONData=jzx;
       
       console.log(newState)
       const returnState=Object.assign({}, state, newState);

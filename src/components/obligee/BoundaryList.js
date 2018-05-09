@@ -15,8 +15,11 @@ var LandPointDistance=[];
 
 if(state.ObContentReducer.L.jzxJSONData!="")
 {
-  var jzx =JSON.parse(state.ObContentReducer.L.jzxJSONData);
-
+  var jzx;
+  if(typeof(state.ObContentReducer.L.jzxJSONData)=="string")
+  jzx =JSON.parse(state.ObContentReducer.L.jzxJSONData);
+else
+  jzx=state.ObContentReducer.L.jzxJSONData;
   console.log(jzx);
   for(let i=0;i<jzx.geometries.length;i++)
   {
