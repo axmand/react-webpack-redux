@@ -83,7 +83,7 @@ const styles = theme => ({
   bottomtable:{
     position:'absolute',
     top: "92%",
-    left:'50%',
+    left:'48%',
     width: `${window.innerHeight * 0.28*2.5}px`,
     height:`${window.innerHeight * 0.875* 0.06*2.5}px`,
     padding:0,
