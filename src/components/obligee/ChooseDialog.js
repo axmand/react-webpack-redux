@@ -243,9 +243,14 @@ loaded:false
       list0 = action.payload;
      
       newState = JSON.parse(list0[3].data)[0];
-      
-
+      if(!newState.L.jzxJSONData)
+      {
+        return newState;
+      }
+  if(typeof(newState.L.jzxJSONData)=="string")
      var jzx=JSON.parse(newState.L.jzxJSONData);
+     else
+     var jzx=newState.L.jzxJSONData;
      
       let jzxID=[];
       for(let i=0;i<jzx.geometries.length;i++)
@@ -298,7 +303,8 @@ break;
     var LandPointInMap=[];
     if(action.payload.data==undefined)
       return state;
-
+      if(!action.payload.data.ProjectItem.L.jzxJSONData)
+      return state;
       if(typeof(action.payload.data.ProjectItem.L.jzxJSONData)=="string")
 
       var jzx =JSON.parse(action.payload.data.ProjectItem.L.jzxJSONData);
@@ -474,6 +480,8 @@ return state;
     console.log(action.payload.data);
    
     let jzx=action.payload.data.jzxJSONData;
+    if(!jzx)
+    return state;
    if(typeof(jzx)=="string")
    jzx=JSON.parse(jzx);
       let startPoints=[];
