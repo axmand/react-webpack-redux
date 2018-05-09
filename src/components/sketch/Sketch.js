@@ -99,6 +99,7 @@ class Sketch extends Component {
             haveSaved={haveSaved}
             plotListData={plotListData}
             LayerData={layerData}
+            projectData={projectData}
           />
         )}
         {this.state.index === 1 && 
@@ -130,6 +131,7 @@ const mapStateToProps =  (state, ownProps) => {
     plotListData:sketchState.plotListData,
     appBarLonger:canvasSeduce.appBarLonger,
     projectData: state.ProjectReduce.projectData,
+    haveLoaded: state.ProjectReduce.projectData.loaded,
     layerData:state.sketchReduce.layerData
   };
 };
