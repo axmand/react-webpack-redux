@@ -265,7 +265,7 @@ class ThematicMap extends Component {
       }
       //设置地图中心点坐标
       if(LayerData.mapCenter){
-        mapCenter=JSON.parse(LayerData).mapCenter;
+        mapCenter=JSON.parse(LayerData.mapCenter);
         thematicMap.setCenter(mapCenter);
       }else{
         if(poiGeometries.length>0){
