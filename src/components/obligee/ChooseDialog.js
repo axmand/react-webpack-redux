@@ -244,8 +244,10 @@ loaded:false
      
       newState = JSON.parse(list0[3].data)[0];
       
-
+if(typeof(newState.L.jzxJSONData)=="string")
      var jzx=JSON.parse(newState.L.jzxJSONData);
+     else
+     var jzx=newState.L.jzxJSONData;
      
       let jzxID=[];
       for(let i=0;i<jzx.geometries.length;i++)
