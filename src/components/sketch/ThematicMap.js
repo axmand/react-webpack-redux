@@ -209,11 +209,11 @@ class ThematicMap extends Component {
       let jzd,sz,jzx,zd,zj;      
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
-        center: LayerData.mapCenter,
+        center: JSON.parse(LayerData.mapCenter),
         zoom:mapZoom,
       });
       if(LayerData.jzdJSONData){
-        jzd=maptalks.Layer.fromJSON(LayerData.jzdJSONData);
+        jzd=maptalks.Layer.fromJSON(JSON.parse(LayerData.jzdJSONData));
         //设置界址点半径成图美观
         if(jzd.getGeometries()){
           for (let i = 0; i <jzd.getGeometries().length; i++) {
@@ -222,16 +222,16 @@ class ThematicMap extends Component {
         }
       }
       if(LayerData.szJSONData){
-        sz= maptalks.Layer.fromJSON(LayerData.szJSONData);
+        sz= maptalks.Layer.fromJSON(JSON.parse(LayerData.szJSONData));
       }
       if(LayerData.jzxJSONData){
-        jzx= maptalks.Layer.fromJSON(LayerData.jzxJSONData);
+        jzx= maptalks.Layer.fromJSON(JSON.parse(LayerData.jzxJSONData));
       }
       if(LayerData.zdJSONData){
-        zd= maptalks.Layer.fromJSON(LayerData.zdJSONData);
+        zd= maptalks.Layer.fromJSON(JSON.parse(LayerData.zdJSONData));
       }
       if(LayerData.zjJSONData){
-        zj=maptalks.Layer.fromJSON(LayerData.zjJSONData);
+        zj=maptalks.Layer.fromJSON(JSON.parse(LayerData.zjJSONData));
       }
       zd.addTo(thematicMap);      
       sz.addTo(thematicMap);

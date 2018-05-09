@@ -39,7 +39,7 @@ let snap = new SnapTool({
 });
 let target,
   clickedObj = [],
-  editingLabel,
+  editingLabel=[],
   linePoiArr = [];
 let clickObj, deleteObj, recoverObj, addLabel,editLabel;
 //用于获取点线面对象
@@ -201,7 +201,8 @@ addLabel =
     });
     map.getLayer("label").addGeometry(label);
     label.on("click", clickObj);
-    editingLabel=label;
+    editingLabel.push(label);
+    console.log(editingLabel)
     label.startEditText();
     recoverObj();
   };
@@ -210,9 +211,12 @@ addLabel =
   editLabel=
     editLabel||
     function(){
-      if(editingLabel){
-      console.log(editingLabel)
-      editingLabel.endEditText();
+      if(editingLabel.length>0){
+        for(let i= 0;i<editingLabel.length;i++){
+          console.log(editingLabel[i])
+          editingLabel[i].endEditText();
+        }
+        editingLabel=[];
       }
    }
 // //用于删除对象
@@ -322,17 +326,9 @@ class Map extends Component {
       jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(jzd_geos){
+        jzd.addGeometry(jzd_geos);
         for (let i = 0; i < jzd_geos.length; i++) {
-          console.log(jzd_geos[i]);
-          let jzd_geo = new maptalks.Circle(jzd_geos[i].coordinates, 3, {
-            id: jzd_geos[i].feature.id,
-            labels: jzd_geos[i].options.labels,
-            picture:  jzd_geos[i].options.picture,
-            isClicked: jzd_geos[i].options.isClicked,
-            symbol:  jzd_geos[i].symbol
-          });
-          jzd_geo.on("click", clickObj);
-          jzd.addGeometry(jzd_geo);
+          jzd.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -342,24 +338,9 @@ class Map extends Component {
       sz_geos=JSON.parse(LayerData.szJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(sz_geos){
+        sz.addGeometry(sz_geos);
         for (let i = 0; i < sz_geos.length; i++) {
-          let sz_geo = new maptalks.LineString(sz_geos[i].feature.geometry.coordinates,  {
-            id: sz_geos[i].feature.geometry.id,
-            isClicked: sz_geos[i].options.isClicked,
-            length: sz_geos[i].options.length,
-            labels: sz_geos[i].options.labels,
-            arrowStyle : null, 
-            arrowPlacement : 'vertex-last',
-            visible : true,
-            editable : true,
-            cursor : null,
-            draggable : false,
-            dragShadow : false, 
-            drawOnAxis : null,
-            symbol:  sz_geos[i].symbol,
-          });
-          sz_geo.on("click", clickObj);
-          sz.addGeometry(sz_geo);
+          sz.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -369,25 +350,9 @@ class Map extends Component {
         jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
         //为地图对象添加点击绑定事件
         if(jzx_geos){
+          jzx.addGeometry(jzx_geos);
           for (let i = 0; i < jzx_geos.length; i++) {
-            let jzx_geo = new maptalks.LineString(jzx_geos[i].feature.geometry.coordinates,  {
-              id: jzx_geos[i].feature.geometry.id,
-              labels: jzx_geos[i].options.labels,
-              length: jzx_geos[i].options.length,
-              poiArr: jzx_geos[i].options.linePoiArr,
-              isClicked: jzx_geos[i].options.isClicked,
-              symbol:  jzx_geos[i].symbol,
-              arrowStyle : null, 
-              arrowPlacement : 'vertex-last',
-              visible : true,
-              editable : true,
-              cursor : null,
-              draggable : false,
-              dragShadow : false, 
-              drawOnAxis : null,
-            });
-            jzx_geo.on("click", clickObj);
-            jzx.addGeometry(jzx_geo);
+            jzx.getGeometries()[i].on("click", clickObj);
           }
         }
     }
@@ -398,21 +363,9 @@ class Map extends Component {
       console.log(zd_geos)
       //为地图对象添加点击绑定事件
       if(zd_geos){
+        zd.addGeometry(zd_geos); 
         for (let i = 0; i < zd_geos.length; i++) {
-          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometry.coordinates,  {
-            id: zd_geos[i].feature.geometry.id,
-            labels: zd_geos[i].options.labels,
-            isClicked: zd_geos[i].options.isClicked,
-            polygonType:zd_geos[i].options.polygonType,
-            symbol:  zd_geos[i].symbol,
-            visible : true,
-            editable : true,
-            cursor : 'pointer',
-            draggable : false,
-            drawOnAxis : null, 
-          });
-          zd_geo.on("click", clickObj);
-          zd.addGeometry(zd_geo);
+          zd.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -423,38 +376,13 @@ class Map extends Component {
       console.log(zj_geos)
       //为地图对象添加点击绑定事件
       if(zj_geos){
+        zj.addGeometry(zj_geos);  
         for (let i = 0; i < zj_geos.length; i++) {
-          let zj_geo = new maptalks.Label(zj_geos[i].content,zj_geos[i].feature.geometry.coordinates,  {
-            'id': zj_geos[i].feature.geometry.id,
-            'draggable': true,
-            'type': "Label",
-            'isClicked': zj_geos[i].options.isClicked,
-            'boxStyle' : {
-              'padding' : [12, 8],
-              'verticalAlignment' : 'top',
-              'horizontalAlignment' : 'right',
-              'minWidth' : 48,
-              'minHeight' : 24,
-              'symbol' : {
-                'textDy':-24,
-                'markerType' : 'square',
-                'markerFill' : 'rgb(255,255,255)',
-                'markerFillOpacity' : 0,
-                'markerLineWidth' : 0
-              }
-            },
-            'textSymbol': {
-              'textFaceName' : '宋体',
-              'textFill' : '#000',
-              'textSize' : 15,
-              'textVerticalAlignment' : 'top'
-            }
-          });
-          zj_geo.on("click", clickObj);
-          zj.addGeometry(zj_geo);
+          zj.getGeometries()[i].on("click", clickObj);
         }
       }
     }
+
     //读取并剔除不合格的底图数据
     let poiGeometries,lineGeometries,polygonGeometries
     if(DT_Point!==null){
@@ -542,174 +470,62 @@ class Map extends Component {
     //添加界址点图层数据
     if(LayerData.jzdJSONData){
       let jzd_geos;
-      if(LayerData.jzdJSONData.geometries){
-          if(LayerData.jzdJSONData.geometries.length!==0){
-          jzd_geos=LayerData.jzdJSONData.geometries;        
-          }
-        }
-      if(typeof(LayerData.jzdJSONData)==='string'){
-        jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
-      }
+      jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(jzd_geos){
+        jzd.addGeometry(jzd_geos);
         for (let i = 0; i < jzd_geos.length; i++) {
-          console.log(jzd_geos[i]);
-          let jzd_geo = new maptalks.Circle(jzd_geos[i].coordinates, 3, {
-            id: jzd_geos[i].feature.id,
-            labels: jzd_geos[i].options.labels,
-            picture:  jzd_geos[i].options.picture,
-            isClicked: jzd_geos[i].options.isClicked,
-            symbol:  jzd_geos[i].symbol
-          });
-          jzd_geo.on("click", clickObj);
-          jzd.addGeometry(jzd_geo);
+          jzd.getGeometries()[i].on("click", clickObj);
         }
       }
     }
     //添加四至图层数据
     if(LayerData.szJSONData){
       let sz_geos;
-      if(LayerData.szJSONData.geometries){
-        if(LayerData.szJSONData.geometries.length!==0){
-          sz_geos=LayerData.szJSONData.geometries;
-        }
-      }  
-      if(typeof(LayerData.szJSONData)==='string'){
-        sz_geos=JSON.parse(LayerData.szJSONData).geometries;
-      }
+      sz_geos=JSON.parse(LayerData.szJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(sz_geos){
+        sz.addGeometry(sz_geos);
         for (let i = 0; i < sz_geos.length; i++) {
-          let sz_geo = new maptalks.LineString(sz_geos[i].feature.geometry.coordinates,  {
-            id: sz_geos[i].feature.geometry.id,
-            isClicked: sz_geos[i].options.isClicked,
-            length: sz_geos[i].options.length,
-            labels: sz_geos[i].options.labels,
-            arrowStyle : null, 
-            arrowPlacement : 'vertex-last',
-            visible : true,
-            editable : true,
-            cursor : null,
-            draggable : false,
-            dragShadow : false, 
-            drawOnAxis : null,
-            symbol:  sz_geos[i].symbol,
-          });
-          sz_geo.on("click", clickObj);
-          sz.addGeometry(sz_geo);
+          sz.getGeometries()[i].on("click", clickObj);
         }
       }
     }
       //添加界址线图层数据
       if(LayerData.jzxJSONData){
         let jzx_geos;
-        if(LayerData.jzxJSONData.geometries){
-          if(LayerData.jzxJSONData.geometries.length!==0){
-              jzx_geos=LayerData.jzxJSONData.geometries;
-          }
-        }
-        if(typeof(LayerData.jzxJSONData)==='string'){
-          jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
-        }
+        jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
         //为地图对象添加点击绑定事件
         if(jzx_geos){
+          jzx.addGeometry(jzx_geos);
           for (let i = 0; i < jzx_geos.length; i++) {
-            let jzx_geo = new maptalks.LineString(jzx_geos[i].feature.geometry.coordinates,  {
-              id: jzx_geos[i].feature.geometry.id,
-              labels: jzx_geos[i].options.labels,
-              length: jzx_geos[i].options.length,
-              poiArr: jzx_geos[i].options.linePoiArr,
-              isClicked: jzx_geos[i].options.isClicked,
-              symbol:  jzx_geos[i].symbol,
-              arrowStyle : null, 
-              arrowPlacement : 'vertex-last',
-              visible : true,
-              editable : true,
-              cursor : null,
-              draggable : false,
-              dragShadow : false, 
-              drawOnAxis : null,
-            });
-            jzx_geo.on("click", clickObj);
-            jzx.addGeometry(jzx_geo);
+            jzx.getGeometries()[i].on("click", clickObj);
           }
         }
     }
     //添加宗地图层数据
     if(LayerData.zdJSONData){
       let zd_geos;
-      if(LayerData.zdJSONData.geometries){
-        if(LayerData.zdJSONData.geometries.length!==0){
-          zd_geos=LayerData.zdJSONData.geometries;
-        }
-      }
-      if(typeof(LayerData.zdJSONData)==='string'){
-        zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
-      }
+      zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
       console.log(zd_geos)
       //为地图对象添加点击绑定事件
       if(zd_geos){
+        zd.addGeometry(zd_geos); 
         for (let i = 0; i < zd_geos.length; i++) {
-          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometry.coordinates,  {
-            id: zd_geos[i].feature.geometry.id,
-            labels: zd_geos[i].options.labels,
-            isClicked: zd_geos[i].options.isClicked,
-            polygonType:zd_geos[i].options.polygonType,
-            symbol:  zd_geos[i].symbol,
-            visible : true,
-            editable : true,
-            cursor : 'pointer',
-            draggable : false,
-            drawOnAxis : null, 
-          });
-          zd_geo.on("click", clickObj);
-          zd.addGeometry(zd_geo);
+          zd.getGeometries()[i].on("click", clickObj);
         }
       }
     }
     //添加注记图层数据
     if(LayerData.zjJSONData){
       let zj_geos;
-      if(LayerData.zjJSONData.geometries){
-        if(LayerData.zjJSONData.geometries.length!==0){
-          zj_geos=LayerData.zjJSONData.geometries;
-        }
-      }
-      if(typeof(LayerData.zjJSONData)==='string'){
-        zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
-      }
+      zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
       console.log(zj_geos)
       //为地图对象添加点击绑定事件
       if(zj_geos){
+        zj.addGeometry(zj_geos);  
         for (let i = 0; i < zj_geos.length; i++) {
-          let zj_geo = new maptalks.Label(zj_geos[i].content,zj_geos[i].feature.geometry.coordinates,  {
-            'id': zj_geos[i].feature.geometry.id,
-            'draggable': true,
-            'type': "Label",
-            'isClicked': zj_geos[i].options.isClicked,
-            'boxStyle' : {
-              'padding' : [12, 8],
-              'verticalAlignment' : 'top',
-              'horizontalAlignment' : 'right',
-              'minWidth' : 48,
-              'minHeight' : 24,
-              'symbol' : {
-                'textDy':-24,
-                'markerType' : 'square',
-                'markerFill' : 'rgb(255,255,255)',
-                'markerFillOpacity' : 0,
-                'markerLineWidth' : 0
-              }
-            },
-            'textSymbol': {
-              'textFaceName' : '宋体',
-              'textFill' : '#000',
-              'textSize' : 15,
-              'textVerticalAlignment' : 'top'
-            }
-          });
-          zj_geo.on("click", clickObj);
-          zj.addGeometry(zj_geo);
+          zj.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -1659,7 +1475,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
 
         modifyPointId = action.payload.command;
         //高亮显示选择纠正位置的点
@@ -1780,7 +1595,6 @@ const sketchReduce = (
       case "plotBD":
         console.log("内置北斗展点");
         recoverObj();      
-        map.off("click", editLabel);
         drawTool.disable();
         let BDplotData = [];
         BDplotData = JSON.parse(action.payload.data);
@@ -1813,7 +1627,6 @@ const sketchReduce = (
       case "plotRTK":
         console.log("RTK展点");
         recoverObj();      
-        map.off("click", editLabel);
         drawTool.disable();
         let plotData = [];
         plotData = JSON.parse(action.payload.data);
@@ -2035,7 +1848,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         if (!state.drawPointIsChecked) {
           //开始画点
           drawPoint();
@@ -2078,7 +1890,6 @@ const sketchReduce = (
         recoverObj();
         drawTool.disable();
         map.off("dblclick", drawToolOn);
-        map.off("click", editLabel);
         map.off("click", addLabel);
         
         const rectifyPoiState = {
@@ -2115,7 +1926,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         if (!state.drawLineIsChecked) {
           //开始画线
           drawLine();
@@ -2156,7 +1966,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         //画线时drawTool的绑定事件
         drawJZXEnd =
           drawJZXEnd ||
@@ -2262,7 +2071,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         //画线时drawTool的绑定事件
         drawCurveEnd =
           drawCurveEnd ||
@@ -2348,7 +2156,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         if (!state.drawPolygonIsChecked) {
           //开始构面
           drawPolygon();
@@ -2388,7 +2195,6 @@ const sketchReduce = (
           drawTool.off("drawend",BindOnDisTool);
           drawTool.off("drawend",BindOnAreaTool);
           map.off("click", addLabel);
-          map.off("click", editLabel);
         if (!state.balconyIsChecked) {
           //开始构面
           drawBalcony();
@@ -2449,7 +2255,6 @@ const sketchReduce = (
       //添加注记
       case "addLabelClick":
         recoverObj();
-        map.off("click", editLabel);
         if (!state.addLabelIsChecked) {
           map.on("click", addLabel);
         } else {
@@ -2464,14 +2269,6 @@ const sketchReduce = (
       case "editLabel":
         map.off("click", addLabel);
         editLabel();
-        // if (!state.editLabelIsChecked) {
-        //   map.on("click", editLabel);
-        // } else {
-        //   if(editingLabel){
-        //     editingLabel.endEditText();
-        //   }
-        //   map.off("click", editLabel);
-        // }
         const editLabelState = {
           addLabelIsChecked: false,
           editLabelIsChecked:true,
@@ -2488,7 +2285,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawPointEnd);
         map.off("click", addLabel);
         map.off("dblclick", drawToolOn);
-        map.off("click", editLabel);
         if (!state.measureDistanceIsChecked) {
           UseDisTool();
           map.on("dblclick", drawToolOn);
@@ -2527,7 +2323,6 @@ const sketchReduce = (
         drawTool.off("drawend", rectifyPointEnd);
         map.off("dblclick", drawToolOn);      
         map.off("click", addLabel);
-        map.off("click", editLabel);
         if (!state.measureAreaIsChecked) {
           UseAreaTool();
           map.on("dblclick", drawToolOn);
@@ -2560,7 +2355,6 @@ const sketchReduce = (
         console.log(target);
         drawTool.disable();
         map.off("click", addLabel);
-        map.off("click", editLabel);
         map.off("dblclick", drawToolOn);
         console.log(clickedObj.length)
         if (clickedObj.length>0) {
@@ -2604,7 +2398,6 @@ const sketchReduce = (
         console.log("choose");
         drawTool.disable();
         map.off("click", addLabel);
-        map.off("click", editLabel);
         map.off("dblclick", drawToolOn);
         const newState7 = {
           plotIsChecked: false,
@@ -2671,7 +2464,6 @@ const sketchReduce = (
         }
       //撤销
       case "undoClick":
-      map.off("click", editLabel);
       if(drawTool.getCurrentGeometry()){
         drawUndo();
         const new_drawAlert={ drawAlert:false}
@@ -2683,7 +2475,6 @@ const sketchReduce = (
       //重做
       case "redoClick":
         console.log("重做");
-        map.off("click", editLabel);
         if(drawTool.getCurrentGeometry()){
           drawRedo();
           const new_drawAlert={ drawAlert:false}
@@ -2717,14 +2508,9 @@ const sketchReduce = (
           drawTool.disable();
           map.off("click", drawToolOn);       
           map.off("click", addLabel);
-          map.off("click", editLabel);
           map.off("dblclick", drawToolOn);
-          console.log(map.getLayer("point").toJSON());
-          console.log(map.getLayer("SZ").toJSON())
-          console.log(map.getLayer("JZX").toJSON())
-          console.log(map.getLayer("polygon").toJSON())
-          console.log(map.getLayer("label").toJSON())
-          console.log(state.haveSaved)
+          console.log(map.getLayer("JZX").getGeometries())
+          console.log(JSON.stringify(map.getLayer("JZX").toJSON()))
           if(state.haveSaved){
             const alerthaveSaved={alerthaveSaved:true}
             return Object.assign({}, state, { ...alerthaveSaved });
@@ -2750,12 +2536,12 @@ const sketchReduce = (
               alertSave: false,
               mapZoom:map.getZoom(),
               layerData:{
-                jzdJSONData: map.getLayer("point").toJSON(),
-                szJSONData: map.getLayer("SZ").toJSON(),
-                jzxJSONData: map.getLayer("JZX").toJSON(),
-                zdJSONData: map.getLayer("polygon").toJSON(),
-                zjJSONData: map.getLayer("label").toJSON(),
-                mapCenter: mapCenter
+                jzdJSONData: JSON.stringify(map.getLayer("point").toJSON()) ,
+                szJSONData: JSON.stringify(map.getLayer("SZ").toJSON()),
+                jzxJSONData: JSON.stringify(map.getLayer("JZX").toJSON()),
+                zdJSONData: JSON.stringify(map.getLayer("polygon").toJSON()),
+                zjJSONData: JSON.stringify(map.getLayer("label").toJSON()),
+                mapCenter: JSON.stringify(mapCenter)
               }
             }; 
             return Object.assign({}, state, { ...saveData });

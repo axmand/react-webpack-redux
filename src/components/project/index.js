@@ -65,7 +65,9 @@ const styles = {
   },
   divStyle: {
     opacity: "1",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    overflowX: "hidden",
+    overflowY: "hidden",
   }
 };
 
