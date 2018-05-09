@@ -470,7 +470,7 @@ return state;
       newState.F3.StartPointCodeList=startPoints;
       newState.F3.InnerPointCodeList=innerPoints;
       newState.F3.EndPointCodeList=endPoints;
-      newState.F3.jzxID=jzxID;
+      newState.L.jzxID=jzxID;
       
       console.log(newState)
       const returnState=Object.assign({}, state, newState);
