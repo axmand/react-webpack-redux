@@ -322,17 +322,9 @@ class Map extends Component {
       jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(jzd_geos){
+        jzd.addGeometry(jzd_geos);
         for (let i = 0; i < jzd_geos.length; i++) {
-          console.log(jzd_geos[i]);
-          let jzd_geo = new maptalks.Circle(jzd_geos[i].coordinates, 3, {
-            id: jzd_geos[i].feature.id,
-            labels: jzd_geos[i].options.labels,
-            picture:  jzd_geos[i].options.picture,
-            isClicked: jzd_geos[i].options.isClicked,
-            symbol:  jzd_geos[i].symbol
-          });
-          jzd_geo.on("click", clickObj);
-          jzd.addGeometry(jzd_geo);
+          jzd.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -342,24 +334,9 @@ class Map extends Component {
       sz_geos=JSON.parse(LayerData.szJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(sz_geos){
+        sz.addGeometry(sz_geos);
         for (let i = 0; i < sz_geos.length; i++) {
-          let sz_geo = new maptalks.LineString(sz_geos[i].feature.geometry.coordinates,  {
-            id: sz_geos[i].feature.geometry.id,
-            isClicked: sz_geos[i].options.isClicked,
-            length: sz_geos[i].options.length,
-            labels: sz_geos[i].options.labels,
-            arrowStyle : null, 
-            arrowPlacement : 'vertex-last',
-            visible : true,
-            editable : true,
-            cursor : null,
-            draggable : false,
-            dragShadow : false, 
-            drawOnAxis : null,
-            symbol:  sz_geos[i].symbol,
-          });
-          sz_geo.on("click", clickObj);
-          sz.addGeometry(sz_geo);
+          sz.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -369,25 +346,9 @@ class Map extends Component {
         jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
         //为地图对象添加点击绑定事件
         if(jzx_geos){
+          jzx.addGeometry(jzx_geos);
           for (let i = 0; i < jzx_geos.length; i++) {
-            let jzx_geo = new maptalks.LineString(jzx_geos[i].feature.geometry.coordinates,  {
-              id: jzx_geos[i].feature.geometry.id,
-              labels: jzx_geos[i].options.labels,
-              length: jzx_geos[i].options.length,
-              poiArr: jzx_geos[i].options.linePoiArr,
-              isClicked: jzx_geos[i].options.isClicked,
-              symbol:  jzx_geos[i].symbol,
-              arrowStyle : null, 
-              arrowPlacement : 'vertex-last',
-              visible : true,
-              editable : true,
-              cursor : null,
-              draggable : false,
-              dragShadow : false, 
-              drawOnAxis : null,
-            });
-            jzx_geo.on("click", clickObj);
-            jzx.addGeometry(jzx_geo);
+            jzx.getGeometries()[i].on("click", clickObj);
           }
         }
     }
@@ -398,21 +359,9 @@ class Map extends Component {
       console.log(zd_geos)
       //为地图对象添加点击绑定事件
       if(zd_geos){
+        zd.addGeometry(zd_geos); 
         for (let i = 0; i < zd_geos.length; i++) {
-          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometry.coordinates,  {
-            id: zd_geos[i].feature.geometry.id,
-            labels: zd_geos[i].options.labels,
-            isClicked: zd_geos[i].options.isClicked,
-            polygonType:zd_geos[i].options.polygonType,
-            symbol:  zd_geos[i].symbol,
-            visible : true,
-            editable : true,
-            cursor : 'pointer',
-            draggable : false,
-            drawOnAxis : null, 
-          });
-          zd_geo.on("click", clickObj);
-          zd.addGeometry(zd_geo);
+          zd.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -423,38 +372,13 @@ class Map extends Component {
       console.log(zj_geos)
       //为地图对象添加点击绑定事件
       if(zj_geos){
+        zj.addGeometry(zj_geos);  
         for (let i = 0; i < zj_geos.length; i++) {
-          let zj_geo = new maptalks.Label(zj_geos[i].content,zj_geos[i].feature.geometry.coordinates,  {
-            'id': zj_geos[i].feature.geometry.id,
-            'draggable': true,
-            'type': "Label",
-            'isClicked': zj_geos[i].options.isClicked,
-            'boxStyle' : {
-              'padding' : [12, 8],
-              'verticalAlignment' : 'top',
-              'horizontalAlignment' : 'right',
-              'minWidth' : 48,
-              'minHeight' : 24,
-              'symbol' : {
-                'textDy':-24,
-                'markerType' : 'square',
-                'markerFill' : 'rgb(255,255,255)',
-                'markerFillOpacity' : 0,
-                'markerLineWidth' : 0
-              }
-            },
-            'textSymbol': {
-              'textFaceName' : '宋体',
-              'textFill' : '#000',
-              'textSize' : 15,
-              'textVerticalAlignment' : 'top'
-            }
-          });
-          zj_geo.on("click", clickObj);
-          zj.addGeometry(zj_geo);
+          zj.getGeometries()[i].on("click", clickObj);
         }
       }
     }
+
     //读取并剔除不合格的底图数据
     let poiGeometries,lineGeometries,polygonGeometries
     if(DT_Point!==null){
@@ -542,20 +466,12 @@ class Map extends Component {
     //添加界址点图层数据
     if(LayerData.jzdJSONData){
       let jzd_geos;
-       jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
+      jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(jzd_geos){
+        jzd.addGeometry(jzd_geos);
         for (let i = 0; i < jzd_geos.length; i++) {
-          console.log(jzd_geos[i]);
-          let jzd_geo = new maptalks.Circle(jzd_geos[i].coordinates, 3, {
-            id: jzd_geos[i].feature.id,
-            labels: jzd_geos[i].options.labels,
-            picture:  jzd_geos[i].options.picture,
-            isClicked: jzd_geos[i].options.isClicked,
-            symbol:  jzd_geos[i].symbol
-          });
-          jzd_geo.on("click", clickObj);
-          jzd.addGeometry(jzd_geo);
+          jzd.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -565,24 +481,9 @@ class Map extends Component {
       sz_geos=JSON.parse(LayerData.szJSONData).geometries;
       //为地图对象添加点击绑定事件
       if(sz_geos){
+        sz.addGeometry(sz_geos);
         for (let i = 0; i < sz_geos.length; i++) {
-          let sz_geo = new maptalks.LineString(sz_geos[i].feature.geometry.coordinates,  {
-            id: sz_geos[i].feature.geometry.id,
-            isClicked: sz_geos[i].options.isClicked,
-            length: sz_geos[i].options.length,
-            labels: sz_geos[i].options.labels,
-            arrowStyle : null, 
-            arrowPlacement : 'vertex-last',
-            visible : true,
-            editable : true,
-            cursor : null,
-            draggable : false,
-            dragShadow : false, 
-            drawOnAxis : null,
-            symbol:  sz_geos[i].symbol,
-          });
-          sz_geo.on("click", clickObj);
-          sz.addGeometry(sz_geo);
+          sz.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -592,25 +493,9 @@ class Map extends Component {
         jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
         //为地图对象添加点击绑定事件
         if(jzx_geos){
+          jzx.addGeometry(jzx_geos);
           for (let i = 0; i < jzx_geos.length; i++) {
-            let jzx_geo = new maptalks.LineString(jzx_geos[i].feature.geometry.coordinates,  {
-              id: jzx_geos[i].feature.geometry.id,
-              labels: jzx_geos[i].options.labels,
-              length: jzx_geos[i].options.length,
-              poiArr: jzx_geos[i].options.linePoiArr,
-              isClicked: jzx_geos[i].options.isClicked,
-              symbol:  jzx_geos[i].symbol,
-              arrowStyle : null, 
-              arrowPlacement : 'vertex-last',
-              visible : true,
-              editable : true,
-              cursor : null,
-              draggable : false,
-              dragShadow : false, 
-              drawOnAxis : null,
-            });
-            jzx_geo.on("click", clickObj);
-            jzx.addGeometry(jzx_geo);
+            jzx.getGeometries()[i].on("click", clickObj);
           }
         }
     }
@@ -621,21 +506,9 @@ class Map extends Component {
       console.log(zd_geos)
       //为地图对象添加点击绑定事件
       if(zd_geos){
+        zd.addGeometry(zd_geos); 
         for (let i = 0; i < zd_geos.length; i++) {
-          let zd_geo = new maptalks.Polygon(zd_geos[i].feature.geometry.coordinates,  {
-            id: zd_geos[i].feature.geometry.id,
-            labels: zd_geos[i].options.labels,
-            isClicked: zd_geos[i].options.isClicked,
-            polygonType:zd_geos[i].options.polygonType,
-            symbol:  zd_geos[i].symbol,
-            visible : true,
-            editable : true,
-            cursor : 'pointer',
-            draggable : false,
-            drawOnAxis : null, 
-          });
-          zd_geo.on("click", clickObj);
-          zd.addGeometry(zd_geo);
+          zd.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -646,35 +519,9 @@ class Map extends Component {
       console.log(zj_geos)
       //为地图对象添加点击绑定事件
       if(zj_geos){
+        zj.addGeometry(zj_geos);  
         for (let i = 0; i < zj_geos.length; i++) {
-          let zj_geo = new maptalks.Label(zj_geos[i].content,zj_geos[i].feature.geometry.coordinates,  {
-            'id': zj_geos[i].feature.geometry.id,
-            'draggable': true,
-            'type': "Label",
-            'isClicked': zj_geos[i].options.isClicked,
-            'boxStyle' : {
-              'padding' : [12, 8],
-              'verticalAlignment' : 'top',
-              'horizontalAlignment' : 'right',
-              'minWidth' : 48,
-              'minHeight' : 24,
-              'symbol' : {
-                'textDy':-24,
-                'markerType' : 'square',
-                'markerFill' : 'rgb(255,255,255)',
-                'markerFillOpacity' : 0,
-                'markerLineWidth' : 0
-              }
-            },
-            'textSymbol': {
-              'textFaceName' : '宋体',
-              'textFill' : '#000',
-              'textSize' : 15,
-              'textVerticalAlignment' : 'top'
-            }
-          });
-          zj_geo.on("click", clickObj);
-          zj.addGeometry(zj_geo);
+          zj.getGeometries()[i].on("click", clickObj);
         }
       }
     }
@@ -2684,12 +2531,8 @@ const sketchReduce = (
           map.off("click", addLabel);
           map.off("click", editLabel);
           map.off("dblclick", drawToolOn);
-          console.log(map.getLayer("point").toJSON());
-          console.log(map.getLayer("SZ").toJSON())
-          console.log(map.getLayer("JZX").toJSON())
-          console.log(map.getLayer("polygon").toJSON())
-          console.log(map.getLayer("label").toJSON())
-          console.log(state.haveSaved)
+          console.log(map.getLayer("JZX").getGeometries())
+          console.log(JSON.stringify(map.getLayer("JZX").toJSON()))
           if(state.haveSaved){
             const alerthaveSaved={alerthaveSaved:true}
             return Object.assign({}, state, { ...alerthaveSaved });
