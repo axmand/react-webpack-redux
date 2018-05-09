@@ -39,7 +39,7 @@ let snap = new SnapTool({
 });
 let target,
   clickedObj = [],
-  editingLabel,
+  editingLabel=[],
   linePoiArr = [];
 let clickObj, deleteObj, recoverObj, addLabel,editLabel;
 //用于获取点线面对象
@@ -201,7 +201,8 @@ addLabel =
     });
     map.getLayer("label").addGeometry(label);
     label.on("click", clickObj);
-    editingLabel=label;
+    editingLabel.push(label);
+    console.log(editingLabel)
     label.startEditText();
     recoverObj();
   };
@@ -210,9 +211,12 @@ addLabel =
   editLabel=
     editLabel||
     function(){
-      if(editingLabel){
-      console.log(editingLabel)
-      editingLabel.endEditText();
+      if(editingLabel.length>0){
+        for(let i= 0;i<editingLabel.length;i++){
+          console.log(editingLabel[i])
+          editingLabel[i].endEditText();
+        }
+        editingLabel=[];
       }
    }
 // //用于删除对象
@@ -1471,7 +1475,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
 
         modifyPointId = action.payload.command;
         //高亮显示选择纠正位置的点
@@ -1592,7 +1595,6 @@ const sketchReduce = (
       case "plotBD":
         console.log("内置北斗展点");
         recoverObj();      
-        map.off("click", editLabel);
         drawTool.disable();
         let BDplotData = [];
         BDplotData = JSON.parse(action.payload.data);
@@ -1625,7 +1627,6 @@ const sketchReduce = (
       case "plotRTK":
         console.log("RTK展点");
         recoverObj();      
-        map.off("click", editLabel);
         drawTool.disable();
         let plotData = [];
         plotData = JSON.parse(action.payload.data);
@@ -1847,7 +1848,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         if (!state.drawPointIsChecked) {
           //开始画点
           drawPoint();
@@ -1890,7 +1890,6 @@ const sketchReduce = (
         recoverObj();
         drawTool.disable();
         map.off("dblclick", drawToolOn);
-        map.off("click", editLabel);
         map.off("click", addLabel);
         
         const rectifyPoiState = {
@@ -1927,7 +1926,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         if (!state.drawLineIsChecked) {
           //开始画线
           drawLine();
@@ -1968,7 +1966,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         //画线时drawTool的绑定事件
         drawJZXEnd =
           drawJZXEnd ||
@@ -2074,7 +2071,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         //画线时drawTool的绑定事件
         drawCurveEnd =
           drawCurveEnd ||
@@ -2160,7 +2156,6 @@ const sketchReduce = (
         drawTool.off("drawend",BindOnDisTool);
         drawTool.off("drawend",BindOnAreaTool);
         map.off("click", addLabel);
-        map.off("click", editLabel);
         if (!state.drawPolygonIsChecked) {
           //开始构面
           drawPolygon();
@@ -2200,7 +2195,6 @@ const sketchReduce = (
           drawTool.off("drawend",BindOnDisTool);
           drawTool.off("drawend",BindOnAreaTool);
           map.off("click", addLabel);
-          map.off("click", editLabel);
         if (!state.balconyIsChecked) {
           //开始构面
           drawBalcony();
@@ -2261,7 +2255,6 @@ const sketchReduce = (
       //添加注记
       case "addLabelClick":
         recoverObj();
-        map.off("click", editLabel);
         if (!state.addLabelIsChecked) {
           map.on("click", addLabel);
         } else {
@@ -2276,14 +2269,6 @@ const sketchReduce = (
       case "editLabel":
         map.off("click", addLabel);
         editLabel();
-        // if (!state.editLabelIsChecked) {
-        //   map.on("click", editLabel);
-        // } else {
-        //   if(editingLabel){
-        //     editingLabel.endEditText();
-        //   }
-        //   map.off("click", editLabel);
-        // }
         const editLabelState = {
           addLabelIsChecked: false,
           editLabelIsChecked:true,
@@ -2300,7 +2285,6 @@ const sketchReduce = (
         drawTool.off("drawend", drawPointEnd);
         map.off("click", addLabel);
         map.off("dblclick", drawToolOn);
-        map.off("click", editLabel);
         if (!state.measureDistanceIsChecked) {
           UseDisTool();
           map.on("dblclick", drawToolOn);
@@ -2339,7 +2323,6 @@ const sketchReduce = (
         drawTool.off("drawend", rectifyPointEnd);
         map.off("dblclick", drawToolOn);      
         map.off("click", addLabel);
-        map.off("click", editLabel);
         if (!state.measureAreaIsChecked) {
           UseAreaTool();
           map.on("dblclick", drawToolOn);
@@ -2372,7 +2355,6 @@ const sketchReduce = (
         console.log(target);
         drawTool.disable();
         map.off("click", addLabel);
-        map.off("click", editLabel);
         map.off("dblclick", drawToolOn);
         console.log(clickedObj.length)
         if (clickedObj.length>0) {
@@ -2416,7 +2398,6 @@ const sketchReduce = (
         console.log("choose");
         drawTool.disable();
         map.off("click", addLabel);
-        map.off("click", editLabel);
         map.off("dblclick", drawToolOn);
         const newState7 = {
           plotIsChecked: false,
@@ -2483,7 +2464,6 @@ const sketchReduce = (
         }
       //撤销
       case "undoClick":
-      map.off("click", editLabel);
       if(drawTool.getCurrentGeometry()){
         drawUndo();
         const new_drawAlert={ drawAlert:false}
@@ -2495,7 +2475,6 @@ const sketchReduce = (
       //重做
       case "redoClick":
         console.log("重做");
-        map.off("click", editLabel);
         if(drawTool.getCurrentGeometry()){
           drawRedo();
           const new_drawAlert={ drawAlert:false}
@@ -2529,7 +2508,6 @@ const sketchReduce = (
           drawTool.disable();
           map.off("click", drawToolOn);       
           map.off("click", addLabel);
-          map.off("click", editLabel);
           map.off("dblclick", drawToolOn);
           console.log(map.getLayer("JZX").getGeometries())
           console.log(JSON.stringify(map.getLayer("JZX").toJSON()))

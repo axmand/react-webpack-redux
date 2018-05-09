@@ -1336,6 +1336,7 @@ onBDPlotClick: () => {
     // fetch(appConfig.fileServiceRootPath + '//project/photolist/' )
     .then(response => response.json())
     .then( json => {
+      console.log(ownProps)
       dispatch({
         type: 'handleCameraShow',
         payload:{json:json,ownProps:ownProps},
@@ -1345,7 +1346,7 @@ onBDPlotClick: () => {
         type: 'showPhoto2projectData',
         payload:{json:json,ownProps:ownProps},
       })
-      //console.log(json)
+
       dispatch({
         type: 'ProgressShow',
       }) 
