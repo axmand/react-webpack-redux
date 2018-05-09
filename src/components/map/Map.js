@@ -444,100 +444,102 @@ class Map extends Component {
     zj = map.getLayer('label');
     location=map.getLayer('location');
     DT=map.getLayer('DT');
-    if(jzd.getGeometries()){
-      jzd.clear();
-    }
-    if(sz.getGeometries()){
-      sz.clear();
-    }
-    if(jzx.getGeometries()){
-      jzx.clear();
-    }
-    if(zd.getGeometries()){
-      zd.clear();
-    }
-    if(zj.getGeometries()){
-      zj.clear();
-    }
-    if(location.getGeometries()){
-      location.clear();
-    }
-     /*
-    项目地图数据更新但未导出时加载的是的JSON格式图层数据
-    项目切换时加载的是导出后的string格式图层数据
-    故需要在重载时进行判断
-    */
-    //添加界址点图层数据
-    if(LayerData.jzdJSONData){
-      let jzd_geos;
-      jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
-      //为地图对象添加点击绑定事件
-      if(jzd_geos){
-        jzd.addGeometry(jzd_geos);
-        for (let i = 0; i < jzd_geos.length; i++) {
-          jzd.getGeometries()[i].on("click", clickObj);
-        }
-      }
-    }
-    //添加四至图层数据
-    if(LayerData.szJSONData){
-      let sz_geos;
-      sz_geos=JSON.parse(LayerData.szJSONData).geometries;
-      //为地图对象添加点击绑定事件
-      if(sz_geos){
-        sz.addGeometry(sz_geos);
-        for (let i = 0; i < sz_geos.length; i++) {
-          sz.getGeometries()[i].on("click", clickObj);
-        }
-      }
-    }
-      //添加界址线图层数据
-      if(LayerData.jzxJSONData){
-        let jzx_geos;
-        jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
-        //为地图对象添加点击绑定事件
-        if(jzx_geos){
-          jzx.addGeometry(jzx_geos);
-          for (let i = 0; i < jzx_geos.length; i++) {
-            jzx.getGeometries()[i].on("click", clickObj);
-          }
-        }
-    }
-    //添加宗地图层数据
-    if(LayerData.zdJSONData){
-      let zd_geos;
-      zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
-      console.log(zd_geos)
-      //为地图对象添加点击绑定事件
-      if(zd_geos){
-        zd.addGeometry(zd_geos); 
-        for (let i = 0; i < zd_geos.length; i++) {
-          zd.getGeometries()[i].on("click", clickObj);
-        }
-      }
-    }
-    //添加注记图层数据
-    if(LayerData.zjJSONData){
-      let zj_geos;
-      zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
-      console.log(zj_geos)
-      //为地图对象添加点击绑定事件
-      if(zj_geos){
-        zj.addGeometry(zj_geos);  
-        for (let i = 0; i < zj_geos.length; i++) {
-          zj.getGeometries()[i].on("click", clickObj);
-        }
-      }
-    }
+   
     //判断项目是否切换若切换则更新底图数据
     if(new_ProjectName!==ProjectName){
       //更新项目名
       ProjectName=new_ProjectName;
+
       //清空底图数据重新载入
       if(DT.getGeometries()){
         DT.clear();
       }
-    //读取并剔除不合格的底图数据
+      if(jzd.getGeometries()){
+        jzd.clear();
+      }
+      if(sz.getGeometries()){
+        sz.clear();
+      }
+      if(jzx.getGeometries()){
+        jzx.clear();
+      }
+      if(zd.getGeometries()){
+        zd.clear();
+      }
+      if(zj.getGeometries()){
+        zj.clear();
+      }
+      if(location.getGeometries()){
+        location.clear();
+      }
+       /*
+      项目地图数据更新但未导出时加载的是的JSON格式图层数据
+      项目切换时加载的是导出后的string格式图层数据
+      故需要在重载时进行判断
+      */
+      //添加界址点图层数据
+      if(LayerData.jzdJSONData){
+        let jzd_geos;
+        jzd_geos=JSON.parse(LayerData.jzdJSONData).geometries;
+        //为地图对象添加点击绑定事件
+        if(jzd_geos){
+          jzd.addGeometry(jzd_geos);
+          for (let i = 0; i < jzd_geos.length; i++) {
+            jzd.getGeometries()[i].on("click", clickObj);
+          }
+        }
+      }
+      //添加四至图层数据
+      if(LayerData.szJSONData){
+        let sz_geos;
+        sz_geos=JSON.parse(LayerData.szJSONData).geometries;
+        //为地图对象添加点击绑定事件
+        if(sz_geos){
+          sz.addGeometry(sz_geos);
+          for (let i = 0; i < sz_geos.length; i++) {
+            sz.getGeometries()[i].on("click", clickObj);
+          }
+        }
+      }
+        //添加界址线图层数据
+        if(LayerData.jzxJSONData){
+          let jzx_geos;
+          jzx_geos=JSON.parse(LayerData.jzxJSONData).geometries;
+          //为地图对象添加点击绑定事件
+          if(jzx_geos){
+            jzx.addGeometry(jzx_geos);
+            for (let i = 0; i < jzx_geos.length; i++) {
+              jzx.getGeometries()[i].on("click", clickObj);
+            }
+          }
+      }
+      //添加宗地图层数据
+      if(LayerData.zdJSONData){
+        let zd_geos;
+        zd_geos=JSON.parse(LayerData.zdJSONData).geometries;
+        console.log(zd_geos)
+        //为地图对象添加点击绑定事件
+        if(zd_geos){
+          zd.addGeometry(zd_geos); 
+          for (let i = 0; i < zd_geos.length; i++) {
+            zd.getGeometries()[i].on("click", clickObj);
+          }
+        }
+      }
+      //添加注记图层数据
+      if(LayerData.zjJSONData){
+        let zj_geos;
+        zj_geos=JSON.parse(LayerData.zjJSONData).geometries;
+        console.log(zj_geos)
+        //为地图对象添加点击绑定事件
+        if(zj_geos){
+          zj.addGeometry(zj_geos);  
+          for (let i = 0; i < zj_geos.length; i++) {
+            zj.getGeometries()[i].on("click", clickObj);
+          }
+        }
+      }
+      //读取并剔除不合格的底图数据
       let poiGeometries,lineGeometries,polygonGeometries
       if(DT_Point!==null){
         poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
