@@ -210,6 +210,8 @@ class ThematicMap extends Component {
       const ThematicMapDiv = this.refs.ThematicMap;
       thematicMap = new maptalks.Map(ThematicMapDiv, {
         center:[108.37, 22.82] ,
+        dragPitch : false,
+        dragRotate : false,
         zoom:mapZoom,
       });  
 

@@ -276,11 +276,14 @@ class Map extends Component {
     map = new maptalks.Map(mapDiv, {
       center:[108.37, 22.82],
       zoom: 16,
+      dragPitch : false,
+      dragRotate : false,
       baseLayer: new maptalks.TileLayer("base", {
         crossOrigin: "anonymous",
         urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
         subdomains  : ['1','2','3','4','5'],
-        attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
+        // attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
+        attribution: ''
       }),
     });
      //获取项目数据
