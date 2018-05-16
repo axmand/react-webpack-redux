@@ -5,10 +5,8 @@ import Dialog,{DialogContent,DialogTitle,DialogActions} from 'material-ui/Dialog
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Button from 'material-ui/Button';
 // import FontAwesome from 'react-fontawesome'
-import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import PhotoContent from './PhotoContent'
@@ -18,7 +16,7 @@ import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 // import projectData from './../../redux/RootData';
 import appConfig from "../../redux/Config";
-import JZDList from "./JZDList";
+
 
 
 const styles = {
@@ -64,33 +62,16 @@ class BoundaryModule extends Component {
   render() {
     const {
       handleCameraClose,
-      handleCameraShow,
       handlePhotoDeleteShow,
       handlePhotoDelete,
       CameraShow,
       DeleteShow,
       PrintProgress,
-      projectData,
-      // XCZJclick,
-      // PhotoItemTest,
-      // DeleteId,
       classes
     } = this.props;
   
     return (
     <div>
-       {/* <ListItem button className={classes.listitem} disableGutters={true} onClick={ XCZJclick }>  */}
-       {/* <ListItem button className={classes.listitem} disableGutters={true}> 
-        <ListItemIcon>
-          <PhotoCameraIcon className={classes.listItemIcon}/>
-        </ListItemIcon>            
-        <ListItemText
-          disableTypography={true}
-          className={classes.listItemText}
-          primary="现场指界"
-        />
-      </ListItem> */}
-       <JZDList projectData ={projectData}/> 
         <Dialog
           fullScreen
           className={classes.dialog}
@@ -200,12 +181,12 @@ const BoundaryReduce = (
   }, action) => {
   
   let newState = JSON.parse(JSON.stringify(state))
-  
+  //显示进度条
   if (action.type === "ProgressShow") {
     const PrintProgress = { PrintProgress: !state.PrintProgress }
     return Object.assign({}, state, { ...PrintProgress })
   }
-  
+  //显示界址点的照片
   if (action.type === "handleCameraShow") {
     let sta = JSON.parse(action.payload.json.status)
     if(action.payload.ownProps.projectData.Loaded === false||sta !== 200)
@@ -213,13 +194,11 @@ const BoundaryReduce = (
     else
       { 
         let list = [];
-        // action.payload.ownProps.projectData.PhotoItem = list.slice(0);
         newState.PhotoItemTest = list.slice(0);
         list = JSON.parse(action.payload.json.data);
 
         for(let i = 0;i<list.length;i++)
           {
-            // projectData.PhotoItem.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false});
             newState.PhotoItemTest.push({text:list[i].PhotoString,key:list[i].PhotoId,checked:false})
           }
         newState.CameraShow =  !state.CameraShow
@@ -227,23 +206,24 @@ const BoundaryReduce = (
    
       return { ...state, ...newState }; 
   }
-
+  //关闭照片显示对话框
   if (action.type === "handleCameraClose") {
     const CameraShow = {CameraShow: !state.CameraShow }
     return Object.assign({}, state, { ...CameraShow })
   }
-
+  //显示照相机
   if (action.type === "handleCardShow") {
     const CardShow = { CardShow: !state.CardShow }
     return Object.assign({}, state, { ...CardShow })
   }
-
+  //关闭照相机
   if (action.type === "handleCardClose") {
     const CardShow = {CardShow: !state.CardShow }
     return Object.assign({}, state, { ...CardShow })
   }
-  
+  //截取视频流获得照片
   if (action.type === "capture") {       
+    //获取时间进行照片命名
     function timetrans()
       {
         var date = new Date();
@@ -270,7 +250,7 @@ const BoundaryReduce = (
         PhotoId: PhotoId,
         PhotoString: PhotoString,
     });
-
+    //通过调用接口将照片保存到服务
     fetch(appConfig.fileServiceRootPath + '//project/photo', 
     { 
       method: 'POST', 
@@ -280,23 +260,21 @@ const BoundaryReduce = (
     .then( json => {console.log(json)})
     .catch(err => {console.log(err)})
     
-    // projectData.PhotoItem.push({text:PhotoString,key:PhotoId,checked:false})
     newState.PhotoItemTest.push({text:PhotoString,key:PhotoId,checked:false})
     newState.CardShow =  !state.CardShow 
     return { ...state, ...newState };
   }
-  
+  //显示删除照片对话框
   if (action.type === "handlePhotoDeleteShow") {
     const DeleteShow = {DeleteShow: !state.DeleteShow }
     return Object.assign({}, state, { ...DeleteShow })
   }
-  
+  //删除照片
   if(action.type === "handlePhotoDelete"){
     newState.DeleteShow = !state.DeleteShow;
     let Photoitems = newState.PhotoItemTest.filter( (todo) =>{return todo.checked === false } )
-    // projectData.PhotoItem = Photoitems.slice(0);
     newState.PhotoItemTest = Photoitems;
-    
+    //通过调用接口删除照片
     console.log(appConfig.fileServiceRootPath + '//project/deletephoto/' + newState.DeleteId)
     fetch(appConfig.fileServiceRootPath + '//project/deletephoto/' + newState.DeleteId)
     .then(response => response.json())
@@ -304,7 +282,7 @@ const BoundaryReduce = (
     .catch(err => {console.log(err)})
     return { ...state, ...newState };
   }
-
+  //选中照片，获取需要删除的照片ID
   if(action.type === "handleChoosePhoto"){
       let Photoitems = newState.PhotoItemTest.map( todo => {
         if ( todo.key === action.id ) {
@@ -316,7 +294,6 @@ const BoundaryReduce = (
         return todo;
       })
       newState.DeleteId = [];
-      // console.log(Photoitems)
       Photoitems.map(todo =>{
         if(todo.checked === true){
           let data=todo.key.replace('.png','')
@@ -324,7 +301,6 @@ const BoundaryReduce = (
         }
       })
      
-      // projectData.PhotoItem =Photoitems.slice(0);
       newState.PhotoItemTest = Photoitems;
       return { ...state, ...newState };
   }

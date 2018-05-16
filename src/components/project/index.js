@@ -185,7 +185,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: "handleProjectProgress"
       });
-      //console.log(appConfig.fileServiceRootPath + '/project/list')
+      //调用服务接口获取项目列表
       fetch(appConfig.fileServiceRootPath + "/project/list")
         .then(response => response.json())
         .then(json => {
@@ -265,9 +265,9 @@ const ProjectReduce = (
   action
 ) => {
   let newState = JSON.parse(JSON.stringify(state));
-
+  //显示项目列表
   if (action.type === "handleContentShow") {
-    //console.log('Project Module ...')
+
     let list = [];
     newState.inputItems = list.slice(0);
 
@@ -277,7 +277,6 @@ const ProjectReduce = (
     if (sta0 !== 200) {
       newState.ProjectFalse = !state.ProjectFalse;
     } else {
-      // newState.inputItems = list.slice(0);
       for (let i = 0; i < list.length; i++) {
         const uuidv4 = require("uuid/v4");
         let Id = uuidv4();
@@ -287,27 +286,27 @@ const ProjectReduce = (
     }
     return { ...state, ...newState };
   }
-
+  //显示进度条
   if (action.type === "handleProjectProgress") {
     const ProjectProgress = { ProjectProgress: !state.ProjectProgress };
     return Object.assign({}, state, { ...ProjectProgress });
   }
-
+  //关闭项目列表对话框
   if (action.type === "handleContentClose") {
     const ContentShow = { ContentShow: !state.ContentShow };
     return Object.assign({}, state, { ...ContentShow });
   }
-
+  //提示数据导入成功
   if (action.type === "handleProjectTrue") {
     const ProjectTrue = { ProjectTrue: !state.ProjectTrue };
     return Object.assign({}, state, { ...ProjectTrue });
   }
-
+  //提示数据导入失败
   if (action.type === "handleProjectFalse") {
     const ProjectFalse = { ProjectFalse: !state.ProjectFalse };
     return Object.assign({}, state, { ...ProjectFalse });
   }
-
+  //选择项目，将项目数据导入
   if (action.type === "handleChooseItem") {
     let list0 = [];
     let Prolist = [];
@@ -319,13 +318,10 @@ const ProjectReduce = (
     newState.projectData.Project_DT_Line = JSON.parse(list0[1].data);
     newState.projectData.Project_DT_Polygon = JSON.parse(list0[2].data);
     newState.projectData.Loaded = true;
-    // projectData.ProjectName = Prolist;
-    // projectData.ProjectItem = list0[0];
-    // projectData.Loaded = ! state.projectData.Loaded;
     newState.ContentShow = !state.ContentShow;
     return { ...state, ...newState };
   }
-
+  //响应图层数据更新的函数
   if (action.type === "updateData2projectData") {
     let list0 = {};
     console.log(action.payload.data);
@@ -333,10 +329,10 @@ const ProjectReduce = (
     newState.projectData.ProjectItem.L = list0;
     return { ...state, ...newState };
   }
-
+  //响应表格数据更新的函数
   if (action.type === "TableData2projectData") {
     var list0 = action.payload.TableData;
-    if(list0!=undefined)
+    if(list0!==undefined)
     {
         list0.L = state.projectData.ProjectItem.L;
         newState.projectData.ProjectItem = list0;
@@ -345,7 +341,7 @@ const ProjectReduce = (
     else
     return state;
   }
-
+  //响应照片数据更新的函数
   if (action.type === "showPhoto2projectData") {
     let list = [];
     newState.projectData.PhotoItem = list.slice(0);
@@ -362,22 +358,22 @@ const ProjectReduce = (
 
     return { ...state, ...newState };
   }
-
+  //响应保存拍摄照片数据的函数
   if (action.type === "capture2projectData") {
     newState.projectData.PhotoItem = action.payload.ownProps.PhotoItemTest;
     return { ...state, ...newState };
   }
-
+  //响应删除选择照片数据的函数
   if (action.type === "PhotoDelete2projectData") {
     newState.projectData.PhotoItem = action.payload.ownProps.PhotoItemTest;
     return { ...state, ...newState };
   }
-
+  //响应选择照片数据的函数
   if (action.type === "ChoosePhoto2projectData") {
     newState.projectData.PhotoItem = action.payload.ownProps.PhotoItemTest;
     return { ...state, ...newState };
   }
-
+  //响应现场指界点击，保存点选ID的函数
   if (action.type === "jzdXCZJClick") {
     newState.projectData.PoiId = action.payload.command;
     return { ...state, ...newState };

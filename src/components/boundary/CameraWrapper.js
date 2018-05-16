@@ -57,15 +57,17 @@ const mapStateToProps = (state,ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-          console.log(ownProps)
+  console.log(ownProps)
   return {
     capture:()=>{
       camera.snapshot()
       .then(data => {
+        //拍摄照片，获取数据流
          dispatch({
          type: 'capture',
          payload: {data:data,ownProps:ownProps}
          })
+        //将改动的数据流保存到项目state中
          dispatch({
          type: 'capture2projectData',
          payload: {data:data,ownProps:ownProps}

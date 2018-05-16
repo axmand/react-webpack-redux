@@ -16,7 +16,6 @@ import Button from 'material-ui/Button';
 import { connect } from 'react-redux'
 import RootReducer from './../../redux/RootReducer';
 import PrintIcon from 'material-ui-icons/Print';
-import projectData from './../../redux/RootData';
 import appConfig from "../../redux/Config"
 
 const styles = {
@@ -59,10 +58,8 @@ class PrintModule extends Component {
       handlePrint2,
       handlePrint3,
       handlePrint4,
-      // handlePrint5,
-      // handlePrint6,
-      // handlePrint7,
-      handlePrintTrue,handlePrintFalse,
+      handlePrintTrue,
+      handlePrintFalse,
       PrintTrue,
       PrintFalse,
       PrintShow,
@@ -163,9 +160,6 @@ PrintModule.propTypes = {
   handlePrint2: PropTypes.func.isRequired,
   handlePrint3: PropTypes.func.isRequired,
   handlePrint4: PropTypes.func.isRequired,
-  handlePrint5: PropTypes.func.isRequired,
-  handlePrint6: PropTypes.func.isRequired,
-  handlePrint7: PropTypes.func.isRequired,
   PrintShow: PropTypes.bool.isRequired,
   PrintTrue: PropTypes.bool.isRequired,
   PrintFalse: PropTypes.bool.isRequired,
@@ -210,7 +204,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: 'ProgressShow',
       });
-
+     //调用接口打印不动产权籍调查表
       fetch(appConfig.fileServiceRootPath + '/project/printforms')
         .then(response => response.json())
         .then( json => {
@@ -232,7 +226,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: 'ProgressShow',
       });
-      
+      //调用接口打印界址标识表留白
       fetch(appConfig.fileServiceRootPath + '/project/printforms2')
         .then(response => response.json())
         .then( json => {
@@ -253,7 +247,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: 'ProgressShow',
       });
-      
+      //调用接口打印界址签章表
       fetch(appConfig.fileServiceRootPath + '/project/printjzqzb')
         .then(response => response.json())
         .then( json => {
@@ -270,7 +264,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           
           setTimeout(() => {
             dispatch({
-                type:'handlePrintTrue2'
+                type:'handlePrintTrue'
             }
           )}, 500);
         })
@@ -281,7 +275,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: 'ProgressShow',
       });
-      
+      //调用接口打印不动产单元草图
       fetch(appConfig.fileServiceRootPath + '/project/printpicture')
         .then(response => response.json())
         .then( json => {
@@ -297,88 +291,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
         .catch(e => console.log("Oops, error", e))
     },
-    
-    handlePrint5: () => {
-      dispatch({
-        type: 'ProgressShow',
-      });
-      
-      fetch(appConfig.fileServiceRootPath + '/project/print/5')
-        .then(response => response.json())
-        .then( json => {
-          dispatch({
-            type: 'handlePrint5',
-            payload: json,
-          })
-          console.log(json)
-          
-          dispatch({
-            type: 'ProgressShow',
-          });
-          
-          setTimeout(() => {
-            dispatch({
-                type:'handlePrintTrue2'
-            }
-          )}, 500);
-        })
-        .catch(e => console.log("Oops, error", e))
-    },
-    
-    handlePrint6: () => {
-      dispatch({
-        type: 'ProgressShow',
-      });
-      
-      fetch(appConfig.fileServiceRootPath + '/project/print/6')
-        .then(response => response.json())
-        .then( json => {
-          dispatch({
-            type: 'handlePrint6',
-            payload: json,
-          })
-          
-          console.log(json)
-          
-          dispatch({
-            type: 'ProgressShow',
-          });
-          
-          setTimeout(() => {
-            dispatch({
-                type:'handlePrintTrue2'
-            }
-          )}, 1000);
-        })
-        .catch(e => console.log("Oops, error", e))
-    },
-    
-    handlePrint7: () => {
-      dispatch({
-        type: 'ProgressShow',
-      });
-      
-      fetch(appConfig.fileServiceRootPath + '/project/print/7')
-        .then(response => response.json())
-        .then( json => {
-          dispatch({
-            type: 'handlePrint7',
-            payload: json,
-          })
-          
-          console.log(json)
-          dispatch({
-            type: 'ProgressShow',
-          });
-          setTimeout(() => {
-            dispatch({
-                type:'handlePrintTrue2'
-            }
-          )}, 500);
-        })
-        .catch(e => console.log("Oops, error", e))
-    },
-    
 
     handlePrintTrue: () => {
       dispatch({
@@ -430,11 +342,6 @@ const PrintReduce = (
     const PrintTrue = { PrintTrue: !state.PrintTrue }
     return Object.assign({}, state, { ...PrintTrue })
   }
- 
-  if (action.type === "handlePrintTrue2") {
-    const PrintTrue = { PrintTrue: !state.PrintTrue }
-    return Object.assign({}, state, { ...PrintTrue })
-  }
     
   if (action.type === "handlePrintFalse") {
     const PrintFalse = { PrintFalse: !state.PrintFalse }
@@ -481,36 +388,6 @@ const PrintReduce = (
   if (action.type === "handlePrint4") {
     let sta4 = JSON.parse(action.payload.status); 
     if(sta4 === 200)
-      {newState.PrintTrue = !state.PrintTrue}
-    else
-      {newState.PrintFalse = !state.PrintFalse}
-    newState.PrintShow = !state.PrintShow;
-    return { ...state, ...newState }; 
-  }
-    
-  if (action.type === "handlePrint5") {
-    let sta5 = JSON.parse(action.payload.status); 
-    if(sta5 === 200)
-      {newState.PrintTrue = !state.PrintTrue}
-    else
-      {newState.PrintFalse = !state.PrintFalse}
-    newState.PrintShow = !state.PrintShow;
-    return { ...state, ...newState }; 
-  }
-    
-  if (action.type === "handlePrint6") {
-    let sta6 = JSON.parse(action.payload.status); 
-    if(sta6 === 200)
-      {newState.PrintTrue = !state.PrintTrue}
-    else
-      {newState.PrintFalse = !state.PrintFalse}
-    newState.PrintShow = !state.PrintShow;
-    return { ...state, ...newState }; 
-  }
-
-  if (action.type === "handlePrint7") {
-    let sta7 = JSON.parse(action.payload.status); 
-    if(sta7 === 200)
       {newState.PrintTrue = !state.PrintTrue}
     else
       {newState.PrintFalse = !state.PrintFalse}
