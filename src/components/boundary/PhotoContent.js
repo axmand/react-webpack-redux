@@ -111,22 +111,26 @@ const mapStateToProps = (state,ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleCardClose:()=>{
+      //关闭对话框
       dispatch({
          type: 'handleCardClose',
 			})
     },
 
     handleCardShow:()=>{
+      //显示对话框
       dispatch({
          type: 'handleCardShow',
 			})
     },
     
     handleChoosePhoto:(id)=>{
+      //选中照片
         dispatch({
           type: 'handleChoosePhoto',
           id
         }),
+        //将选中照片的属性存储在项目state中
         dispatch({
           type: 'ChoosePhoto2projectData',
           payload:{ownProps:ownProps}

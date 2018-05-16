@@ -130,6 +130,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: 'MAP_SKETCH_VIEW_HIDE',
         });
       }
+
       dispatch({
         type: 'handleOutputShow',
         payload: {
@@ -156,11 +157,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type: 'handleOutputFalse',
       })
     },
-    
+    //响应数据导出
     handleOutput: () => {
       let JsonData = JSON.stringify([ownProps.OutputData.ProjectItem]);
-
       console.log(JsonData)
+      //调用接口，将数据保存导出到服务
       fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
       { 
       method: 'POST', 
@@ -204,7 +205,7 @@ const OutputReduce = (
   }, action) => {
 
   let newState = JSON.parse(JSON.stringify(state))
-
+  //显示对话框
   if (action.type === "handleOutputShow") {
     if(action.payload.Loaded === false){
       alert("Error_import_002:请选择项目！");
@@ -217,22 +218,22 @@ const OutputReduce = (
     }
     return { ...state, ...newState }; 
   }
-
+  //关闭对话框
   if (action.type === "handleOutputClose") {
     const OutputShow = { OutputShow: !state.OutputShow }
     return Object.assign({}, state, { ...OutputShow })
   }
-
+  //响应数据导出
   if (action.type === "handleOutput") {
     newState.OutputShow = !state.OutputShow;
     return { ...state, ...newState }; 
   }
-  
+  //导出成功对话框
   if (action.type === "handleOutputTrue") {
     const OutputTrue = { OutputTrue: !state.OutputTrue };
     return Object.assign({}, state, { ...OutputTrue });
   }
-
+  //导出失败对话框
   if (action.type === "handleOutputFalse") {
     const OutputFalse = { OutputFalse: !state.OutputFalse };
     return Object.assign({}, state, { ...OutputFalse });
