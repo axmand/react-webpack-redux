@@ -5,9 +5,11 @@ import CommonAreaMessage from './CommonAreaMessage'
 
 class CommonAreaTable extends Component {  
   render() {
-    
+    //用于封装表格信息
     var table=(  
       <div>
+
+        
 <table className="mytable">
      
     <tbody >

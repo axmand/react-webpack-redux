@@ -4,7 +4,8 @@ import SelectCell from './SelectCell';
 import DateInputCell from './DateInputCell'
 class ObligeeTable3 extends Component {  
   render() {
-    
+    //用于封装宗地基本信息表第3页
+
     var table=(  
 <table className="mytable">
      

@@ -3,7 +3,7 @@ import  InputCell from './InputCell'
 import SelectCell from './SelectCell'
 class ObligeeTable1 extends Component {  
   render() {
-    //const { value, onShowClick,onCompleteInput,dialogShow } = this.props;
+//用于封装宗地基本信息表第一页
     var table=(
         <table className="mytable">
     

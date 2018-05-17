@@ -5,7 +5,7 @@ import PointNameCell from './PointNameCell'
 // Map Redux state to component props
 function mapStateToProps(state ,ownProps) {
   // const tableIndex =ownProps.tableIndex;
-  
+  //解析图层中的界址线数据
   var startPoints=state.ObContentReducer.F3.StartPointCodeList;
   var endPoints=state.ObContentReducer.F3.EndPointCodeList;
   var innerPoints=state.ObContentReducer.F3.InnerPointCodeList;
@@ -22,10 +22,6 @@ function mapStateToProps(state ,ownProps) {
       jzxID.push(jzx.geometries[i].feature.id) ;
     }
   }
-  // }
-  // projectData.ProjectItem.F3.StartPointCodeList=startPoints;
-  // projectData.ProjectItem.F3.InnerPointCodeList=innerPoints;
-  // projectData.ProjectItem.F3.EndPointCodeList=endPoints;
   
   return {
     startPoint:startPoints,
@@ -68,7 +64,7 @@ class BoundarySignature extends Component {
 var tableContent=[];
 
 
-
+//添加表头
 var tableHead1=(
 <tr>
 <td width="217" colSpan="3"><p >界址线 </p></td>
@@ -97,6 +93,8 @@ var tableHead2=(<tr>
    }
   if(startPoint.length>0) 
   {
+
+    //循环添加界址签章表的每一条记录
   for(var i=0;i<startPoint.length;i++)
     {
         var obj=(

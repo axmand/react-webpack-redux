@@ -4,7 +4,8 @@ import SelectCell from './SelectCell';
 
 class ObligeeTable2 extends Component {  
   render() {
-    
+    //用于封装宗地基本信息表第2页
+
     var table=(
         <table className="mytable">
      

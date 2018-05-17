@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
-// import Avatar from 'material-ui/Avatar';
 import RootReducer from './../../redux/RootReducer';
 
 import Dialog from 'material-ui/Dialog';
-// import FontAwesome from 'react-fontawesome'
 import LibraryBooksIcon from 'material-ui-icons/LibraryBooks';
-// import AddIcon from 'material-ui-icons/Add';
-// import Typography from 'material-ui/Typography';
 import blue from 'material-ui/colors/blue';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import { connect } from 'react-redux'
 import Paper from 'material-ui/Paper';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
-// import PeopleIcon from 'material-ui-icons/People'
-//import projectData from './../../redux/RootData';
+
 
 const styles = {
   avatar: {
@@ -31,8 +25,7 @@ const styles = {
    listitem: {
     flexDirection: 'column',
     justifyContent: 'center ',
-    // paddingTop: "15%",
-    // paddingBottom: "15%",
+
     height:`${window.innerHeight*0.1}px`,
    
   },
@@ -53,7 +46,7 @@ const styles = {
 
 class ChooseTableDialog extends Component {
 
-
+//定义列表项 即每一个表格的打开按钮
   render() {
     
     const{open,close,search, choose1,choose2,choose3,choose4,choose5,choose6,
@@ -63,6 +56,8 @@ class ChooseTableDialog extends Component {
     }=this.props;
     return (
       <div>
+
+        
       <ListItem button className={classes.listitem} disableGutters={true} onClick={clickIcon}>
           <ListItemIcon>
             <LibraryBooksIcon className={classes.listItemIcon}/>
@@ -151,6 +146,8 @@ const mapStateToProps = (state) => {
 // Map Redux actions to component props
 const mapDispatchToProps= (dispatch,ownProps)=> {
   return {
+
+    //用来实现打开操作
     search:()=>dispatch(
       {
         type: 'search'

@@ -12,7 +12,7 @@ const mapStateToProps=(state,ownProps)=> {
  var LandPointCodeList=[];
 var LandPointDistance=[];
  
-
+//解析界址线图层中的界址线数据
 if(state.ObContentReducer.L.jzxJSONData!="")
 {
   var jzx;
@@ -99,8 +99,7 @@ class BoundaryList extends Component {
 
     var tableContent=[];
     
-    //<MutiCheckButton tableIndex="F2" value={""}  type="LandPointTypeList"/>
-    
+    //添加表头
     var tableHead1=(
       <tr>
     <td width="67" rowSpan="2"><p >界址点号 </p></td>
@@ -132,27 +131,11 @@ class BoundaryList extends Component {
     <td width="64"><p ></p></td>
   </tr>);
     
-    // var tableHead2=(<tr>
-    //   <td width="30"><p >钢钉 </p></td>
-    //   <td width="30"><p >水泥桩 </p></td>
-    //   <td width="30"><p >喷涂 </p></td>
-    //   <td width="27"><p >无标志 </p></td>
-    //   <td width="28"><p >其他 </p></td>
-    //   <td width="25"><p >两点连线 </p></td>
-    //   <td width="28"><p >道路 </p></td>
-    //   <td width="28"><p >沟渠 </p></td>
-    //   <td width="28"><p >围墙 </p></td>
-    //   <td width="28"><p >围栏 </p></td>
-    //   <td width="28"><p >田埂 </p></td>
-    //   <td width="28"><p >墙壁 </p></td>
-    //   <td width="28"><p >其他 </p></td>
-    //   <td width="28"><p >内 </p></td>
-    //   <td width="28"><p >中 </p></td>
-    //   <td width="28"><p >外 </p></td>
-    //   <td width="64"><p ></p></td>
-    // </tr>);
+   
        tableContent.push(tableHead1);
        tableContent.push(tableHead2);
+
+       //循环添加表格内容
 if(LandPointCodeList.length>0)
 {
 var firstLine=(
@@ -201,7 +184,7 @@ var tr1=(
   </tr>);
  var tr2=( <tr>
     {/* <td width="60" rowSpan="2"></td> */}
-    {/* <td width="100" rowSpan="2"><InputListCell tableIndex="F2" name="LandPointDistance"  index={i} defaultValue="test" title="距离" tips="请填写距离"/></td> */}
+    {/* <td width="100" rowSpan="2">< tableIndex="F2" name="LandPointDistance"  index={i} defaultValue="test" title="距离" tips="请填写距离"/></td> */}
 
     <td width="100" rowSpan="2"></td>
     <td width="25" rowSpan="2"><p ><CheckCell tableIndex="F2" value={""} row={i} col={0} type="LandBoundaryType"/></p></td>

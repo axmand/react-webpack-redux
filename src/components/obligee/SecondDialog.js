@@ -87,7 +87,7 @@ class SecondDialog extends Component {
       // changeTabIndex1,
       // changeTabIndex2
     } = this.props;
-
+//封装三个界址表
     return (
       <div>
         <Dialog

@@ -11,22 +11,9 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
-// import Menu, { MenuItem } from 'material-ui/Menu'
-
-// import Tabs, { Tab } from 'material-ui/Tabs';
-// import Paper from 'material-ui/Paper';
-// import Grid from 'material-ui/Grid';
-// import RootReducer from './../../redux/RootReducer';
-//import projectData from './../../redux/RootData'
 import appConfig from "../../redux/Config"
-
-// import { createStore } from 'redux'
 import { connect } from 'react-redux'
-// import ObligeeTable1 from './ObligeeTable1'
-// import ObligeeTable2 from './ObligeeTable2'
-// import ObligeeTable3 from './ObligeeTable3'
 import InputCell from './InputCell'
-// import { Transitions } from 'material-ui/styles/transitions';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -67,7 +54,7 @@ TabContainer.propTypes = {
 
 class ThirdDialog extends Component {
 
-
+//用于实现调查审核表
   render() {
     const classes = this.props.classes;
         const { open,close } = this.props;

@@ -1,18 +1,7 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
-// import ReactDOM from 'react-dom'
+
 import { connect } from 'react-redux'
-// import Dialog, {
-//   DialogActions,
-//   DialogContent,
-//   DialogContentText,
-//   DialogTitle,
-// } from 'material-ui/Dialog';
-// import Button from 'material-ui/Button';
-// import Input from 'material-ui/Input';
-// import List, { ListItem, ListItemText } from 'material-ui/List'
-// import Tabs, { Tab } from 'material-ui/Tabs';
-// import TextField from 'material-ui/TextField';
+
 import { withStyles } from 'material-ui/styles';
 import Checkbox from 'material-ui/Checkbox';
 
@@ -24,7 +13,7 @@ const styleSheet =theme=> ({
  });
 // Map Redux state to component props
 const mapStateToProps=(state,ownProps)=> {
-
+//绑定字段到state
 return {
     value:state.ObContentReducer[ownProps.tableIndex][ownProps.type][ownProps.row]
 }
@@ -57,7 +46,7 @@ class CheckCellUI extends React.PureComponent {
   onClicked = () => {
     this.props.onclick(this.props.row,this.props.col,this.props.type,this.props.tableIndex);
 };
-
+//控制显示隐藏
     valueShow = (value) => {
        return  value === this.props.col;
        

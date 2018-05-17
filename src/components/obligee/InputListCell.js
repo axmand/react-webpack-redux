@@ -102,14 +102,7 @@ class InputListCellUI extends React.PureComponent {
 
          <ListItem button  onClick={this.showInputCell} > {value}
        
-        {/* <TextField
-          id="placeholder"
-          style={{ fontSize: '15px',color: '#000000',fontFamily: "微软雅黑", fontWeight: 'bold',padding: '0px',}}
-          fullWidth
-          
-          margin="normal"
-          value={value}
-        /> */}
+      
       
         </ListItem>
 

@@ -60,16 +60,9 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-// const styleSheet2 = createStyleSheet('BasicTabs', theme => ({
-//   root: {
-//     flexGrow: 1,
-//     marginTop: theme.spacing.unit * 3,
-//     backgroundColor: theme.palette.background.paper,
-//   },
-// }));
 
 class ForthDialog extends Component {
-
+//用于封装共有独有土地信息
 
   render() {
     const classes = this.props.classes;
@@ -103,11 +96,9 @@ class ForthDialog extends Component {
 
             <h1><br></br>共有/共用宗地面积分摊表</h1>
 
-            {/* <Provider store={ObligeeTableStore}> */}
 
             <CommonAreaTable tableIndex="F7"/>
             
-                {/* </Provider> */}
   
           </TabContainer>
         

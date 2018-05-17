@@ -126,10 +126,7 @@ class InputCellUI extends React.PureComponent {
 
         <FormHelperText>{tips}</FormHelperText>
 
-            {/* <br/>
-            提示
-            <br />
-{tips} */}
+        
           </DialogContent>
           <DialogActions>
             <Button color="primary" onClick={this.closeInputCell}>
