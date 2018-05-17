@@ -15,6 +15,7 @@ import Search from "material-ui-icons/Search";
 import LayerControl from "./LayerControl";
 import RealtimeMapping from "./RealtimeMapping";
 
+//设置组件样式
 const styles = {
   list: {
     position: "absolute",
@@ -47,7 +48,9 @@ class MapToolBar extends Component {
     return (
       <div>
         <List className={classes.list}>
+          {/* 图层控制组件 */}
           <LayerControl />
+          {/* 获取当前定位组件 */}
           <ListItem dense={true} />
           <ListItem
             button
@@ -57,6 +60,7 @@ class MapToolBar extends Component {
           >
             <LocationOn className={classes.icon} />
           </ListItem>
+          {/* 地图放大组件 */}
           <ListItem dense={true} />
           <ListItem
             button
@@ -66,6 +70,7 @@ class MapToolBar extends Component {
           >
             <Add className={classes.icon} />
           </ListItem>
+          {/* 地图缩小组件 */}
           <ListItem dense={true} />
           <ListItem
             button
@@ -75,6 +80,7 @@ class MapToolBar extends Component {
           >
             <Remove className={classes.icon} />
           </ListItem>
+          {/* 宗地信息查询组件 */}
           <ListItem dense={true} />
           <ListItem
             button
@@ -84,6 +90,7 @@ class MapToolBar extends Component {
           >
             <Search className={classes.icon} />
           </ListItem>
+          {/* 实时成图控制组件 */}
           <ListItem dense={true} />
           <RealtimeMapping />
         </List>

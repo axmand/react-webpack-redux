@@ -44,6 +44,7 @@ class RealtimeMapping extends Component {
 
     return (
       <div>
+        {/* 实时成图按钮 */}
         <ListItem className={classes.listItem}>
         <Switch
           classes={{
@@ -71,7 +72,7 @@ RealtimeMapping.propTypes = {
 
 const mapStateToProps = (state) => {
   const sketchState = state.sketchReduce;
-
+//获取实时成图开启关闭的状态值，用于控制按钮状态开启关闭
     return {
       isRealtimeOn: sketchState.isRealtimeOn,
     }
@@ -79,6 +80,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    //绑定按钮点击函数
     handleRealtimeMapping:()=>{
       dispatch({
         type:'handleRealtimeMapping'

@@ -128,6 +128,7 @@ class LayerControl extends Component {
 
     return (
       <div className={classes.root}>
+      {/* 图层控制按钮 */}
         <ListItem
           ref={node => {
             this.button = node;
@@ -139,6 +140,7 @@ class LayerControl extends Component {
         >
           <LayersIcon className={classes.icon} />
         </ListItem>
+        {/* 图层控制按钮弹出的图层选择页面 */}
         <Popover
           anchorEl={anchorEl}
           open={menuOpen}
@@ -153,6 +155,7 @@ class LayerControl extends Component {
           }}
           className={classes.menu}
         >
+        {/* 在每个MenuItem中设置需要控制显示的图层 */}
           <MenuItem className={classes.menuitem}>
             <Checkbox
               classes={{ checked: classes.checked }}
@@ -297,10 +300,9 @@ LayerControl.PropTypes = {
  */
 const mapStateToProps = state => {
   const layerControlState = state.layerControlReduce;
-
+  //获取状态值用于控制图层显示状态
   return {
-    handleTopographicMapIsChecked:
-    layerControlState.handleTopographicMapIsChecked,
+    handleTopographicMapIsChecked:layerControlState.handleTopographicMapIsChecked,
     tianDiTuIsChecked: layerControlState.tianDiTuIsChecked,
     topographicMapIsChecked:layerControlState.topographicMapIsChecked,
     pointIsChecked: layerControlState.pointIsChecked,
@@ -310,7 +312,7 @@ const mapStateToProps = state => {
     labelIsChecked: layerControlState.labelIsChecked
   };
 };
-
+//定义图层显示选项所绑定的事件，实现的函数在
 const mapDispatchToProps = dispatch => {
   return {
     handleTopographicMapIsChecked: () => {
@@ -354,175 +356,3 @@ const mapDispatchToProps = dispatch => {
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(LayerControl)
 );
-
-// <MenuItem className={classes.menuitem} disableGutters={true}>
-//   <CheckBox
-//     classes={{ checked: classes.checked }}
-//     checked={true}
-//     disabled={true}
-//   />
-//   <ListItemText
-//     primary={"影像图"}
-//     disableTypography={true}
-//     className={classes.listItemText}
-//   />
-// </MenuItem>
-
-// <MenuItem className={classes.menuitem} disableGutters={true}>
-//   <CheckBox
-//     classes={{ checked: classes.checked }}
-//     checked={topographicMapIsChecked}
-//     onChange={handleTopographicMapIsChecked}
-//   />
-//   <ListItemText
-//     primary={"地形图"}
-//     disableTypography={true}
-//     className={classes.listItemText}
-//   />
-// </MenuItem>
-
-// <MenuItem className={classes.menuitem} disableGutters={true}>
-//   <CheckBox
-//     classes={{ checked: classes.checked }}
-//     checked={tianDiTuIsChecked}
-//     onChange={handleTianDiTuIsIsChecked}
-//   />
-//   <ListItemText
-//     primary={"天地图"}
-//     disableTypography={true}
-//     className={classes.listItemText}
-//   />
-// </MenuItem>
-
-// <MenuItem className={classes.menuitem} disableGutters={true}>
-//   <CheckBox
-//     classes={{ checked: classes.checked }}
-//     checked={pointIsChecked}
-//     onChange={handlePointIsChecked}
-//   />
-//   <ListItemText
-//     primary={"界址点"}
-//     disableTypography={true}
-//     className={classes.listItemText}
-//   />
-// </MenuItem>
-
-// <MenuItem className={classes.menuitem} disableGutters={true}>
-//   <CheckBox
-//     classes={{ checked: classes.checked }}
-//     checked={lineIsChecked}
-//     onChange={handleLineIsChecked}
-//   />
-//   <ListItemText
-//     primary={"四至"}
-//     disableTypography={true}
-//     className={classes.listItemText}
-//   />
-// </MenuItem>
-
-// <MenuItem className={classes.menuitem} disableGutters={true}>
-//   <CheckBox
-//     classes={{ checked: classes.checked }}
-//     checked={polygonIsChecked}
-//     onChange={handlePolygonIsChecked}
-//   />
-//   <ListItemText
-//     primary={"宗地"}
-//     disableTypography={true}
-//     className={classes.listItemText}
-//   />
-// </MenuItem>
-
-// <MenuItem className={classes.menuitem} disableGutters={true}>
-//   <CheckBox
-//     classes={{ checked: classes.checked }}
-//     checked={labelIsChecked}
-//     onChange={handleLabelIsChecked}
-//   />
-//   <ListItemText
-//     primary={"注记"}
-//     disableTypography={true}
-//     className={classes.listItemText}
-//   />
-// </MenuItem>
-
-// <FormGroup>
-//   <FormControlLabel
-//     control={
-//       <Checkbox
-//         classes={{ checked: classes.checked }}
-//         checked={true}
-//         value="RemoteSensingImage"
-//       />
-//     }
-//     disabled={true}
-//     label="影像图"
-//     disableTypography={true}
-//     className={classes.formControlLabel}
-//   />
-//   <FormControlLabel
-//     control={
-//       <Checkbox
-//         classes={{ checked: classes.checked }}
-//         checked={topographicMapIsChecked}
-//         onChange={handleTopographicMapIsChecked}
-//       />
-//     }
-//     label="地形图"
-//   />
-//   <FormControlLabel
-//     control={
-//       <Checkbox
-//         classes={{ checked: classes.checked }}
-//         checked={tianDiTuIsChecked}
-//         onChange={handleTianDiTuIsIsChecked}
-//         value="TianDiTu"
-//       />
-//     }
-//     label="天地图"
-//   />
-//   <FormControlLabel
-//     control={
-//       <Checkbox
-//         classes={{ checked: classes.checked }}
-//         checked={pointIsChecked}
-//         onChange={handlePointIsChecked}
-//         value="BoundaryMark"
-//       />
-//     }
-//     label="界址点"
-//   />
-//   <FormControlLabel
-//     control={
-//       <Checkbox
-//         classes={{ checked: classes.checked }}
-//         checked={lineIsChecked}
-//         onChange={handleLineIsChecked}
-//         value="SiZhi"
-//       />
-//     }
-//     label="四至"
-//   />
-//   <FormControlLabel
-//     control={
-//       <Checkbox
-//         classes={{ checked: classes.checked }}
-//         checked={polygonIsChecked}
-//         onChange={handlePolygonIsChecked}
-//         value="LandParcel"
-//       />
-//     }
-//     label="宗地"
-//   />
-//   <FormControlLabel
-//     control={
-//       <Checkbox
-//         classes={{ checked: classes.checked }}
-//         checked={labelIsChecked}
-//         onChange={handleLabelIsChecked}
-//         value="Notation"
-//       />
-//     }
-//     label="注记"
-//   />
-// </FormGroup>

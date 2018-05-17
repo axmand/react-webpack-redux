@@ -12,9 +12,6 @@ import * as maptalks from "maptalks";
 import { SnapTool } from "maptalks.snapto";
 // import projectData from "./../../redux/RootData";
 import appConfig from "../../redux/Config";
-import poiData from "./Point";
-import lineData from "./Line";
-import polygonData from "./Polygon";
 
 //引入地图组件
 import MapToolBar from "./MapToolBar";
