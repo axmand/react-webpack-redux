@@ -169,7 +169,9 @@ addLabel =
   addLabel ||
   function(e) {
     recoverObj();
-    let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);   
+    //获取随机的id编号
+    let labelId=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36); 
+    //新建标注对象并添加至标注图层  
     let label = new maptalks.Label("label", e.coordinate, {
       'id':labelId, 
       'isClicked':false,     
@@ -197,17 +199,18 @@ addLabel =
       }
     });
     map.getLayer("label").addGeometry(label);
-    label.on("click", clickObj);
-    editingLabel.push(label);
+    label.on("click", clickObj);//绑定点击事件
+    editingLabel.push(label);//将该标注添加至正在编辑中的标注数组
     console.log(editingLabel)
-    label.startEditText();
+    label.startEditText();//进行标注内容编辑
     recoverObj();
   };
 
-  //编辑标注
+  //编辑标注完成
   editLabel=
     editLabel||
     function(){
+      //结束标注的编辑状态并清空数组
       if(editingLabel.length>0){
         for(let i= 0;i<editingLabel.length;i++){
           console.log(editingLabel[i])
@@ -225,6 +228,7 @@ deleteObj =
     for(let i=0;i<num;i++){
       let target=clickedObj[i];
       if (target.getJSONType() === "Circle") {
+        // 删除界址点及其点号标注
         target.remove();
         let point_labels =  map.getLayer("label").getGeometryById(target.options.labels);
         if(point_labels){
@@ -737,12 +741,12 @@ RootReducer.merge(mapReduce);
 //加入reducer(layerControlReduce)
 const layerControlReduce = (
   state = {
-    topographicMapIsChecked:true,
-    pointIsChecked: true,
-    lineIsChecked: true,
-    jzxIsChecked: true,
-    polygonIsChecked: true,
-    labelIsChecked: true
+    topographicMapIsChecked:true,//底图图层控制显示
+    pointIsChecked: true,//界址点图层
+    lineIsChecked: true,//四至图层
+    jzxIsChecked: true,//界址线图层
+    polygonIsChecked: true,//宗地图层
+    labelIsChecked: true//注记图层
   },
   action
 ) => {
@@ -863,41 +867,41 @@ let modifyPointId;
 
 const sketchReduce = (
   state = {
-    isRealtimeOn: false,
-    drawAlert:false,
-    plotIsChecked: false,
-    plotRTKIsChecked:false,
-    plotBDIsChecked:false,
-    plotFromFile:false,
-    drawPointIsChecked: false,
-    rectifyPoiIsChecked:false,
-    drawLineIsChecked: false,
-    drawJZXIsChecked: false,
+    isRealtimeOn: false,//实时成图是否开启
+    drawAlert:false,//撤销重做错误提示是否弹出
+    plotIsChecked: false,//是否点击展点按钮
+    plotRTKIsChecked:false,//是否选择RTK展点
+    plotBDIsChecked:false,//是否选择北斗展点
+    plotFromFile:false,//是否选择从文件展点
+    drawPointIsChecked: false,//是否点击画点
+    rectifyPoiIsChecked:false,//是否点及纠正点位按钮
+    drawLineIsChecked: false,//是否点击画四至按钮
+    drawJZXIsChecked: false,//是否点击画界址线
     drawArcIsChecked: false,
-    drawPolygonIsChecked: false,
-    balconyIsChecked: false,
-    labelIsChecked:false,
-    addLabelIsChecked: false,
-    editLabelIsChecked:false,
-    measureDistanceIsChecked: false,
-    measureAreaIsChecked: false,
-    deleteIsChecked: false,
-    chooseObjIsChecked: false,
-    snapIsChecked:false,
-    snapJzdIsChecked:false,
-    snapDxIsChecked:false,
-    undoIsChecked: false,
-    redoIsChecked: false,
-    haveSaved: true,
-    alerthaveSaved:false,
+    drawPolygonIsChecked: false,//是否点击画宗地
+    balconyIsChecked: false,//是否点击画阳台
+    labelIsChecked:false,//是否点击标注按钮
+    addLabelIsChecked: false,//是否点击添加标注
+    editLabelIsChecked:false,//是否点击标注编辑完成
+    measureDistanceIsChecked: false,//是否点击测距
+    measureAreaIsChecked: false,//是否点击测面
+    deleteIsChecked: false,//是否点击删除
+    chooseObjIsChecked: false,//是否点击选中
+    snapIsChecked:false,//是否点击捕捉
+    snapJzdIsChecked:false,//是否点击捕捉界址点图层
+    snapDxIsChecked:false,//是否点击捕捉底图图层
+    undoIsChecked: false,//是否点击撤销
+    redoIsChecked: false,//是否点击重做
+    haveSaved: true,//是否已保存绘制数据
+    alerthaveSaved:false,//是否弹出保存对话框
     showSaveDialog:false,
     alertSave: true,
-    alertPlotFail: false,
-    errorMessage: "",
-    alertSignature: false,
-    showDelDialog: false,
-    haveObjToDel: false,
-    fetchPoiNumIsChecked:false,
+    alertPlotFail: false,//是否弹出展点失败提示
+    errorMessage: "",//错误信息内容
+    alertSignature: false,//是否弹出签章错误提示
+    showDelDialog: false,//是否弹出删除确认
+    haveObjToDel: false,//是否有选中删除对象
+    fetchPoiNumIsChecked:false,//是否点击取号
     layerData: {
       jzdJSONData: JSON,
       szJSONData: JSON,
@@ -905,10 +909,10 @@ const sketchReduce = (
       zdJSONData: JSON,
       zjJSONData: JSON,
       mapCenter: []
-    },
-    poiTableData: [],
-    mapZoom:16,
-    plotListData: []
+    },//地图数据
+    poiTableData: [],//界址点列表数据
+    mapZoom:16,//地图缩放比例
+    plotListData: []//展点列表数据
   },
   action
 ) => {
@@ -919,19 +923,13 @@ const sketchReduce = (
     return { ...state, ...newState };
   }
 
-  //用于计算标签的角度
+  //用于计算标注添加的角度
   computeAngle =
     computeAngle ||
     function(a, b) {
       const mapProjection = map.getProjection();
-      // console.log(mapProjection)
-
       const aProject = mapProjection.project(a);
       const bProject = mapProjection.project(b);
-      // console.log(aProject)
-      // console.log(bProject)
-
-      // let angle = Math.atan((aProject.y-bProject.y)/(aProject.x-bProject.x)) * 180 / Math.PI;
       const angle =
         Math.atan2(bProject.y - aProject.y, bProject.x - aProject.x) *
         180 /
@@ -948,7 +946,6 @@ const sketchReduce = (
         x: (startPoi.x + endPoi.x) / 2,
         y: (startPoi.y + endPoi.y) / 2
       });
-
       const rotation_rad = rotation / 180 * Math.PI;
       const dx = 10 * Math.sin(rotation_rad);
       const dy = -10 * Math.cos(rotation_rad);
@@ -1032,6 +1029,7 @@ const sketchReduce = (
         }
       });
       label.on("click", clickObj);
+      //添加界址点到地图并绑定点击事件
       let point = new maptalks.Circle(poi, 3, {
         id: jzdnum,
         labels: label.getId(),
@@ -1055,6 +1053,7 @@ const sketchReduce = (
     drawPointEnd ||
     function(param){
       recoverObj();
+      // 获取点击地图得到的坐标
       let coorArr = param.geometry.getCoordinates();
       console.log(coorArr);
       let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
@@ -1107,6 +1106,7 @@ const sketchReduce = (
     drawPoint=
       drawPoint || 
       function(){
+        // 设置drawtool绘图模式及绘制样式，为drawtool绑定双击结束后的绘制事件
         drawTool.setMode("Point").enable();
         drawTool.setSymbol({           
           lineColor: "#000000",
@@ -1123,7 +1123,7 @@ const sketchReduce = (
       recoverObj();
       let coorArr = param.geometry.getCoordinates();
       console.log(coorArr)
-      coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+      coorArr.pop();//删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
       console.log(coorArr)
       if(coorArr.length<2){
        // drawTool.disable();
@@ -1176,6 +1176,7 @@ const sketchReduce = (
   drawLine =
     drawLine ||
     function() {
+      //设置画四至时绘图工具的模式及样式
       drawTool.setMode("LineString").enable();
       drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
       drawTool.on("drawend", drawLineEnd);
@@ -1259,7 +1260,7 @@ const sketchReduce = (
     drawBalconyEnd ||
     function(param) {
       let coorArr = param.geometry.getCoordinates()[0];
-      coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+      coorArr.pop();//删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
       if(coorArr.length<3){
        // drawTool.disable();
       }else{
@@ -1345,7 +1346,7 @@ const sketchReduce = (
       function(param){
         recoverObj();
         let coorArr = param.geometry.getCoordinates();
-        coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+        coorArr.pop();//删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
         if(coorArr.length<2){
           //drawTool.disable();
         }else{
@@ -1369,6 +1370,7 @@ const sketchReduce = (
        linePoiArr = [];
     }
   }
+  //设置测距工具模式及样式
   UseDisTool=
       UseDisTool ||
       function(){
@@ -1381,7 +1383,7 @@ const sketchReduce = (
     BindOnAreaTool || 
     function(param){
       let coorArr = param.geometry.getCoordinates()[0];
-      //删除由于缓慢双击产生的最后一个坐标
+      //删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
       coorArr.pop();
       if(coorArr.length<3){
        // drawTool.disable();
@@ -1440,6 +1442,7 @@ const sketchReduce = (
     }
     recoverObj();
   }
+  // 设置测面积绘图工具的模式样式
   UseAreaTool=
     UseAreaTool ||
       function(){
@@ -1455,7 +1458,7 @@ const sketchReduce = (
 
     //////           
     switch (action.type) {
-      //实时定位
+      //maptool实时定位按钮绑定的事件
       case "handleRealtimeMapping":
         const isRealtimeOn = { isRealtimeOn: !state.isRealtimeOn };
         if (isRealtimeOn.isRealtimeOn) {
@@ -1468,6 +1471,7 @@ const sketchReduce = (
       case "rectifyJzdClick":
         recoverObj();
         console.log(clickedObj);
+        //关闭绘图工具绑定的其他函数
         drawTool.off("drawend", drawPointEnd);
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
@@ -1485,8 +1489,10 @@ const sketchReduce = (
         rectifyPointEnd=function(param){
         console.log("纠正点位");
         recoverObj();
+        // 获取点击的坐标
         let coorArr = param.geometry.getCoordinates();
         let num = modifyPointId;          
+        // 获取旧点及旧标注
         let oldPoi = map.getLayer("point").getGeometryById(num);
         let oldLabel = map.getLayer("label").getGeometryById(num);
         let labelContent= num;
@@ -1530,7 +1536,7 @@ const sketchReduce = (
             polygonFill: "#00FFFF"
           }
         });
-        
+        // 删除旧点及旧标注添加新点新标注
         oldPoi.remove();
         oldLabel.remove();
         map.getLayer("label").addGeometry(label);
@@ -1541,6 +1547,7 @@ const sketchReduce = (
       rectifyPoint=
         rectifyPoint || 
         function(){
+          // 设置绘图工具模式样式及绑定的函数
           drawTool.setMode("Point").enable();
           drawTool.setSymbol({           
             lineColor: "#000000",
@@ -1549,6 +1556,7 @@ const sketchReduce = (
           drawTool.on("drawend", rectifyPointEnd);
         }
         rectifyPoint();
+        // 将更新后的数据同步到界址点列表
         const new_jzdData = map.getLayer("point").toJSON()
         let new_jzdpoi = new_jzdData.geometries;
         let new_tableRow;
@@ -1599,6 +1607,7 @@ const sketchReduce = (
         recoverObj();      
         drawTool.disable();
         let BDplotData = [];
+        // 获取北斗定位数据并添加对象至地图
         BDplotData = JSON.parse(action.payload.data);
         console.log(BDplotData);
         let BDpoi = new maptalks.Coordinate([BDplotData[2], BDplotData[0]]);
@@ -1684,9 +1693,11 @@ const sketchReduce = (
         return { ...state, ...plotFailState };
       //通过文件展点
       case"getFileContent":
+      // 获取全站仪读取的点信息
         let fileDatastr =eval("("+action.payload.content+")");
         let fileDataJson=JSON.parse(fileDatastr); 
         let filedata_mapCenter;
+        // 依次添加至地图并绑定点击事件
         for(let i=0;i<fileDataJson.length;i++){
           let poi_coor=new maptalks.Coordinate([fileDataJson[i].L,fileDataJson[i].B])
           let poi_name= fileDataJson[i].PointName;
@@ -1761,7 +1772,7 @@ const sketchReduce = (
           alertSave: true,
         };
         return { ...state, ...FileplotSuccessState };
-      //关闭错误提示
+      //关闭展点错误提示
       case "plotAlerClose":
         if (state.isRealtimeOn) {
           const closePlotAlert1 = { alertPlotFail: false };
@@ -1770,9 +1781,6 @@ const sketchReduce = (
           const closePlotAlert2 = { alertPlot2: false };
           return Object.assign({}, state, { ...closePlotAlert2 });
         }
-
-      case "handleChooseItem":
-        return {...state};
       //弹出取号确认框
       case "openFetchPoiNum":
         const FetchPoiNum_Y={fetchPoiNumIsChecked:true}
@@ -1878,6 +1886,7 @@ const sketchReduce = (
         return { ...state, ...drawPointState };
       //纠点拍照
       case "rectifyPoiClick":
+      //将界址点数据整理传递至界址点列表
         const jzdData = map.getLayer("point").toJSON()
         let jzdpoi = jzdData.geometries;
         let tableRow;
@@ -1974,7 +1983,7 @@ const sketchReduce = (
           function(param) {
             recoverObj();
             let coorArr = param.geometry.getCoordinates();
-            coorArr.pop();//删除由于缓慢双击产生的最后一个坐标
+            coorArr.pop();
             if(coorArr.length<2){
              // drawTool.disable();
             }else{
@@ -2147,7 +2156,7 @@ const sketchReduce = (
         };
         console.log(state);
         return { ...state, ...CurveState };
-      //构面
+      //绘制宗地
       case "drawPolygonClick":
         drawTool.off("drawend", drawPointEnd);
         drawTool.off("drawend", rectifyPointEnd);    
@@ -2267,7 +2276,7 @@ const sketchReduce = (
           addLabelIsChecked: true,
         };
         return { ...state, ...addLabelState };
-      //编辑标注
+      //标注编辑完成
       case "editLabel":
         map.off("click", addLabel);
         editLabel();
@@ -2382,16 +2391,17 @@ const sketchReduce = (
           };
           return Object.assign({}, state, { ...stateDelFail });
         }
-
+        // 关闭删除对话框
       case "handleCloseDelDialog":
         const showDelDialog1 = { showDelDialog: false };
         return Object.assign({}, state, { ...showDelDialog1 });
-
+        // 确认删除绑定的操作
       case "handleDelete":
         deleteObj();
         clickedObj=[];
         const showDelDialog2 = { showDelDialog: false };
         return Object.assign({}, state, { ...showDelDialog2 });
+        // 关闭错误删除提示框
       case "delAlerClose":
         const closeAlert = { haveObjToDel: false };
         return Object.assign({}, state, { ...closeAlert });
@@ -2500,7 +2510,7 @@ const sketchReduce = (
         return Object.assign({}, state, { ...closeSaveDialog2 });
       }
       
-      //保存
+      //点击保存弹出保存确认对话框
       case "opensaveDialog":
         if (map === undefined){
           console.log(state)
@@ -2549,24 +2559,24 @@ const sketchReduce = (
             return Object.assign({}, state, { ...saveData });
           }
         }
+        // 地图数据保存成功
       case "mapDataSaveSuccess":
         const saveSuccess={haveSaved:true}
       return Object.assign({}, state, { ...saveSuccess });
-
+      //关闭保存提示框 
       case "saveAlertClose":
         const saveAlertClose = { alertSave: false };
         return Object.assign({}, state, { ...saveAlertClose });
-      //签章
+      //点击签章打开签章表
       case "signatureAlertOpen":
         const signatureAlert = {
           alertSignature: true,
         };
         return Object.assign({}, state, { ...signatureAlert });
-
+        // 关闭签章提示框
       case "signatureAlerClose":
         const signatureAlertClose = { alertSignature: false };
         return Object.assign({}, state, { ...signatureAlertClose });
-
       //草图专题图切换时初始化数据
       case "resetSketchState":
         console.log("reset");
@@ -2602,10 +2612,6 @@ const sketchReduce = (
         //将地图中心设置为当前选中的界址线端点
         map.setCenter(jzxPoi.getCoordinates()[0]);
         return {...state};
-      //点击拍照按钮后读取所选的界址点点号并打开摄像头进行拍照
-      // case 'jzdXCZJClick':
-      //   projectData.PoiId =  action.payload.command;
-        return {...state}
 
       default:
         return { ...state };

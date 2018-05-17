@@ -42,7 +42,7 @@ class SketchModule extends Component {
           <MapIcon className={classes.listItemIcon}/>
         </ListItemIcon>            
         <ListItemText
-          primary="绘制草图"
+          primary="绘制草图"  
           disableTypography={true}
           className={classes.listItemText}
         />
@@ -58,6 +58,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => {
   console.log(ownProps)
     return {
+      //点击打开或关闭草图编辑组件
       onClick: () => {
           dispatch({
               type: 'MAP_SKETCH_VIEW_SWITCH',

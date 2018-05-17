@@ -93,6 +93,7 @@ class Sketch extends Component {
             <ClearIcon style={{color:'#fff'}}/>
           </IconButton>
         </AppBar>
+        {/* 切换到草图编辑页面弹出草图编辑工具条 */}
         {this.state.index === 0 && (
           <SketchToolBar 
             isRealtimeOn={isRealtimeOn}  
@@ -102,6 +103,7 @@ class Sketch extends Component {
             projectData={projectData}
           />
         )}
+        {/* 切换到不动产单元草图编辑页面 */}
         {this.state.index === 1 && 
         <ThematicMap 
         ThematicMapData={projectData}
@@ -126,24 +128,26 @@ const mapStateToProps =  (state, ownProps) => {
   const canvasSeduce = state.CanvasReduce;
   console.log(ownProps)
   return {
-    haveSaved: sketchState.haveSaved,
-    isRealtimeOn: sketchState.isRealtimeOn,
-    plotListData:sketchState.plotListData,
+    haveSaved: sketchState.haveSaved,//草图编辑是否保存
+    isRealtimeOn: sketchState.isRealtimeOn,//实时成图按钮是否开启
+    plotListData:sketchState.plotListData,//界址点列表数据
     appBarLonger:canvasSeduce.appBarLonger,
     projectData: state.ProjectReduce.projectData,
     haveLoaded: state.ProjectReduce.projectData.loaded,
-    layerData:state.sketchReduce.layerData
+    layerData:state.sketchReduce.layerData//草图编辑保存后各图层数据
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    //切换草图编辑与不动产单元草图页面
     onClick: () => {
       dispatch({
         type: "MAP_SKETCH_VIEW_SWITCH",
         payload:ownProps.SketchData,
       });
     },
+    //点击进入草图编辑组件绑定的函数
     onTabSketchClick: () => {
       dispatch({
         type: "openPrintPreview"
@@ -153,6 +157,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       });
     
     },
+    //点击进入不动产草图页面绑定的函数
     onTabThematicClick:()=>{     
       dispatch({
         type:"Tab_Bar_Longer"

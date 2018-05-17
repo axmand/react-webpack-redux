@@ -8,9 +8,6 @@ import * as maptalks from "maptalks";
 import { withStyles } from "material-ui/styles";
 import Paper from "material-ui/Paper";
 import Button from "material-ui/Button";
-// import TextField from 'material-ui/TextField';
-// import Toolbar from 'material-ui/Toolbar';
-/* eslint-disable flowtype/require-valid-file-annotation */
 
 import green from "material-ui/colors/green";
 import { CircularProgress } from "material-ui/Progress";
@@ -19,25 +16,27 @@ import FindInPage from "material-ui-icons/FindInPage"//打印预览
 import SaveIcon from "material-ui-icons/Save"; //保存
 import Close from "material-ui-icons/Close"; //保存
 import Typography from "material-ui/Typography";
-// import Divider from "material-ui/Divider";
 import Dialog, {DialogContent} from "material-ui/Dialog";
 
 import appConfig from "../../redux/Config";
 import html2canvas from "html2canvas";
 import { read } from "fs";
-
+//设置组件样式
 const styles = theme => ({
+  //根页面样式
   root: {
     width: "100%",
     height: `${window.innerHeight - 48}px`,
     background: "white",
     display: "flex",
   },
+  //不动产单元草图页面样式
   thematicMap: {
     position: "absolute",
     width: `${window.innerHeight * 0.61875*2.5}px`,
     height: `${window.innerHeight * 0.875*2.5}px`,
   },
+  //草图标题样式
   title: {
     padding: "2% 0 2% 0",
     fontSize: "4em",
@@ -45,6 +44,7 @@ const styles = theme => ({
     fontWeight: "800",
     height: "3%"
   },
+  //草图主体表格样式
   table:{    
     position:'absolute',
     left:'7.5%',
@@ -193,8 +193,8 @@ let thematicMap,thematicMapDOM;
 class ThematicMap extends Component {
   componentDidMount() {
     const {
-      haveSaved,
-      mapZoom
+      haveSaved,//草图绘制结果是否保存
+      mapZoom//地图缩放比例
     } = this.props;
     const ThematicMapData=this.props.ThematicMapData;
     console.log(this.props);
@@ -204,7 +204,7 @@ class ThematicMap extends Component {
     let DT_Polygon=ThematicMapData.Project_DT_Polygon;
     let LayerData=ThematicMapData.ProjectItem.L;
     console.log(LayerData);
-
+    //判断草图绘制成果是否保存，若是则新建地图
     if (haveSaved) {   
       let jzd,sz,jzx,zd,zj,mapCenter;      
       const ThematicMapDiv = this.refs.ThematicMap;
@@ -214,92 +214,93 @@ class ThematicMap extends Component {
         dragRotate : false,
         zoom:mapZoom,
       });  
-
-      if(LayerData.jzdJSONData){
-        jzd=maptalks.Layer.fromJSON(JSON.parse(LayerData.jzdJSONData));
-        //设置界址点半径成图美观
-        if(jzd.getGeometries()){
-          for (let i = 0; i <jzd.getGeometries().length; i++) {
-            jzd.getGeometries()[i].setRadius(1);
-          }
-        }
-      }
-      if(LayerData.szJSONData){
-        sz= maptalks.Layer.fromJSON(JSON.parse(LayerData.szJSONData));
-      }
-      if(LayerData.jzxJSONData){
-        jzx= maptalks.Layer.fromJSON(JSON.parse(LayerData.jzxJSONData));
-      }
-      if(LayerData.zdJSONData){
-        zd= maptalks.Layer.fromJSON(JSON.parse(LayerData.zdJSONData));
-      }
-      if(LayerData.zjJSONData){
-        zj=maptalks.Layer.fromJSON(JSON.parse(LayerData.zjJSONData));
-      }
-      zd.addTo(thematicMap);      
+    //判断各图层是否绘有数据，若有则添加至不动产单元草图
+    if(LayerData.zdJSONData){
+      zd= maptalks.Layer.fromJSON(JSON.parse(LayerData.zdJSONData));
+      zd.addTo(thematicMap); 
+    }      
+    if(LayerData.szJSONData){
+      sz= maptalks.Layer.fromJSON(JSON.parse(LayerData.szJSONData));
       sz.addTo(thematicMap);
+    }      
+    if(LayerData.jzxJSONData){
+      jzx= maptalks.Layer.fromJSON(JSON.parse(LayerData.jzxJSONData));
       jzx.addTo(thematicMap);
+    }      
+    if(LayerData.jzdJSONData){
+      jzd=maptalks.Layer.fromJSON(JSON.parse(LayerData.jzdJSONData));
+      //设置界址点半径成图美观
+      if(jzd.getGeometries()){
+        for (let i = 0; i <jzd.getGeometries().length; i++) {
+          jzd.getGeometries()[i].setRadius(1);
+        }
+      }
       jzd.addTo(thematicMap);
+    }
+
+    if(LayerData.zjJSONData){
+      zj=maptalks.Layer.fromJSON(JSON.parse(LayerData.zjJSONData));
       zj.addTo(thematicMap);
-      //读取并剔除不合格的底图数据
-      let DT=new maptalks.VectorLayer("DT",{geometryEvents:false}).setStyle({
-        symbol:{
-            markerType:'ellipse',
-            markerFill: '#ccc',
-            markerLineColor:'#444',
-            markerWidth : 4,
-            markerHeight : 4,
-            lineColor:'#000',
-            lineWidth:1,
-            polygonFill: "#FFF",
-            polygonOpacity: 0.4
-        }
-      }).addTo(thematicMap);
-      let poiGeometries,lineGeometries,polygonGeometries;
-      if(DT_Point!==null){
-        poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
+    }
+    //读取并剔除不合格的底图数据
+    let DT=new maptalks.VectorLayer("DT",{geometryEvents:false}).setStyle({
+      symbol:{
+          markerType:'ellipse',
+          markerFill: '#ccc',
+          markerLineColor:'#444',
+          markerWidth : 4,
+          markerHeight : 4,
+          lineColor:'#000',
+          lineWidth:1,
+          polygonFill: "#FFF",
+          polygonOpacity: 0.4
       }
-      if(DT_Line!==null){
-        lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
-      }
-      if(DT_Polygon!==null){
-        polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
-      }
-      //设置地图中心点坐标
-      if(LayerData.mapCenter){
-        mapCenter=JSON.parse(LayerData.mapCenter);
+    }).addTo(thematicMap);
+    let poiGeometries,lineGeometries,polygonGeometries;
+    if(DT_Point!==null){
+      poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
+    }
+    if(DT_Line!==null){
+      lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
+    }
+    if(DT_Polygon!==null){
+      polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
+    }
+    //设置地图中心点坐标
+    if(LayerData.mapCenter){
+      mapCenter=JSON.parse(LayerData.mapCenter);
+      thematicMap.setCenter(mapCenter);
+    }else{
+      if(poiGeometries.length>0){
+        mapCenter = poiGeometries[0].getCoordinates();
         thematicMap.setCenter(mapCenter);
-      }else{
-        if(poiGeometries.length>0){
-          mapCenter = poiGeometries[0].getCoordinates();
-          thematicMap.setCenter(mapCenter);
-        }
-      } 
-      poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
-      if(poiGeometries!==null){
-        DT.addGeometry(poiGeometries);
-        DT.bringToBack();
       }
-   }
+    } 
+    poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+    if(poiGeometries!==null){
+      DT.addGeometry(poiGeometries);
+      DT.bringToBack();
+    }
   }
+}
 
   render() {
     const classes = this.props.classes;
     const d= new Date();
     const date=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日";
     const {
-      TuDiQuanLiRen,
-      ZuoLuo,
-      alertSave,
-      haveSaved,
-      onSaveAlertClose,
-      onSaveThematicMapClick,
-      thematicMapSaveSuccess,
-      thematicMapSaveLoading,
-      onPreviewPrintClick,
-      previewPrintIsChecked,
-      unclosePreviewAlert,
-      previewAlerClose
+      TuDiQuanLiRen,//权利人信息
+      ZuoLuo,//坐落信息
+      alertSave,//是否弹出保存警告对话框
+      haveSaved,//是否保存
+      onSaveAlertClose,//关闭保存警告
+      onSaveThematicMapClick,//点击保存不动产单元草图绑定的函数
+      thematicMapSaveSuccess,//保存成功
+      thematicMapSaveLoading,//保存中
+      onPreviewPrintClick,//点击打印预览绑定的函数
+      previewPrintIsChecked,//判断是否点击打印预览
+      unclosePreviewAlert,//未关闭预览时弹出警告提示
+      previewAlerClose//关闭弹出的预览警告
     } = this.props;
 
     let saveButtonClass = "";
@@ -327,6 +328,7 @@ class ThematicMap extends Component {
             :""
           }}
         >
+        {/*错误提示框1 */}
           <Dialog 
             open={alertSave} 
             onRequestClose={onSaveAlertClose}
@@ -337,6 +339,7 @@ class ThematicMap extends Component {
                 </Typography>
               </DialogContent>
           </Dialog>
+          {/*错误提示框2 */}
           <Dialog 
             open={unclosePreviewAlert} 
             onRequestClose={previewAlerClose}>
@@ -346,11 +349,11 @@ class ThematicMap extends Component {
                 </Typography>
               </DialogContent>
           </Dialog>
-
+        {/*不动产单元草图标题 */}
           <Typography type="headline" className={classes.title}>
             不动产单元草图
           </Typography>
-
+        {/*不动产单元草图表格部分 */}
           <table ref="tabletest" className={classes.table}>
             <thead className={classes.head}> 
               <tr style={{height:'100%'}}>
@@ -374,6 +377,7 @@ class ThematicMap extends Component {
                 </td>
               </tr>
             </thead>
+            {/*不动产单元草图地图部分 */}
             <tbody>
               <tr className={classes.mapPic}>
                 <td  className={classes.tablecell} colSpan="4">
@@ -385,7 +389,7 @@ class ThematicMap extends Component {
               </tr>
             </tbody>
           </table>
-
+          {/*不动产单元草图底部填写内容 */}
           <table className={classes.bottomtable}>
             <tbody>
               <tr className={classes.btmtr}>
@@ -418,8 +422,10 @@ class ThematicMap extends Component {
               </tr>
             </tbody>
           </table>
+          {/*不动产单元草图右侧内容 */}
           <div className={classes.right}>南宁市不动产权籍调查机构绘制</div>
         </Paper>
+        {/*不动产单元草图预览按钮 */}
         <div className={classes.wrapper_preview}>
           <Button
             fab
@@ -433,6 +439,7 @@ class ThematicMap extends Component {
           )}
             
           </Button>
+          {/*不动产单元草图保存按钮 */}
         </div>
         <div className={classes.wrapper_save}>
           <Button
@@ -463,6 +470,7 @@ ThematicMap.PropTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  //从其他组件的state中获取本组件所需的状态值
   const sketchState = state.sketchReduce;
   const canvasSeduce = state.CanvasReduce;
   const ThematicMapData=ownProps.ThematicMapData;
@@ -479,7 +487,7 @@ const mapStateToProps = (state, ownProps) => {
     mapZoom:sketchState.mapZoom,
   };
 };
-
+//定义本组件按钮的函数
 const mapDispatchToProps = dispatch => {
   return {
     //未保存时错误提示
@@ -502,26 +510,30 @@ const mapDispatchToProps = dispatch => {
     },
     //保存
     onSaveThematicMapClick: () => {
+      //若未关闭预览则弹出提示框
       dispatch({
         type:"UNCLOSE_PREVIEW_ALERT"
       })
+      //关闭预览后执行保存操作，将数据传递至projectdata
       dispatch({
         type: "SAVE_THEMATICMAP_CLICK"
       });
       console.log(findDOMNode(thematicMapDOM))
+      //利用html2canvas将页面的不动产单元草图区域截图保存
       html2canvas(findDOMNode(thematicMapDOM)).then(function(canvas) {
         console.log(canvas.toDataURL())
         const ThematicMapDataURL = canvas.toDataURL();
         const ThematicMapDataLoad = ThematicMapDataURL.slice(
           ThematicMapDataURL.indexOf(",") + 1
         );
-        
+        //将图片结果传递至服务器
         fetch(appConfig.fileServiceRootPath + "/project/savepicture", {
           method: "POST",
           body: ThematicMapDataLoad
         })
           .then(response => response.json())
           .then(json => {
+            //图片传递成功时执行的函数
             dispatch({
               type: "SUCCESS_SAVE_THEMATICMAP_CLICK"
             });
@@ -532,6 +544,7 @@ const mapDispatchToProps = dispatch => {
             }, 1000);
             console.log(json);
           })
+          //否则后台输出错误信息
           .catch(err => {
             console.log(err);
           });
@@ -547,12 +560,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 //reducer
 const CanvasReduce = (
   state = {
-    thematicMapImg: ImageData,
-    thematicMapSaveSuccess: false,
-    thematicMapSaveLoading: false,
-    previewPrintIsChecked:false,
-    appBarLonger:false,
-    unclosePreviewAlert:false
+    thematicMapImg: ImageData,//图片数据
+    thematicMapSaveSuccess: false,//不动产单元草图是否保存成功
+    thematicMapSaveLoading: false,//是否正在保存
+    previewPrintIsChecked:false,//是否点击打印预览
+    appBarLonger:false,//是否处于非打印预览下，加长顶部切换条
+    unclosePreviewAlert:false//是否未关闭打印预览需要弹出警告提示框
   },
   action
 ) => {

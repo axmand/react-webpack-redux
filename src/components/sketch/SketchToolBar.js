@@ -197,7 +197,7 @@ class SkechToolBar extends Component {
     const classes = this.props.classes;
     const {anchorEl}=this.state;
     const {
-      onPlotClick,
+      choosePlotType,
       PlotListClose,
       onRTKPlotClick,
       onBDPlotClick,
@@ -272,6 +272,7 @@ class SkechToolBar extends Component {
     } = this.props;
     return (
     <div>
+      {/* 由各功能按钮组成的可拖动的草图编辑工具条 */}
         <Draggable handle="span">
             <List className={classes.root}>
             <Button 
@@ -284,7 +285,7 @@ class SkechToolBar extends Component {
                     ? "rgba(69, 90, 100, .8)"
                     : "transparent"
                 }}
-                onClick={onPlotClick}
+                onClick={choosePlotType}
                 >
                 <LocationSearching className={classes.icon} />
                 <Typograghy className={classes.text}>展点</Typograghy>
@@ -479,9 +480,8 @@ class SkechToolBar extends Component {
             </Button>
             </List>
         </Draggable>
-
           <SecondDialog />
-          
+          {/* 删除时弹出确认对话框 */}
           <Dialog open={showDelDialog} onRequestClose={handleCloseDelDialog}>
             <DialogContent>
               <DialogContentText  style={{color:"#455A64"}}>确认删除？</DialogContentText>
@@ -495,6 +495,7 @@ class SkechToolBar extends Component {
               </Button>
             </DialogActions>
           </Dialog>
+          {/* 保存时弹出确认对话框 */}
           <Dialog open={showSaveDialog} onRequestClose={handleCloseSaveDialog}>
             <DialogContent>
               <DialogContentText  style={{color:"#455A64"}}>确认保存草图绘制数据？</DialogContentText>
@@ -508,12 +509,13 @@ class SkechToolBar extends Component {
               </Button>
             </DialogActions>
           </Dialog>
+          {/* 已保存提示 */}
           <Dialog open={alerthaveSaved} onRequestClose={handleCloseSaveDialog}>
             <DialogContent>
               <DialogContentText  style={{color:"#455A64"}}>草图绘制数据已保存！</DialogContentText>
             </DialogContent>
           </Dialog>
-
+          {/* 删除时错误操作提示框 */}
           <Dialog 
             open={haveObjToDel} 
             onRequestClose={onDelAlerClose}>
@@ -523,7 +525,7 @@ class SkechToolBar extends Component {
                 </Typograghy>
               </DialogContent>
           </Dialog>
-
+          {/* RTK展点时错误提示框 */}
           <Dialog 
             open={alertPlotFail} 
             onRequestClose={onPlotAlerClose}>
@@ -533,7 +535,7 @@ class SkechToolBar extends Component {
                 </Typograghy>
               </DialogContent>
           </Dialog>
-
+          {/* 撤销重做错误操作提示框 */}
           <Dialog 
             open={drawAlert} 
             onRequestClose={onDrawAlerClose}>
@@ -543,7 +545,7 @@ class SkechToolBar extends Component {
                 </Typograghy>
               </DialogContent>
           </Dialog>
-
+          {/* 未保存时错误操作提示框 */}
           <Dialog 
             open={alertSignature} 
             onRequestClose={onSignatureAlerClose}>
@@ -553,6 +555,7 @@ class SkechToolBar extends Component {
                 </Typograghy>
               </DialogContent>
           </Dialog>
+          {/* 确认取号提示框 */}
           <Dialog open={fetchPoiNumIsChecked} onRequestClose={closeFetchPoiNum}>
             <DialogContent>
               <DialogContentText  style={{color:"#455A64"}}>确认取号？</DialogContentText>
@@ -566,6 +569,7 @@ class SkechToolBar extends Component {
               </Button>
             </DialogActions>
           </Dialog>
+      {/* 点击标注按钮弹出操作选择列表 */}
       <Popover
           anchorEl={findDOMNode(this.label)}
           open={labelIsChecked}
@@ -606,6 +610,7 @@ class SkechToolBar extends Component {
             <span className={classes.snaptext}>编辑完成</span>
           </ListItem>
       </Popover>
+      {/* 点击捕捉按钮弹出捕捉图层选择列表 */}
       <Popover
           anchorEl={findDOMNode(this.snap)}
           open={snapIsChecked}
@@ -646,6 +651,7 @@ class SkechToolBar extends Component {
             <span className={classes.snaptext}>地形图</span>
           </ListItem>
       </Popover>
+      {/* 点击展点弹出展点方式选择列表 */}
       <Popover
           anchorEl={findDOMNode(this.Plot)}
           open={plotIsChecked}
@@ -678,6 +684,7 @@ class SkechToolBar extends Component {
             </span>
           </ListItem>
       </Popover>
+      {/* 点击纠点拍照弹出界址点列表 */}
       <Drawer
         type="persistent"
         classes={{
@@ -814,7 +821,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   // console.log(ownProps);
   return {
     //选择展点方式
-    onPlotClick:()=>{
+    choosePlotType:()=>{
       dispatch({
         type:"choosePlotType"
       });
@@ -832,7 +839,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           type: "OPEN_WAITING_MODULE",
         });
         console.log("Fetching latitude and longtitude from the satellite ...");
-        console.log(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea");
+       //获取RTK数据
         fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/RTK/printnmea")
           .then(response => {
             console.log(response)
@@ -876,6 +883,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           })
           .catch(err => {
             console.log(err);
+            // 输出错误信息
             dispatch({
               type: "STATUS_BAR_NOTIFICATION",
               payload: {
@@ -902,7 +910,7 @@ onBDPlotClick: () => {
     type: "OPEN_WAITING_MODULE",
   });
   console.log("Fetching latitude and longtitude from the BD ...");
-
+// 获取内置北斗定位数据
   fetch(appConfig.fileServiceRootPath + "/sp/getresult ")
     .then(response => {
       console.log(response)
@@ -958,7 +966,8 @@ onBDPlotClick: () => {
       let oFReader=new FileReader();
       oFReader.readAsText(file,"UTF-8");	
       oFReader.onloadend=function(oFRevent){
-        txtContent=oFRevent.target.result;      
+        txtContent=oFRevent.target.result;
+        // 将文件数据传递至服务器处理后获取可展点在地图上的数据格式      
         fetch(appConfig.fileServiceRootPath + '//project/totalstation',
           {
             method:"POST",
@@ -994,35 +1003,30 @@ onBDPlotClick: () => {
     onDrawPointClick: () => {
       dispatch({
         type: "drawPointClick",
-        payload: dispatch
       });
     },
     //纠点拍照
     onRectifyPoiClick: () => {
       dispatch({
         type: "rectifyPoiClick",
-        payload: dispatch
       });
     },
-    //连线
+    //画四至线
     onDrawLineClick: () => {
       dispatch({
         type: "drawLineClick",
-        payload: dispatch
       });
     },
-    //连线
+    //画界址线
     onDrawJZXClick: () => {
       dispatch({
         type: "drawJZXClick",
-        payload: dispatch
       });
     },
     //画弧线
     onDrawArcClick:()=>{
       dispatch({
         type:"drawArcClick",
-        payload:dispatch
       })
 
     },
@@ -1030,7 +1034,6 @@ onBDPlotClick: () => {
     onDrawPolygonClick: () => {
       dispatch({
         type: "drawPolygonClick",
-        payload: dispatch
       });
     },
     //画阳台
@@ -1045,7 +1048,7 @@ onBDPlotClick: () => {
         type:'labelClick'
       })
     },
-    // 添加标注
+    // 添加标注并关闭下拉选择列表
     onaddLabelClick: () => {
       dispatch({
         type: "addLabelClick",
@@ -1054,7 +1057,7 @@ onBDPlotClick: () => {
         type:"labelListClose"
       })
     },
-    //编辑标注
+    //编辑标注完成并关闭下拉选择列表
     onEditLabel:()=>{
       dispatch({
         type:"editLabel"
@@ -1081,24 +1084,25 @@ onBDPlotClick: () => {
         type:"measureAreaClick"
       })
     },
-    //选中对象
+    //点击选中按钮绑定函数
     onChooseObjClick: () => {
       dispatch({
         type: "chooseObjClick",
-        payload: dispatch
       });
     },
-    //打开捕捉列表
+    //点击捕捉按钮绑定函数
     onSnapClick:()=>{
       dispatch({
         type: "snapClick",
       });
     },
+    // 关闭捕捉下拉列表
     SnapListClose:()=>{
       dispatch({
         type: "snapListClose",
       });
     },
+    // 选择捕捉图层
     onSnapListClick:chosedLayer=>{
       dispatch({
         type: "snapListClick",
@@ -1116,7 +1120,6 @@ onBDPlotClick: () => {
     onDeleteClick: () => {
       dispatch({
         type: "deleteClick",
-        payload: dispatch
       });
     },
 
@@ -1124,14 +1127,12 @@ onBDPlotClick: () => {
     onUndoClick: () => {
       dispatch({
         type: "undoClick",
-        payload: dispatch
       });
     },
     //重做
     onRedoClick: () => {
       dispatch({
         type: "redoClick",
-        payload: dispatch
       });
     },
     //保存
@@ -1150,12 +1151,14 @@ onBDPlotClick: () => {
            data:ownProps.LayerData
          }
       });
+      // 关闭保存确认对话框
       dispatch({
         type: "handleCloseSaveDialog"
       });
       dispatch({
         type:'mapDataSaveSuccess'
       });
+      // 保存后数据重填签章表
       dispatch({
         type:'fillSignatureList',
         payload: {
@@ -1163,6 +1166,7 @@ onBDPlotClick: () => {
         }
       });
     },
+    // 关闭保存确认对话框
     handleCloseSaveDialog:()=>{
       dispatch({
         type: "handleCloseSaveDialog"
@@ -1190,38 +1194,43 @@ onBDPlotClick: () => {
         });
       }
     },
-    
+    // 点击删除
     handleDelete:()=>{
         dispatch({
             type: 'handleDelete',
         })
     },
-
+// 关闭删除确认对话框
     handleCloseDelDialog: () => {
       dispatch({
         type: "handleCloseDelDialog"
       });
     },
+    // 关闭错误删除警告提示
     onDelAlerClose: () => {
       dispatch({
         type: "delAlerClose"
       });
     },
+    // 关闭展点错误警告提示
     onPlotAlerClose: () => {
       dispatch({
         type: "plotAlerClose"
       });
     },
+    // 关闭签章警告提示
     onSignatureAlerClose:()=>{
         dispatch({
             type:"signatureAlerClose"
         })
     },
+    //关闭错误使用撤销重做提示
     onDrawAlerClose:()=>{
       dispatch({
         type:"drawAlerClose"
       })
     },
+    // 纠正点位按钮绑定事件
     onRectifyJzdClick:poi_id=>{
       dispatch({
         type:'rectifyJzdClick',
@@ -1229,17 +1238,19 @@ onBDPlotClick: () => {
       });
       
     },
+    // 关闭取号对话框
     closeFetchPoiNum:()=>{
       dispatch({
         type:'closeFetchPoiNum',
       });
     },
+    // 打开取号对话框
     openFetchPoiNum:()=>{
       dispatch({
         type:'openFetchPoiNum',
       });
     },
-
+// 取号对话框确认按钮绑定的函数
     onFetchPoi_NumClick:()=>{
       dispatch({
         type:'closeFetchPoiNum',
@@ -1254,7 +1265,7 @@ onBDPlotClick: () => {
               strType: localStorage.getItem('Macinfo'),
               strUserName: null
         });
-        
+        // 传递点坐标及旧点号到服务端获取新点号
         fetch('http://webapi.nlis.local:52417/NanNingWebService/GetParcelNumber.asmx/GetParcelSingleNumber',
         {
           method: "POST",
@@ -1323,7 +1334,7 @@ onBDPlotClick: () => {
         }
       });
    },
-   
+  //  点击界址点拍照，传递当前点号
    onjzdXCZJClick:poi_id=>{
     dispatch({
       type:'jzdXCZJClick',
