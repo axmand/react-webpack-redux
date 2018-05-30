@@ -60,16 +60,23 @@ const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
 
   switch(action.type) {
     case 'MAP_SKETCH_VIEW_SWITCH':
-      if(action.payload.Loaded === false)
-        alert("Error_import_002:请选择项目！");
-      else{
-        if(action.payload.sketchHaveSaved===false){
-          alert("请先保存草图绘制数据！");
-        }else{
-           newState.sketchDisplayState =  !state.sketchDisplayState 
-        } 
+      console.log(action.payload)
+      if(action.payload===undefined){
+        newState.sketchDisplayState =  !state.sketchDisplayState 
+        return { ...state, ...newState }; 
+      }else{
+        if(action.payload.Loaded === false)
+          alert("Error_import_002:请选择项目！");
+        else{
+          if(action.payload.sketchHaveSaved===false){
+            alert("请先保存草图绘制数据！");
+          }else{
+            newState.sketchDisplayState =  !state.sketchDisplayState 
+          } 
+        }
+        return { ...state, ...newState }; 
       }
-    return { ...state, ...newState }; 
+
     case 'MAP_SKETCH_VIEW_HIDE':
       if(state.sketchDisplayState === true)
         { newState.sketchDisplayState =  false }
