@@ -26,7 +26,7 @@ class CommonAreaTable extends Component {
     <td width="143"><p >宗地面积(m2) </p></td>
     <td width="150"><InputCell tableIndex="F1" name="ParcelArea" title="宗地面积" tips="填写宗地面积"/></td>
     <td width="157"><p >定着物单元数 </p></td>
-    <td width="154"><InputCell tableIndex="F7" name="FixedCount" title="宗地面积" tips="填写宗地面积"/></td>
+    <td width="154"><InputCell tableIndex="F7" name="FixedCount" title="定着物单元数" tips="填写定着物单元数（数字）"/></td>
   </tr>
    </tbody>
 </table>
