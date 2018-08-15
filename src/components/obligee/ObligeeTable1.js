@@ -14,7 +14,7 @@ class ObligeeTable1 extends Component {
           
             <td width="9%" rowSpan="5"><p >权利人</p ></td> 
             <td width="18%"><p >所有权</p></td>
-            <td width="72%" colSpan="16"><InputCell  name="OwnPowerSide" title="所有权" tips="填写。。。" tableIndex="F1"/></td>
+            <td width="72%" colSpan="16"><InputCell  name="OwnPowerSide" title="所有权" tips="填写所有权单位名称" tableIndex="F1"/></td>
         </tr>
             <tr>
             <td width="18%" rowSpan="4"><p >使用权</p ></td>
