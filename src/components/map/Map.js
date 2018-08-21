@@ -277,14 +277,20 @@ class Map extends Component {
     map = new maptalks.Map(mapDiv, {
       center:[108.37, 22.82],
       zoom: 16,
+      scaleControl: {
+        'position'  : 'bottom-right',
+        'maxWidth': 100,
+        'metric': true,
+        'imperial': true
+      },
       dragPitch : false,
       dragRotate : false,
       baseLayer: new maptalks.TileLayer("base", {
         crossOrigin: "anonymous",
+        // 'urlTemplate' : 'http://www.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i342009817!3m9!2sen-US!3sCN!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0&token=32965',
         urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
         subdomains  : ['1','2','3','4','5'],
-        // attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>'
-        attribution: ''
+        attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>',
       }),
     });
      //获取项目数据

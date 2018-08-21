@@ -261,12 +261,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch({
             type: 'ProgressShow',
           });
-          
-          setTimeout(() => {
-            dispatch({
-                type:'handlePrintTrue'
-            }
-          )}, 500);
         })
         .catch(e => console.log("Oops, error", e))
     },

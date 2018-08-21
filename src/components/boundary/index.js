@@ -120,7 +120,6 @@ class BoundaryModule extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // console.log(ownProps)
   return {
     CameraShow: state.BoundaryReduce.CameraShow,
     DeleteShow: state.BoundaryReduce.DeleteShow,
@@ -144,7 +143,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
 
     handleCameraClose: () => {
-      console.log(ownProps)
       dispatch({
         type: 'handleCameraClose',
       })
