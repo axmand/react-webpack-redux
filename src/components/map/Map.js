@@ -836,10 +836,12 @@ RootReducer.merge(layerControlReduce);
 //加入Reducer(sketchReduce)
 //初始化相关量
 let labels = [],
+  coorInfoLabel,
   length,
   addObjLabel,
   computeAngle;
-let plot,
+let  showCoorInfo,
+  plot,
   rectifyPointEnd,
   rectifyPoint,
   drawToolOn,
@@ -994,6 +996,58 @@ const sketchReduce = (
       drawTool.enable();
       console.log("on");
     };
+
+//绑定绘制时显示当前绘制坐标的函数
+    drawTool.on('drawvertex',function(param){
+      let drawLocation;
+      if(drawTool.getMode()=="polygon"){
+        let coorArr = param.geometry.getCoordinates()[0];
+        drawLocation=coorArr[coorArr.length-2];
+      }else{
+        let coorArr = param.geometry.getCoordinates();
+        drawLocation=coorArr[coorArr.length-1];
+      }
+      console.log(drawLocation);
+      showCoorInfo(drawLocation);
+    });
+    drawTool.on('drawstart',function(param){
+      let coorArr = param.coordinate;
+      let drawLocation=coorArr;
+      showCoorInfo(drawLocation);
+    });
+
+  //用于绘制过程中显示当前绘制位置的坐标
+  showCoorInfo = 
+    showCoorInfo || 
+    function(coorArr){
+      if(coorInfoLabel){
+        coorInfoLabel.remove();
+        coorInfoLabel=null;
+      }
+      let coorInfoOption = '当前绘制位置:  \n Lng:' + coorArr.x + ' \n  Lat:' + coorArr.y ;
+      coorInfoLabel = new maptalks.Label(coorInfoOption, coorArr, {
+        'type': "Label",
+        'textSymbol': {
+          'textFaceName' : '宋体',
+          'textFill' : '#000',
+          'textSize' : 15,
+          'textVerticalAlignment' : 'top'
+        },
+        'boxStyle' : {
+          'padding' : [12, 8],
+          'symbol' : {
+            'textDy':60,
+            'textDx':-120,
+            'markerType' : 'square',
+            'markerFillOpacity' : 0.9,
+            'markerLineColor': '#FFFFFF',
+            'markerFill' : '#FFFFFF',
+            'markerLineWidth' : 1
+          }
+        }
+      });
+      map.getLayer("label").addGeometry(coorInfoLabel);
+    }
   //用于展点
   plot =
     plot ||
@@ -1055,7 +1109,7 @@ const sketchReduce = (
       recoverObj();
       // 获取点击地图得到的坐标
       let coorArr = param.geometry.getCoordinates();
-      console.log(coorArr);
+      showCoorInfo(coorArr);
       let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
       let content = jzdnum;
       //为界址点添加点号注记
@@ -1097,6 +1151,7 @@ const sketchReduce = (
           polygonFill: "#FFFFFF"
         }
       });
+
       map.getLayer("label").addGeometry(label);
       map.getLayer("point").addGeometry(point);
       point.on("click", clickObj);
@@ -1171,6 +1226,12 @@ const sketchReduce = (
       sz_line.on("click", clickObj);
       }
       recoverObj();
+
+      if(coorInfoLabel){
+        coorInfoLabel.remove();
+        coorInfoLabel=null;
+      }
+
     };
   //用于画线
   drawLine =
@@ -1187,7 +1248,7 @@ const sketchReduce = (
     function(param) {
       let coorArr = param.geometry.getCoordinates()[0];
       //删除由于缓慢双击产生的最后一个坐标
-     coorArr.pop();
+     coorArr.splice(coorArr.length-2,1);
      console.log(coorArr);
      if(coorArr.length<3){
       //drawTool.disable();
@@ -1241,6 +1302,10 @@ const sketchReduce = (
       console.log(zd_obj)
     }
     recoverObj();
+    if(coorInfoLabel){
+      coorInfoLabel.remove();
+      coorInfoLabel=null;
+    }
   };
   //用于构面
   drawPolygon =
@@ -1313,6 +1378,10 @@ const sketchReduce = (
         zd_obj.on("click", clickObj);
       }
       recoverObj();
+      if(coorInfoLabel){
+        coorInfoLabel.remove();
+        coorInfoLabel=null;
+      }
     };
   drawBalcony =
     drawBalcony ||
@@ -1345,6 +1414,10 @@ const sketchReduce = (
     BindOnDisTool || 
       function(param){
         recoverObj();
+        if(coorInfoLabel){
+          coorInfoLabel.remove();
+          coorInfoLabel=null;
+        }
         let coorArr = param.geometry.getCoordinates();
         coorArr.pop();//删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
         if(coorArr.length<2){
@@ -1441,6 +1514,10 @@ const sketchReduce = (
       });
     }
     recoverObj();
+    if(coorInfoLabel){
+      coorInfoLabel.remove();
+      coorInfoLabel=null;
+    }
   }
   // 设置测面积绘图工具的模式样式
   UseAreaTool=
@@ -1982,6 +2059,10 @@ const sketchReduce = (
           drawJZXEnd ||
           function(param) {
             recoverObj();
+            if(coorInfoLabel){
+              coorInfoLabel.remove();
+              coorInfoLabel=null;
+            }
             let coorArr = param.geometry.getCoordinates();
             coorArr.pop();
             if(coorArr.length<2){
