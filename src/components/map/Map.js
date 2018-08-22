@@ -1331,7 +1331,7 @@ const sketchReduce = (
     drawBalconyEnd ||
     function(param) {
       let coorArr = param.geometry.getCoordinates()[0];
-      coorArr.pop();//删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
+      coorArr.splice(coorArr.length-2,1);//删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
       if(coorArr.length<3){
        // drawTool.disable();
       }else{
@@ -1463,7 +1463,7 @@ const sketchReduce = (
     function(param){
       let coorArr = param.geometry.getCoordinates()[0];
       //删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
-      coorArr.pop();
+      coorArr.splice(coorArr.length-2,1);
       if(coorArr.length<3){
        // drawTool.disable();
       }else{       
