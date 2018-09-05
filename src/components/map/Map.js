@@ -303,13 +303,13 @@ class Map extends Component {
      //初始化地图中心
      let center;
     //初始化新建所有图层
-     let jzd,sz,jzx,zd,zj,DT,location;
+     let jzd,sz,jzx,zd,zj,DT,info;
      jzd = new maptalks.VectorLayer('point');
      sz = new maptalks.VectorLayer('SZ');
      jzx = new maptalks.VectorLayer('JZX');
      zd = new maptalks.VectorLayer('polygon');
      zj = new maptalks.VectorLayer('label');
-     location=new maptalks.VectorLayer("location");
+     info=new maptalks.VectorLayer("info");
      DT=new maptalks.VectorLayer("DT",{geometryEvents:false}).setStyle({
       symbol:{
           markerType:'ellipse',
@@ -329,7 +329,7 @@ class Map extends Component {
     jzx.addTo(map);
     jzd.addTo(map); 
     zj.addTo(map);  
-    location.addTo(map);
+    info.addTo(map);
     //添加界址点图层数据
     if(LayerData.jzdJSONData){
       let jzd_geos;
@@ -445,14 +445,14 @@ class Map extends Component {
     let DT_Polygon=nextProps.DT_Polygon;
     let new_ProjectName=nextProps.ProjectName;
     let center;
-    let jzd,sz,jzx,zd,zj,location,DT;
+    let jzd,sz,jzx,zd,zj,info,DT;
     //项目数据更新时清空地图图层数据
     jzd = map.getLayer('point');
     sz = map.getLayer('SZ');
     jzx = map.getLayer('JZX');
     zd = map.getLayer('polygon');
     zj = map.getLayer('label');
-    location=map.getLayer('location');
+    info=map.getLayer('info');
     DT=map.getLayer('DT');
    
     //判断项目是否切换若切换则更新底图数据
@@ -479,8 +479,8 @@ class Map extends Component {
       if(zj.getGeometries()){
         zj.clear();
       }
-      if(location.getGeometries()){
-        location.clear();
+      if(info.getGeometries()){
+        info.clear();
       }
        /*
       项目地图数据更新但未导出时加载的是的JSON格式图层数据
@@ -677,8 +677,8 @@ const mapReduce = (state = 0, action) => {
         }
       });
       //将对象添加至图层
-      map.getLayer("location").addGeometry(circle);
-      map.getLayer("location").addGeometry(label);
+      map.getLayer("info").addGeometry(circle);
+      map.getLayer("info").addGeometry(label);
     }
   }
   //通过rtk获取当前定位
@@ -727,8 +727,8 @@ const mapReduce = (state = 0, action) => {
       }
     });
     //将对象添加至图层
-    map.getLayer("location").addGeometry(circle);
-    map.getLayer("location").addGeometry(label);
+    map.getLayer("info").addGeometry(circle);
+    map.getLayer("info").addGeometry(label);
   }
 
   //地图放大
@@ -842,7 +842,6 @@ RootReducer.merge(layerControlReduce);
 //加入Reducer(sketchReduce)
 //初始化相关量
 let labels = [],
-  coorInfoLabel,
   length,
   addObjLabel,
   computeAngle;
@@ -869,9 +868,8 @@ let  showCoorInfo,
   UseDisTool,
   BindOnAreaTool,
   UseAreaTool;
-
-
-let modifyPointId;
+  let jzdLastId=0;
+  let modifyPointId;
 
 const sketchReduce = (
   state = {
@@ -1026,12 +1024,9 @@ const sketchReduce = (
   showCoorInfo = 
     showCoorInfo || 
     function(coorArr){
-      if(coorInfoLabel){
-        coorInfoLabel.remove();
-        coorInfoLabel=null;
-      }
+      map.getLayer('info').clear();
       let coorInfoOption = '当前绘制位置:  \n Lng:' + coorArr.x + ' \n  Lat:' + coorArr.y ;
-      coorInfoLabel = new maptalks.Label(coorInfoOption, coorArr, {
+      let coorInfoLabel = new maptalks.Label(coorInfoOption, coorArr, {
         'type': "Label",
         'textSymbol': {
           'textFaceName' : '宋体',
@@ -1052,14 +1047,29 @@ const sketchReduce = (
           }
         }
       });
-      map.getLayer("label").addGeometry(coorInfoLabel);
+      map.getLayer("info").addGeometry(coorInfoLabel);
     }
   //用于展点
   plot =
     plot ||
     function(poi) {
       recoverObj();
-      let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+      showCoorInfo(poi);
+      let jzdPoiArr=map.getLayer("point").getGeometries();
+      let jzdnum;
+      let poiIdArr=[];
+
+      if(jzdPoiArr.length>0){  
+        //查找界址点id中的最大编号
+        for(let i=0;i<jzdPoiArr.length;i++){
+          let id=parseInt(jzdPoiArr[i].getId().substr(1));
+          poiIdArr.push(id);
+        }
+        jzdLastId=Math.max.apply(null, poiIdArr);
+        console.log(jzdLastId);
+      }
+      
+      jzdnum="J"+(jzdLastId+1);
       let content = jzdnum;
       //为界址点添加点号注记
       let label = new maptalks.Label(content, poi, {
@@ -1116,8 +1126,23 @@ const sketchReduce = (
       // 获取点击地图得到的坐标
       let coorArr = param.geometry.getCoordinates();
       showCoorInfo(coorArr);
-      let jzdnum=Number(Math.random().toString().substr(3,3) + Date.now()).toString(36);
+      let jzdPoiArr=map.getLayer("point").getGeometries();
+      let jzdnum;
+      let poiIdArr=[];
+
+      if(jzdPoiArr.length>0){  
+        //查找界址点id中的最大编号
+        for(let i=0;i<jzdPoiArr.length;i++){
+          let id=parseInt(jzdPoiArr[i].getId().substr(1));
+          poiIdArr.push(id);
+        }
+        jzdLastId=Math.max.apply(null, poiIdArr);
+        console.log(jzdLastId);
+      }
+
+      jzdnum="J"+(jzdLastId+1);
       let content = jzdnum;
+
       //为界址点添加点号注记
       let label = new maptalks.Label(content, coorArr, {
         'id': jzdnum,
@@ -1164,17 +1189,91 @@ const sketchReduce = (
       console.log(point);
       recoverObj();
     }
-    drawPoint=
-      drawPoint || 
-      function(){
-        // 设置drawtool绘图模式及绘制样式，为drawtool绑定双击结束后的绘制事件
-        drawTool.setMode("Point").enable();
-        drawTool.setSymbol({           
-          lineColor: "#000000",
-          lineWidth: 1.5,
-          polygonFill: "#FFFFFF" });
-        drawTool.on("drawend", drawPointEnd);
+  drawPoint=
+    drawPoint || 
+    function(){
+      // 设置drawtool绘图模式及绘制样式，为drawtool绑定双击结束后的绘制事件
+      drawTool.setMode("Point").enable();
+      drawTool.setSymbol({           
+        lineColor: "#000000",
+        lineWidth: 1.5,
+        polygonFill: "#FFFFFF" });
+      drawTool.on("drawend", drawPointEnd);
+    }
+//修正点位坐标时DrawTool绑定事件
+  rectifyPointEnd=
+    rectifyPointEnd || 
+    function(param){
+    console.log("纠正点位");
+    recoverObj();
+    // 获取点击的坐标
+    let coorArr = param.geometry.getCoordinates();
+    showCoorInfo(coorArr);
+    let num = modifyPointId;          
+    // 获取旧点及旧标注
+    let oldPoi = map.getLayer("point").getGeometryById(num);
+    let oldLabel = map.getLayer("label").getGeometryById(num);
+    let labelContent= num;
+    console.log(labelContent);
+    //为界址点添加点号注记
+    let label = new maptalks.Label(labelContent, coorArr, {
+      'id': num,
+      'isClicked':false,
+      'draggable': true,
+      'type': "Label",
+      'boxStyle' : {
+        'padding' : [12, 8],
+        'verticalAlignment' : 'top',
+        'horizontalAlignment' : 'right',
+        'minWidth' : 48,
+        'minHeight' : 24,
+        'symbol' : {
+          'textDy':-24,
+          'markerType' : 'square',
+          'markerFill' : 'rgb(255,255,255)',
+          'markerFillOpacity' : 0,
+          'markerLineWidth' : 0
+        }
+      },
+      'textSymbol': {
+        'textFaceName' : '宋体',
+        'textFill' : '#000',
+        'textSize' : 15,
+        'textVerticalAlignment' : 'top'
       }
+    });
+    label.on("click", clickObj);
+    let point = new maptalks.Circle(coorArr, 3, {
+      id: num,
+      labels: label.getId(),
+      picture: oldPoi.options.picture,
+      isClicked: true,
+      symbol: {
+        lineColor: "#00FFFF",
+        lineWidth: 1.5,
+        polygonFill: "#00FFFF"
+      }
+    });
+    // 删除旧点及旧标注添加新点新标注
+    oldPoi.remove();
+    oldLabel.remove();
+    map.getLayer("label").addGeometry(label);
+    map.getLayer("point").addGeometry(point);
+    point.on("click", clickObj);
+    clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
+  }
+  rectifyPoint=
+    rectifyPoint || 
+    function(){
+      // 设置绘图工具模式样式及绑定的函数
+      drawTool.setMode("Point").enable();
+      drawTool.setSymbol({           
+        lineColor: "#000000",
+        lineWidth: 1.5,
+        polygonFill: "#FFFFFF" 
+      });
+      drawTool.on("drawend", rectifyPointEnd);
+  }
 
   //画线时drawTool的绑定事件
   drawLineEnd =
@@ -1232,11 +1331,7 @@ const sketchReduce = (
       sz_line.on("click", clickObj);
       }
       recoverObj();
-
-      if(coorInfoLabel){
-        coorInfoLabel.remove();
-        coorInfoLabel=null;
-      }
+      map.getLayer('info').clear();
 
     };
   //用于画线
@@ -1308,10 +1403,7 @@ const sketchReduce = (
       console.log(zd_obj)
     }
     recoverObj();
-    if(coorInfoLabel){
-      coorInfoLabel.remove();
-      coorInfoLabel=null;
-    }
+    map.getLayer('info').clear();
   };
   //用于构面
   drawPolygon =
@@ -1384,10 +1476,7 @@ const sketchReduce = (
         zd_obj.on("click", clickObj);
       }
       recoverObj();
-      if(coorInfoLabel){
-        coorInfoLabel.remove();
-        coorInfoLabel=null;
-      }
+      map.getLayer('info').clear();
     };
   drawBalcony =
     drawBalcony ||
@@ -1415,15 +1504,12 @@ const sketchReduce = (
     function() {
       drawTool.redo();
     };
- //测量距离
+  //测量距离
   BindOnDisTool=
     BindOnDisTool || 
       function(param){
         recoverObj();
-        if(coorInfoLabel){
-          coorInfoLabel.remove();
-          coorInfoLabel=null;
-        }
+        map.getLayer('info').clear();
         let coorArr = param.geometry.getCoordinates();
         coorArr.pop();//删除由于双击产生的最后一个坐标数据，只将双击作为结束操作而不进行选点
         if(coorArr.length<2){
@@ -1457,7 +1543,7 @@ const sketchReduce = (
         drawTool.setSymbol({ lineColor: "#000000", lineWidth: 1.5 });
         drawTool.on("drawend",BindOnDisTool);
       }
-//测量面积
+ //测量面积
   BindOnAreaTool=
     BindOnAreaTool || 
     function(param){
@@ -1520,10 +1606,7 @@ const sketchReduce = (
       });
     }
     recoverObj();
-    if(coorInfoLabel){
-      coorInfoLabel.remove();
-      coorInfoLabel=null;
-    }
+    map.getLayer('info').clear();
   }
   // 设置测面积绘图工具的模式样式
   UseAreaTool=
@@ -1569,75 +1652,6 @@ const sketchReduce = (
         //高亮显示选择纠正位置的点
         map.getLayer('point').getGeometryById(modifyPointId).updateSymbol({polygonFill: "#00FFFF", lineColor: "#00FFFF"});
         clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
-        rectifyPointEnd=function(param){
-        console.log("纠正点位");
-        recoverObj();
-        // 获取点击的坐标
-        let coorArr = param.geometry.getCoordinates();
-        let num = modifyPointId;          
-        // 获取旧点及旧标注
-        let oldPoi = map.getLayer("point").getGeometryById(num);
-        let oldLabel = map.getLayer("label").getGeometryById(num);
-        let labelContent= num;
-        console.log(labelContent);
-        //为界址点添加点号注记
-        let label = new maptalks.Label(labelContent, coorArr, {
-          'id': num,
-          'isClicked':false,
-          'draggable': true,
-          'type': "Label",
-          'boxStyle' : {
-            'padding' : [12, 8],
-            'verticalAlignment' : 'top',
-            'horizontalAlignment' : 'right',
-            'minWidth' : 48,
-            'minHeight' : 24,
-            'symbol' : {
-              'textDy':-24,
-              'markerType' : 'square',
-              'markerFill' : 'rgb(255,255,255)',
-              'markerFillOpacity' : 0,
-              'markerLineWidth' : 0
-            }
-          },
-          'textSymbol': {
-            'textFaceName' : '宋体',
-            'textFill' : '#000',
-            'textSize' : 15,
-            'textVerticalAlignment' : 'top'
-          }
-        });
-        label.on("click", clickObj);
-        let point = new maptalks.Circle(coorArr, 3, {
-          id: num,
-          labels: label.getId(),
-          picture: oldPoi.options.picture,
-          isClicked: true,
-          symbol: {
-            lineColor: "#00FFFF",
-            lineWidth: 1.5,
-            polygonFill: "#00FFFF"
-          }
-        });
-        // 删除旧点及旧标注添加新点新标注
-        oldPoi.remove();
-        oldLabel.remove();
-        map.getLayer("label").addGeometry(label);
-        map.getLayer("point").addGeometry(point);
-        point.on("click", clickObj);
-        clickedObj.push(map.getLayer('point').getGeometryById(modifyPointId));
-      }
-      rectifyPoint=
-        rectifyPoint || 
-        function(){
-          // 设置绘图工具模式样式及绑定的函数
-          drawTool.setMode("Point").enable();
-          drawTool.setSymbol({           
-            lineColor: "#000000",
-            lineWidth: 1.5,
-            polygonFill: "#FFFFFF" });
-          drawTool.on("drawend", rectifyPointEnd);
-        }
         rectifyPoint();
         // 将更新后的数据同步到界址点列表
         const new_jzdData = map.getLayer("point").toJSON()
@@ -1932,6 +1946,7 @@ const sketchReduce = (
       //画点
       case "drawPointClick":
         recoverObj();
+        map.getLayer('info').clear();
         drawTool.off("drawend", rectifyPointEnd);
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
@@ -1969,7 +1984,8 @@ const sketchReduce = (
         return { ...state, ...drawPointState };
       //纠点拍照
       case "rectifyPoiClick":
-      //将界址点数据整理传递至界址点列表
+        map.getLayer('info').clear();
+        //将界址点数据整理传递至界址点列表
         const jzdData = map.getLayer("point").toJSON()
         let jzdpoi = jzdData.geometries;
         let tableRow;
@@ -2011,6 +2027,7 @@ const sketchReduce = (
       //画四至线
       case "drawLineClick":
         recoverObj();
+        map.getLayer('info').clear();
         drawTool.off("drawend", drawPointEnd);
         drawTool.off("drawend", rectifyPointEnd);
         drawTool.off("drawend", drawJZXEnd);
@@ -2051,6 +2068,7 @@ const sketchReduce = (
       //画界址线
       case "drawJZXClick":
         recoverObj();
+        map.getLayer('info').clear();
         drawTool.off("drawend", drawPointEnd);
         drawTool.off("drawend", rectifyPointEnd);
         drawTool.off("drawend", drawLineEnd);
@@ -2065,10 +2083,7 @@ const sketchReduce = (
           drawJZXEnd ||
           function(param) {
             recoverObj();
-            if(coorInfoLabel){
-              coorInfoLabel.remove();
-              coorInfoLabel=null;
-            }
+            map.getLayer('info').clear();
             let coorArr = param.geometry.getCoordinates();
             coorArr.pop();
             if(coorArr.length<2){
@@ -2245,6 +2260,7 @@ const sketchReduce = (
         return { ...state, ...CurveState };
       //绘制宗地
       case "drawPolygonClick":
+        map.getLayer('info').clear();
         drawTool.off("drawend", drawPointEnd);
         drawTool.off("drawend", rectifyPointEnd);    
         drawTool.off("drawend", drawLineEnd);
@@ -2283,7 +2299,8 @@ const sketchReduce = (
         };
         return { ...state, ...newState3 };
       //阳台
-      case "balconyClick":        
+      case "balconyClick":  
+          map.getLayer('info').clear();      
           drawTool.off("drawend", drawPointEnd);
           drawTool.off("drawend", rectifyPointEnd);
           drawTool.off("drawend", drawLineEnd);
@@ -2353,6 +2370,7 @@ const sketchReduce = (
       //添加注记
       case "addLabelClick":
         recoverObj();
+        map.getLayer('info').clear();              
         if (!state.addLabelIsChecked) {
           map.on("click", addLabel);
         } else {
@@ -2373,7 +2391,8 @@ const sketchReduce = (
         };
         return { ...state, ...editLabelState };
       //测距
-      case "measureDistanceClick":        
+      case "measureDistanceClick":   
+        map.getLayer('info').clear();                 
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
@@ -2412,6 +2431,7 @@ const sketchReduce = (
         return { ...state, ...measureDis };
       //测面积
       case "measureAreaClick":
+        map.getLayer('info').clear();      
         drawTool.off("drawend", drawPolygonEnd);
         drawTool.off("drawend", drawLineEnd);
         drawTool.off("drawend", drawJZXEnd);
@@ -2452,6 +2472,7 @@ const sketchReduce = (
       case "deleteClick":
         console.log(target);
         drawTool.disable();
+        map.getLayer('info').clear();              
         map.off("click", addLabel);
         map.off("dblclick", drawToolOn);
         console.log(clickedObj.length)
@@ -2494,6 +2515,7 @@ const sketchReduce = (
         return Object.assign({}, state, { ...closeAlert });
       //选中
       case "chooseObjClick":
+        map.getLayer('info').clear();            
         console.log("choose");
         drawTool.disable();
         map.off("click", addLabel);
@@ -2563,6 +2585,7 @@ const sketchReduce = (
         }
       //撤销
       case "undoClick":
+      map.getLayer('info').clear();            
       if(drawTool.getCurrentGeometry()){
         drawUndo();
         const new_drawAlert={ drawAlert:false}
@@ -2574,6 +2597,7 @@ const sketchReduce = (
       //重做
       case "redoClick":
         console.log("重做");
+        map.getLayer('info').clear();              
         if(drawTool.getCurrentGeometry()){
           drawRedo();
           const new_drawAlert={ drawAlert:false}
@@ -2656,6 +2680,7 @@ const sketchReduce = (
         return Object.assign({}, state, { ...saveAlertClose });
       //点击签章打开签章表
       case "signatureAlertOpen":
+        map.getLayer('info').clear();      
         const signatureAlert = {
           alertSignature: true,
         };
