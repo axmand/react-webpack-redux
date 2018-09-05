@@ -1,6 +1,6 @@
 {
   "name": "react-webpack-redux",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a biotemplate for react project",
   "main": "main.js",
   "homepage": "./",
