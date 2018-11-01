@@ -918,7 +918,11 @@ const sketchReduce = (
     },//地图数据
     poiTableData: [],//界址点列表数据
     mapZoom:16,//地图缩放比例
-    plotListData: []//展点列表数据
+    plotListData: [],//展点列表数据
+    totalStationData:[],//全站仪数据
+    controlPoiArr:[
+      {index:"p1",poi_id:'',coor_x:'',coor_y:''},
+      {index:"p2",poi_id:'',coor_x:'',coor_y:''},],
   },
   action
 ) => {
@@ -1786,68 +1790,87 @@ const sketchReduce = (
           redoIsChecked: false,
           haveSaved: false,
           alertSave: true,
+          totalStationAlertContent:""
         };
         return { ...state, ...plotFailState };
-      //通过文件展点
+      //点击从文件展点读取坐标数据
       case"getFileContent":
-      // 获取全站仪读取的点信息
+       // 获取全站仪读取的点信息
         let fileDatastr =eval("("+action.payload.content+")");
         let fileDataJson=JSON.parse(fileDatastr); 
         let filedata_mapCenter;
-        // 依次添加至地图并绑定点击事件
+        //读取全站仪数据文件至数组
+        let new_totalStationData=[];
+        let totalStationData_Row;
         for(let i=0;i<fileDataJson.length;i++){
           let poi_coor=new maptalks.Coordinate([fileDataJson[i].L,fileDataJson[i].B])
           let poi_name= fileDataJson[i].PointName;
-          console.log(poi_name);
-          filedata_mapCenter=poi_coor;
-        
-         //为界址点添加点号注记
-         let label = new maptalks.Label(poi_name, poi_coor, {
-          'id': poi_name,
-          'isClicked':false,
-          'draggable': true,
-          'type': "Label",
-          'boxStyle' : {
-            'padding' : [12, 8],
-            'verticalAlignment' : 'top',
-            'horizontalAlignment' : 'right',
-            'minWidth' : 48,
-            'minHeight' : 24,
-            'symbol' : {
-              'textDy':-24,
-              'markerType' : 'square',
-              'markerFill' : 'rgb(255,255,255)',
-              'markerFillOpacity' : 0,
-              'markerLineWidth' : 0
-            }
-          },
-          'textSymbol': {
-            'textFaceName' : '宋体',
-            'textFill' : '#000',
-            'textSize' : 15,
-            'textVerticalAlignment' : 'top'
+          totalStationData_Row={
+            id:poi_name,
+            coordinates:poi_coor,
           }
-        });
-        label.on("click", clickObj);
-        let point = new maptalks.Circle(poi_coor, 3, {
-          id: poi_name,
-          labels: label.getId(),
-          picture: "",
-          isClicked: false,
-          symbol: {
-            lineColor: "#000000",
-            lineWidth: 1.5,
-            polygonFill: "#FFFFFF"
-          }
-        });        
-        point.on("click", clickObj);
-        map.getLayer("label").addGeometry(label);
-        map.getLayer("point").addGeometry(point);
-        console.log(point);
+          new_totalStationData.push(totalStationData_Row);
         }
-        map.setCenter(filedata_mapCenter);
+        // // 依次添加至地图并绑定点击事件
+        // for(let i=0;i<fileDataJson.length;i++){
+        //   let poi_coor=new maptalks.Coordinate([fileDataJson[i].L,fileDataJson[i].B])
+        //   let poi_name= fileDataJson[i].PointName;
+        //   console.log(poi_name);
+        //   filedata_mapCenter=poi_coor;
+        
+        //   //为界址点添加点号注记
+        //   let label = new maptalks.Label(poi_name, poi_coor, {
+        //     'id': poi_name,
+        //     'isClicked':false,
+        //     'draggable': true,
+        //     'type': "Label",
+        //     'boxStyle' : {
+        //       'padding' : [12, 8],
+        //       'verticalAlignment' : 'top',
+        //       'horizontalAlignment' : 'right',
+        //       'minWidth' : 48,
+        //       'minHeight' : 24,
+        //       'symbol' : {
+        //         'textDy':-24,
+        //         'markerType' : 'square',
+        //         'markerFill' : 'rgb(255,255,255)',
+        //         'markerFillOpacity' : 0,
+        //         'markerLineWidth' : 0
+        //       }
+        //     },
+        //     'textSymbol': {
+        //       'textFaceName' : '宋体',
+        //       'textFill' : '#000',
+        //       'textSize' : 15,
+        //       'textVerticalAlignment' : 'top'
+        //     }
+        //   });
+        //   label.on("click", clickObj);
+        //   let point = new maptalks.Circle(poi_coor, 3, {
+        //     id: poi_name,
+        //     labels: label.getId(),
+        //     picture: "",
+        //     isClicked: false,
+        //     symbol: {
+        //       lineColor: "#000000",
+        //       lineWidth: 1.5,
+        //       polygonFill: "#FFFFFF"
+        //     }
+        //   });        
+        //   point.on("click", clickObj);
+        //   map.getLayer("label").addGeometry(label);
+        //   map.getLayer("point").addGeometry(point);
+        //   console.log(point);
+        // }
+        // map.setCenter(filedata_mapCenter);
 
         const FileplotSuccessState = {
+          totalStationData:new_totalStationData,
+          controlPoiArr:[
+            {index:"p1",poi_id:'',coor_x:'',coor_y:''},
+            {index:"p2",poi_id:'',coor_x:'',coor_y:''},
+          ],
+          totalStationAlertContent:"",
           plotRTKIsChecked: false,
           plotBDIsChecked:false,
           plotFromFile:true,
@@ -1869,7 +1892,49 @@ const sketchReduce = (
           alertSave: true,
         };
         return { ...state, ...FileplotSuccessState };
-      //关闭展点错误提示
+   
+      //更新控制点数据
+      case "handleControlPoiInput":
+        let update_id=action.payload.targetID;
+        let update_Data=action.payload.targetValue;
+        let dataType=update_id.replace(/[^a-zA-Z]/g,'');
+        let dataIndex=Number(update_id.replace(/[^\d]/g,''))-1;
+        console.log(dataIndex);
+        console.log(dataType);
+        let controlPoiArr_input=state.controlPoiArr;
+        if(dataType=='ppoiNum'){
+          controlPoiArr_input[Number(dataIndex)].poi_id=update_Data;
+        }
+        if(dataType=='pxCoor'){
+          controlPoiArr_input[Number(dataIndex)].coor_x=update_Data;
+        }
+        if(dataType=='pyCoor'){
+          controlPoiArr_input[Number(dataIndex)].coor_y=update_Data;
+        }
+        const handleControlPoiInput={
+          controlPoiArr:controlPoiArr_input
+        }
+        return Object.assign({}, state, { ...handleControlPoiInput });
+      //进行全站仪坐标转换
+      case "doCoorTransform":
+      let controlPoiarr=action.payload.controlPoiarr;
+       console.log(controlPoiarr)
+        const doCoorTransform={
+          totalStationAlertContent:action.payload.alertContent
+        }
+        return Object.assign({}, state, { ...doCoorTransform });
+        return{...state}
+      //全站仪坐标转换界面提示信息
+      case "showControlPoiAlert":
+        const alertContentUpdate={totalStationAlertContent:action.payload.alertContent}
+        return Object.assign({}, state, { ...alertContentUpdate });
+      //关闭全站仪坐标转换界面
+      case "closeCoorTransform":
+        const closeCoorTransform={
+          plotFromFile:false
+        }
+        return Object.assign({}, state, { ...closeCoorTransform });
+        //关闭展点错误提示
       case "plotAlerClose":
         if (state.isRealtimeOn) {
           const closePlotAlert1 = { alertPlotFail: false };
