@@ -210,11 +210,7 @@ const OutputReduce = (
     if(action.payload.Loaded === false){
       alert("Error_import_002:请选择项目！");
     }else{
-      if(action.payload.sketchHaveSaved===false){
-        alert("请先保存草图绘制数据！");
-      }else{
         newState.OutputShow =  !state.OutputShow 
-      }
     }
     return { ...state, ...newState }; 
   }
