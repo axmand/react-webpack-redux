@@ -435,7 +435,7 @@ class ThematicMap extends Component {
           {previewPrintIsChecked ? (
             <Close className={classes.icon} />
           ) : (
-            <FindInPage className={classes.icon} />
+            <span>打印预览</span>
           )}
             
           </Button>
