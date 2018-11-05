@@ -503,7 +503,6 @@ class SkechToolBar extends Component {
             </Button>
             </List>
         </Draggable>
-        <SecondDialog />
           {/* 删除时弹出确认对话框 */}
           <Dialog open={showDelDialog} onRequestClose={handleCloseDelDialog}>
             <DialogContent>
