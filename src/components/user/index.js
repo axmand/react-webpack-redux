@@ -386,7 +386,7 @@ class UserModule extends Component {
                 />
               </ListItem>
 
-              <ListItem dense>
+              {/* <ListItem dense>
                 <ListItemText
                   disableTypography
                   className={classes.labelUser}
@@ -397,7 +397,7 @@ class UserModule extends Component {
                   className={classes.userStateText}
                   primary={lastLoginTime}
                 />
-              </ListItem>
+              </ListItem> */}
 
               <Divider />
 
@@ -574,10 +574,11 @@ RootReducer.merge(userReduce);
 //state?
 const mapStateToProps = state => {
   const userState = state.userReduce;
+  const loginState = state.loginReduce;
 
   return {
     userAvatar: userState.userAvatar,
-    userName: userState.userName,
+    userName: loginState.username,
     userID: userState.userID,
     userCompany: userState.userCompany,
     userJob: userState.userJob,

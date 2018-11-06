@@ -81,14 +81,9 @@ const obligeeReducer=(state = DialogState, action)=> {
     if(action.payload.Loaded=== false){
       alert("Error_import_002:请选择项目或检查数据是否成功导入！");
     }else{
-      if(action.payload.sketchHaveSaved===false){
-        alert("请先保存草图绘制数据！");
-      }else{
         return Object.assign({}, state, {open:true});
-      }
-      return{...state}
     }
-     
+    return{...state}
   case 'closeChoose':
   return Object.assign({}, state, {
         	open:false

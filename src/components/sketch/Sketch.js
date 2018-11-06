@@ -58,6 +58,7 @@ class Sketch extends Component {
       layerData,//图层数据
       haveSaved,
       plotListData,
+      controlPoiArr,
       appBarLonger } = this.props;
     return (
       <div className={classes.root}>
@@ -134,7 +135,7 @@ const mapStateToProps =  (state, ownProps) => {
     appBarLonger:canvasSeduce.appBarLonger,
     projectData: state.ProjectReduce.projectData,
     haveLoaded: state.ProjectReduce.projectData.loaded,
-    layerData:state.sketchReduce.layerData//草图编辑保存后各图层数据
+    layerData:state.sketchReduce.layerData,//草图编辑保存后各图层数据
   };
 };
 

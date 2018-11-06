@@ -68,11 +68,7 @@ const mapViewReduce = (state = {sketchDisplayState: false}, action) => {
         if(action.payload.Loaded === false)
           alert("Error_import_002:请选择项目！");
         else{
-          if(action.payload.sketchHaveSaved===false){
-            alert("请先保存草图绘制数据！");
-          }else{
             newState.sketchDisplayState =  !state.sketchDisplayState 
-          } 
         }
         return { ...state, ...newState }; 
       }

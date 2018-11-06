@@ -20,6 +20,7 @@ import Popover from "material-ui/Popover";
 import List, { ListItem} from "material-ui/List";
 import Typograghy from "material-ui/Typography";
 import Checkbox from "material-ui/Checkbox";
+import Grid from 'material-ui/Grid';
 import PhotoCameraIcon from 'material-ui-icons/PhotoCamera';
 
 //import icon
@@ -45,7 +46,8 @@ import CreateIcon from "material-ui-icons/Create"; //签章
 import DragHandle from "material-ui-icons/DragHandle"; //拖动
 // import CloseIcon from "material-ui-icons/Close";
 // import Snackbar from "material-ui/Snackbar";
-import SecondDialog from '../obligee/SecondDialog'
+import SecondDialog from '../obligee/SecondDialog';
+import TotalStationCoorTransform from './TotalStationCoorTransform'
 import appConfig from "../../redux/Config";
 import coordinate from "../../utils/coordinate"
 import macinfo from "../../utils/macinfo"
@@ -153,6 +155,27 @@ const styles = theme => ({
     height: '75%',
     width:`${window.innerHeight * 0.4}px`,
   },
+
+  coordinateTransformPaper: {
+    left:`${window.innerWidth * 0.2}px`,
+    top:`${window.innerHeight * 0.2}px`,
+    height:`${window.innerHeight * 0.6}px`,
+    width:`${window.innerWidth * 0.6}px`,
+  },
+  totalStationGrid:{
+    flexGrow: 1,
+    width: '100%',
+    height: '100%'
+  },
+  coorTranBtn:{
+    background:'#455A64',
+    color:'#fff',
+    top:'88%',
+    minHeight:'32px',
+    minWidth:'64px',
+    margin:"10px"
+  },
+
   toolBar:{
     padding:0,
     minHeight:'45px',
@@ -231,8 +254,6 @@ class SkechToolBar extends Component {
       onRectifyJzdClick,
       onSnapClick,//捕捉
       SnapListClose,
-    } = this.props;
-    const {
       onPlotAlerClose,
       handleDelete,
       showDelDialog,
@@ -241,15 +262,15 @@ class SkechToolBar extends Component {
       showSaveDialog,
       alerthaveSaved,
       handleCloseSaveDialog,
-      onDrawAlerClose
-    } = this.props;
-    const {
+      onDrawAlerClose,
       alertPlotFail,
       plotListData,
+      controlPoiNum,
       alertSignature,
       plotIsChecked,
       drawPointIsChecked,
       rectifyPoiIsChecked,
+      plotFromFile,
       drawLineIsChecked,
       drawJZXIsChecked,
       drawArcIsChecked,
@@ -269,8 +290,10 @@ class SkechToolBar extends Component {
       onFetchPoi_NumClick,
       onjzdXCZJClick,
       fetchPoiNumIsChecked,
+      controlPoiArr,
+      totalStationData      
     } = this.props;
-    return (
+   return (
     <div>
       {/* 由各功能按钮组成的可拖动的草图编辑工具条 */}
         <Draggable handle="span">
@@ -480,7 +503,6 @@ class SkechToolBar extends Component {
             </Button>
             </List>
         </Draggable>
-          <SecondDialog />
           {/* 删除时弹出确认对话框 */}
           <Dialog open={showDelDialog} onRequestClose={handleCloseDelDialog}>
             <DialogContent>
@@ -684,6 +706,11 @@ class SkechToolBar extends Component {
             </span>
           </ListItem>
       </Popover>
+
+      <TotalStationCoorTransform 
+        controlPoiArr={controlPoiArr} 
+        totalStationData={totalStationData}
+      />
       {/* 点击纠点拍照弹出界址点列表 */}
       <Drawer
         type="persistent"
@@ -794,6 +821,9 @@ const mapStateToProps = state => {
     plotIsChecked:sketchState.plotIsChecked,
     drawPointIsChecked: sketchState.drawPointIsChecked,
     rectifyPoiIsChecked:sketchState.rectifyPoiIsChecked,
+    plotFromFile:sketchState.plotFromFile,
+    totalStationData:sketchState.totalStationData,
+    controlPoiArr:sketchState.controlPoiArr,
     drawLineIsChecked: sketchState.drawLineIsChecked,
     drawJZXIsChecked:sketchState.drawJZXIsChecked,
     drawArcIsChecked:sketchState.drawArcIsChecked,
@@ -832,7 +862,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         type:"plotListClose",
       })
     },
-//选择RTK展点
+ //选择RTK展点
     onRTKPlotClick: () => {
       if (ownProps.isRealtimeOn) {
         dispatch({
@@ -1334,6 +1364,12 @@ onBDPlotClick: () => {
         }
       });
    },
+   //关闭控制点提示弹出框
+   closeControlPoiAlert:()=>{
+    dispatch({
+        type:"closeControlPoiAlert"
+    })
+  },
   //  点击界址点拍照，传递当前点号
    onjzdXCZJClick:poi_id=>{
     dispatch({

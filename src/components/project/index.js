@@ -336,10 +336,30 @@ const ProjectReduce = (
     {
         list0.L = state.projectData.ProjectItem.L;
         newState.projectData.ProjectItem = list0;
+        let JsonData = JSON.stringify([newState.projectData]);
+        console.log(JsonData)
+        //调用接口，将数据保存导出到服务
+        fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
+        { 
+        method: 'POST', 
+        body: JsonData
+        })
+
+
         return { ...state, ...newState };
     }
     else
+{
+    let JsonData = JSON.stringify([newState.projectData]);
+    console.log(JsonData)
+    //调用接口，将数据保存导出到服务
+    fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
+    { 
+    method: 'POST', 
+    body: JsonData
+    })
     return state;
+  }
   }
   //响应照片数据更新的函数
   if (action.type === "showPhoto2projectData") {
