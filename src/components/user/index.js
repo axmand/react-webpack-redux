@@ -696,6 +696,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             });
           }
 
+          if (json.status === 201)
+          {
+            dispatch({
+              type: "COMPASS_MODULE_RUNNING_STATE",
+              payload: json.data
+            });
+          }
+
           dispatch({
             type: "STATUS_BAR_NOTIFICATION",
             payload: {
