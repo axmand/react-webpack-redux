@@ -50,7 +50,7 @@ class ObligeeModule extends Component {
 const mapStateToProps = (state, ownProps) => {
   var test=ownProps.ObligeeData.ProjectName;
   var test1=state.ObContentReducer
-  console.log(ownProps)
+  // console.log(ownProps)
   return {
     projectName:ownProps.ObligeeData.ProjectName,
     TableData:state.ObContentReducer,
