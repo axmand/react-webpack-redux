@@ -336,7 +336,7 @@ const ProjectReduce = (
     {
         list0.L = state.projectData.ProjectItem.L;
         newState.projectData.ProjectItem = list0;
-        let JsonData = JSON.stringify([newState.projectData]);
+        let JsonData = JSON.stringify([newState.projectData.ProjectItem]);
         console.log(JsonData)
         //调用接口，将数据保存导出到服务
         fetch(appConfig.fileServiceRootPath + '//project/forms/post', 
