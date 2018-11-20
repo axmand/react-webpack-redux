@@ -940,7 +940,7 @@ onBDPlotClick: () => {
     type: "OPEN_WAITING_MODULE",
   });
   console.log("Fetching latitude and longtitude from the BD ...");
-// 获取内置北斗定位数据
+  // 获取内置北斗定位数据
   fetch(appConfig.fileServiceRootPath + "/sp/getresult ")
     .then(response => {
       console.log(response)
@@ -998,7 +998,8 @@ onBDPlotClick: () => {
       oFReader.onloadend=function(oFRevent){
         txtContent=oFRevent.target.result;
         // 将文件数据传递至服务器处理后获取可展点在地图上的数据格式      
-        fetch(appConfig.fileServiceRootPath + '//project/totalstation',
+        fetch(appConfig.fileServiceRootPath + '//project/showtotalstation',
+        // fetch(appConfig.fileServiceRootPath + '//project/totalstation',
           {
             method:"POST",
             body:txtContent
@@ -1015,7 +1016,6 @@ onBDPlotClick: () => {
                 return json
               }else{
                 return Promise.reject(json);
-
               }
             })
           })

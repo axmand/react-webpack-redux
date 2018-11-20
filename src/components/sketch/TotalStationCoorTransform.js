@@ -16,6 +16,7 @@ import Dialog, {
     DialogContent,
     DialogContentText
   } from "material-ui/Dialog";
+import appConfig from "../../redux/Config";
 
 const styles = theme => ({
     coordinateTransformPaper: {
@@ -51,12 +52,12 @@ const styles = theme => ({
         color:'#fff',
       },
       tablecell_id:{
-        width:'20%',
+        width:'10%',
         padding:0,
         textAlign:'center'
       },
       tablecell_coor:{
-        width:'40%',
+        width:'30%',
         padding:0,
         textAlign:'center'
       },
@@ -165,6 +166,9 @@ class TotalStationCoorTransform extends Component{
                                     <TableCell className={classes.tablecell_coor}>
                                     <Typography className={classes.headtext} >Y坐标</Typography>  
                                     </TableCell>
+                                    <TableCell className={classes.tablecell_coor}>
+                                    <Typography className={classes.headtext} >H</Typography>  
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -172,6 +176,7 @@ class TotalStationCoorTransform extends Component{
                                     let id_poiNum=n.index+'poiNum';
                                     let id_xCoor=n.index+'xCoor';
                                     let id_yCoor=n.index+'yCoor';
+                                    let id_H=n.index+'H';
                                     return (
                                     <TableRow key={n.index} style={{height:'36px'}}>
                                         {/*点号 */}
@@ -185,6 +190,10 @@ class TotalStationCoorTransform extends Component{
                                         {/* Y坐标 */}
                                         <TableCell  className={classes.tablecell_coor} >
                                         <input id={id_yCoor} className={classes.input}  onChange={handleControlPoiInput}/>
+                                        </TableCell>
+                                        {/* H*/}
+                                        <TableCell  className={classes.tablecell_coor} >
+                                        <input id={id_H} className={classes.input}  onChange={handleControlPoiInput}/>
                                         </TableCell>
                                     </TableRow>
                                     );
@@ -235,7 +244,7 @@ const mapDispatchToProps = (dispatch,ownProps) => {
             let poiNumCorrect=false;
 
             for(let i=0;i<ownProps.controlPoiArr.length;i++){
-                if(ownProps.controlPoiArr[i].poi_id&&ownProps.controlPoiArr[i].coor_x&&ownProps.controlPoiArr[i].coor_y){
+                if(ownProps.controlPoiArr[i].poi_id&&ownProps.controlPoiArr[i].coor_x&&ownProps.controlPoiArr[i].coor_y&&ownProps.controlPoiArr[i].H){
                     controlPoiArrIsComplete=true;
                 }else{
                     controlPoiArrIsComplete=false;
@@ -254,13 +263,44 @@ const mapDispatchToProps = (dispatch,ownProps) => {
                 }
 
                 if(poiNumCorrect){
-                     dispatch({
-                        type:"doCoorTransform",
-                        payload:{
-                            controlPoiarr:ownProps.controlPoiArr,
-                            alertContent:""
-                        }
-                    })
+                    let controlPoiString=ownProps.controlPoiArr[0].poi_id+","+ownProps.controlPoiArr[0].coor_x+","+ownProps.controlPoiArr[0].coor_y+","+ownProps.controlPoiArr[0].H+"\n"
+                                                    +ownProps.controlPoiArr[1].poi_id+","+ownProps.controlPoiArr[1].coor_x+","+ownProps.controlPoiArr[1].coor_y+","+ownProps.controlPoiArr[1].H;
+                    console.log(controlPoiString);
+                    fetch(appConfig.fileServiceRootPath + '//project/totalstation',
+                        {
+                        method:"POST",
+                        body:controlPoiString
+                        }).then(response=>{
+                            return response.json()
+                            .then(json=>{
+                                if(json.status==200){
+                                    dispatch({
+                                        type:"doCoorTransform",
+                                        payload:{
+                                            transformedCoor:json.data,
+                                            alertContent:""
+                                        }
+                                    });
+                                    dispatch({
+                                        type:"closeCoorTransform"
+                                        })
+                                    return json
+                                }else{
+                                    return Promise.reject(json);
+                                }
+                            })
+                        })
+                        .then(json=>{
+                            console.log(json)
+                        }).catch(err=>{
+                            dispatch({
+                                type:"showControlPoiAlert",
+                                payload:{
+                                    alertContent:err
+                                }
+                            })
+                            console.log(err)
+                        })
                 }else{
                     dispatch({
                         type:"showControlPoiAlert",
