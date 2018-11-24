@@ -278,7 +278,7 @@ class UserModule extends Component {
       userCompany,
       userJob,
       lastLoginTime,
-      handleClickBluetooth,
+      handleClickBluetoothRTK,
       handleClickCompassModule,
       bluetoothConnectModuleLoading,
       CompassModuleRunningState,
@@ -408,7 +408,7 @@ class UserModule extends Component {
                 <div className={classes.wrapperWithProgress}>
                   <Button
                     className={classes.buttonAttach}
-                    onClick={handleClickBluetooth}
+                    onClick={handleClickBluetoothRTK}
                   >
                     <Bluetooth className={classes.icon} />                  
                     <Typography className={classes.typography}>
@@ -521,7 +521,7 @@ class UserModule extends Component {
             </Table>
           </DialogContent>
         </Dialog>
-        <BluetoothConnect />
+        <BluetoothConnect/>
       </div>
     );
   }
@@ -529,6 +529,7 @@ class UserModule extends Component {
 
 UserModule.propTypes = {
   handleClickBluetooth: PropTypes.func.isRequired,
+  handleClickBluetoothRTK: PropTypes.func.isRequired,
 };
 
 //import reducer
@@ -590,37 +591,37 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    handleClickBluetooth: () => {
-      // console.log("call handleClickBluetooth function ...");
+    //选择连接RTK
+    handleClickBluetoothRTK:()=>{
       dispatch({
         type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
       });
       fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/splist")
-        .then(response => response.json())
-        .then(json => {
-          dispatch({
-            type: "COM_BLUETOOTH_VIEW_SWITCH",
-          });
-          dispatch({
-            type: "COM_BLUETOOTH_MODULE_GET",
-            payload: json.data
-          });
-          dispatch({
-            type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
-            payload: {
-              notification: err,
-            }
-          });
-          dispatch({
-            type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
-          });
+      .then(response => response.json())
+      .then(json => {
+        dispatch({
+          type: "COM_BLUETOOTH_RTK_VIEW_SWITCH",
         });
+        dispatch({
+          type: "COM_BLUETOOTH_MODULE_GET",
+          payload: json.data
+        });
+        dispatch({
+          type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: "STATUS_BAR_NOTIFICATION",
+          payload: {
+            notification: err,
+          }
+        });
+        dispatch({
+          type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
+        });
+      });
     },
     // 处理北斗模块连接的相关操作
     handleClickCompassModule: () => {

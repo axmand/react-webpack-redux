@@ -15,6 +15,7 @@ import {
  } from "material-ui/Form";
 import Select from "material-ui/Select";
 import Button from "material-ui/Button";
+import TextField from "material-ui/TextField";
 
 import RootReducer from "./../../redux/RootReducer";
 
@@ -61,6 +62,11 @@ const styles = {
     marginLeft: "15%"
   },
 
+  textField:{
+    height:'64px',
+    fontSize:'1.2em'
+  },
+
   select: {
     // width: "100%",
     // height: "4em",
@@ -104,24 +110,55 @@ const styles = {
 };
 
 let COMPort = "";
+let IPRTK="";
+let portRTK="";
+let originNode="";
+let usernameRTK="";
+let passwordRTK="";
 
 class BluetoothConnect extends React.Component {
+
+  state = {
+    IP_RTK:"",
+    port_RTK:"",
+    origin_Node:"",
+    username_RTK:"",
+    password_RTK:"",
+    COM_Port:""
+  };
   handleChangeBluetooth = name => event => {
     this.setState({ [name]: event.target.value });
-    COMPort = event.target.value;
-    // console.log(COMPort);
+    if(name==="IP_RTK"){
+      IPRTK=event.target.value
+    }
+    if(name==="port_RTK"){
+      portRTK=event.target.value
+    }
+    if(name==="origin_Node"){
+      originNode=event.target.value
+    }
+    if(name==="username_RTK"){
+      usernameRTK=event.target.value
+    }
+    if(name==="password_RTK"){
+      passwordRTK=event.target.value
+    }
+    if(name==="COM_Port"){
+      COMPort = event.target.value;
+    }
+    console.log("/bluetooth/connect/RTK/"+IPRTK+":"+portRTK+"/"+originNode+"/"+usernameRTK+"/"+passwordRTK);
   };
 
   render() {
     const {
       classes,
       portLists,
-      bluetoothSwitch,
+      bluetoothRTKSwitch,
       // handleRequestCloseBluetooth,
       handleCOMPortConnect,
       handleCOMPortDisconnect,
       // portConnectStateShow,
-      handleRequestCloseBluetoothSwitch,
+      handleRequestCloseRTKBluetoothSwitch,
       // bluetoothConnectAlertShow,
       // handleClickBluetoothConnectAlert,
       // handleRequestCloseBluetoothConnectAlert,
@@ -133,20 +170,66 @@ class BluetoothConnect extends React.Component {
     return (
       <div>
         <Dialog
-          open={bluetoothSwitch}
-          onRequestClose={handleRequestCloseBluetoothSwitch}
+          open={bluetoothRTKSwitch}
+          onRequestClose={handleRequestCloseRTKBluetoothSwitch}
           className={classes.dialogBluetooth}
         >
           <DialogTitle disableTypography className={classes.title}>
-            {"蓝牙连接"}
+            {"RTK蓝牙连接"}
           </DialogTitle>
           <DialogContent>
+            {/* ip 端口 源节点 用户名 密码 */}
             <form className={classes.container}>
-              <FormControl fullWidth className={classes.formControl}>
+            <TextField
+                  id="IPRTK"
+                  label="IP"
+                  fullWidth
+                  className={classes.textField}
+                  margin="none"
+                  value={this.state.IP_RTK}
+                  onChange={this.handleChangeBluetooth('IP_RTK')}
+                />
+                <TextField
+                  id="portRTK"
+                  label="端口号"
+                  fullWidth
+                  className={classes.textField}
+                  margin="none"
+                  value={this.state.port_RTK}
+                  onChange={this.handleChangeBluetooth('port_RTK')}
+                />
+                 <TextField
+                  id="portRTK"
+                  label="源节点"
+                  fullWidth
+                  className={classes.textField}
+                  margin="none"
+                  value={this.state.origin_Node}
+                  onChange={this.handleChangeBluetooth('origin_Node')}
+                />
+                <TextField
+                  id="usernameRTK"
+                  label="用户名"
+                  fullWidth
+                  className={classes.textField}
+                  margin="none"
+                  value={this.state.username_RTK}
+                  onChange={this.handleChangeBluetooth('username_RTK')}
+                />
+                <TextField
+                  id="passwordRTK"
+                  label="密码"
+                  fullWidth
+                  className={classes.textField}
+                  margin="none"
+                  value={this.state.password_RTK}
+                  onChange={this.handleChangeBluetooth('password_RTK')}
+                />
+              <FormControl fullWidth className={classes.formControl}>                
                 <InputLabel className={ classes.port } htmlFor="bluetooth-port">Port</InputLabel>
                 <Select
-                  value={COMPort}
-                  onChange={this.handleChangeBluetooth("port")}
+                  value={this.state.COM_Port}
+                  onChange={this.handleChangeBluetooth("COM_Port")}
                   input={<Input id="bluetooth-port" />}
                   native
                   className={classes.select}
@@ -184,7 +267,6 @@ class BluetoothConnect extends React.Component {
             </form>
           </DialogContent>
         </Dialog>
-
       </div>
     );
   }
@@ -198,18 +280,23 @@ const mapStateToProps = state => {
   const bluetoothState = state.BluetoothReducer;
   return {
     portLists: bluetoothState.portLists,
-    bluetoothSwitch: bluetoothState.bluetoothSwitch,
+    bluetoothRTKSwitch:bluetoothState.bluetoothRTKSwitch,
+    IPRTK:bluetoothState.IPRTK,
+    portRTK:bluetoothState.portRTK,
+    usernameRTK:bluetoothState.usernameRTK,
+    passwordRTK:bluetoothState.passwordRTK,
     portConnectStateShow: bluetoothState.portConnectStateShow,
     bluetoothConnectAlertShow: bluetoothState.bluetoothConnectAlertShow,
     bluetoothConnectNotification: bluetoothState.bluetoothConnectNotification,
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    handleRequestCloseBluetoothSwitch: () => {
+
+    handleRequestCloseRTKBluetoothSwitch: () => {
       dispatch({
-        type: "COM_BLUETOOTH_VIEW_SWITCH"
+        type: "COM_BLUETOOTH_RTK_VIEW_SWITCH"
       });
     },
 
@@ -225,13 +312,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: "OPEN_WAITING_MODULE",
       });
-
-      // const COMPortSelected = COMPort.slice(
-      //   COMPort.indexOf("(") + 1,
-      //   COMPort.indexOf(")")
-      // );
-      // console.log(COMPortSelected);
-
       const COMPortSelected = COMPort
 
       const RTKBlutoothConnectURLBase =
@@ -284,8 +364,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 notification: "RTK蓝牙已连接！",
               }
             });
-            console.log(appConfig.fileServiceRootPath + appConfig.CORSConnectionInterface)
-            fetch(appConfig.fileServiceRootPath + appConfig.CORSConnectionInterface, {
+            
+            let CORS_URL="/bluetooth/connect/RTK/"+IPRTK+":"+portRTK+"/"+originNode+"/"+usernameRTK+"/"+passwordRTK;
+            console.log(CORS_URL);
+            fetch(appConfig.fileServiceRootPath + CORS_URL, {
               method: "GET"
             })
               .then(response => {
@@ -307,7 +389,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                   dispatch({
                     type: "COM_BLUETOOTH_MODULE_CONNECT",
                     payload: {
-                      notification: "RTK同CORS站连接信号受阻，无法获取差分数据！！！",
+                      notification: "RTK同CORS站连接信号受阻或信息输入有误，无法获取差分数据！！！",
                     }
                   });
                 };
@@ -359,7 +441,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           });
         });       
     },
-    
+
     handleCOMPortDisconnect: () => {
       console.log("handleCOMPortDisconnect Triggerd ...");
       console.log(COMPort);
@@ -369,10 +451,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       });
 
       const COMPortSelected = COMPort
-      // const COMPortSelected = COMPort.slice(
-      //   COMPort.indexOf("(") + 1,
-      //   COMPort.indexOf(")")
-      // );
       console.log(COMPortSelected);
 
       const RTKBlutoothDisconnectURLBase =
@@ -435,11 +513,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           });
         });
     },
-    // handleRequestCloseBluetoothConnectAlert: () => {
-    //   dispatch({
-    //     type: "COM_BLUETOOTH_CONNECT_ALERT_SWITCH"
-    //   });
-    // }
   };
 };
 
@@ -451,18 +524,35 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 const BluetoothReducer = (
   state = {
     portLists: ["COM1", "COM2", "COM3", "COM4"],
-    bluetoothSwitch: false,
+    bluetoothRTKSwitch:false,
     portConnectStateShow: false,
     bluetoothConnectAlertShow: false,
     bluetoothConnectNotification: '',
+    IPRTK:"",
+    portRTK:"",
+    usernameRTK:"",
+    passwordRTK:"",
   },
   action
 ) => {
   let newState = JSON.parse(JSON.stringify(state));
 
   switch (action.type) {
-    case "COM_BLUETOOTH_VIEW_SWITCH":
-      newState.bluetoothSwitch = !newState.bluetoothSwitch;
+    // case "CHANGE_INPUT_VALUE_RTK":
+    //   if (action.payload.targetID === 'IPRTK')
+    //     newState.IPRTK = action.payload.targetValue; 
+    //   if (action.payload.targetID === 'portRTK')
+    //     newState.portRTK = action.payload.targetValue; 
+    //   return {...state, ...newState}
+    //   if (action.payload.targetID === 'usernameRTK')
+    //     newState.usernameRTK = action.payload.targetValue; 
+    //     return {...state, ...newState}
+    //   if (action.payload.targetID === 'passwordRTK')
+    //     newState.passwordRTK = action.payload.targetValue; 
+    //     return {...state, ...newState}
+
+    case "COM_BLUETOOTH_RTK_VIEW_SWITCH":
+      newState.bluetoothRTKSwitch = !newState.bluetoothRTKSwitch;
       return { ...state, ...newState };
 
     case "BLUETOOTH_STATE_SHOW":
