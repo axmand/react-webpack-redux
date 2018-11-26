@@ -528,7 +528,6 @@ class UserModule extends Component {
 }
 
 UserModule.propTypes = {
-  handleClickBluetooth: PropTypes.func.isRequired,
   handleClickBluetoothRTK: PropTypes.func.isRequired,
 };
 

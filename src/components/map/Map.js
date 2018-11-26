@@ -393,28 +393,59 @@ class Map extends Component {
       }
     }
 
+    console.log(typeof(DT_Line));
+    console.log(DT_Polygon);
     //读取并剔除不合格的底图数据
     let poiGeometries,lineGeometries,polygonGeometries
-    if(DT_Point!==null){
+    if(DT_Point!=="请检查项目名称或底图文件"){
       poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
     }
-    if(DT_Line!==null){
+    if(DT_Line!=="请检查项目名称或底图文件"){
       lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
     }
-    if(DT_Polygon!==null){
+    if(DT_Polygon!=="请检查项目名称或底图文件"){
       polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
     }
+
+    if(poiGeometries&&lineGeometries&&polygonGeometries){
+      poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+    }
+    if(poiGeometries==null&&lineGeometries&&polygonGeometries){
+      poiGeometries = polygonGeometries.concat(lineGeometries);
+    }
+    if(lineGeometries==null&&poiGeometries&&polygonGeometries){
+      poiGeometries = polygonGeometries.concat(poiGeometries);
+    }
+    if(polygonGeometries==null&&poiGeometries&&lineGeometries){
+      poiGeometries = lineGeometries.concat(poiGeometries);
+    }
+    if(polygonGeometries==null&&poiGeometries==null&&lineGeometries){
+      poiGeometries = lineGeometries;
+    }
+    if(lineGeometries==null&&poiGeometries==null&&polygonGeometries){
+      poiGeometries = lineGeometries;
+    }
+    if(lineGeometries==null&&polygonGeometries==null&&poiGeometries){
+      poiGeometries = poiGeometries;
+    }
+
     //设置地图中心点坐标
     if(LayerData.mapCenter){
       center=LayerData.mapCenter;
     }else{
       if(poiGeometries.length!==0){
-        center = poiGeometries[0].getCoordinates();
-        map.setCenter(center);
+        let position=poiGeometries[0].getCoordinates();
+        if(position[0]){
+          center =position[0][0];
+          map.setCenter(center);
+        }else{
+          center = poiGeometries[0].getCoordinates();
+          map.setCenter(center);
+        }
       }
     }
 
-    poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+
     if(poiGeometries!==null){
       DT.addGeometry(poiGeometries);
       DT.bringToBack();
@@ -549,32 +580,60 @@ class Map extends Component {
           }
         }
       }
-      //读取并剔除不合格的底图数据
-      let poiGeometries,lineGeometries,polygonGeometries
-      if(DT_Point!==null){
-        poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
-      }
-      if(DT_Line!==null){
-        lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
-      }
-      if(DT_Polygon!==null){
-        polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
-      }
-      //设置地图中心点坐标
-      if(LayerData.mapCenter){
-        center=LayerData.mapCenter;
-        map.setCenter(center);
-      }else{
-        if(poiGeometries.length!==0){
+    //读取并剔除不合格的底图数据
+    let poiGeometries,lineGeometries,polygonGeometries
+    if(DT_Point!=="请检查项目名称或底图文件"){
+      poiGeometries=maptalks.GeoJSON.toGeometry(DT_Point).filter(geometry=>geometry!==null);
+    }
+    if(DT_Line!=="请检查项目名称或底图文件"){
+      lineGeometries=maptalks.GeoJSON.toGeometry(DT_Line).filter(geometry=>geometry!==null);
+    }
+    if(DT_Polygon!=="请检查项目名称或底图文件"){
+      polygonGeometries=maptalks.GeoJSON.toGeometry(DT_Polygon).filter(geometry=>geometry!==null);  
+    }
+
+    if(poiGeometries&&lineGeometries&&polygonGeometries){
+      poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
+    }
+    if(poiGeometries==null&&lineGeometries&&polygonGeometries){
+      poiGeometries = polygonGeometries.concat(lineGeometries);
+    }
+    if(lineGeometries==null&&poiGeometries&&polygonGeometries){
+      poiGeometries = polygonGeometries.concat(poiGeometries);
+    }
+    if(polygonGeometries==null&&poiGeometries&&lineGeometries){
+      poiGeometries = lineGeometries.concat(poiGeometries);
+    }
+    if(polygonGeometries==null&&poiGeometries==null&&lineGeometries){
+      poiGeometries = lineGeometries;
+    }
+    if(lineGeometries==null&&poiGeometries==null&&polygonGeometries){
+      poiGeometries = lineGeometries;
+    }
+    if(lineGeometries==null&&polygonGeometries==null&&poiGeometries){
+      poiGeometries = poiGeometries;
+    }
+
+    //设置地图中心点坐标
+    if(LayerData.mapCenter){
+      center=LayerData.mapCenter;
+    }else{
+      if(poiGeometries.length!==0){
+        let position=poiGeometries[0].getCoordinates();
+        if(position[0]){
+          center =position[0][0];
+          map.setCenter(center);
+        }else{
           center = poiGeometries[0].getCoordinates();
           map.setCenter(center);
         }
       }
-      poiGeometries = polygonGeometries.concat(lineGeometries).concat(poiGeometries);
-      if(poiGeometries!==null){
-        DT.addGeometry(poiGeometries);
-        DT.bringToBack();
-      }
+    }
+  
+    if(poiGeometries!==null){
+      DT.addGeometry(poiGeometries);
+      DT.bringToBack();
+    }
     }
   }
   render() {
