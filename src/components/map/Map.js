@@ -32,7 +32,16 @@ let drawTool = new maptalks.DrawTool({
  //为界址点图层添加snapto工具
 let snap = new SnapTool({
   tolerance: 40,
-  mode: "point"
+  mode: "point",
+  symbol: {
+    'markerType': 'ellipse',
+    'markerFill': '#0f89f5',
+    'markerLineColor': '#fff',
+    'markerLineWidth': 1,
+    'markerLineOpacity': 1,
+    'markerWidth': 8,
+    'markerHeight': 8
+}
 });
 let target,
   clickedObj = [],
