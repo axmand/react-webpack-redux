@@ -50,6 +50,7 @@ import Photo from "material-ui-icons/Photo";
 //import page
 import appConfig from "../../redux/Config"
 import BluetoothConnect from "./BluetoothConnect";
+import CompassConnect from "./CompassConnect";
 
 
 // inset css
