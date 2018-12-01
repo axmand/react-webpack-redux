@@ -523,6 +523,7 @@ class UserModule extends Component {
           </DialogContent>
         </Dialog>
         <BluetoothConnect/>
+        <CompassConnect/>
       </div>
     );
   }
@@ -530,6 +531,7 @@ class UserModule extends Component {
 
 UserModule.propTypes = {
   handleClickBluetoothRTK: PropTypes.func.isRequired,
+  handleClickCompassModule: PropTypes.func.isRequired
 };
 
 //import reducer
@@ -596,6 +598,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({
         type: "BLUETOOTH_CONNECT_MODULE_LOADING_STATE_SWITCH",
       });
+     
       fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/splist")
       .then(response => response.json())
       .then(json => {
@@ -625,109 +628,135 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     // 处理北斗模块连接的相关操作
     handleClickCompassModule: () => {
-      // console.log("call handleClickCompassModule ...");
       dispatch({
         type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
       });
-      if(ownProps.CompassModuleRunningState)
-      {
-        fetch(appConfig.fileServiceRootPath + "/sp/closesp")
-        .then(response => response.json())
-        .then(json => {
-          if (json.status === 500)
-          {
-            return Promise.reject(json.data)
-          }
-          
-          if (json.status === 200)
-          {
-            dispatch({
-              type: "COMPASS_MODULE_RUNNING_STATE",
-              payload: json.data
-            });
-          }
 
-          dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
-            payload: {
-              notification: json.data,
-            }
-          });
-          dispatch({
-            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
-            payload: {
-              notification: err,
-            }
-          });
-          dispatch({
-            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
-          });
+      fetch(appConfig.fileServiceRootPath + "/bluetooth/connect/splist")
+      .then(response => response.json())
+      .then(json => {
+        dispatch({
+          type: "COM_COMPASS_SWITCH",
         });
-      }
-      else
-      {
-        fetch(appConfig.fileServiceRootPath + "/sp/opensp")
-        .then(response => response.json()
-          .then(json => {
-            if (response.ok) {
-              return json
-            } 
-            else {
-              return Promise.reject(json)
-            }
-          })
-        )
-        .then(json => {
-          if (json.status === 500)
-          {
-            return Promise.reject(json.data)
-          }
-          
-          if (json.status === 200)
-          {
-            dispatch({
-              type: "COMPASS_MODULE_RUNNING_STATE",
-              payload: json.data
-            });
-          }
-
-          if (json.status === 201)
-          {
-            dispatch({
-              type: "COMPASS_MODULE_RUNNING_STATE",
-              payload: json.data
-            });
-          }
-
-          dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
-            payload: {
-              notification: json.data,
-            }
-          });
-          dispatch({
-            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          dispatch({
-            type: "STATUS_BAR_NOTIFICATION",
-            payload: {
-              notification: err,
-            }
-          });
-          dispatch({
-            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
-          });
+        dispatch({
+          type: "COM_BLUETOOTH_MODULE_GET",
+          payload: json.data
         });
-      }
+        dispatch({
+          type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: "STATUS_BAR_NOTIFICATION",
+          payload: {
+            notification: err,
+          }
+        });
+        dispatch({
+          type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+        });
+      });
+      // if(ownProps.CompassModuleRunningState)
+      // {
+      //   fetch(appConfig.fileServiceRootPath + "/sp/closesp")
+      //   .then(response => response.json())
+      //   .then(json => {
+      //     if (json.status === 500)
+      //     {
+      //       return Promise.reject(json.data)
+      //     }
+          
+      //     if (json.status === 200)
+      //     {
+      //       dispatch({
+      //         type: "COMPASS_MODULE_RUNNING_STATE",
+      //         payload: json.data
+      //       });
+      //     }
+
+      //     dispatch({
+      //       type: "STATUS_BAR_NOTIFICATION",
+      //       payload: {
+      //         notification: json.data,
+      //       }
+      //     });
+      //     dispatch({
+      //       type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+      //     });
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //     dispatch({
+      //       type: "STATUS_BAR_NOTIFICATION",
+      //       payload: {
+      //         notification: err,
+      //       }
+      //     });
+      //     dispatch({
+      //       type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+      //     });
+      //   });
+      // }
+      // else
+      // {
+      //   fetch(appConfig.fileServiceRootPath + "/sp/opensp")
+      //   .then(response => response.json()
+      //     .then(json => {
+      //       if (response.ok) {
+      //         return json
+      //       } 
+      //       else {
+      //         return Promise.reject(json)
+      //       }
+      //     })
+      //   )
+      //   .then(json => {
+      //     if (json.status === 500)
+      //     {
+      //       return Promise.reject(json.data)
+      //     }
+          
+      //     if (json.status === 200)
+      //     {
+      //       dispatch({
+      //         type: "COMPASS_MODULE_RUNNING_STATE",
+      //         payload: json.data
+      //       });
+      //     }
+
+      //     if (json.status === 201)
+      //     {
+      //       dispatch({
+      //         type: "COMPASS_MODULE_RUNNING_STATE",
+      //         payload: json.data
+      //       });
+      //     }
+
+      //     dispatch({
+      //       type: "STATUS_BAR_NOTIFICATION",
+      //       payload: {
+      //         notification: json.data,
+      //       }
+      //     });
+      //     dispatch({
+      //       type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+      //     });
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //     dispatch({
+      //       type: "STATUS_BAR_NOTIFICATION",
+      //       payload: {
+      //         notification: err,
+      //       }
+      //     });
+      //     dispatch({
+      //       type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+      //     });
+      //   });
+      // }
     }
   };
 };

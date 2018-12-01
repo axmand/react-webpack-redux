@@ -55,7 +55,7 @@ const styles = {
     margin: 0
   },
 
-  dialogBluetooth: {
+  dialogCompass: {
     width: "70%",
     height: "30%",
     marginTop: "25%",
@@ -128,37 +128,23 @@ class CompassConnect extends React.Component {
   };
   handleChangeBluetooth = name => event => {
     this.setState({ [name]: event.target.value });
-    if(name==="IP_RTK"){
-      IPRTK=event.target.value
-    }
-    if(name==="port_RTK"){
-      portRTK=event.target.value
-    }
-    if(name==="origin_Node"){
-      originNode=event.target.value
-    }
-    if(name==="username_RTK"){
-      usernameRTK=event.target.value
-    }
-    if(name==="password_RTK"){
-      passwordRTK=event.target.value
-    }
+
     if(name==="COM_Port"){
       COMPort = event.target.value;
     }
-    console.log("/bluetooth/connect/RTK/"+IPRTK+":"+portRTK+"/"+originNode+"/"+usernameRTK+"/"+passwordRTK);
+    // console.log("/bluetooth/connect/RTK/");
   };
 
   render() {
     const {
       classes,
       portLists,
-      bluetoothRTKSwitch,
+      CompassSwitch,
       // handleRequestCloseBluetooth,
-      handleCOMPortConnect,
-      handleCOMPortDisconnect,
+      handleCompassConnect,
+      handleCompassDisConnect,
       // portConnectStateShow,
-      handleRequestCloseRTKBluetoothSwitch,
+      handleRequestCloseCompassSwitch,
       // bluetoothConnectAlertShow,
       // handleClickBluetoothConnectAlert,
       // handleRequestCloseBluetoothConnectAlert,
@@ -170,61 +156,15 @@ class CompassConnect extends React.Component {
     return (
       <div>
         <Dialog
-          open={bluetoothRTKSwitch}
-          onRequestClose={handleRequestCloseRTKBluetoothSwitch}
-          className={classes.dialogBluetooth}
+          open={CompassSwitch}
+          onRequestClose={handleRequestCloseCompassSwitch}
+          className={classes.dialogCompass}
         >
           <DialogTitle disableTypography className={classes.title}>
-            {"RTK蓝牙连接"}
+            {"北斗模块连接"}
           </DialogTitle>
           <DialogContent>
-            {/* ip 端口 源节点 用户名 密码 */}
             <form className={classes.container}>
-            <TextField
-                  id="IPRTK"
-                  label="IP"
-                  fullWidth
-                  className={classes.textField}
-                  margin="none"
-                  value={this.state.IP_RTK}
-                  onChange={this.handleChangeBluetooth('IP_RTK')}
-                />
-                <TextField
-                  id="portRTK"
-                  label="端口号"
-                  fullWidth
-                  className={classes.textField}
-                  margin="none"
-                  value={this.state.port_RTK}
-                  onChange={this.handleChangeBluetooth('port_RTK')}
-                />
-                 <TextField
-                  id="portRTK"
-                  label="源节点"
-                  fullWidth
-                  className={classes.textField}
-                  margin="none"
-                  value={this.state.origin_Node}
-                  onChange={this.handleChangeBluetooth('origin_Node')}
-                />
-                <TextField
-                  id="usernameRTK"
-                  label="用户名"
-                  fullWidth
-                  className={classes.textField}
-                  margin="none"
-                  value={this.state.username_RTK}
-                  onChange={this.handleChangeBluetooth('username_RTK')}
-                />
-                <TextField
-                  id="passwordRTK"
-                  label="密码"
-                  fullWidth
-                  className={classes.textField}
-                  margin="none"
-                  value={this.state.password_RTK}
-                  onChange={this.handleChangeBluetooth('password_RTK')}
-                />
               <FormControl fullWidth className={classes.formControl}>                
                 <InputLabel className={ classes.port } htmlFor="bluetooth-port">Port</InputLabel>
                 <Select
@@ -250,7 +190,7 @@ class CompassConnect extends React.Component {
                     raised
                     className={classes.button}
                     color="primary"
-                    onClick={handleCOMPortDisconnect}
+                    onClick={handleCompassDisConnect}
                   >
                     断开
                   </Button>
@@ -258,7 +198,7 @@ class CompassConnect extends React.Component {
                     raised
                     className={classes.button}
                     color="primary"
-                    onClick={handleCOMPortConnect}
+                    onClick={handleCompassConnect}
                   >
                     连接
                   </Button>
@@ -277,156 +217,79 @@ CompassConnect.PropTypes = {
 };
 
 const mapStateToProps = state => {
-  const bluetoothState = state.BluetoothReducer;
+  const CompassState = state.CompassReducer;
   return {
-    portLists: bluetoothState.portLists,
-    bluetoothRTKSwitch:bluetoothState.bluetoothRTKSwitch,
-    IPRTK:bluetoothState.IPRTK,
-    portRTK:bluetoothState.portRTK,
-    usernameRTK:bluetoothState.usernameRTK,
-    passwordRTK:bluetoothState.passwordRTK,
-    portConnectStateShow: bluetoothState.portConnectStateShow,
-    bluetoothConnectAlertShow: bluetoothState.bluetoothConnectAlertShow,
-    bluetoothConnectNotification: bluetoothState.bluetoothConnectNotification,
+    portLists: CompassState.portLists,
+    CompassSwitch:CompassState.CompassSwitch,
+    portConnectStateShow: CompassState.portConnectStateShow,
+    bluetoothConnectAlertShow: CompassState.bluetoothConnectAlertShow,
+    bluetoothConnectNotification:CompassState.bluetoothConnectNotification,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
 
-    handleRequestCloseRTKBluetoothSwitch: () => {
+    handleRequestCloseCompassSwitch: () => {
       dispatch({
-        type: "COM_BLUETOOTH_RTK_VIEW_SWITCH"
+        type: "COM_COMPASS_SWITCH"
       });
-    },
+    }, 
 
-    handleRequestCloseBluetoothStateShow: () => {
-      dispatch({
-        type: "BLUETOOTH_STATE_SHOW"
-      });
-    },
-
-    handleCOMPortConnect: () => {
+    handleCompassConnect: () => {
       console.log("handleCOMPortConnect Triggerd ...");
       // console.log(COMPort);
-      dispatch({
-        type: "OPEN_WAITING_MODULE",
-      });
+      // dispatch({
+      //   type: "OPEN_WAITING_MODULE",
+      // });
       const COMPortSelected = COMPort
 
-      const RTKBlutoothConnectURLBase =
-      appConfig.fileServiceRootPath + "/bluetooth/connect/sp/";
-      const RTKBlutoothConnectURL = RTKBlutoothConnectURLBase + COMPortSelected;
-      console.log(RTKBlutoothConnectURL);
-
-      fetch(RTKBlutoothConnectURL, {
-        method: "GET"
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json()
-          } 
-          else {
-            return Promise.reject({
-              status: response.status,
-              statusText: response.statusText
-            })
-          }
-        })
+      const CompassConnectURLBase =
+      appConfig.fileServiceRootPath + "/sp/opensp";
+      const CompassConnectURL = CompassConnectURLBase + COMPortSelected;
+      console.log(CompassConnectURL);
+      fetch(CompassConnectURL)
+        .then(response => response.json()
+          .then(json => {
+            if (response.ok) {
+              return json
+            } 
+            else {
+              return Promise.reject(json)
+            }
+          })
+        )
         .then(json => {
-          console.log(json);
-          // 处理不同HTTP状态码下的对应操作
           if (json.status === 500)
           {
-            dispatch({
-              type: "COM_BLUETOOTH_MODULE_CONNECT",
-              payload: {
-                notification: "RTK同平板蓝牙连接信号受阻，无法获取COM端口！！！",
-              }
-            });
-            // 在状态栏显示调试信息
-            dispatch({
-              type: "STATUS_BAR_NOTIFICATION",
-              payload: {
-                notification: json,
-              }
-            });
-            dispatch({
-              type: "CLOSE_WAITING_MODULE",
-            });
-          };
-
+            return Promise.reject(json.data)
+          }
+          
           if (json.status === 200)
           {
             dispatch({
-              type: "COM_BLUETOOTH_MODULE_CONNECT",
-              payload: {
-                notification: "RTK蓝牙已连接！",
-              }
+              type: "COMPASS_MODULE_RUNNING_STATE",
+              payload: json.data
             });
-            
-            let CORS_URL="/bluetooth/connect/RTK/"+IPRTK+":"+portRTK+"/"+originNode+"/"+usernameRTK+"/"+passwordRTK;
-            console.log(CORS_URL);
-            fetch(appConfig.fileServiceRootPath + CORS_URL, {
-              method: "GET"
-            })
-              .then(response => {
-                if (response.ok) {
-                  return response.json()
-                } 
-                else {
-                  return Promise.reject({
-                    status: response.status,
-                    statusText: response.statusText
-                  })
-                }
-              })
-              .then(json => {
-                console.log(json);
-                // 处理不同HTTP状态码下的对应操作
-                if (json.status === 500)
-                {
-                  dispatch({
-                    type: "COM_BLUETOOTH_MODULE_CONNECT",
-                    payload: {
-                      notification: "RTK同CORS站连接信号受阻或信息输入有误，无法获取差分数据！！！",
-                    }
-                  });
-                };
-      
-                if (json.status === 200)
-                {
-                  dispatch({
-                    type: "COM_BLUETOOTH_MODULE_CONNECT",
-                    payload: {
-                      notification: "RTK同CORS站已建立连接！",
-                    }
-                  });
-                };
-                // 在状态栏显示调试信息
-                dispatch({
-                  type: "STATUS_BAR_NOTIFICATION",
-                  payload: {
-                    notification: json,
-                  }
-                });
-                dispatch({
-                  type: "CLOSE_WAITING_MODULE",
-                });
-              })
-            .catch(err => {
-              console.log(err);
-              dispatch({
-                type: "STATUS_BAR_NOTIFICATION",
-                payload: {
-                  notification: err,
-                }
-              });
-              dispatch({
-                type: "CLOSE_WAITING_MODULE",
-              });
+          }
+
+          if (json.status === 201)
+          {
+            dispatch({
+              type: "COMPASS_MODULE_RUNNING_STATE",
+              payload: json.data
             });
-          };
+          }
+
+          dispatch({
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: json.data,
+            }
+          });
+          dispatch({
+            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
+          });
         })
         .catch(err => {
           console.log(err);
@@ -437,70 +300,176 @@ const mapDispatchToProps = (dispatch) => {
             }
           });
           dispatch({
-            type: "CLOSE_WAITING_MODULE",
+            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
           });
-        });       
+        });
+     
+        // fetch(RTKBlutoothConnectURL, {
+      //   method: "GET"
+      // })
+      //   .then(response => {
+      //     if (response.ok) {
+      //       return response.json()
+      //     } 
+      //     else {
+      //       return Promise.reject({
+      //         status: response.status,
+      //         statusText: response.statusText
+      //       })
+      //     }
+      //   })
+      //   .then(json => {
+      //     console.log(json);
+      //     // 处理不同HTTP状态码下的对应操作
+      //     if (json.status === 500)
+      //     {
+      //       dispatch({
+      //         type: "COM_BLUETOOTH_MODULE_CONNECT",
+      //         payload: {
+      //           notification: "RTK同平板蓝牙连接信号受阻，无法获取COM端口！！！",
+      //         }
+      //       });
+      //       // 在状态栏显示调试信息
+      //       dispatch({
+      //         type: "STATUS_BAR_NOTIFICATION",
+      //         payload: {
+      //           notification: json,
+      //         }
+      //       });
+      //       dispatch({
+      //         type: "CLOSE_WAITING_MODULE",
+      //       });
+      //     };
+
+      //     if (json.status === 200)
+      //     {
+      //       dispatch({
+      //         type: "COM_BLUETOOTH_MODULE_CONNECT",
+      //         payload: {
+      //           notification: "RTK蓝牙已连接！",
+      //         }
+      //       });
+            
+      //       let CORS_URL="/bluetooth/connect/RTK/"+IPRTK+":"+portRTK+"/"+originNode+"/"+usernameRTK+"/"+passwordRTK;
+      //       console.log(CORS_URL);
+      //       fetch(appConfig.fileServiceRootPath + CORS_URL, {
+      //         method: "GET"
+      //       })
+      //         .then(response => {
+      //           if (response.ok) {
+      //             return response.json()
+      //           } 
+      //           else {
+      //             return Promise.reject({
+      //               status: response.status,
+      //               statusText: response.statusText
+      //             })
+      //           }
+      //         })
+      //         .then(json => {
+      //           console.log(json);
+      //           // 处理不同HTTP状态码下的对应操作
+      //           if (json.status === 500)
+      //           {
+      //             dispatch({
+      //               type: "COM_BLUETOOTH_MODULE_CONNECT",
+      //               payload: {
+      //                 notification: "RTK同CORS站连接信号受阻或信息输入有误，无法获取差分数据！！！",
+      //               }
+      //             });
+      //           };
+      
+      //           if (json.status === 200)
+      //           {
+      //             dispatch({
+      //               type: "COM_BLUETOOTH_MODULE_CONNECT",
+      //               payload: {
+      //                 notification: "RTK同CORS站已建立连接！",
+      //               }
+      //             });
+      //           };
+      //           // 在状态栏显示调试信息
+      //           dispatch({
+      //             type: "STATUS_BAR_NOTIFICATION",
+      //             payload: {
+      //               notification: json,
+      //             }
+      //           });
+      //           dispatch({
+      //             type: "CLOSE_WAITING_MODULE",
+      //           });
+      //         })
+      //       .catch(err => {
+      //         console.log(err);
+      //         dispatch({
+      //           type: "STATUS_BAR_NOTIFICATION",
+      //           payload: {
+      //             notification: err,
+      //           }
+      //         });
+      //         dispatch({
+      //           type: "CLOSE_WAITING_MODULE",
+      //         });
+      //       });
+      //     };
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //     dispatch({
+      //       type: "STATUS_BAR_NOTIFICATION",
+      //       payload: {
+      //         notification: err,
+      //       }
+      //     });
+      //     dispatch({
+      //       type: "CLOSE_WAITING_MODULE",
+      //     });
+      //   });       
     },
 
-    handleCOMPortDisconnect: () => {
-      console.log("handleCOMPortDisconnect Triggerd ...");
+    handleCompassDisConnect: () => {
+      console.log("handleCompassDisConnect Triggerd ...");
       console.log(COMPort);
 
-      dispatch({
-        type: "OPEN_WAITING_MODULE",
-      });
+      // dispatch({
+      //   type: "OPEN_WAITING_MODULE",
+      // });
 
       const COMPortSelected = COMPort
       console.log(COMPortSelected);
 
-      const RTKBlutoothDisconnectURLBase =
-        appConfig.fileServiceRootPath + "/bluetooth/connect/closesp/";
-      const RTKBlutoothDisconnectURL =
-        RTKBlutoothDisconnectURLBase + COMPortSelected;
-      console.log(RTKBlutoothDisconnectURL);
-
-      fetch(RTKBlutoothDisconnectURL, {
-        method: "GET"
-      })
-        .then(response => {
-          console.log(response)
-          if (response.ok) {
-            return response.json()
-          } 
-          else {
-            return Promise.reject({
-              status: response.status,
-              statusText: response.statusText
-            })
-          }
-        })
-        .then(json => {
-          console.log(json);
-          // 处理不同HTTP状态码下的对应操作
+      const CompassDisconnectURLBase =
+      appConfig.fileServiceRootPath + "/sp/closesp";
+      // const CompassDisconnectURL =
+      // CompassDisconnectURLBase + COMPortSelected;
+      // console.log(CompassDisconnectURL);
+      fetch(CompassDisconnectURLBase)
+      .then(response => response.json())
+      .then(json => {
           if (json.status === 500)
           {
-            dispatch({
-              type: "COM_BLUETOOTH_MODULE_DISCONNECT",
-              payload: {
-                notification: "断开RTK蓝牙连接失败！！！",
-              }
-            });
-          };
-
+            return Promise.reject(json.data)
+          }
+          
           if (json.status === 200)
           {
             dispatch({
-              type: "COM_BLUETOOTH_MODULE_DISCONNECT",
-              payload: {
-                notification: "已断开RTK蓝牙连接",
-              }
+              type: "COMPASS_MODULE_RUNNING_STATE",
+              payload: json.data
             });
-          };
+          }
+
           dispatch({
-            type: "CLOSE_WAITING_MODULE",
+            type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: json.data,
+            }
+          });
+          dispatch({
+            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
           });
         })
-        .catch(err => {
+      .catch(err => {
           console.log(err);
           dispatch({
             type: "STATUS_BAR_NOTIFICATION",
@@ -509,10 +478,64 @@ const mapDispatchToProps = (dispatch) => {
             }
           });
           dispatch({
-            type: "CLOSE_WAITING_MODULE",
+            type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
           });
         });
-    },
+      }
+
+      // fetch(CompassDisconnectURL, {
+      //   method: "GET"
+      // })
+      //   .then(response => {
+      //     console.log(response)
+      //     if (response.ok) {
+      //       return response.json()
+      //     } 
+      //     else {
+      //       return Promise.reject({
+      //         status: response.status,
+      //         statusText: response.statusText
+      //       })
+      //     }
+      //   })
+      //   .then(json => {
+      //     console.log(json);
+      //     // 处理不同HTTP状态码下的对应操作
+      //     if (json.status === 500)
+      //     {
+      //       dispatch({
+      //         type: "COM_BLUETOOTH_MODULE_DISCONNECT",
+      //         payload: {
+      //           notification: "断开RTK蓝牙连接失败！！！",
+      //         }
+      //       });
+      //     };
+
+      //     if (json.status === 200)
+      //     {
+      //       dispatch({
+      //         type: "COM_BLUETOOTH_MODULE_DISCONNECT",
+      //         payload: {
+      //           notification: "已断开RTK蓝牙连接",
+      //         }
+      //       });
+      //     };
+      //     dispatch({
+      //       type: "CLOSE_WAITING_MODULE",
+      //     });
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //     dispatch({
+      //       type: "STATUS_BAR_NOTIFICATION",
+      //       payload: {
+      //         notification: err,
+      //       }
+      //     });
+      //     dispatch({
+      //       type: "CLOSE_WAITING_MODULE",
+      //     });
+      //   });
   };
 };
 
@@ -521,10 +544,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(
 );
 
 //reducer
-const BluetoothReducer = (
+const CompassReducer = (
   state = {
     portLists: ["COM1", "COM2", "COM3", "COM4"],
-    bluetoothRTKSwitch:false,
+    CompassSwitch:false,
     portConnectStateShow: false,
     bluetoothConnectAlertShow: false,
     bluetoothConnectNotification: '',
@@ -550,9 +573,16 @@ const BluetoothReducer = (
     //   if (action.payload.targetID === 'passwordRTK')
     //     newState.passwordRTK = action.payload.targetValue; 
     //     return {...state, ...newState}
-
-    case "COM_BLUETOOTH_RTK_VIEW_SWITCH":
-      newState.bluetoothRTKSwitch = !newState.bluetoothRTKSwitch;
+    case 'COMPASS_MODULE_RUNNING_STATE':
+      newState.CompassModuleRunningState = !newState.CompassModuleRunningState;
+      return { ...state, ...newState };
+    
+    case 'COMPASS_MODULE_LOADING_STATE_SWITCH':
+      newState.CompassModuleLoading = !newState.CompassModuleLoading;
+      return { ...state, ...newState };
+   
+    case "COM_COMPASS_SWITCH":
+      newState.CompassSwitch = !newState.CompassSwitch;
       return { ...state, ...newState };
 
     case "BLUETOOTH_STATE_SHOW":
@@ -562,8 +592,8 @@ const BluetoothReducer = (
     case "COM_BLUETOOTH_MODULE_GET":
       //console.log(action.payload)
       let newPortListsStr = action.payload;
-      console.log(newPortListsStr)
-      console.log(JSON.parse(newPortListsStr))
+      // console.log(newPortListsStr)
+      // console.log(JSON.parse(newPortListsStr))
       // newPortListsStr = newPortListsStr.slice(
       //   newPortListsStr.indexOf("[") + 1,
       //   newPortListsStr.indexOf("]")
@@ -591,7 +621,7 @@ const BluetoothReducer = (
       return { ...state, ...newState };
   }
 };
-RootReducer.merge(BluetoothReducer);
+RootReducer.merge(CompassReducer);
 
 
 // {/* <Dialog
