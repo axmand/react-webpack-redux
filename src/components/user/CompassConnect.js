@@ -244,7 +244,7 @@ const mapDispatchToProps = (dispatch) => {
       const COMPortSelected = COMPort
 
       const CompassConnectURLBase =
-      appConfig.fileServiceRootPath + "/sp/opensp";
+      appConfig.fileServiceRootPath + "/sp/opensp/";
       const CompassConnectURL = CompassConnectURLBase + COMPortSelected;
       console.log(CompassConnectURL);
       fetch(CompassConnectURL)
