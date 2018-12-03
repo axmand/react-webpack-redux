@@ -181,7 +181,6 @@ class CompassConnect extends React.Component {
                     </option>
                   ))}
                 </Select>
-                <FormHelperText>{bluetoothConnectNotification}</FormHelperText>
               </FormControl>
 
               <List>
