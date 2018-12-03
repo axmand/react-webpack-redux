@@ -148,7 +148,7 @@ class CompassConnect extends React.Component {
       // bluetoothConnectAlertShow,
       // handleClickBluetoothConnectAlert,
       // handleRequestCloseBluetoothConnectAlert,
-      bluetoothConnectNotification,
+      CompassConnectNotification,
     } = this.props;
 
     //console.log(portLists);
@@ -181,6 +181,7 @@ class CompassConnect extends React.Component {
                     </option>
                   ))}
                 </Select>
+                <FormHelperText>{CompassConnectNotification}</FormHelperText>
               </FormControl>
 
               <List>
@@ -222,7 +223,7 @@ const mapStateToProps = state => {
     CompassSwitch:CompassState.CompassSwitch,
     portConnectStateShow: CompassState.portConnectStateShow,
     bluetoothConnectAlertShow: CompassState.bluetoothConnectAlertShow,
-    bluetoothConnectNotification:CompassState.bluetoothConnectNotification,
+    CompassConnectNotification:CompassState.CompassConnectNotification,
   };
 };
 
@@ -250,6 +251,7 @@ const mapDispatchToProps = (dispatch) => {
       fetch(CompassConnectURL)
         .then(response => response.json()
           .then(json => {
+            console.log(json);
             if (response.ok) {
               return json
             } 
@@ -287,6 +289,12 @@ const mapDispatchToProps = (dispatch) => {
             }
           });
           dispatch({
+            type: "COM_COMPASS_MODULE_CONNECT",
+            payload: {
+              notification: json.data,
+            }
+          });
+          dispatch({
             type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
           });
         })
@@ -294,6 +302,12 @@ const mapDispatchToProps = (dispatch) => {
           console.log(err);
           dispatch({
             type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
+          });
+          dispatch({
+            type: "COM_COMPASS_MODULE_CONNECT",
             payload: {
               notification: err,
             }
@@ -464,6 +478,14 @@ const mapDispatchToProps = (dispatch) => {
               notification: json.data,
             }
           });
+         
+          dispatch({
+            type: "COM_COMPASS_MODULE_DISCONNECT",
+            payload: {
+              notification: json.data,
+            }
+          });
+         
           dispatch({
             type: "COMPASS_MODULE_LOADING_STATE_SWITCH",
           });
@@ -472,6 +494,12 @@ const mapDispatchToProps = (dispatch) => {
           console.log(err);
           dispatch({
             type: "STATUS_BAR_NOTIFICATION",
+            payload: {
+              notification: err,
+            }
+          });
+          dispatch({
+            type: "COM_COMPASS_MODULE_DISCONNECT",
             payload: {
               notification: err,
             }
@@ -549,7 +577,7 @@ const CompassReducer = (
     CompassSwitch:false,
     portConnectStateShow: false,
     bluetoothConnectAlertShow: false,
-    bluetoothConnectNotification: '',
+    CompassConnectNotification: '',
     IPRTK:"",
     portRTK:"",
     usernameRTK:"",
@@ -572,13 +600,13 @@ const CompassReducer = (
     //   if (action.payload.targetID === 'passwordRTK')
     //     newState.passwordRTK = action.payload.targetValue; 
     //     return {...state, ...newState}
-    case 'COMPASS_MODULE_RUNNING_STATE':
-      newState.CompassModuleRunningState = !newState.CompassModuleRunningState;
-      return { ...state, ...newState };
+    // case 'COMPASS_MODULE_RUNNING_STATE':
+    //   newState.CompassModuleRunningState = !newState.CompassModuleRunningState;
+    //   return { ...state, ...newState };
     
-    case 'COMPASS_MODULE_LOADING_STATE_SWITCH':
-      newState.CompassModuleLoading = !newState.CompassModuleLoading;
-      return { ...state, ...newState };
+    // case 'COMPASS_MODULE_LOADING_STATE_SWITCH':
+    //   newState.CompassModuleLoading = !newState.CompassModuleLoading;
+    //   return { ...state, ...newState };
    
     case "COM_COMPASS_SWITCH":
       newState.CompassSwitch = !newState.CompassSwitch;
@@ -601,15 +629,15 @@ const CompassReducer = (
       newState.portLists = JSON.parse(newPortListsStr);
       return { ...state, ...newState };
 
-    case "COM_BLUETOOTH_MODULE_CONNECT":
+    case "COM_COMPASS_MODULE_CONNECT":
       // console.log(action.payload)
       // newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
-      newState.bluetoothConnectNotification = action.payload.notification
+      newState.CompassConnectNotification = action.payload.notification
       return { ...state, ...newState };
 
-    case "COM_BLUETOOTH_MODULE_DISCONNECT":
+    case "COM_COMPASS_MODULE_DISCONNECT":
       // newState.bluetoothConnectAlertShow = !newState.bluetoothConnectAlertShow;
-      newState.bluetoothConnectNotification = action.payload.notification
+      newState.CompassConnectNotification = action.payload.notification
       return { ...state, ...newState };
 
     // case "COM_BLUETOOTH_CONNECT_ALERT_SWITCH":

@@ -427,7 +427,7 @@ class UserModule extends Component {
                     {CompassModuleRunningState? <Devices className={classes.icon} /> : <PhonelinkOff className={classes.icon} />}                 
                     {CompassModuleRunningState? <Typography className={classes.typography}>北斗模块断开 </Typography>: <Typography className={classes.typography}>北斗模块连接</Typography>} 
                   </Button>
-                  {CompassModuleLoading && <CircularProgress size={52} className={classes.buttonProgress} />}
+                  {/* {CompassModuleLoading && <CircularProgress size={52} className={classes.buttonProgress} />} */}
                 </div>
 
                 {/* <div className={classes.wrapperWithProgress}>
