@@ -438,7 +438,7 @@ const mapDispatchToProps = (dispatch) => {
       console.log(COMPortSelected);
 
       const CompassDisconnectURLBase =
-      appConfig.fileServiceRootPath + "/sp/closesp";
+      appConfig.fileServiceRootPath + "/sp/closesp/";
       // const CompassDisconnectURL =
       // CompassDisconnectURLBase + COMPortSelected;
       // console.log(CompassDisconnectURL);
