@@ -297,10 +297,17 @@ class Map extends Component {
       baseLayer: new maptalks.TileLayer("base", {
         crossOrigin: "anonymous",
         // 'urlTemplate' : 'http://www.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i342009817!3m9!2sen-US!3sCN!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0&token=32965',
-        urlTemplate : 'http://t{s}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}',
-        subdomains  : ['1','2','3','4','5'],
+        urlTemplate : 'http://{s}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=d0c3c3be64e0042982f3d4a94cb15298',
+        subdomains  : ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"],
         attribution : '&copy; <a href="http://www.tianditu.cn/">天地图</a>',
       }),
+      layers : [
+        new maptalks.TileLayer("base2", {
+          urlTemplate:
+            "http://{s}.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=d0c3c3be64e0042982f3d4a94cb15298",
+          subdomains: ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"]
+        })
+    ],
     });
      //获取项目数据
      let LayerData=this.props.LayerData;
